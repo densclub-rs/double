@@ -1,17 +1,14 @@
----
-double-state: [null, state-0, null]
----
-
 # Double
 
 >
 > **The program that does not exist… *yet* !**
 > 
 
+![Double](_media/human-filling-ai-with-meaning.png)
 
 ## General Considerations
 
-This document outlines the core ideas that serve as shared rules and community-endorsed concepts for the **Double** project.
+Here outlines the core ideas that serve as shared rules and community-endorsed concepts for the **Double** project.
 
 If you do not agree with the ideas and concepts below, you have two options:
 
@@ -40,15 +37,16 @@ This establishes the project’s foundational principle:
 
 ## Ideas
 
-Despite the presence of many files in the project directory, ***at the very beginning*** there is nothing except ideas.Therefore, the project needs an agreement on how to manage them.
+Despite the presence of many files in the project directory, ***at the very beginning*** there is nothing except ideas. Therefore, the project needs an agreement on how to manage them.
 
 Ideas are the most general concepts and principles to develop and grow **Double** project. They should describe a philosophy behind a technical solution accepted for the project.
 
 ### Double layout naming convention
 
+* use [kebab case](https://en.wikipedia.org/wiki/Letter_case#Kebab_case) for naming
 * create any directory
 * create a Markdown file inside the directory with the same name as the directory
-* use [kebab case](https://en.wikipedia.org/wiki/Letter_case#Kebab_case) for naming
+
 
 Example:
 
@@ -70,7 +68,7 @@ The [people](people/people.md) directory is that place.
 
 # At the Very Beginning
 
-This is the starting point for any other Double-based project.
+This is **the starting point** for any other Double-based project.
 
 There are only these core concepts:
 
@@ -79,40 +77,5 @@ There are only these core concepts:
 1. [Double Layout Naming Convention](#double-layout-naming-convention)
 1. [Ideas' Catalog](#ideas)
 1. [Supposed Community Catalog](#participants)
-1. Main project language is English
-
-## State of the Double Project
-
-There is a need for one more core concept. It is the **"State of the Double project"**. The state concept defines a control point, or checkpoint, that allows the project to move through its history and to fork a new line of development from any recorded state.
-
-As the main project develops further, anyone can return to an earlier state and create their own development path. In that case, there will be a common ancestor (*'state-N'*) and, potentially, a common descendant if a fork is later merged back into the main line. Think of ***states*** as divergence and convergence points in the lifetime of the project.
-
-A state is tracked by keeping special tags in both in-file metadata (Markdown properties) and Git annotated tags in sync:
-
-- there is a property named `double-state` that stores a bidirectional list: [`prev`, `current`, `next`] as an array of pointers,
-- if a pointer is not defined, use `null` or `none` for that value,
-- project states are published as Git annotated tags: `state-0`, `state-1`, etc.,
-- ***states*** can be traversed easily after cloning by using tag names.
-
-Example commands:
-
-- `git tag -a state-0 -m "State 0: initial baseline"`
-- `git tag -a state-1 -m "State 1: added state tracing section"`
-- `git push origin --tags`
-- `git fetch --tags`
-- `git tag --list "state-*"`
-- `git checkout state-0`
-
-Update policy:
-
-- when moving forward, set `prev` to the old `current`, set `current` to the new value, and optionally set `next` to the anticipated successor,
-- keep past state tags immutable as possible,
-- add new annotated tags for each new state.
-
-
-# What to Do Next
-
-To move to the next state, `state-1`, the following things must be clarified:
-
-* how to maintain ideas in the [Ideas](./ideas/ideas.md) folder and define the direction of the project's development
-* how to maintain participants in the [People](./people/people.md) folder
+1. <a id="very-beginning-md-format">Present the most of knowledge and information in the Markdown format</a>
+1. <a id="very-beginning-language">Main project language is English</a>

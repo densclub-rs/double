@@ -2,3 +2,14 @@ logseq
 Untitled*.md
 .smart-env
 .trash
+*.cast
+.megaignore
+.debris
+.git
+.obsidian/
+.double/drafts/
+.codex/
+.gemini/
+.claude/
+.agents/
+.directory

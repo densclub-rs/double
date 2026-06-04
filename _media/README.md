@@ -1,0 +1,1 @@
+Keep all media attachments for notes here.

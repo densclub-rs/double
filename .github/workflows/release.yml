@@ -1,0 +1,225 @@
+name: Release Double
+
+on:
+  push:
+    tags:
+      - 'v*'
+      - 'rc*'
+      - 'machine-of-ideas-v*'
+      - 'machine-of-ideas-rc*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Tag name to release'
+        required: true
+        default: ''
+
+concurrency:
+  group: release-${{ github.event.inputs.version || github.ref_name || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build and publish release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Determine release version
+        id: version
+        run: |
+          VERSION_INPUT="${{ github.event.inputs.version }}"
+
+          if [[ -n "$VERSION_INPUT" ]]; then
+            VERSION="$VERSION_INPUT"
+          elif [[ "${{ github.event_name }}" == "push" ]]; then
+            VERSION="${GITHUB_REF#refs/tags/}"
+          else
+            echo "No tag version available."
+            exit 1
+          fi
+
+          if [[ "$VERSION" =~ ^machine-of-ideas-(v\.?[0-9]+(\.[0-9]+){1,2}([.-][0-9A-Za-z.-]+)?)$ ]]; then
+            RELEASE_KIND="machine-of-ideas"
+            IS_PRERELEASE="false"
+            RAW_VERSION="${BASH_REMATCH[1]}"
+            CLEAN_VERSION="${RAW_VERSION#v}"
+            CLEAN_VERSION="${CLEAN_VERSION#.}"
+            RELEASE_NAME="double-machine-of-ideas-${CLEAN_VERSION}"
+          elif [[ "$VERSION" =~ ^machine-of-ideas-rc[-.]?([0-9]+(\.[0-9]+){1,2}([.-][0-9A-Za-z.-]+)?)$ ]]; then
+            RELEASE_KIND="machine-of-ideas"
+            IS_PRERELEASE="true"
+            CLEAN_VERSION="${BASH_REMATCH[1]}"
+            RELEASE_NAME="double-machine-of-ideas-rc-${CLEAN_VERSION}"
+          elif [[ "$VERSION" =~ ^v\.?[0-9]+(\.[0-9]+){1,2}([.-][0-9A-Za-z.-]+)?$ ]]; then
+            RELEASE_KIND="project"
+            IS_PRERELEASE="false"
+            RAW_VERSION="$VERSION"
+            CLEAN_VERSION="${RAW_VERSION#v}"
+            CLEAN_VERSION="${CLEAN_VERSION#.}"
+            RELEASE_NAME="double-${CLEAN_VERSION}"
+          elif [[ "$VERSION" =~ ^rc[-.]?([0-9]+(\.[0-9]+){1,2}([.-][0-9A-Za-z.-]+)?)$ ]]; then
+            RELEASE_KIND="project"
+            IS_PRERELEASE="true"
+            CLEAN_VERSION="${BASH_REMATCH[1]}"
+            RELEASE_NAME="double-rc-${CLEAN_VERSION}"
+          else
+            echo "Release version must look like v1.2.3, v.1.2.3, rc1.2.3, rc-1.2.3, rc.1.2.3, machine-of-ideas-v1.2.3, or machine-of-ideas-rc1.2.3. Got: $VERSION"
+            exit 1
+          fi
+
+          if ! git rev-parse --verify --quiet "refs/tags/$VERSION" >/dev/null; then
+            echo "Tag does not exist in this repository: $VERSION"
+            exit 1
+          fi
+
+          COMMIT_SHA="$(git rev-list -n 1 "$VERSION")"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "commit_sha=$COMMIT_SHA" >> "$GITHUB_OUTPUT"
+          echo "release_kind=$RELEASE_KIND" >> "$GITHUB_OUTPUT"
+          echo "release_name=$RELEASE_NAME" >> "$GITHUB_OUTPUT"
+          echo "is_prerelease=$IS_PRERELEASE" >> "$GITHUB_OUTPUT"
+          echo "Release version: $VERSION"
+          echo "Release kind: $RELEASE_KIND"
+          echo "Release name: $RELEASE_NAME"
+          echo "Prerelease: $IS_PRERELEASE"
+          echo "Release commit: $COMMIT_SHA"
+
+      - name: Build project
+        run: |
+          echo "No build command configured. Add your build steps here."
+          # example: ./scripts/build.sh
+          # example: npm install && npm run build
+
+      - name: Create release packages
+        id: packages
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          RELEASE_KIND="${{ steps.version.outputs.release_kind }}"
+          RELEASE_NAME="${{ steps.version.outputs.release_name }}"
+          DIST_DIR="dist"
+          STAGE_DIR="$DIST_DIR/stage/$RELEASE_NAME"
+
+          rm -rf "$DIST_DIR"
+          mkdir -p "$DIST_DIR"
+
+          if [[ "$RELEASE_KIND" == "project" ]]; then
+            echo "Building full project package..."
+            git archive --format=tar --prefix="${RELEASE_NAME}/" "$VERSION" . \
+              | gzip -n > "$DIST_DIR/${RELEASE_NAME}.tar.gz"
+          elif [[ "$RELEASE_KIND" == "machine-of-ideas" ]]; then
+            echo "Building Machine of Ideas package..."
+            mkdir -p "$STAGE_DIR"
+
+            while IFS= read -r path; do
+              if [[ "$path" == *.md ]]; then
+                status="$(
+                  git show "$VERSION:$path" \
+                    | awk '
+                        BEGIN { in_fm = 0; seen_fm = 0 }
+                        NR == 1 && $0 == "---" { in_fm = 1; seen_fm = 1; next }
+                        in_fm && $0 == "---" { exit }
+                        in_fm && $0 ~ /^[[:space:]]*status[[:space:]]*:/ {
+                          sub(/^[[:space:]]*status[[:space:]]*:[[:space:]]*/, "")
+                          gsub(/^["'\'']|["'\'']$/, "")
+                          print tolower($0)
+                          exit
+                        }
+                      '
+                )"
+
+                if [[ "$status" == "draft" ]]; then
+                  echo "Skipping draft: $path"
+                  continue
+                fi
+              fi
+
+              mkdir -p "$STAGE_DIR/$(dirname "$path")"
+              git show "$VERSION:$path" > "$STAGE_DIR/$path"
+            done < <(git ls-tree -r --name-only "$VERSION" .double | grep '/machine-of-ideas/')
+
+            if [[ -z "$(find "$STAGE_DIR" -type f -print -quit)" ]]; then
+              echo "No files selected for Machine of Ideas release."
+              exit 1
+            fi
+
+            tar -C "$DIST_DIR/stage" -czf "$DIST_DIR/${RELEASE_NAME}.tar.gz" "$RELEASE_NAME"
+          else
+            echo "Unknown release kind: $RELEASE_KIND"
+            exit 1
+          fi
+
+          (cd "$DIST_DIR" && sha256sum *.tar.gz > SHA256SUMS.txt)
+
+          ls -l "$DIST_DIR"
+          cat "$DIST_DIR/SHA256SUMS.txt"
+          {
+            echo "package=$DIST_DIR/${RELEASE_NAME}.tar.gz"
+            echo "checksums=$DIST_DIR/SHA256SUMS.txt"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Create or update GitHub release
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          COMMIT_SHA="${{ steps.version.outputs.commit_sha }}"
+          RELEASE_KIND="${{ steps.version.outputs.release_kind }}"
+          RELEASE_NAME="${{ steps.version.outputs.release_name }}"
+          IS_PRERELEASE="${{ steps.version.outputs.is_prerelease }}"
+          PACKAGE="${{ steps.packages.outputs.package }}"
+          CHECKSUMS="${{ steps.packages.outputs.checksums }}"
+          BODY_FILE="$(mktemp)"
+
+          {
+            printf 'Release generated from Git tag `%s`.\n\n' "$VERSION"
+            printf 'Commit: `%s`\n\n' "$COMMIT_SHA"
+            printf 'Release type: `%s`\n\n' "$RELEASE_KIND"
+            printf 'Prerelease: `%s`\n\n' "$IS_PRERELEASE"
+            printf 'Artifacts:\n'
+            printf -- '- `%s.tar.gz`\n' "$RELEASE_NAME"
+            printf -- '- `SHA256SUMS.txt` contains artifact checksums\n'
+          } > "$BODY_FILE"
+
+          if gh release view "$VERSION" >/dev/null 2>&1; then
+            if [[ "$IS_PRERELEASE" == "true" ]]; then
+              gh release edit "$VERSION" \
+                --title "$RELEASE_NAME" \
+                --notes-file "$BODY_FILE" \
+                --verify-tag \
+                --prerelease
+            else
+              gh release edit "$VERSION" \
+                --title "$RELEASE_NAME" \
+                --notes-file "$BODY_FILE" \
+                --verify-tag
+            fi
+
+            gh release upload "$VERSION" \
+              "$PACKAGE" \
+              "$CHECKSUMS" \
+              --clobber
+          else
+            if [[ "$IS_PRERELEASE" == "true" ]]; then
+              gh release create "$VERSION" \
+                "$PACKAGE" \
+                "$CHECKSUMS" \
+                --title "$RELEASE_NAME" \
+                --notes-file "$BODY_FILE" \
+                --verify-tag \
+                --prerelease
+            else
+              gh release create "$VERSION" \
+                "$PACKAGE" \
+                "$CHECKSUMS" \
+                --title "$RELEASE_NAME" \
+                --notes-file "$BODY_FILE" \
+                --verify-tag
+            fi
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
