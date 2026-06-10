@@ -4,7 +4,7 @@ name: machine-of-ideas
 description: >
   Use this skill when the user clearly wants to capture, develop, inspect, continue, or advance an idea through the Machine of Ideas. Trigger on direct
   requests such as "I have an idea", "let's work on an idea", "run machine of ideas", "I've catch it, let's go", or when the user
-  asks to continue an existing idea artifact. Do not trigger on casual mentions of ideas inside unrelated technical discussion unless the user asks to enter the idea workflow.
+  asks to continue an existing idea artifact. Also trigger when the user asks to work on an idea clarification, sub-idea, mini-idea, `уточнение идеи`, `подидея`, `мини-идея`, or `миниидея`. Do not trigger on casual mentions of ideas inside unrelated technical discussion unless the user asks to enter the idea workflow.
 metadata:
   short-description: Formalize individual experience in working with ideas, knowledge, and system design into a reproducible process
 ---
@@ -22,6 +22,8 @@ The skill does not replace the workflow. The canonical process is defined in:
 Activate this skill when the user clearly wants to work with the Machine of Ideas, including:
 
 - capturing a new idea
+- capturing a clarification of an existing idea as a mini-idea
+- working on a sub-idea or mini-idea
 - continuing an existing idea
 - extracting concepts from an idea
 - synthesizing principles from an idea or concept artifact
@@ -29,6 +31,8 @@ Activate this skill when the user clearly wants to work with the Machine of Idea
 - asking what the next useful step is for an idea
 
 If the user's intent is only weakly implied, offer activation instead of silently entering the workflow.
+
+Requests to work on an idea clarification, sub-idea, or mini-idea should route to `01-idea-capture` with `.double/templates/machine-of-ideas/mini-idea-template.md`, after confirming the parent idea.
 
 Example:
 
@@ -52,6 +56,7 @@ workflow has confirmed:
 - current workflow step
 - interaction language
 - artifact language
+- selected output template
 - selected mode
 
 ## Loading Order

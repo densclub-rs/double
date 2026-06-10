@@ -27,7 +27,7 @@ cards, roles, modes, prompts, templates, or registries.
 - workflow: `machine-of-ideas-workflow`
 - workflow-definition: `.double/workflows/machine-of-ideas/machine-of-ideas-workflow.md`
 - registry-scope: `activation`, `routing`, `workflow-entry`
-- description: skill entry point for recognizing user intent to capture, continue, inspect, or advance an idea through the Machine of Ideas
+- description: skill entry point for recognizing user intent to capture, continue, inspect, or advance an idea through the Machine of Ideas, including idea clarifications, sub-ideas, and mini-ideas
 
 ## Usage Rule
 

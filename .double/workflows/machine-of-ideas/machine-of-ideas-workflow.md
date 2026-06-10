@@ -54,16 +54,17 @@ On startup, the agent should:
 6. Ask the user which language to use for final artifacts.
 7. If the user has already made either language choice explicit, confirm the detected choice instead of asking again.
 8. Determine the current step based on the confirmed target and the user request.
-9. If no step is specified and there are no input artifacts, select `01-idea-capture`.
-10. Find the agent card, associated role, allowed modes, and output artifact template for the selected step.
-11. Inspect the active artifact and relevant input artifacts for unresolved `Open Questions`.
-12. Inform the user of the current state, unresolved questions if any, selected languages, and available actions.
-13. Recommend the next useful action:
+9. If the user asks to work on a clarification of an existing idea, a sub-idea, or a mini-idea, select `01-idea-capture` and use the mini-idea template.
+10. If no step is specified and there are no input artifacts, select `01-idea-capture`.
+11. Find the agent card, associated role, allowed modes, and output artifact template for the selected step.
+12. Inspect the active artifact and relevant input artifacts for unresolved `Open Questions`.
+13. Inform the user of the current state, unresolved questions if any, selected languages, and available actions.
+14. Recommend the next useful action:
    - if unresolved open questions exist, suggest answering them before advancing
    - if no unresolved open questions block the current step and the current artifact satisfies the step contract, suggest transition to the next step
    - if the current step should continue, recommend a suitable mode and briefly explain why
-14. Ask the user to choose a mode or accept the recommended/default mode.
-15. Begin executing the step only after confirming the target idea, current step, interaction language, artifact language, and mode.
+15. Ask the user to choose a mode or accept the recommended/default mode.
+16. Begin executing the step only after confirming the target idea, current step, interaction language, artifact language, selected output template, and mode.
 
 ## Language Protocol
 
@@ -113,6 +114,18 @@ The source idea file remains the visible status surface for the idea's developme
 When the user starts work on a new idea and does not identify it as a sub-idea of an existing idea, the target is a root idea. A root idea artifact must be published directly under `ideas/` using the layout `ideas/<idea-id>/<idea-id>.md`.
 
 The agent must not place a new root idea inside a workflow, process, or topic directory such as `ideas/machine-of-ideas/`. A nested location is allowed only when the user explicitly says the new idea is a sub-idea or names the parent idea directory.
+
+## Mini-Idea Routing Rule
+
+When the user asks to work on an `idea clarification`, `clarification of an idea`, `sub-idea`, `mini-idea`, `mini idea`, the workflow should treat the request as work on a mini-idea inside a confirmed parent idea.
+
+The selected step is `01-idea-capture`, but the selected template is `.double/templates/machine-of-ideas/mini-idea-template.md` instead of the full idea template.
+
+The agent should confirm the parent idea before capture. If the parent idea can be inferred from the active artifact, editor context, or explicit user reference, present that inference as a working assumption and ask for confirmation or correction.
+
+A mini-idea is captured as its own artifact, but concept extraction and principle synthesis are routed back into the parent idea's concept and principle artifacts. The main idea does not need special metadata linking it to the mini-idea.
+
+If the mini-idea develops significant semantic mismatch with the parent idea, the agent should stop treating it as a mini-idea and ask the user whether to turn the material into a separate independent idea.
 
 ## New Idea Status Rule
 
@@ -250,15 +263,17 @@ The agent can:
 - required-inputs:
   - `raw-user-input`
   - `conversation-context`
-  - `idea-template`
+  - `idea-template` or `mini-idea-template`
 - produced-outputs:
   - `idea-artifact`
+  - `mini-idea-artifact` when the mini-idea template is selected
 - language-policy:
   - ask for interaction language before structured capture if not already clear
   - ask for artifact language before producing final Markdown
   - write `interaction-language` and `artifact-language` to frontmatter
 - template:
   - `.double/templates/machine-of-ideas/idea-template.md`
+  - `.double/templates/machine-of-ideas/mini-idea-template.md` when the user asks for an idea clarification, sub-idea, or mini-idea
 - entry-message-policy:
   - explain current step
   - show available modes

@@ -7,6 +7,8 @@ derived-from:
   - ideas/machine-of-ideas/machine-of-ideas.md
   - ideas/machine-of-ideas/machine-of-ideas-concepts.md#concept-human-clarification-loop
   - ideas/machine-of-ideas/machine-of-ideas-principles.md#principle-ask-and-integrate-open-questions
+  - ideas/machine-of-ideas/machine-of-ideas-concepts.md#concept-mini-idea
+  - ideas/machine-of-ideas/machine-of-ideas-principles.md#principle-route-mini-ideas-through-parent-artifacts
 ---
 
 # Role: Idea Capture
@@ -34,6 +36,7 @@ Help the user articulate an idea in a structured Markdown format without prematu
 - formulate the final artifact in the selected artifact language
 - treat requests to change process behavior, workflow behavior, prompts, templates, modes, roles, agents, or registries as `.double/` working-catalog changes
 - treat requests to change a specific idea artifact as `ideas/` artifact changes
+- treat requests to work on an idea clarification, `уточнение идеи`, sub-idea, `подидея`, mini-idea, or `миниидея` as `Idea Capture` using the mini-idea template
 - if the intended edit target is ambiguous, state the assumed target before editing
 - ask clarifying questions when there is insufficient context
 - move step by step
@@ -71,6 +74,8 @@ Placement rule:
 - when starting work on a new root idea, the idea directory must be created directly under `ideas/` as `ideas/<idea-id>/`
 - a new root idea must not be placed inside a workflow, topic, or process directory such as `ideas/machine-of-ideas/`
 - only a sub-idea may be created inside another idea directory, and only when the user explicitly identifies it as a sub-idea or names the parent idea
+- when the user asks for an idea clarification, sub-idea, or mini-idea, use `.double/templates/machine-of-ideas/mini-idea-template.md` and confirm the parent idea before capture
+- do not treat a mini-idea as a normal candidate for promotion into an independent idea; if it significantly diverges from the parent idea, stop and ask the user whether it should become a separate idea
 
 Status rule:
 
@@ -80,7 +85,7 @@ Status rule:
 For `Idea Capture`, these rules apply directly to the formation of the two main results of the step:
 
 - directory of the new idea as a working space
-- main Markdown note with a description of the idea according to the canonical template
+- main Markdown note with a description of the idea according to the canonical template, or mini-idea template when the request is parent-scoped
 
 ## Strict Constraints
 

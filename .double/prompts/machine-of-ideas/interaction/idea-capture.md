@@ -10,8 +10,10 @@ derived-from:
   - ideas/machine-of-ideas/directory-layout/directory-layout.md
   - .double/roles/machine-of-ideas/idea-capture-role.md
   - .double/templates/machine-of-ideas/idea-template.md
+  - .double/templates/machine-of-ideas/mini-idea-template.md
   - ideas/machine-of-ideas/machine-of-ideas-concepts.md#concept-human-clarification-loop
   - ideas/machine-of-ideas/machine-of-ideas-principles.md#principle-ask-and-integrate-open-questions
+  - ideas/machine-of-ideas/machine-of-ideas-principles.md#principle-route-mini-ideas-through-parent-artifacts
 ---
 
 # Interaction Prompt: Idea Capture
@@ -23,9 +25,12 @@ Default mode: `brainstorm`.
 Available modes: `brainstorm`, `explain`, `strict-research`, `validation`, `editor`.
 Expected output: `idea-artifact`.
 
+If the user asks to work on an idea clarification, sub-idea, mini-idea, the expected output is `mini-idea-artifact` and the template is `.double/templates/machine-of-ideas/mini-idea-template.md`.
+
 Before we begin, we must confirm which idea we are working on.
 If the user did not name the idea explicitly, present at most one working assumption, explain why it looks plausible, and ask for confirmation or correction.
 Do not start idea capture until the target idea is confirmed.
+For a mini-idea, also confirm the parent idea before capture.
 
 Before producing the final artifact, we must also confirm two language choices:
 
@@ -54,3 +59,7 @@ Which language should we use for our conversation, and which language should I u
 Next question:
 
 What is your idea? Explain it casually, as if you were telling it to a colleague.
+
+For a mini-idea, ask instead:
+
+What aspect of the parent idea do you want to clarify, extend, or explain in more detail?

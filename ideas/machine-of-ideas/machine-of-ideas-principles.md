@@ -11,6 +11,7 @@ derived-from:
   - ideas/machine-of-ideas/machine-of-ideas.md
   - ideas/machine-of-ideas/machine-of-ideas-concepts.md
   - ideas/machine-of-ideas/principle-synthesis/principle-synthesis.md
+  - ideas/machine-of-ideas/mini-idea/mini-idea.md
 ---
 
 # Principle Artifact: Machine of Ideas
@@ -25,7 +26,7 @@ derived-from:
 
 ## 2. Principle Synthesis Summary
 
-The `Machine of Ideas` is guided by a small set of principles that protect the movement from living thought to structured artifacts. The central normative structure is: preserve the source context, transform ideas gradually, keep conceptual layers distinct, make every derived artifact traceable, use human clarification where the artifact needs it, support multilingual artifact formation, and allow the machine to evolve without losing continuity.
+The `Machine of Ideas` is guided by a small set of principles that protect the movement from living thought to structured artifacts. The central normative structure is: preserve the source context, transform ideas gradually, keep conceptual layers distinct, make every derived artifact traceable, use human clarification where the artifact needs it, support multilingual artifact formation, route mini ideas back through their parent artifacts, and allow the machine to evolve without losing continuity.
 
 These principles are not requirements, tasks, architecture, or implementation design. Within the machine-of-ideas workflow, formulated principles are the final stage of idea elaboration. They become the basis for forming specifications in other projects that implement SDD methodology, while the integration with those projects can itself be developed through this machine.
 
@@ -363,6 +364,58 @@ The machine works with unfinished thought. Some uncertainty should remain open, 
 - How should artifacts distinguish answers integrated into content from answers kept as explicit resolved questions?
 - Which questions are important enough to block transition to the next workflow stage?
 
+<a id="principle-route-mini-ideas-through-parent-artifacts"></a>
+
+### Principle: Route Mini-Ideas Through Parent Artifacts
+
+Principle id: `principle-route-mini-ideas-through-parent-artifacts`
+
+#### Statement
+
+When the user works on a mini-idea or sub-idea, the machine should use a dedicated mini-idea template for capture, then route concept extraction and principle synthesis back into the corresponding parent idea's concept and principle artifacts.
+
+#### Derived From
+
+- Source concepts: [Mini Idea](./machine-of-ideas-concepts.md#concept-mini-idea), [Artifact Contract](./machine-of-ideas-concepts.md#concept-artifact-contract), [Traceability](./machine-of-ideas-concepts.md#concept-traceability), [Human Clarification Loop](./machine-of-ideas-concepts.md#concept-human-clarification-loop)
+- Source relationship, boundary, or tension: small additions need their own source context, but parent ideas need coherent concept and principle surfaces
+- Source idea support: `ideas/machine-of-ideas/mini-idea/mini-idea.md` states that `mini-idea` and `sub-idea` are synonyms, that a dedicated template should be used, and that later synthesis should update parent artifacts
+- Explicit or inferred: explicit after mini-idea refinement
+
+#### Rationale
+
+Mini-ideas are valuable because they let the user develop a focused aspect without rebuilding the whole idea. If each mini-idea automatically produced separate concept and principle artifacts, the parent idea would fragment. If the mini-idea had no artifact, the local source context would disappear. Routing keeps both needs intact: the mini-idea preserves the focused discussion, while parent artifacts remain the conceptual and principled source of truth.
+
+#### Implications Without Implementation
+
+- The machine should automatically choose the mini-idea template when the user says they are working on a mini-idea or sub-idea.
+- The terms `mini-idea` and `sub-idea` should be treated as synonyms.
+- When the user says the mini-idea work is finished, concept and principle synthesis should use the parent idea's corresponding artifacts as integration targets.
+- Parent concept and principle artifacts should cite the mini-idea when they incorporate material from it.
+- Answers to mini-idea open questions may rewrite sections of the parent concept or principle artifacts when they change parent-level understanding.
+- The machine should explicitly tell the user when a mini-idea answer or unresolved question affects a parent artifact, including which parent artifact or section changed.
+- The main idea should not need special metadata that links it to mini-ideas; mini-ideas are treated as parts, additions, and detailed explanations of aspects of the whole.
+- If the mini-idea develops a significant semantic mismatch with the parent idea, the machine should stop working on it as a mini-idea, alert the user, and propose turning it into a separate independent idea.
+- Semantic mismatch should be judged through several signals: low semantic closeness between the parent idea artifact and the mini-idea artifact, more open questions in the mini-idea than in the parent idea, and the user's difficulty answering mini-idea questions when unresolved questions exceed the parent idea's unresolved question load.
+
+#### Boundaries
+
+- This principle does not require every mini-idea to change parent concepts or principles.
+- It does not treat mini-ideas as normal candidates for promotion into independent ideas.
+- It does not require parent-idea metadata for tracking mini-idea links.
+- It does not make parent rewrites silent or implicit.
+
+#### Anti-Patterns
+
+- Creating separate peer concept and principle artifacts for every mini-idea by default.
+- Treating `sub-idea` as a separate workflow type from `mini-idea` without user intent.
+- Updating parent concept or principle artifacts from a mini-idea without citing the mini-idea.
+- Letting a mini-idea answer change the parent idea while failing to tell the user what changed.
+- Continuing to develop a mini-idea as part of the parent idea after it has materially diverged from the parent's meaning.
+
+#### Questions
+
+- How should these semantic mismatch signals be measured or compared in practice without turning them into rigid automatic decisions?
+
 <a id="principle-stabilize-roles-vary-modes"></a>
 
 ### Principle: Stabilize Roles, Vary Modes
@@ -616,6 +669,11 @@ Ask and Integrate Open Questions
   -> depends on Keep Layers Distinct
   -> strengthens Make Artifacts Contractual
 
+Route Mini-Ideas Through Parent Artifacts
+  -> depends on Preserve Source Context and Make Artifacts Contractual
+  -> uses Ask and Integrate Open Questions when mini-idea answers affect parent artifacts
+  -> protects Keep Layers Distinct by preventing unnecessary concept and principle fragmentation
+
 Separate Interaction and Artifact Language
   -> extends Prefer Subjective Fit Over Methodological Purity
   -> strengthens Make Artifacts Contractual
@@ -636,6 +694,7 @@ Prefer Subjective Fit Over Methodological Purity
 - `Make Artifacts Contractual` provides stability, but too much contract pressure can damage `Preserve Productive Tension`.
 - `Use Stable Addressable Units` improves precision and catalogability, but it creates responsibility for id stability and id-change policy.
 - `Ask and Integrate Open Questions` improves grounding in human judgment, but too many questions can slow the current stage or overburden the user.
+- `Route Mini-Ideas Through Parent Artifacts` keeps parent concepts and principles coherent, but it creates maintenance responsibility when small focused answers rewrite parent-level sections.
 - `Separate Interaction and Artifact Language` supports subjective fit and collaboration, but it adds an explicit setup choice before artifact generation.
 - `Stabilize Roles, Vary Modes` protects stage identity, but real user requests may intentionally mix stages.
 - `Separate Operational Machinery From Project Understanding` improves readability, but it creates maintenance work to keep both layers connected.
@@ -654,6 +713,7 @@ Prefer Subjective Fit Over Methodological Purity
 - Define validation rules for `interaction-language` and `artifact-language` metadata in idea, concept, and principle artifacts.
 - Explore language migration rules for older artifacts that do not yet declare their artifact language.
 - Investigate validation methods that check traceability and layer boundaries without forcing premature closure.
+- Define registry and routing rules for automatic mini-idea template selection and parent artifact integration.
 
 ## 8. Rejected or Deferred Candidate Principles
 
@@ -687,6 +747,22 @@ Prefer Subjective Fit Over Methodological Purity
   - Answer: excess formalization is acceptable within the machine of ideas when the person developing the idea chooses it.
   - Consequence: artifact contracts do not need to optimize for the lightest possible structure; they should remain human-readable and honest about unresolved content.
   - Boundary: the machine should not impose strictness as doctrine when a lighter form better fits the idea or the person working with it.
+- How should mini-ideas or sub-ideas be routed?
+  - Answer: `mini-idea` and `sub-idea` are synonyms in this model; both use the dedicated mini-idea template and route later concept and principle synthesis into the parent idea's artifacts.
+  - Consequence: focused work can affect parent concepts and principles without creating unnecessary peer artifacts.
+  - Boundary: parent artifact changes must be explicitly reported to the user.
+- What metadata should record parent integration targets and affected parent sections?
+  - Answer: no special metadata should be added to the main idea for links to mini-ideas.
+  - Consequence: mini-ideas are treated as parts of the whole: additions and detailed explanations of aspects of the parent idea.
+  - Boundary: parent-level changes still need to be explicitly reported to the user, but not encoded as special parent metadata.
+- What exact promotion rule should turn a mini-idea into a fully independent idea?
+  - Answer: a mini-idea is not normally a candidate for promotion into an independent idea.
+  - Consequence: if a mini-idea significantly stops matching the meaning of the parent idea, work on it as a mini-idea should stop and the user should be asked whether to turn it into a separate independent idea.
+  - Boundary: semantic mismatch is a stop-and-ask signal, not an automatic conversion.
+- How should the machine judge that a semantic mismatch between a mini-idea and its parent idea is significant enough to stop and ask the user?
+  - Answer: use a combination of signals: semantic closeness between parent and mini-idea artifacts, whether the mini-idea has more open questions than the parent idea, and whether the user has difficulty answering mini-idea questions while unresolved mini-idea questions outnumber unresolved parent questions.
+  - Consequence: mismatch assessment combines meaning comparison with the practical state of clarification work.
+  - Boundary: these criteria should guide attention and user escalation, not silently decide that the mini-idea has become independent.
 - What practical mechanism should distinguish ordinary edits from structural evolution of the machine?
   - Answer: structural evolution must happen through the developed workflow of the machine of ideas itself.
   - Consequence: the expected artifacts of that process are the sign of mature evolution.

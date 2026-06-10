@@ -11,6 +11,7 @@ derived-from:
   - ideas/machine-of-ideas/machine-of-ideas.md
   - ideas/machine-of-ideas/directory-layout/directory-layout.md
   - ideas/machine-of-ideas/concept-extraction/concept-extraction.md
+  - ideas/machine-of-ideas/mini-idea/mini-idea.md
 ---
 
 # Concept Artifact: Machine of Ideas
@@ -36,7 +37,7 @@ The concept set is valid as a first concept artifact for `Machine of Ideas`. It 
 
 `Machine of Ideas` is a transformation system for thought. It takes raw or polished material through stages of clarification and produces artifacts that can become input for later stages.
 
-The main conceptual pattern is a layered working machine: human-readable project documentation, operational working forms, stage-specific agents, roles, modes, human clarification loops, multilingual artifact formation, and artifacts all participate in one process as distinct concepts.
+The main conceptual pattern is a layered working machine: human-readable project documentation, operational working forms, stage-specific agents, roles, modes, human clarification loops, multilingual artifact formation, mini ideas, and artifacts all participate in one process as distinct concepts.
 
 Each core concept has a stable explicit id and matching explicit anchor. These ids make concepts usable in catalogs and referable from principle artifacts, specifications, and other ideas without depending on automatically generated heading anchors.
 
@@ -109,6 +110,41 @@ It is the first stable public form of the idea and a source for later conceptual
 - It is not a concept artifact.
 - It is not a specification or implementation plan.
 - It may preserve ambiguity when ambiguity remains meaningful.
+
+<a id="concept-mini-idea"></a>
+
+### Concept: Mini Idea
+
+Concept id: `concept-mini-idea`
+
+#### Definition
+
+A focused idea fragment inside a parent idea that has its own lighter idea artifact while routing later concept and principle work back into the parent idea's concept and principle artifacts. In this model, `mini-idea` and `sub-idea` are synonyms for the same concept.
+
+#### Source in Idea
+
+- Explicit in `ideas/machine-of-ideas/mini-idea/mini-idea.md`.
+- Supported by the need to develop small additions without fragmenting the parent idea's concept and principle layers.
+- `Mini-idea` and `sub-idea` are treated as synonyms for this concept.
+
+#### Role in the Idea
+
+It gives the machine a light but traceable form for working on one aspect of an existing idea. The mini-idea keeps local source context, while parent concept and principle artifacts remain the main publication surfaces for conceptual and principled synthesis.
+
+#### Related Concepts
+
+- `Idea Artifact`
+- `Artifact Contract`
+- `Traceability`
+- `Human Clarification Loop`
+
+#### Boundaries
+
+- It is not a fully independent idea by default.
+- It is not normally a candidate for promotion into a fully independent idea.
+- It does not automatically produce separate peer concept and principle artifacts.
+- It does not hide parent-level impact; changes to parent concepts or principles must be reported explicitly to the user.
+- If its meaning significantly diverges from the parent idea, work should stop and the user should be asked whether the material should become a separate independent idea.
 
 <a id="concept-workflow-stage"></a>
 
@@ -568,6 +604,7 @@ The workflow sequence is held together by these relations:
 - `Role` stabilizes the responsibility of a `Stage Agent`.
 - `Mode` changes execution style without changing the role or stage.
 - `Artifact Contract` gives each output a reusable form.
+- `Mini Idea` gives small additions a lighter artifact while routing concept and principle synthesis back into the parent idea.
 - `Multilingual Artifact Form` separates the language of dialogue from the language of produced artifacts.
 - `Registry` makes operational components discoverable.
 - `Operational Workspace` stores the executable working form of the machine.
@@ -577,6 +614,8 @@ The workflow sequence is held together by these relations:
 - `Transition Condition` controls movement between stages.
 - `Self-Evolving Working Form` names the machine's ability to change its own forms.
 - `Human Clarification Loop` names the process by which open questions are asked to the human and answered inside the active artifact.
+
+In the mini-idea variant, answers to open questions may affect the parent idea's concept or principle artifacts. When that happens, the parent artifact remains the integration target and the mini-idea remains a cited source.
 
 ## 7. Entities and Terms
 
@@ -591,6 +630,7 @@ These terms are important in the source corpus but are not treated here as core 
 - `concept-extraction-agent`: a concrete agent instance.
 - `principle-synthesis-agent`: a concrete agent instance.
 - `concept-template.md`: a concrete template file.
+- `mini-idea-template.md`: a concrete template file for mini ideas.
 - `principle-template.md`: a concrete template file.
 - `.double/drafts`: a concrete draft directory.
 - `workflow-version: 0.1.0`: current version marker, not a concept by itself.

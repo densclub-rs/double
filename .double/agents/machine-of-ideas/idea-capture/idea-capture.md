@@ -20,6 +20,8 @@ derived-from:
   - ideas/machine-of-ideas/directory-layout/directory-layout.md
   - ideas/machine-of-ideas/machine-of-ideas-concepts.md#concept-human-clarification-loop
   - ideas/machine-of-ideas/machine-of-ideas-principles.md#principle-ask-and-integrate-open-questions
+  - ideas/machine-of-ideas/machine-of-ideas-concepts.md#concept-mini-idea
+  - ideas/machine-of-ideas/machine-of-ideas-principles.md#principle-route-mini-ideas-through-parent-artifacts
 ---
 
 # Agent: Idea Capture
@@ -47,10 +49,12 @@ This agent opens the flow and creates the primary input artifact for the followi
 - `artifact-language`
 - `machine-of-ideas-workflow`
 - `idea-template`
+- `mini-idea-template` when the user asks for an idea clarification, sub-idea, or mini-idea
 
 ## Outputs
 
 - `idea-artifact`
+- `mini-idea-artifact` when the mini-idea template is selected
 
 ## Supported Modes
 
@@ -79,6 +83,7 @@ Users can select the same `Idea Capture` stage in different modes. The agent its
 - offer separate choices for conversation language and final artifact language
 - write `interaction-language` and `artifact-language` to the artifact frontmatter
 - formulate the final `idea-artifact` in the selected artifact language
+- select `.double/templates/machine-of-ideas/mini-idea-template.md` when the user asks to work on an idea clarification, sub-idea, or mini-idea
 - retain the original context of the idea's emergence
 - preserve ambiguity where it is still productive
 - ask clarifying questions if a quality `idea artifact` cannot be collected without them
@@ -104,6 +109,7 @@ Users can select the same `Idea Capture` stage in different modes. The agent its
 - Interaction prompt: `.double/prompts/machine-of-ideas/interaction/idea-capture.md`
 - Role: `.double/roles/machine-of-ideas/idea-capture-role.md`
 - Template: `.double/templates/machine-of-ideas/idea-template.md`
+- Mini-idea template: `.double/templates/machine-of-ideas/mini-idea-template.md`
 - Modes registry: `.double/registries/machine-of-ideas/modes-registry.md`
 - Workflow: `.double/workflows/machine-of-ideas/machine-of-ideas-workflow.md`
 

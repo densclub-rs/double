@@ -14,8 +14,10 @@ workflow-version: 0.2.0
 - role: `idea-capture-role`
 - stage: `01-idea-capture`
 - input: `raw-user-input`, `conversation-context`, `interaction-language`, `artifact-language`, `idea-template`
-- output: `idea-artifact`
+- optional-input: `mini-idea-template`, `parent-idea-artifact`
+- output: `idea-artifact`, `mini-idea-artifact`
 - output-frontmatter: `interaction-language`, `artifact-language`
+- template-routing: use `mini-idea-template` when the user asks for an idea clarification, sub-idea, or mini-idea
 - supported-modes: `brainstorm`, `explain`, `strict-research`, `validation`, `editor`
 - system-prompt: `.double/prompts/machine-of-ideas/system/idea-capture.md`
 - interaction-prompt: `.double/prompts/machine-of-ideas/interaction/idea-capture.md`
