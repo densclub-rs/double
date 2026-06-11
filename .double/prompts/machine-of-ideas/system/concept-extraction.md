@@ -1,4 +1,5 @@
 ---
+style: double
 submodule: machine-of-ideas
 id: concept-extraction-system-prompt
 kind: prompt

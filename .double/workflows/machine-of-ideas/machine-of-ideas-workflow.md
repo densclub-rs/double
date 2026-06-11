@@ -1,4 +1,5 @@
 ---
+style: double
 submodule: machine-of-ideas
 id: machine-of-ideas-workflow
 kind: workflow

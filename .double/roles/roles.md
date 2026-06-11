@@ -1,4 +1,5 @@
 ---
+style: double
 mindmap-plugin: basic
 ---
 

@@ -12,6 +12,7 @@ derived-from:
   - ideas/machine-of-ideas/directory-layout/directory-layout.md
   - ideas/machine-of-ideas/concept-extraction/concept-extraction.md
   - ideas/machine-of-ideas/mini-idea/mini-idea.md
+  - ideas/machine-of-ideas/styles/styles.md
 ---
 
 # Concept Artifact: Machine of Ideas
@@ -37,7 +38,7 @@ The concept set is valid as a first concept artifact for `Machine of Ideas`. It 
 
 `Machine of Ideas` is a transformation system for thought. It takes raw or polished material through stages of clarification and produces artifacts that can become input for later stages.
 
-The main conceptual pattern is a layered working machine: human-readable project documentation, operational working forms, stage-specific agents, roles, modes, human clarification loops, multilingual artifact formation, mini ideas, and artifacts all participate in one process as distinct concepts.
+The main conceptual pattern is a layered working machine: human-readable project documentation, operational working forms, stage-specific agents, roles, modes, styles, human clarification loops, multilingual artifact formation, mini ideas, and artifacts all participate in one process as distinct concepts.
 
 Each core concept has a stable explicit id and matching explicit anchor. These ids make concepts usable in catalogs and referable from principle artifacts, specifications, and other ideas without depending on automatically generated heading anchors.
 
@@ -66,7 +67,7 @@ A reproducible and mutable process for turning raw thoughts, observations, and c
 
 #### Role in the Idea
 
-This is the umbrella concept that gives the other concepts their place. It explains why stages, agents, roles, modes, templates, and artifacts belong to one system rather than to disconnected practices.
+This is the umbrella concept that gives the other concepts their place. It explains why stages, agents, roles, modes, styles, templates, and artifacts belong to one system rather than to disconnected practices.
 
 #### Related Concepts
 
@@ -225,12 +226,13 @@ A stable responsibility model behind an agent, defining its mission, working def
 
 #### Role in the Idea
 
-It separates an agent's responsibility model from a particular execution style.
+It separates an agent's responsibility model from a particular mode, style, or execution emphasis.
 
 #### Related Concepts
 
 - `Stage Agent`
 - `Mode`
+- `Style`
 - `Boundary Discipline`
 
 #### Boundaries
@@ -263,12 +265,54 @@ It lets the same stage be performed with different cognitive or service behavior
 - `Stage Agent`
 - `Role`
 - `Workflow Stage`
+- `Style`
 
 #### Boundaries
 
 - A mode is not a role.
 - A mode is not a stage.
 - A mode is not the artifact produced by a stage.
+- A mode is not a style; it changes the execution lens of a stage, while style changes the expressive and configurable manner in which workflow work is mediated.
+
+<a id="concept-style"></a>
+
+### Concept: Style
+
+Concept id: `concept-style`
+
+#### Definition
+
+A reusable and exchangeable fine-tuning layer that adapts how the `Machine of Ideas` communicates, asks, structures, prompts, and configures its working forms for a person, group, or context while preserving the underlying workflow contract.
+
+#### Source in Idea
+
+- Explicit in `ideas/machine-of-ideas/styles/styles.md`.
+- Supported by the root idea's emphasis on subjective fit, personal knowledge work, and adaptation without turning the machine into a fixed doctrine.
+- Related to the current `double` style expressed by the existing `.double/` working catalog.
+
+#### Role in the Idea
+
+It gives personal or collective adaptation a visible conceptual place. A style can shape tone, degree of formality, model temperature or associative freedom, prompts, templates, roles, agents, and artifact expression, but it should not replace the core workflow, stage sequence, or transition logic.
+
+Styles can be formulated, reused, shared, adapted, or used as source material for new styles. The machine may later include a dedicated mode or working path for helping a person create their own style.
+
+#### Related Concepts
+
+- `Idea Machine`
+- `Workflow Stage`
+- `Mode`
+- `Role`
+- `Artifact Contract`
+- `Self-Evolving Working Form`
+
+#### Boundaries
+
+- A style is not a workflow stage.
+- A style is not a mode; it does not change the kind of work being performed in a stage.
+- A style is not an output format such as PDF, HTML, Markdown, or JSON.
+- A style does not override the core workflow contract of the `Machine of Ideas`.
+- Style inheritance is not yet a technical inheritance mechanism; an existing style may serve as source material for forming a new style.
+- The concrete storage layout, loading rules, validation rules, and exchange mechanism for styles belong to later design or specification work.
 
 <a id="concept-multilingual-artifact-form"></a>
 
@@ -602,7 +646,8 @@ The workflow sequence is held together by these relations:
 - `Workflow Stage` defines a layer of work in the process.
 - `Stage Agent` executes a `Workflow Stage`.
 - `Role` stabilizes the responsibility of a `Stage Agent`.
-- `Mode` changes execution style without changing the role or stage.
+- `Mode` changes the execution lens of a stage without changing the role or stage.
+- `Style` fine-tunes the expressive and configurable manner of workflow work while preserving the workflow contract.
 - `Artifact Contract` gives each output a reusable form.
 - `Mini Idea` gives small additions a lighter artifact while routing concept and principle synthesis back into the parent idea.
 - `Multilingual Artifact Form` separates the language of dialogue from the language of produced artifacts.
@@ -626,6 +671,7 @@ These terms are important in the source corpus but are not treated here as core 
 - `strict-research`: a concrete mode instance.
 - `validation`: a concrete mode instance and the current execution mode.
 - `editor`: a concrete mode instance.
+- `double`: the current default style name for the existing Double working form.
 - `idea-capture-agent`: a concrete agent instance.
 - `concept-extraction-agent`: a concrete agent instance.
 - `principle-synthesis-agent`: a concrete agent instance.
@@ -636,6 +682,7 @@ These terms are important in the source corpus but are not treated here as core 
 - `workflow-version: 0.1.0`: current version marker, not a concept by itself.
 - `interaction-language`: a frontmatter field that records the dialogue language selected for a run.
 - `artifact-language`: a frontmatter field that records the language selected for the produced artifact.
+- `PDF`, `HTML`, `Markdown`, and `JSON`: output or representation formats, not styles in this concept artifact.
 
 ## 8. Notes for Principle Synthesis
 

@@ -12,6 +12,7 @@ derived-from:
   - ideas/machine-of-ideas/machine-of-ideas-concepts.md
   - ideas/machine-of-ideas/principle-synthesis/principle-synthesis.md
   - ideas/machine-of-ideas/mini-idea/mini-idea.md
+  - ideas/machine-of-ideas/styles/styles.md
 ---
 
 # Principle Artifact: Machine of Ideas
@@ -26,7 +27,7 @@ derived-from:
 
 ## 2. Principle Synthesis Summary
 
-The `Machine of Ideas` is guided by a small set of principles that protect the movement from living thought to structured artifacts. The central normative structure is: preserve the source context, transform ideas gradually, keep conceptual layers distinct, make every derived artifact traceable, use human clarification where the artifact needs it, support multilingual artifact formation, route mini ideas back through their parent artifacts, and allow the machine to evolve without losing continuity.
+The `Machine of Ideas` is guided by a small set of principles that protect the movement from living thought to structured artifacts. The central normative structure is: preserve the source context, transform ideas gradually, keep conceptual layers distinct, make every derived artifact traceable, use human clarification where the artifact needs it, support multilingual artifact formation, route mini ideas back through their parent artifacts, support exchangeable styles without overriding workflow contracts, and allow the machine to evolve without losing continuity.
 
 These principles are not requirements, tasks, architecture, or implementation design. Within the machine-of-ideas workflow, formulated principles are the final stage of idea elaboration. They become the basis for forming specifications in other projects that implement SDD methodology, while the integration with those projects can itself be developed through this machine.
 
@@ -424,12 +425,12 @@ Principle id: `principle-stabilize-roles-vary-modes`
 
 #### Statement
 
-An agent's role should preserve the responsibility and boundary of a stage, while modes may vary the style of execution without changing what stage is being performed.
+An agent's role should preserve the responsibility and boundary of a stage, while modes may vary the execution lens without changing what stage is being performed.
 
 #### Derived From
 
 - Source concepts: [Stage Agent](./machine-of-ideas-concepts.md#concept-stage-agent), [Role](./machine-of-ideas-concepts.md#concept-role), [Mode](./machine-of-ideas-concepts.md#concept-mode), [Workflow Stage](./machine-of-ideas-concepts.md#concept-workflow-stage)
-- Source relationship, boundary, or tension: different cognitive styles are useful, but stage identity must remain stable
+- Source relationship, boundary, or tension: different execution lenses are useful, but stage identity must remain stable
 - Source idea support: the machine is conceived as agents, roles, and modes activated at stages of an idea-management flow
 - Explicit or inferred: inferred from the operational concept structure
 
@@ -440,7 +441,7 @@ The machine needs flexibility without losing orientation. Modes let the same sta
 #### Implications Without Implementation
 
 - Future agents should make their stage responsibility explicit.
-- Mode changes should affect behavior, tone, emphasis, or rigor, not the underlying stage boundary.
+- Mode changes should affect behavior, emphasis, or rigor, not the underlying stage boundary.
 - A future interface may expose mode switching, but the principle does not prescribe how.
 
 #### Boundaries
@@ -641,6 +642,58 @@ The machine is grounded in an individual and potentially collective practice of 
 - How can the machine support multiple people without erasing individual working styles?
 - Which parts of the workflow should be customizable, and which should remain stable?
 
+<a id="principle-support-exchangeable-styles"></a>
+
+### Principle: Support Exchangeable Styles Without Overriding Workflow Contracts
+
+Principle id: `principle-support-exchangeable-styles`
+
+#### Statement
+
+The machine should allow people and groups to create, reuse, exchange, and adapt styles that fine-tune how the machine works with them, while preserving the core workflow contract of the `Machine of Ideas`.
+
+#### Derived From
+
+- Source concepts: [Style](./machine-of-ideas-concepts.md#concept-style), [Workflow Stage](./machine-of-ideas-concepts.md#concept-workflow-stage), [Mode](./machine-of-ideas-concepts.md#concept-mode), [Artifact Contract](./machine-of-ideas-concepts.md#concept-artifact-contract), [Self-Evolving Working Form](./machine-of-ideas-concepts.md#concept-self-evolving-working-form)
+- Source relationship, boundary, or tension: the machine should fit individual and collective working preferences without turning every adaptation into a different workflow
+- Source idea support: `ideas/machine-of-ideas/styles/styles.md` defines style as a fine-tuning layer that preserves workflow contracts, remains distinct from modes, is exchangeable, and is not an output format
+- Explicit or inferred: explicit after style mini-idea refinement
+
+#### Rationale
+
+The machine should not force every person or group to work in the same tone, degree of formality, prompting style, or artifact expression. At the same time, if style changes could replace the workflow itself, the machine would lose the continuity that makes its artifacts comparable and traceable. Exchangeable styles preserve adaptation while keeping the underlying workflow recognizable.
+
+#### Implications Without Implementation
+
+- Future workflow runs may ask which style should shape subsequent work.
+- A style may affect tone, formality, model temperature or associative freedom, prompts, templates, roles, agents, and artifact expression.
+- A style must preserve the stage identity, transition logic, and workflow contract of the machine.
+- Styles should be reusable and adaptable by other people or projects.
+- A future mode or working path may help a person formulate their own style.
+- Existing styles may serve as source material for new styles.
+- Concrete storage, loading, validation, and exchange mechanisms for styles should be defined in later design or specification work.
+
+#### Boundaries
+
+- This principle does not define a directory layout or style registry.
+- It does not define a technical inheritance mechanism for styles.
+- It does not make output formats such as PDF, HTML, Markdown, or JSON into styles.
+- It does not permit style to override the core workflow or replace workflow transition conditions.
+- It does not replace modes; styles and modes are separate dimensions of workflow execution.
+
+#### Anti-Patterns
+
+- Treating a personal preference change as a forked workflow when the workflow contract remains the same.
+- Letting a style silently change the stage sequence or transition conditions.
+- Calling an output format a style.
+- Making styles private untraceable edits that cannot be reused, compared, or adapted.
+- Treating inheritance between styles as a settled technical mechanism before the implementation layer exists.
+
+#### Questions
+
+- What later design artifact should define the storage, loading, and validation rules for styles?
+- What is the practical minimum style contract that allows safe exchange between projects?
+
 ## 5. Principle Map
 
 ```text
@@ -686,6 +739,11 @@ Separate Operational Machinery From Project Understanding
 Prefer Subjective Fit Over Methodological Purity
   -> motivates Evolve Traceably
   -> limits rigid use of any fixed method
+
+Support Exchangeable Styles Without Overriding Workflow Contracts
+  -> extends Prefer Subjective Fit Over Methodological Purity
+  -> depends on Stabilize Roles, Vary Modes
+  -> must preserve Make Artifacts Contractual and Transform Gradually
 ```
 
 ## 6. Trade-offs and Tensions
@@ -699,6 +757,7 @@ Prefer Subjective Fit Over Methodological Purity
 - `Stabilize Roles, Vary Modes` protects stage identity, but real user requests may intentionally mix stages.
 - `Separate Operational Machinery From Project Understanding` improves readability, but it creates maintenance work to keep both layers connected.
 - `Prefer Subjective Fit Over Methodological Purity` supports personal adaptation, but it must be balanced against traceability and reproducibility.
+- `Support Exchangeable Styles Without Overriding Workflow Contracts` supports personal and group adaptation, but it must not turn style variation into hidden workflow forks.
 - `Evolve Traceably` allows change, but future stages must decide how much change requires versioning.
 
 ## 7. Candidate Inputs for Future Stages
@@ -714,12 +773,15 @@ Prefer Subjective Fit Over Methodological Purity
 - Explore language migration rules for older artifacts that do not yet declare their artifact language.
 - Investigate validation methods that check traceability and layer boundaries without forcing premature closure.
 - Define registry and routing rules for automatic mini-idea template selection and parent artifact integration.
+- Define a later style design or specification artifact for style storage, loading, validation, exchange, and minimum compatibility contracts.
+- Explore a future mode or working path that helps a person formulate their own style.
 
 ## 8. Rejected or Deferred Candidate Principles
 
 - `Use Markdown Everywhere`: deferred because Markdown is currently assumed and valuable, but the principle should be readability and traceability rather than one fixed format.
 - `Use Agents as the Only Execution Model`: rejected as too implementation-specific; the principle is role and stage discipline, not a mandatory runtime form.
 - `Keep the Current Directory Layout`: rejected as too concrete; the principle is separation and connection between project understanding and operational machinery.
+- `Treat Output Format as Style`: rejected because PDF, HTML, Markdown, JSON, and similar forms are artifact representation or export formats rather than styles of working through the machine.
 - `Automate Validation`: deferred because validation is a plausible future stage or tool, but not yet a principle of the idea itself.
 - `Publish Everything Publicly`: deferred because public artifacts are valuable, but the source idea does not require every working artifact to be public.
 - `Use One Canonical Language`: rejected because the machine should support the user's thinking language and the artifact's intended-use language as separate choices.

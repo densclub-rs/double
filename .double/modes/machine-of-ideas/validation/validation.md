@@ -1,4 +1,5 @@
 ---
+style: double
 submodule: machine-of-ideas
 id: validation
 kind: mode

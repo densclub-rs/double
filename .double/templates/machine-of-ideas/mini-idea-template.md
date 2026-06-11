@@ -1,4 +1,5 @@
 ---
+style: double
 submodule: machine-of-ideas
 id: mini-idea-template
 kind: template

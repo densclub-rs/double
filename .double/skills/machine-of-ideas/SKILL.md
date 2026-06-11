@@ -1,4 +1,5 @@
 ---
+style: double
 submodule: machine-of-ideas
 name: machine-of-ideas
 description: >
