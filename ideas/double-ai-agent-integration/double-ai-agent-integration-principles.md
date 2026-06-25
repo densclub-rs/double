@@ -173,7 +173,8 @@ The artifacts are the durable memory and state surface of the idea machine. If a
 #### Implications Without Implementation
 
 - Answers to open questions should be integrated into the active artifact.
-- Resolved questions should be removed from `Open Questions` and preserved in `Resolved Questions` only when useful.
+- Resolved questions should be closed in their original question section after their answers have been integrated into the artifact's main content.
+- Dedicated `Resolved Questions` sections should be used only when a specific artifact contract requires them.
 - Artifact updates should maintain the template contract and visible development links.
 
 #### Boundaries
@@ -184,7 +185,7 @@ The artifacts are the durable memory and state surface of the idea machine. If a
 
 #### Anti-Patterns
 
-- Leaving answered questions in `Open Questions`.
+- Leaving answered questions in their original question section.
 - Updating chat memory but not the artifact.
 - Breaking `Development Artifacts` links or changing section semantics casually.
 
@@ -352,11 +353,7 @@ In compact form:
 - `Vendor-Specific Packaging Comes First`: rejected. The idea explicitly begins from a vendor-agnostic and zero-refactor perspective.
 - `A Proposal Alone Validates the Idea`: rejected. Practical validation requires an executed end-to-end workflow with artifacts and open questions handled.
 
-## 9. Open Questions
-
-- No blocking open questions remain for principle synthesis.
-
-## 10. Resolved Questions
+## 9. Development Notes
 
 - The first review agents are `Codex`, `Claude`, and `Gemini`.
 - The review package should include the idea artifact, concept artifact, and principle artifact.

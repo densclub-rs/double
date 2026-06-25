@@ -39,7 +39,7 @@ The `Principle Synthesis` stage accepts a polished idea and a set of concepts. I
 
 A good principle should be testable with questions: from which concepts was it derived, which problem does it constrain, what does it forbid or guide, which solutions are compatible with it, and which violate it. At the same time, a principle should not become a checklist of tasks. It should survive multiple possible implementations and remain useful as a guide for later stages.
 
-As a result, the stage should produce a `Principle Artifact`: a document defining a working principle concept, listing core principles, linking to source artifacts, providing rationale, trade-offs, anti-patterns, unresolved tensions, and open questions.
+As a result, the stage should produce a `Principle Artifact`: a document defining a working principle concept, listing core principles, linking to source artifacts, providing rationale, trade-offs, anti-patterns, unresolved tensions, and principle-local questions.
 
 The principle artifact also needs a stable publication location. For a source idea stored as `ideas/<...>/<idea-id>/<idea-id>.md`, the principle artifact should be published in the same directory as `ideas/<...>/<idea-id>/<idea-id>-principles.md`. The source idea's main file should include a `Development Artifacts` section with a link to that principles file, so the current development stage can be discovered from the idea itself.
 
@@ -149,8 +149,6 @@ A preliminary structure for a principle artifact:
 ## 7. Candidate Inputs for Future Stages
 
 ## 8. Rejected or Deferred Candidate Principles
-
-## 9. Open Questions
 ```
 
 This structure should become the basis for refining the working template `principle-template`.

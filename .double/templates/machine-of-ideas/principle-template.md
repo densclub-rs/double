@@ -92,7 +92,9 @@ Why this principle follows from the source idea and concept artifact.
 
 #### Questions
 
-- What remains unclear or contested about this principle?
+- Unanswered questions that remain unclear or contested about this principle.
+- Each unanswered item in this subsection is an open question for this specific principle.
+- When a question is answered, integrate the answer into this principle's statement, source grounding, rationale, implications, boundaries, anti-patterns, or related artifact sections, then mark the item as answered or remove it from this subsection.
 
 ## 5. Principle Map
 
@@ -113,11 +115,4 @@ Use bullets, a table, or a small diagram if helpful.
 
 - Which plausible principles were not included?
 - Why were they rejected or deferred?
-
-## 9. Open Questions
-
-- What needs to be clarified before the next stage?
-- When an answer has been supplied, first integrate it into principle statements, boundaries, implications, or deferred questions, then mark the question as done here.
-- Do not store answers, consequences, or resolved-question notes under the question itself.
-- Do not create a separate `Resolved Questions` section for normal principle questions.
 ```

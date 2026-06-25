@@ -46,8 +46,11 @@ A concept is a stable meaning unit of an idea that describes an important entity
 - ask open questions when concept boundaries, relationships, or source grounding need human clarification
 - proactively offer to help answer unresolved open questions before advancing the workflow
 - integrate the user's answers into the active concept artifact
-- keep open questions visible until their answers are integrated into concept definitions, boundaries, relationships, or the conceptual map
-- mark answered questions as done in `Open Questions` after integrating their answers into main artifact sections
+- treat every unanswered item in a concept's `Questions` subsection as an open question for that specific concept
+- do not create an artifact-level `Open Questions` section in concept artifacts
+- place each concept open question only under the `Questions` subsection of the concept it belongs to
+- keep open questions visible in the corresponding concept's `Questions` subsection until their answers are integrated into concept definitions, boundaries, relationships, source grounding, or the conceptual map
+- after integrating an answer, mark the item as answered or remove it from the corresponding concept's `Questions` subsection
 - never store answers, explanations, or resolved-question records under the question itself
 - never create a separate `Resolved Questions` section for normal concept questions
 - if unresolved open questions remain in the source idea at step entry, explicitly remind the user about them without blocking concept extraction

@@ -42,7 +42,7 @@ This makes concept extraction different from both summary and principle synthesi
 
 The concept formation stage should therefore decompose the source idea into stable semantic elements without cutting them away from the original `Idea Artifact`. After reading the conceptual artifact, one should be able to see which meanings carry the idea, which relations between them matter, where their boundaries are, and which questions remain unresolved before principles are synthesized.
 
-The artifact should describe both individual concepts and the conceptual map they form together. An individual concept needs enough context to be understood and challenged: its name, definition, source in the idea, role, relations, boundaries, and open questions. The concept set, however, should not become a flat glossary. It should show how the idea holds together as a field of meanings.
+The artifact should describe both individual concepts and the conceptual map they form together. An individual concept needs enough context to be understood and challenged: its name, definition, source in the idea, role, relations, boundaries, and open questions. In a concept artifact, open questions are identified as all unanswered questions in the `Questions` subsection of the corresponding concept. The concept artifact should not contain a general artifact-level `Open Questions` section, because concept-local questions preserve the narrower context needed to answer them well. The concept set, however, should not become a flat glossary. It should show how the idea holds together as a field of meanings.
 
 Because concept extraction is part of the public development path of an idea, the concept artifact should be published beside the source idea rather than hidden in the working catalog. For a source idea stored as `ideas/<...>/<idea-id>/<idea-id>.md`, the corresponding concept artifact can be published as `ideas/<...>/<idea-id>/<idea-id>-concepts.md`. The source idea can then expose this relation through a `Development Artifacts` section, making the current development stage discoverable from the idea itself.
 
@@ -141,8 +141,6 @@ A preliminary structure for a conceptual artifact:
 ## 5. Terms and Non-Concepts
 
 ## 6. Candidate Inputs for Principle Synthesis
-
-## 7. Open Questions
 ```
 
 The working template may expand this structure with metadata, extraction mode, and an explicit working definition of concept, but it should preserve these conceptual sections as the minimum shape of the artifact.

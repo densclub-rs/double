@@ -85,7 +85,9 @@ A concise definition of the concept in this idea.
 
 #### Questions
 
-- What remains unclear about this concept?
+- Unanswered questions that remain unclear about this concept.
+- Each unanswered item in this subsection is an open question for this specific concept.
+- When a question is answered, integrate the answer into this concept's definition, boundaries, relationships, source grounding, or the conceptual map, then mark the item as answered or remove it from this subsection.
 
 ## 5. Conceptual Map
 
@@ -101,11 +103,4 @@ Explain briefly why they remain supporting terms, entities, or non-concepts.
 
 - Which concepts are likely to become principles?
 - Which relationships or tensions need normative clarification?
-
-## 8. Open Questions
-
-- What needs to be clarified before principle synthesis?
-- When an answer has been supplied, first integrate it into concepts, boundaries, relationships, or the conceptual map, then mark the question as done here.
-- Do not store answers, consequences, or resolved-question notes under the question itself.
-- Do not create a separate `Resolved Questions` section for normal concept questions.
 ```

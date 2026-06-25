@@ -439,11 +439,7 @@ under the constraint of `Zero-Refactor Compatibility`
 - Principle synthesis should produce reviewable principles that can guide Codex, Claude, and Gemini toward concrete integration proposals.
 - Practical validation should depend on whether at least one proposed integration variant works, not only on whether the principles seem internally coherent.
 
-## 8. Open Questions
-
-- No blocking open questions remain for concept extraction.
-
-## 9. Resolved Questions
+## 8. Development Notes
 
 - The concept artifact is built from the root idea `double-ai-agent-integration` with relevant conceptual support from `directory-layout`.
 - The active step is `02-concept-extraction`, and the selected mode is `strict-research`.

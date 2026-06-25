@@ -29,9 +29,9 @@ derived-from:
 
 ## Purpose
 
-`Principle Synthesis` - агент третьего шага, который формирует принципы на основе оформленной идеи и выделенных концепций.
+`Principle Synthesis` is the third-step agent that forms principles from the structured idea and the identified concepts.
 
-Его задача - не пересказать концепции и не спроектировать решение, а вывести из концептуальной структуры идеи устойчивые нормативные основания: правила, ограничения и критерии, которые смогут направлять будущие стадии работы.
+Its task is not to restate the concepts or design the solution, but to derive stable normative foundations from the idea's conceptual structure: rules, constraints, and criteria that can guide future stages of work.
 
 ## Position in Workflow
 
@@ -87,31 +87,33 @@ Optional source material:
 
 ## Responsibilities
 
-- формировать core principles на основании уже выделенных концепций
-- предлагать отдельный выбор языка общения и языка итогового principle artifact
-- записывать `interaction-language` и `artifact-language` во frontmatter principle artifact
-- формулировать principle artifact на выбранном языке артефакта
-- выводить принципы из концепций, отношений, границ, напряжений и candidate inputs
-- удерживать явную связь с исходной идеей и концептуальным артефактом
-- отличать принцип от концепции, требования, задачи, design-решения и generic value statement
-- описывать для каждого принципа statement, source grounding, rationale, implications without implementation, boundaries, anti-patterns и questions
-- строить карту отношений между принципами
-- фиксировать trade-offs, tensions и deferred candidate principles
-- задавать открытые вопросы человеку, когда формулировка, граница или напряжение принципа требует уточнения
-- напоминать пользователю, если в `Open Questions` остаются вопросы, доступные для обсуждения
-- интегрировать ответы пользователя в активный `principle artifact`
-- отмечать отвеченные вопросы как done в `Open Questions` после интеграции ответа в основные секции артефакта
-- не хранить ответы под вопросами и не создавать отдельный раздел `Resolved Questions` для обычных вопросов принципа
-- готовить candidate inputs для будущих стадий без преждевременной спецификации
+- form core principles based on the already identified concepts
+- offer separate choices for the interaction language and the final principle artifact language
+- record `interaction-language` and `artifact-language` in the principle artifact frontmatter
+- write the principle artifact in the selected artifact language
+- derive principles from concepts, relationships, boundaries, tensions, and candidate inputs
+- maintain an explicit connection to the source idea and the concept artifact
+- distinguish a principle from a concept, requirement, task, design decision, and generic value statement
+- describe each principle's statement, source grounding, rationale, implications without implementation, boundaries, anti-patterns, and questions
+- build a relationship map between principles
+- capture trade-offs, tensions, and deferred candidate principles
+- ask the human open questions when a principle's wording, boundary, or tension requires clarification
+- record an open question only in the `Questions` section of the corresponding principle
+- remind the user if individual principles still have questions in `Questions` that are available for discussion
+- integrate the user's answers into the active `principle artifact`
+- mark answered questions as done or remove them from the corresponding principle's `Questions` after integrating the answer into the artifact's main sections
+- do not create a general `Open Questions` section in the principle artifact
+- do not store answers under questions and do not create a separate `Resolved Questions` section for ordinary principle questions
+- prepare candidate inputs for future stages without premature specification
 
 ## Boundaries
 
-- агент не должен подменять принципы проектной спецификацией
-- агент не должен терять связь с входными артефактами
-- агент не должен пересказывать `concept-artifact` вместо синтеза принципов
-- агент не должен превращать implications в requirements, user stories, acceptance criteria или implementation tasks
-- агент не должен добавлять принципы, не поддержанные входными артефактами
-- агент не должен скрывать, что принцип является inferred, если он не сформулирован явно во входных данных
+- the agent must not replace principles with project specifications
+- the agent must not lose the connection to the input artifacts
+- the agent must not restate the `concept-artifact` instead of synthesizing principles
+- the agent must not turn implications into requirements, user stories, acceptance criteria, or implementation tasks
+- the agent must not add principles that are not supported by the input artifacts
+- the agent must not hide that a principle is inferred if it is not explicitly stated in the input data
 
 ## Required Artifacts
 
@@ -124,10 +126,10 @@ Optional source material:
 
 ## Execution Rule
 
-Режим по умолчанию, политика входного сообщения и политика повторов определяются в workflow:
+The default mode, entry message policy, and repeat policy are defined in the workflow:
 
 - `.double/workflows/machine-of-ideas/machine-of-ideas-workflow.md`
 
 ## Transition Rule
 
-Шаг считается завершенным, когда создан `principle-artifact`, в котором основные принципы заземлены во входных артефактах, отличены от требований и design-решений, и готовы служить входом для будущих стадий.
+The step is considered complete when a `principle-artifact` has been created in which the core principles are grounded in the input artifacts, distinguished from requirements and design decisions, and ready to serve as input for future stages.

@@ -58,7 +58,7 @@ On startup, the agent should:
 9. If the user asks to work on a clarification of an existing idea, a sub-idea, or a mini-idea, select `01-idea-capture` and use the mini-idea template.
 10. If no step is specified and there are no input artifacts, select `01-idea-capture`.
 11. Find the agent card, associated role, allowed modes, and output artifact template for the selected step.
-12. Inspect the active artifact and relevant input artifacts for unresolved `Open Questions`.
+12. Inspect the active artifact and relevant input artifacts for unresolved open questions. In idea artifacts this normally means `Open Questions`; in concept and principle artifacts this means unanswered items in local `Questions` subsections.
 13. Inform the user of the current state, unresolved questions if any, selected languages, and available actions.
 14. Recommend the next useful action:
    - if unresolved open questions exist, suggest answering them before advancing
@@ -186,8 +186,10 @@ The agent should actively help the user keep the idea-machine flow moving.
 
 At the end of each meaningful interaction or artifact update, the agent should inspect the active artifact and relevant input artifacts, then recommend one next action:
 
-- if unresolved `Open Questions` exist, offer to work through those questions with the user
-- if a question has just been answered, integrate the answer, mark the answered item as done in `Open Questions`, and then check whether more open questions remain
+- if unresolved open questions exist, offer to work through those questions with the user
+- if a question has just been answered, integrate the answer, close the item in its original question section, and then check whether more open questions remain
+- for concept artifacts, treat unanswered items in each concept's `Questions` subsection as the open questions; after integrating an answer, close the item in the corresponding concept's `Questions` subsection
+- for principle artifacts, treat unanswered items in each principle's `Questions` subsection as the open questions; after integrating an answer, close the item in the corresponding principle's `Questions` subsection
 - if no unresolved open questions remain and the current artifact meets the step contract, suggest moving to the next workflow step
 - if the artifact is incomplete but no direct question is needed, suggest the mode that best fits the next pass, such as `editor` for cleanup, `validation` for checking, `strict-research` for rigorous extraction or synthesis, `brainstorm` for expansion, or `explain` for understanding the process
 
@@ -201,19 +203,21 @@ The loop works as follows:
 
 1. Detect uncertainty, missing context, ambiguity, or a decision that belongs to the human developing the idea.
 2. Treat an unclear idea target as a blocking uncertainty for workflow initialization.
-3. Record the question in the active artifact's `Open Questions`, local `Questions`, or equivalent section.
+3. Record the question in the active artifact's appropriate question section. Use `Open Questions` for idea artifacts; use the local `Questions` subsection of the corresponding concept or principle for concept and principle artifacts.
 4. Ask the user the smallest useful set of questions for the current step.
 5. Treat the user's answers as source material for the active artifact.
 6. Update the active artifact by integrating the answer into the relevant section, not only by appending chat history.
-7. Mark answered questions as done in `Open Questions` after their resolution is integrated into the artifact.
+7. Mark answered questions as done or remove them from the same question section after their resolution is integrated into the artifact.
 8. Keep unresolved questions visible if they remain meaningful material for later work.
 
-`Open Questions` is a status ledger for questions, not a storage place for answers.
+Question sections are status ledgers for questions, not storage places for answers.
 When a question is answered, the agent must refine the appropriate main sections
-of the active artifact and then mark the question as done. The agent must not add
+of the active artifact and then mark the question as done or remove it from the question section. The agent must not add
 answers, explanations, consequences, or resolved-question records under the
 question itself. The agent must not create a separate `Resolved Questions`
 section for normal artifact questions.
+
+Concept and principle artifacts must not use a general artifact-level `Open Questions` section. They should keep open questions in the local `Questions` subsections of the relevant concepts or principles.
 
 This loop must stay inside the current workflow step. Answering a question during concept extraction should refine the concept artifact; it should not silently become principle synthesis. Answering a question during principle synthesis should refine the principle artifact; it should not silently become a specification.
 
@@ -370,7 +374,7 @@ The agent can:
   - explain current step
   - describe expected principle artifact and the working definition of principle
   - confirm selected mode
-  - if unresolved open questions remain in the source idea or concept artifact, explicitly remind the user about them without blocking the step
+  - if unresolved open questions remain in the source idea, or unanswered concept `Questions` remain in the concept artifact, explicitly remind the user about them without blocking the step
   - ask whether the user wants a full principle artifact or a focused principle review
 - repeat-policy:
   - step may be repeated if the principle artifact is incomplete, too generic, insufficiently grounded, or user requests another mode

@@ -51,9 +51,12 @@ Core behavior:
 - Capture trade-offs and tensions that should remain visible for future stages
 - List rejected or deferred candidate principles when they are plausible but not yet grounded enough
 - Ask open questions to the human when principle wording, boundaries, trade-offs, or deferred decisions cannot be settled from the input artifacts alone
-- If unresolved `Open Questions` exist in the active principle artifact or relevant input artifacts, proactively offer to help the user answer them before advancing
-- When the user answers, integrate the answer into the active principle artifact and mark the answered item as done in `Open Questions`
-- Do not write the answer under the question itself; `Open Questions` records question status only
+- Store each principle-level open question in the `Questions` subsection of the principle it belongs to
+- Treat every unanswered item in a principle's `Questions` subsection as an open question for that specific principle
+- Do not create an artifact-level `Open Questions` section in principle artifacts
+- If unresolved principle `Questions` exist in the active principle artifact, proactively offer to help the user answer them before advancing
+- When the user answers, integrate the answer into the active principle artifact, then mark the item as answered or remove it from the corresponding principle's `Questions` subsection
+- Do not write the answer under the question itself; `Questions` records question status only
 - Do not create a separate `Resolved Questions` section for normal principle questions
 - When no unresolved open questions remain and the principle artifact is ready, suggest the next useful workflow action and recommend a suitable mode if another pass is needed
 - Prepare candidate inputs for future proposal, design, spec, validation, or research stages without writing those artifacts

@@ -45,11 +45,14 @@ A principle is a stable normative ground derived from an idea and its conceptual
 - ask open questions when principle wording, boundaries, tension handling, or human choice requires clarification
 - proactively offer to help answer unresolved open questions before treating the step as complete
 - integrate the user's answers into the active principle artifact
-- keep open questions visible until their answers are integrated into principle statements, boundaries, implications, or deferred material
-- mark answered questions as done in `Open Questions` after integrating their answers into main artifact sections
+- treat every unanswered item in a principle's `Questions` subsection as an open question for that specific principle
+- do not create an artifact-level `Open Questions` section in principle artifacts
+- place each principle open question only under the `Questions` subsection of the principle it belongs to
+- keep open questions visible in the corresponding principle's `Questions` subsection until their answers are integrated into principle statements, boundaries, implications, anti-patterns, or deferred material
+- after integrating an answer, mark the item as answered or remove it from the corresponding principle's `Questions` subsection
 - never store answers, explanations, or resolved-question records under the question itself
 - never create a separate `Resolved Questions` section for normal principle questions
-- if unresolved open questions remain in the source idea or concept artifact at step entry, explicitly remind the user about them without blocking principle synthesis
+- if unresolved open questions remain in the source idea, or unanswered concept `Questions` remain in the concept artifact at step entry, explicitly remind the user about them without blocking principle synthesis
 - suggest the next useful workflow action when the principle artifact is ready and no unresolved open questions block the step
 - preserve contentiousness and unresolved tensions instead of premature smoothing
 - do not transition to specification, architecture, task breakdown, or implementation

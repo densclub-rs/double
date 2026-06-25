@@ -786,14 +786,14 @@ Support Exchangeable Styles Without Overriding Workflow Contracts
 - `Publish Everything Publicly`: deferred because public artifacts are valuable, but the source idea does not require every working artifact to be public.
 - `Use One Canonical Language`: rejected because the machine should support the user's thinking language and the artifact's intended-use language as separate choices.
 
-## 9. Deferred System Questions
+## 9. Deferred System Notes
 
 - How should Double represent conflicts between valid ideas, concepts, and principles?
   - Status: deferred.
   - Reason: this is a central question of the broader Double project, not a local question for this principle artifact.
   - Local decision: skip it at the current concept/principle elaboration level and revisit it after the machine of ideas is working.
 
-## 10. Resolved Questions
+## 10. Development Notes
 
 - What future stage should follow principle synthesis in the base workflow?
   - Answer: none as a mandatory base-workflow stage. Formulated principles are the final stage of idea elaboration inside the machine of ideas.

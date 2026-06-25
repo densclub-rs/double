@@ -95,9 +95,11 @@ Optional source material:
 - build a conceptual map of relationships between core concepts
 - record important terms, entities, and labels that are not core concepts
 - ask open questions when concept boundaries or relationships need human clarification
-- remind the user when recorded `Open Questions` remain available for discussion
+- record each concept-level open question under the `Questions` subsection of the concept it belongs to
+- remind the user when unanswered concept `Questions` remain available for discussion
 - integrate user answers into the active `concept artifact`
-- mark answered questions as done in `Open Questions` after their answers are integrated into main artifact sections
+- after integrating an answer, mark the item as answered or remove it from the corresponding concept's `Questions` subsection
+- do not create an artifact-level `Open Questions` section in concept artifacts
 - do not store answers under questions or create a separate `Resolved Questions` section for normal concept questions
 - prepare candidate inputs for the next step `principle-synthesis`
 - rely on the input artifact and explicitly mark conclusions that are interpretation

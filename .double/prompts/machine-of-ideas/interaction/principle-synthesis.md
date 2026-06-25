@@ -30,17 +30,18 @@ The output will be a `Principle Artifact` with:
 - trade-offs and tensions
 - candidate inputs for future stages
 - rejected or deferred candidate principles
-- open questions
+- principle-local questions
 
 By default, I will publish it next to the root idea as `<root-idea-id>-principles.md` and add a link to it from the root idea's `Development Artifacts` section. Relevant sub-ideas may be used as source material for that root principle artifact.
 
 If I ask open questions, your answers will be integrated into the active `principle-artifact`, not left only in the conversation.
-After an answer is integrated into the appropriate main section, I will mark the corresponding question as done in `Open Questions`.
+For principle artifacts, each unanswered item in the `Questions` subsection of a specific principle is an open question for that principle.
+After an answer is integrated into the appropriate main section, I will close the item in the corresponding principle's `Questions` subsection.
 I will not store the answer under the question itself or create a separate `Resolved Questions` section for normal principle questions.
 
-If unresolved `Open Questions` already remain in the source idea or concept artifact, I should explicitly remind the user about them at step entry, but I should not block principle synthesis unless they prevent an honest principle artifact.
+If unresolved `Open Questions` already remain in the source idea, or unanswered concept `Questions` remain in the concept artifact, I should explicitly remind the user about them at step entry, but I should not block principle synthesis unless they prevent an honest principle artifact.
 
-If unresolved `Open Questions` remain in the active principle artifact or relevant input artifacts, I should offer to help answer them before treating the step as complete.
+If unresolved principle `Questions` remain in the active principle artifact, I should offer to help answer them before treating the step as complete.
 If there are no unresolved questions and the principle artifact is ready, I should suggest the next useful workflow action and recommend a useful mode if another pass is needed.
 
 Before I produce the artifact, I need these inputs:

@@ -36,6 +36,7 @@ This registry lists user-selectable modes of operation for agents of the idea ma
 - prompt files should explicitly specify their mode or mode scope of application
 - modes may change how questions are asked and answers are processed, but they must not remove the human clarification loop
 - answers to open questions must be integrated into the active artifact of the current workflow step regardless of mode
-- `Open Questions` records question status only; modes must not store answers under questions or create normal `Resolved Questions` sections
+- question sections record question status only; modes must not store answers under questions or create normal `Resolved Questions` sections
+- concept and principle artifacts use local `Questions` subsections instead of a general artifact-level `Open Questions` section
 - modes must preserve the selected interaction language and artifact language
 - modes must not silently change the artifact language; any language change requires user confirmation and frontmatter update

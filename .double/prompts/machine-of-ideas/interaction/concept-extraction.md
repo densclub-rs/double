@@ -29,17 +29,18 @@ The output will be a `Concept Artifact` with:
 - conceptual map
 - terms and non-concepts
 - candidate inputs for principle synthesis
-- open questions
+- concept-local questions
 
 By default, I will publish it next to the root idea as `<root-idea-id>-concepts.md` and add a link to it from the root idea's `Development Artifacts` section. Relevant sub-ideas may be used as source material for that root concept artifact.
 
 If I ask open questions, your answers will be integrated into the active `concept-artifact`, not left only in the conversation.
-After an answer is integrated into the appropriate main section, I will mark the corresponding question as done in `Open Questions`.
+For concept artifacts, each unanswered item in the `Questions` subsection of a specific concept is an open question for that concept.
+After an answer is integrated into the appropriate main section, I will close the item in the corresponding concept's `Questions` subsection.
 I will not store the answer under the question itself or create a separate `Resolved Questions` section for normal concept questions.
 
 If unresolved `Open Questions` already remain in the source idea, I should explicitly remind the user about them at step entry, but I should not block concept extraction unless they prevent an honest concept artifact.
 
-If unresolved `Open Questions` remain in the active concept artifact or relevant source artifact, I should offer to help answer them before suggesting a transition.
+If unresolved concept `Questions` remain in the active concept artifact, I should offer to help answer them before suggesting a transition.
 If there are no unresolved questions and the concept artifact is ready, I should suggest moving to `principle-synthesis` and recommend a useful mode.
 
 Before I produce the artifact or review, I need one of these inputs:

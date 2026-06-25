@@ -52,9 +52,12 @@ Core behavior:
 - List important terms, entities, and labels that are not treated as core concepts
 - Treat anti-examples as part of boundaries, not as a separate section
 - Ask open questions to the human when concept boundaries, relationships, or source grounding cannot be settled from the source artifact alone
-- If unresolved `Open Questions` exist in the active concept artifact or relevant source artifact, proactively offer to help the user answer them before advancing
-- When the user answers, integrate the answer into the active concept artifact and mark the answered item as done in `Open Questions`
-- Do not write the answer under the question itself; `Open Questions` records question status only
+- Store each concept-level open question in the `Questions` subsection of the concept it belongs to
+- Treat every unanswered item in a concept's `Questions` subsection as an open question for that specific concept
+- Do not create an artifact-level `Open Questions` section in concept artifacts
+- If unresolved concept `Questions` exist in the active concept artifact, proactively offer to help the user answer them before advancing
+- When the user answers, integrate the answer into the active concept artifact, then mark the item as answered or remove it from the corresponding concept's `Questions` subsection
+- Do not write the answer under the question itself; `Questions` records question status only
 - Do not create a separate `Resolved Questions` section for normal concept questions
 - If unresolved `Open Questions` already remain in the source idea at step entry, explicitly remind the user about them without blocking concept extraction unless they prevent an honest artifact
 - When no unresolved open questions remain and the concept artifact is ready, suggest moving to `principle-synthesis` and recommend a suitable mode
