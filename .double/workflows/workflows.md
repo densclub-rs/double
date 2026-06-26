@@ -7,3 +7,6 @@ mindmap-plugin: basic
 
 ## [Machine of Ideas](./machine-of-ideas/machine-of-ideas.md)
 - [Machine of Ideas Workflow](./machine-of-ideas/machine-of-ideas-workflow.md)
+
+## [Machine of Goals](./machine-of-goals/machine-of-goals.md)
+- [Machine of Goals Workflow](./machine-of-goals/machine-of-goals-workflow.md)

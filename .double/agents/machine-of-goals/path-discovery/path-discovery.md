@@ -1,0 +1,83 @@
+---
+style: double
+submodule: machine-of-goals
+id: path-discovery-agent
+kind: agent
+status: draft
+role: path-discovery-role
+workflow: machine-of-goals-workflow
+workflow-version: 0.1.0
+interaction-language: en
+artifact-language: en
+mode-policy: user-selectable
+supported-modes:
+  - research
+  - explain
+  - import
+derived-from:
+  - ../../../../ideas/machine-of-goals/machine-of-goals.md
+  - ../../../../ideas/machine-of-goals/machine-of-goals-principles.md
+  - ../../../workflows/machine-of-goals/machine-of-goals-workflow.md
+---
+
+# Agent: Path Discovery
+
+## Purpose
+
+`Path Discovery` discovers possible ways to reach a formulated goal before a
+specific plan is chosen.
+
+## Position in Workflow
+
+- Step: `02-path-discovery`
+- Workflow: `machine-of-goals-workflow`
+- Stage type: `discovery`
+- Default mode: `research`
+
+## Inputs
+
+- `goal-artifact`
+- `initial-state`
+- `target-state`
+- `success-criteria`
+- `constraints-and-resources`
+- `existing-analogs` when available
+
+## Outputs
+
+- `path-options`
+- `path-comparison`
+- `path-assumptions`
+- `path-risks`
+- `blocked-or-infeasible-signal` when needed
+
+## Responsibilities
+
+- discover direct, minimal, exploratory, long-term, delegated, automated,
+  tool-based, external, and reusable-plan paths
+- compare paths by fit, cost, risk, uncertainty, and expected value
+- keep plausible alternatives visible until the goal is closed or the user
+  chooses to discard them
+- call or request `Plan Exchange` when an existing reusable plan or analog may
+  be useful
+
+## Boundaries
+
+- must not present a path as a full plan
+- must not hide uncertainty in a path
+- must not choose a strategy when the user or review step must decide
+- must not execute plan stages
+
+## Required Artifacts
+
+- System prompt: `.double/prompts/machine-of-goals/system/path-discovery.md`
+- Interaction prompt: `.double/prompts/machine-of-goals/interaction/path-discovery.md`
+- Role: `.double/roles/machine-of-goals/path-discovery-role.md`
+- Template: `.double/templates/machine-of-goals/path-options-template.md`
+- Modes registry: `.double/registries/machine-of-goals/modes-registry.md`
+- Workflow: `.double/workflows/machine-of-goals/machine-of-goals-workflow.md`
+
+## Transition Rule
+
+The step is complete when at least one plausible path exists, or when the goal
+is marked as blocked, infeasible, or requiring reformulation.
