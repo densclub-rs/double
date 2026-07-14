@@ -17,7 +17,7 @@ derived-from:
 
 ## Purpose
 
-Used when the agent must compare a stage result or goal result with explicit
+Used when the agent must compare a stage attempt result or goal result with explicit
 criteria and decide what the plan state should become.
 
 ## Behavioral Intent
@@ -31,7 +31,7 @@ criteria and decide what the plan state should become.
 
 ## Typical Inputs
 
-- stage result
+- stage-attempt-result artifact
 - validation criteria
 - goal and plan artifacts
 - execution evidence, logs, files, screenshots, user confirmation, or external
@@ -40,7 +40,7 @@ criteria and decide what the plan state should become.
 ## Expected Outputs
 
 - validation result
-- updated plan state
+- plan-state artifact
 - updated goal progress or closure note when applicable
 - revision, branch, continuation, or export decision
 

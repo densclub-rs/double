@@ -4,7 +4,7 @@ submodule: machine-of-goals
 id: workflows-registry
 kind: registry
 status: draft
-workflow-version: 0.1.0
+workflow-version: 0.1.5
 ---
 
 # Workflows Registry
@@ -13,7 +13,7 @@ workflow-version: 0.1.0
 
 - id: `machine-of-goals-workflow`
 - status: `draft`
-- version: `0.1.0`
+- version: `0.1.5`
 - definition: `.double/workflows/machine-of-goals/machine-of-goals-workflow.md`
 - agents-registry: `.double/registries/machine-of-goals/agents-registry.md`
 - modes-registry: `.double/registries/machine-of-goals/modes-registry.md`

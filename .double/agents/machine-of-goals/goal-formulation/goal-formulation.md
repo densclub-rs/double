@@ -6,7 +6,7 @@ kind: agent
 status: draft
 role: goal-formulation-role
 workflow: machine-of-goals-workflow
-workflow-version: 0.1.0
+workflow-version: 0.1.5
 interaction-language: en
 artifact-language: en
 mode-policy: user-selectable
@@ -43,7 +43,10 @@ constraints or resources shape the work.
 - `raw-user-goal`
 - `conversation-context`
 - `existing-goal-artifact` when available
+- `parent-goal-artifact` when formulating a subgoal
 - `related-idea-or-project-context` when available
+- `goal-catalog`, defaulting to `./goals` when the user does not choose another
+  target catalog
 - `interaction-language`
 - `artifact-language`
 
@@ -55,10 +58,18 @@ constraints or resources shape the work.
 - `success-criteria-draft`
 - `constraints-and-resources`
 - `open-goal-questions`
+- `goal-directory`
+- `subgoal-directory` when the output is a subgoal
 
 ## Responsibilities
 
 - formulate the goal as a verifiable target state
+- formulate an accepted subgoal as a smaller verifiable target state with its
+  own directory inside the main goal directory
+- ask which target catalog should contain artifacts for a new goal, defaulting
+  to `./goals` in the current working directory
+- create or name the goal directory inside the selected catalog according to
+  the Double layout naming convention
 - clarify the subject of the goal
 - identify the current state and target state
 - define success criteria before planning
@@ -78,7 +89,7 @@ constraints or resources shape the work.
 - System prompt: `.double/prompts/machine-of-goals/system/goal-formulation.md`
 - Interaction prompt: `.double/prompts/machine-of-goals/interaction/goal-formulation.md`
 - Role: `.double/roles/machine-of-goals/goal-formulation-role.md`
-- Template: `.double/templates/machine-of-goals/goal-artifact-template.md`
+- Template: `.double/templates/machine-of-goals/goal-template.md`
 - Modes registry: `.double/registries/machine-of-goals/modes-registry.md`
 - Workflow: `.double/workflows/machine-of-goals/machine-of-goals-workflow.md`
 

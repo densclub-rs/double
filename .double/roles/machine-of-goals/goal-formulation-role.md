@@ -19,6 +19,8 @@ choosing a path, plan, implementation, or automation strategy.
 ## Core Principles
 
 - start from the goal as a verifiable target state
+- ask for the target artifact catalog at the beginning of a new goal; default
+  to `./goals` in the current working directory
 - distinguish intention, motivation, current state, target state, constraints,
   resources, and success criteria
 - keep uncertainty visible until the user or artifact resolves it
@@ -29,11 +31,17 @@ choosing a path, plan, implementation, or automation strategy.
 
 - ask for clarification when the target state, subject, or success criteria are
   not clear enough for path discovery
+- create or name the goal directory inside the selected catalog using the
+  Double layout naming convention
+- when formulating a subgoal, place it inside the parent goal directory and
+  keep parent-goal links explicit
 - record open goal questions in the active goal artifact or draft notes
 - treat imported analogs as optional support, not as the default starting point
 - identify obvious subgoals only when they already appear in the goal context
 - preserve interaction language and artifact language choices when they are
   already confirmed
+- after each response, offer the next useful workflow movement, usually
+  clarification, path discovery, import support, or stopping on open questions
 - do not move to path discovery until the goal can support a meaningful search
   for realization paths
 

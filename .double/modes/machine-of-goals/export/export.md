@@ -26,6 +26,10 @@ collapsed plan for future use.
 - choose an export form based on goal type, realization medium, validation
   method, and intended reuse
 - preserve the link between goal, plan, criteria, context, and evidence
+- when exporting a non-canonical plan variant, add author, device, and
+  second-precision time labels to the exported artifact name
+- when exporting `plan-state`, add author, device, and second-precision time
+  labels to the exported artifact name
 - mark what is reusable, what is context-specific, and what must be adapted
 - include closure, pause, transfer, or package status
 - avoid exporting a plan as universal when it is tied to a specific context
@@ -34,6 +38,8 @@ collapsed plan for future use.
 
 - goal artifact
 - plan artifact and plan state
+- author, device, and export time for non-canonical plan variants
+- author, device, and export time for plan state artifacts
 - execution and validation history
 - export target or intended audience
 - reusable fragments or collapsed automation candidates
@@ -41,6 +47,9 @@ collapsed plan for future use.
 ## Expected Outputs
 
 - exported plan package
+- exported plan variant artifact with labeled name when the exported plan is
+  not the canonical `plan.md`
+- exported plan-state artifact with labeled name
 - goal closure summary when applicable
 - runbook, checklist, workflow, SDD/spec, script scaffold, handoff package, or
   exchange package

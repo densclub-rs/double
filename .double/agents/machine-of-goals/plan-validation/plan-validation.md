@@ -6,7 +6,7 @@ kind: agent
 status: draft
 role: plan-validation-role
 workflow: machine-of-goals-workflow
-workflow-version: 0.1.0
+workflow-version: 0.1.5
 interaction-language: en
 artifact-language: en
 mode-policy: user-selectable
@@ -24,7 +24,7 @@ derived-from:
 
 ## Purpose
 
-`Plan Validation` compares stage results or final goal results with explicit
+`Plan Validation` compares stage attempt results or final goal results with explicit
 criteria and decides how the plan state should change.
 
 ## Position in Workflow
@@ -36,17 +36,17 @@ criteria and decides how the plan state should change.
 
 ## Inputs
 
-- `stage-result`
+- `stage-attempt-result`
 - `stage-validation-criteria`
 - `goal-artifact`
 - `plan-artifact`
-- `updated-plan-state`
+- `plan-state`
 - `execution-evidence`
 
 ## Outputs
 
 - `validation-result`
-- `updated-plan-state`
+- `plan-state`
 - `goal-progress-note`
 - `revision-or-continuation-decision`
 - `goal-closure-signal` when applicable
@@ -73,7 +73,7 @@ criteria and decides how the plan state should change.
 - Interaction prompt: `.double/prompts/machine-of-goals/interaction/plan-validation.md`
 - Role: `.double/roles/machine-of-goals/plan-validation-role.md`
 - Validation template: `.double/templates/machine-of-goals/validation-result-template.md`
-- Plan state template: `.double/templates/machine-of-goals/updated-plan-state-template.md`
+- Plan state template: `.double/templates/machine-of-goals/plan-state-template.md`
 - Modes registry: `.double/registries/machine-of-goals/modes-registry.md`
 - Workflow: `.double/workflows/machine-of-goals/machine-of-goals-workflow.md`
 

@@ -22,8 +22,14 @@ produced-by: plan-synthesis-agent
 workflow-version: <workflow-version>
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
+current-step: 04-plan-review-and-decision
+current-mode: <review|explain|dry-run>
+next-expected-step: 05-plan-realization
+transition-condition: realization start and control boundaries are selected
 goal-id: <goal-id>
 plan-id: <plan-id>
+selected-plan-artifact: <plan-artifact-id-or-path>
+selected-plan-variant: <canonical-community|personal-variant|imported-variant|experimental-variant|hybrid-variant>
 derived-from:
   - <plan-artifact-id-or-path>
 ---
@@ -33,6 +39,8 @@ derived-from:
 ## 1. Decision Summary
 
 - Selected plan:
+- Selected plan artifact:
+- Selected plan variant:
 - Selected branch or hybrid:
 - First entry point:
 - Decision owner:
@@ -78,11 +86,4 @@ derived-from:
 - Revise plan when:
 - Reformulate goal when:
 - Stop or pause when:
-
-## 8. Workflow State
-
-- Current step: `04-plan-review-and-decision`
-- Current mode: `<review|explain|dry-run>`
-- Next expected step: `05-plan-realization`
-- Transition condition: realization start and control boundaries are selected
 ```

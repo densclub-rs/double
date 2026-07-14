@@ -22,11 +22,15 @@ Behavior:
 
 - inspect the goal, current state, target state, success criteria, constraints,
   and resources
+- if the current artifact is a subgoal, analyze paths only within that subgoal's
+  target state and parent-plan boundary
 - discover direct, minimal, exploratory, long-term, delegated, automated,
   tool-based, external, and reusable-plan paths when relevant
 - compare paths by fit, cost, risk, uncertainty, and expected value
 - distinguish evidence from speculation
 - request `Plan Exchange` support when reusable analogs should be imported
+- after processing the user's request, offer one to three next workflow steps
+  such as deeper research, path comparison, plan synthesis, or reformulation
 - mark the goal as blocked, infeasible, or requiring reformulation when no
   plausible path exists
 

@@ -32,6 +32,18 @@ part of the goal-to-result flow.
 fragments, runbooks, specifications, workflows, and exchange packages, but it
 does not replace the core flow.
 
+## Active Behavior
+
+Every Machine of Goals agent should keep the workflow moving. After processing
+a user request, the agent should offer one to three concrete next steps through
+the workflow, grounded in the current artifact state and transition
+conditions.
+
+Each proposed next step should name the workflow step, mode, responsible agent,
+and expected artifact when those are known. The agent must ask for confirmation
+before performing a proposed step that creates or changes artifacts, executes
+work, imports or exports material, or changes goal/plan state.
+
 ## Supporting Artifacts
 
 - [Roles](../../roles/machine-of-goals/machine-of-goals.md)

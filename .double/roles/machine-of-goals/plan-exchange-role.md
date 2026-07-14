@@ -31,9 +31,15 @@ without breaking their connection to goal context.
 
 - preserve source, provenance, assumptions, constraints, and mismatch notes
 - identify which parts are reusable and which are context-specific
+- when exporting `plan-state`, rename the exported artifact with author,
+  device, and second-precision time labels
+- when importing existing `plan-state` artifacts, link them from the current
+  plan artifact as existing implementations instead of replacing current state
 - reject or block import when source context or criteria are missing
 - require validation evidence before packaging a plan as reusable
 - mark closure, pause, transfer, or package status during export
+- after each response, offer the next useful workflow movement, usually adapt
+  imported material, return to planning, validate evidence, or export/package
 
 ## Strict Constraints
 

@@ -15,18 +15,22 @@ derived-from:
 
 ```md
 ---
-id: <goal-id>-<stage-id>-validation
+id: stage-<stage-id>-validation
 kind: validation-result
 status: draft
 produced-by: plan-validation-agent
 workflow-version: <workflow-version>
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
+current-step: 06-plan-validation
+current-mode: <validation|review|explain>
+next-expected-step: <05-plan-realization|07-plan-packaging-export|01-goal-formulation|03-plan-synthesis>
+transition-condition: result accepted, rejected, partial, blocked, or requiring revision
 goal-id: <goal-id>
 plan-id: <plan-id>
 stage-id: <stage-id>
 derived-from:
-  - <stage-result-id-or-path>
+  - <stage-attempt-result-id-or-path>
   - <plan-artifact-id-or-path>
 ---
 
@@ -77,11 +81,4 @@ derived-from:
 - Pause:
 - Close:
 - Request export:
-
-## 7. Workflow State
-
-- Current step: `06-plan-validation`
-- Current mode: `<validation|review|explain>`
-- Next expected step: `<05-plan-realization|07-plan-packaging-export|01-goal-formulation|03-plan-synthesis>`
-- Transition condition: result accepted, rejected, partial, blocked, or requiring revision
 ```

@@ -23,8 +23,16 @@ produced-by: plan-exchange-agent
 workflow-version: <workflow-version>
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
+current-step: 07-plan-packaging-export
+current-mode: <export|validation|explain>
+next-expected-step: <end>
+transition-condition: goal is closed, paused, transferred, exported, or intentionally left without export
 goal-id: <goal-id>
 plan-id: <plan-id>
+plan-artifacts:
+  - <plan-artifact-id-or-path>
+plan-state-artifacts:
+  - <plan-state-id-or-path>
 package-type: <markdown-plan|runbook|checklist|workflow|sdd-spec|script-scaffold|handoff-package|exchange-package>
 derived-from:
   - <goal-artifact-id-or-path>
@@ -51,6 +59,8 @@ derived-from:
 - Constraints:
 - Resources:
 - Original plan:
+- Plan variants:
+- Plan state artifacts:
 - Validation evidence:
 
 ## 3. Reusable Material
@@ -59,6 +69,7 @@ derived-from:
 - Reusable subgoals:
 - Reusable checks:
 - Reusable scripts / workflows / specs:
+- Reusable plan state traces:
 - Required adaptations:
 
 ## 4. Context-Specific Assumptions
@@ -93,10 +104,19 @@ Portable sequence or package outline:
 - Remaining work:
 - Recommended next use:
 
-## 9. Workflow State
+## 9. Plan State Export Notes
 
-- Current step: `07-plan-packaging-export`
-- Current mode: `<export|validation|explain>`
-- Next expected step: `<end>`
-- Transition condition: goal is closed, paused, transferred, exported, or intentionally left without export
+- Exported plan artifacts:
+- Canonical plan naming rule: the Double community plan for a goal is
+  `plan.md`.
+- Plan variant export naming rule: exported or imported non-canonical
+  `plan-artifact` names must include `author`, `device`, and
+  second-precision `time` labels.
+- Example plan variant export name:
+  `plan--author-<author>--device-<device>--time-<YYYYMMDDTHHMMSS>.md`
+- Exported plan state artifacts:
+- Export naming rule: exported `plan-state` artifact names must include
+  `author`, `device`, and second-precision `time` labels.
+- Example plan state export name:
+  `<goal-id>-plan-state--author-<author>--device-<device>--time-<YYYYMMDDTHHMMSS>.md`
 ```

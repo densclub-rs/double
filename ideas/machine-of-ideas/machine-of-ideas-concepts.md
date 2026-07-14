@@ -1,6 +1,7 @@
 ---
 id: machine-of-ideas-concepts
 kind: concept-artifact
+mindmap-plugin: basic
 status: release-candidate
 produced-by: concept-extraction-agent
 workflow-version: 0.1.0
@@ -17,22 +18,38 @@ derived-from:
 
 # Concept Artifact: Machine of Ideas
 
-## 1. Source Idea
+## 1. Concept Index
 
-- Source artifact: `ideas/machine-of-ideas/machine-of-ideas.md`
-- Supporting source corpus: `.double`
+- [`concept-idea-machine: Idea of Machine`](#concept-idea-machine-idea-machine): The overall process that transforms unfinished thought into structured, traceable artifacts.
+- [`concept-workflow-stage: Workflow Stage`](#concept-workflow-stage-workflow-stage): A named layer in the machine's transformation sequence.
+  - [`concept-stage-agent: Stage Agent`](#concept-stage-agent-stage-agent): A specialized working unit that performs a workflow stage.
+    - [`concept-role: Role`](#concept-role-role): The stable responsibility model behind an agent.
+    - [`concept-mode: Mode`](#concept-mode-mode): A user-selectable execution lens for performing a stage.
+    - [`concept-style: Style`](#concept-style-style): A reusable fine-tuning layer for adapting how workflow work is mediated.
+    - [`concept-transition-condition: Transition Condition`](#concept-transition-condition-transition-condition): A condition that determines whether work can move beyond the current stage.
+- [`concept-idea-artifact: Idea Artifact`](#concept-idea-artifact-idea-artifact): A structured Markdown representation of an idea that provides input for later stages.
+  - [`concept-mini-idea: Mini Idea`](#concept-mini-idea-mini-idea): A focused idea fragment whose later conceptual and principle work returns to its parent idea.
+  - [`concept-multilingual-artifact-form: Multilingual Artifact Form`](#concept-multilingual-artifact-form-multilingual-artifact-form): The separation between the language of dialogue and the language selected for generated artifacts.
+- [`concept-artifact-contract: Artifact Contract`](#concept-artifact-contract-artifact-contract): The structured expectation that makes a stage output reusable and discoverable.
+- [`concept-human-clarification-loop: Human Clarification Loop`](#concept-human-clarification-loop-human-clarification-loop): A stage-local dialogue through which human answers are integrated into the active artifact.
+- [`concept-self-evolving-working-form: Self-Evolving Working Form`](#concept-self-evolving-working-form-self-evolving-working-form): The machine's capacity to refine its own forms of work through interaction.
+- [`concept-operational-workspace: Operational Workspace`](#concept-operational-workspace-operational-workspace): The organized working layer containing the machine's operational forms.
+  - [`concept-registry: Registry`](#concept-registry-registry): A lookup and routing artifact for operational components.
+- [`concept-project-documentation-layer: Project Documentation Layer`](#concept-project-documentation-layer-project-documentation-layer): The human-readable space where an idea's origins, meanings, and development artifacts can be studied.
+- [`concept-traceability: Traceability`](#concept-traceability-traceability): The visible continuity between derived work and its sources.
+- [`concept-boundary-discipline: Boundary Discipline`](#concept-boundary-discipline-boundary-discipline): The separation between conceptual work and later normative or implementation layers.
+
+## 2. Source Idea
+
+- Source scope: `root idea plus relevant sub-ideas`
 - Source title: `Machine of Ideas`
-- Source idea directory: `ideas/machine-of-ideas`
+- Root idea artifact: `ideas/machine-of-ideas/machine-of-ideas.md`
+- Root idea directory: `ideas/machine-of-ideas`
+- Relevant sub-ideas: `directory-layout`, `concept-extraction`, `mini-idea`, `styles`
 - Published as: `machine-of-ideas-concepts.md`
-- Produced by stage: `Concept Extraction`
-- Stage description: `ideas/machine-of-ideas/concept-extraction/concept-extraction.md`
 - Extraction mode: `validation`
-
-## 2. Validation Conclusion
-
-This artifact is already a result of the `Machine of Ideas` working on itself. It is the published output of the `Concept Extraction` stage and provides the conceptual input for `Principle Synthesis`.
-
-The concept set is valid as a first concept artifact for `Machine of Ideas`. It treats concepts as stable units of meaning rather than as principles, requirements, tasks, or design decisions. Details that express how the machine should guide future decisions have been moved into `ideas/machine-of-ideas/machine-of-ideas-principles.md`.
+- Interaction language: `en`
+- Artifact language: `en`
 
 ## 3. Conceptual Summary
 
@@ -40,7 +57,7 @@ The concept set is valid as a first concept artifact for `Machine of Ideas`. It 
 
 The main conceptual pattern is a layered working machine: human-readable project documentation, operational working forms, stage-specific agents, roles, modes, styles, human clarification loops, multilingual artifact formation, mini ideas, and artifacts all participate in one process as distinct concepts.
 
-Each core concept has a stable explicit id and matching explicit anchor. These ids make concepts usable in catalogs and referable from principle artifacts, specifications, and other ideas without depending on automatically generated heading anchors.
+Each core concept has a stable id in its heading. These ids make concepts usable in the index and referable from principle artifacts, specifications, and other ideas.
 
 ## 4. Working Definition of Concept
 
@@ -50,11 +67,7 @@ It is not yet a principle, requirement, task, design decision, architecture, or 
 
 ## 5. Core Concepts
 
-<a id="concept-idea-machine"></a>
-
-### Concept: Idea Machine
-
-Concept id: `concept-idea-machine`
+### concept-idea-machine: Idea of Machine
 
 #### Definition
 
@@ -71,9 +84,9 @@ This is the umbrella concept that gives the other concepts their place. It expla
 
 #### Related Concepts
 
-- `Workflow Stage`
-- `Idea Artifact`
-- `Self-Evolving Working Form`
+- Other relations: [`concept-workflow-stage`](#concept-workflow-stage-workflow-stage)
+- Other relations: [`concept-idea-artifact`](#concept-idea-artifact-idea-artifact)
+- Other relations: [`concept-self-evolving-working-form`](#concept-self-evolving-working-form-self-evolving-working-form)
 
 #### Boundaries
 
@@ -81,11 +94,11 @@ This is the umbrella concept that gives the other concepts their place. It expla
 - It is not a final ontology of all Double artifacts.
 - It is not just a folder layout or a single prompt.
 
-<a id="concept-idea-artifact"></a>
+#### Questions
 
-### Concept: Idea Artifact
+No open questions are currently recorded.
 
-Concept id: `concept-idea-artifact`
+### concept-idea-artifact: Idea Artifact
 
 #### Definition
 
@@ -102,9 +115,9 @@ It is the first stable public form of the idea and a source for later conceptual
 
 #### Related Concepts
 
-- `Idea Machine`
-- `Traceability`
-- `Artifact Contract`
+- Other relations: [`concept-idea-machine`](#concept-idea-machine-idea-machine)
+- Other relations: [`concept-traceability`](#concept-traceability-traceability)
+- Other relations: [`concept-artifact-contract`](#concept-artifact-contract-artifact-contract)
 
 #### Boundaries
 
@@ -112,11 +125,11 @@ It is the first stable public form of the idea and a source for later conceptual
 - It is not a specification or implementation plan.
 - It may preserve ambiguity when ambiguity remains meaningful.
 
-<a id="concept-mini-idea"></a>
+#### Questions
 
-### Concept: Mini Idea
+No open questions are currently recorded.
 
-Concept id: `concept-mini-idea`
+### concept-mini-idea: Mini Idea
 
 #### Definition
 
@@ -134,10 +147,10 @@ It gives the machine a light but traceable form for working on one aspect of an 
 
 #### Related Concepts
 
-- `Idea Artifact`
-- `Artifact Contract`
-- `Traceability`
-- `Human Clarification Loop`
+- Other relations: [`concept-idea-artifact`](#concept-idea-artifact-idea-artifact)
+- Other relations: [`concept-artifact-contract`](#concept-artifact-contract-artifact-contract)
+- Other relations: [`concept-traceability`](#concept-traceability-traceability)
+- Other relations: [`concept-human-clarification-loop`](#concept-human-clarification-loop-human-clarification-loop)
 
 #### Boundaries
 
@@ -147,11 +160,11 @@ It gives the machine a light but traceable form for working on one aspect of an 
 - It does not hide parent-level impact; changes to parent concepts or principles must be reported explicitly to the user.
 - If its meaning significantly diverges from the parent idea, work should stop and the user should be asked whether the material should become a separate independent idea.
 
-<a id="concept-workflow-stage"></a>
+#### Questions
 
-### Concept: Workflow Stage
+No open questions are currently recorded.
 
-Concept id: `concept-workflow-stage`
+### concept-workflow-stage: Workflow Stage
 
 #### Definition
 
@@ -168,9 +181,9 @@ It makes the machine reproducible by distinguishing what kind of work is happeni
 
 #### Related Concepts
 
-- `Stage Agent`
-- `Artifact Contract`
-- `Transition Condition`
+- Other relations: [`concept-stage-agent`](#concept-stage-agent-stage-agent)
+- Other relations: [`concept-artifact-contract`](#concept-artifact-contract-artifact-contract)
+- Other relations: [`concept-transition-condition`](#concept-transition-condition-transition-condition)
 
 #### Boundaries
 
@@ -178,11 +191,11 @@ It makes the machine reproducible by distinguishing what kind of work is happeni
 - A stage is not a mode of behavior.
 - It is not the whole transformation process.
 
-<a id="concept-stage-agent"></a>
+#### Questions
 
-### Concept: Stage Agent
+No open questions are currently recorded.
 
-Concept id: `concept-stage-agent`
+### concept-stage-agent: Stage Agent
 
 #### Definition
 
@@ -199,9 +212,9 @@ It is the operational performer of a stage. The agent executes a stage, but does
 
 #### Related Concepts
 
-- `Workflow Stage`
-- `Role`
-- `Mode`
+- Other relations: [`concept-workflow-stage`](#concept-workflow-stage-workflow-stage)
+- Other relations: [`concept-role`](#concept-role-role)
+- Other relations: [`concept-mode`](#concept-mode-mode)
 
 #### Boundaries
 
@@ -209,11 +222,11 @@ It is the operational performer of a stage. The agent executes a stage, but does
 - It does not own the whole machine.
 - It is not the workflow that orders stages.
 
-<a id="concept-role"></a>
+#### Questions
 
-### Concept: Role
+No open questions are currently recorded.
 
-Concept id: `concept-role`
+### concept-role: Role
 
 #### Definition
 
@@ -230,10 +243,10 @@ It separates an agent's responsibility model from a particular mode, style, or e
 
 #### Related Concepts
 
-- `Stage Agent`
-- `Mode`
-- `Style`
-- `Boundary Discipline`
+- Other relations: [`concept-stage-agent`](#concept-stage-agent-stage-agent)
+- Other relations: [`concept-mode`](#concept-mode-mode)
+- Other relations: [`concept-style`](#concept-style-style)
+- Other relations: [`concept-boundary-discipline`](#concept-boundary-discipline-boundary-discipline)
 
 #### Boundaries
 
@@ -241,11 +254,11 @@ It separates an agent's responsibility model from a particular mode, style, or e
 - A role is not a user-selectable mode.
 - A role is not the full workflow sequence.
 
-<a id="concept-mode"></a>
+#### Questions
 
-### Concept: Mode
+No open questions are currently recorded.
 
-Concept id: `concept-mode`
+### concept-mode: Mode
 
 #### Definition
 
@@ -262,10 +275,10 @@ It lets the same stage be performed with different cognitive or service behavior
 
 #### Related Concepts
 
-- `Stage Agent`
-- `Role`
-- `Workflow Stage`
-- `Style`
+- Other relations: [`concept-stage-agent`](#concept-stage-agent-stage-agent)
+- Other relations: [`concept-role`](#concept-role-role)
+- Other relations: [`concept-workflow-stage`](#concept-workflow-stage-workflow-stage)
+- Other relations: [`concept-style`](#concept-style-style)
 
 #### Boundaries
 
@@ -274,11 +287,11 @@ It lets the same stage be performed with different cognitive or service behavior
 - A mode is not the artifact produced by a stage.
 - A mode is not a style; it changes the execution lens of a stage, while style changes the expressive and configurable manner in which workflow work is mediated.
 
-<a id="concept-style"></a>
+#### Questions
 
-### Concept: Style
+No open questions are currently recorded.
 
-Concept id: `concept-style`
+### concept-style: Style
 
 #### Definition
 
@@ -298,12 +311,12 @@ Styles can be formulated, reused, shared, adapted, or used as source material fo
 
 #### Related Concepts
 
-- `Idea Machine`
-- `Workflow Stage`
-- `Mode`
-- `Role`
-- `Artifact Contract`
-- `Self-Evolving Working Form`
+- Other relations: [`concept-idea-machine`](#concept-idea-machine-idea-machine)
+- Other relations: [`concept-workflow-stage`](#concept-workflow-stage-workflow-stage)
+- Other relations: [`concept-mode`](#concept-mode-mode)
+- Other relations: [`concept-role`](#concept-role-role)
+- Other relations: [`concept-artifact-contract`](#concept-artifact-contract-artifact-contract)
+- Other relations: [`concept-self-evolving-working-form`](#concept-self-evolving-working-form-self-evolving-working-form)
 
 #### Boundaries
 
@@ -314,11 +327,11 @@ Styles can be formulated, reused, shared, adapted, or used as source material fo
 - Style inheritance is not yet a technical inheritance mechanism; an existing style may serve as source material for forming a new style.
 - The concrete storage layout, loading rules, validation rules, and exchange mechanism for styles belong to later design or specification work.
 
-<a id="concept-multilingual-artifact-form"></a>
+#### Questions
 
-### Concept: Multilingual Artifact Form
+No open questions are currently recorded.
 
-Concept id: `concept-multilingual-artifact-form`
+### concept-multilingual-artifact-form: Multilingual Artifact Form
 
 #### Definition
 
@@ -335,10 +348,10 @@ It allows the machine to preserve the living context of thought in the user's na
 
 #### Related Concepts
 
-- `Human Clarification Loop`
-- `Artifact Contract`
-- `Idea Artifact`
-- `Traceability`
+- Other relations: [`concept-human-clarification-loop`](#concept-human-clarification-loop-human-clarification-loop)
+- Other relations: [`concept-artifact-contract`](#concept-artifact-contract-artifact-contract)
+- Other relations: [`concept-idea-artifact`](#concept-idea-artifact-idea-artifact)
+- Other relations: [`concept-traceability`](#concept-traceability-traceability)
 
 #### Boundaries
 
@@ -347,11 +360,11 @@ It allows the machine to preserve the living context of thought in the user's na
 - It does not allow agents to silently choose the artifact language without user confirmation.
 - It does not replace source traceability; when language transformation affects meaning, uncertainty should remain visible.
 
-<a id="concept-artifact-contract"></a>
+#### Questions
 
-### Concept: Artifact Contract
+No open questions are currently recorded.
 
-Concept id: `concept-artifact-contract`
+### concept-artifact-contract: Artifact Contract
 
 #### Definition
 
@@ -368,9 +381,9 @@ It makes stage outputs comparable, reusable, and discoverable from their source 
 
 #### Related Concepts
 
-- `Workflow Stage`
-- `Traceability`
-- `Idea Artifact`
+- Other relations: [`concept-workflow-stage`](#concept-workflow-stage-workflow-stage)
+- Other relations: [`concept-traceability`](#concept-traceability-traceability)
+- Other relations: [`concept-idea-artifact`](#concept-idea-artifact-idea-artifact)
 
 #### Boundaries
 
@@ -378,11 +391,11 @@ It makes stage outputs comparable, reusable, and discoverable from their source 
 - An artifact contract is not an implementation task.
 - It is not the content of the artifact itself.
 
-<a id="concept-registry"></a>
+#### Questions
 
-### Concept: Registry
+No open questions are currently recorded.
 
-Concept id: `concept-registry`
+### concept-registry: Registry
 
 #### Definition
 
@@ -399,9 +412,9 @@ Registries make the machine loadable by agents and understandable to humans. The
 
 #### Related Concepts
 
-- `Operational Workspace`
-- `Workflow Stage`
-- `Stage Agent`
+- Other relations: [`concept-operational-workspace`](#concept-operational-workspace-operational-workspace)
+- Other relations: [`concept-workflow-stage`](#concept-workflow-stage-workflow-stage)
+- Other relations: [`concept-stage-agent`](#concept-stage-agent-stage-agent)
 
 #### Boundaries
 
@@ -409,11 +422,11 @@ Registries make the machine loadable by agents and understandable to humans. The
 - A registry is not the full workflow, agent, role, or mode content.
 - A registry is not a project documentation essay.
 
-<a id="concept-operational-workspace"></a>
+#### Questions
 
-### Concept: Operational Workspace
+No open questions are currently recorded.
 
-Concept id: `concept-operational-workspace`
+### concept-operational-workspace: Operational Workspace
 
 #### Definition
 
@@ -430,9 +443,9 @@ It names the operational side of the machine apart from human-facing project doc
 
 #### Related Concepts
 
-- `Project Documentation Layer`
-- `Registry`
-- `Self-Evolving Working Form`
+- Other relations: [`concept-project-documentation-layer`](#concept-project-documentation-layer-project-documentation-layer)
+- Other relations: [`concept-registry`](#concept-registry-registry)
+- Other relations: [`concept-self-evolving-working-form`](#concept-self-evolving-working-form-self-evolving-working-form)
 
 #### Boundaries
 
@@ -440,11 +453,11 @@ It names the operational side of the machine apart from human-facing project doc
 - It is not a single concrete file or registry.
 - It is not identical to the conceptual description of the machine.
 
-<a id="concept-project-documentation-layer"></a>
+#### Questions
 
-### Concept: Project Documentation Layer
+No open questions are currently recorded.
 
-Concept id: `concept-project-documentation-layer`
+### concept-project-documentation-layer: Project Documentation Layer
 
 #### Definition
 
@@ -461,20 +474,20 @@ It names the human-facing side of the machine where meaning, origin, and develop
 
 #### Related Concepts
 
-- `Operational Workspace`
-- `Artifact Contract`
-- `Traceability`
+- Other relations: [`concept-operational-workspace`](#concept-operational-workspace-operational-workspace)
+- Other relations: [`concept-artifact-contract`](#concept-artifact-contract-artifact-contract)
+- Other relations: [`concept-traceability`](#concept-traceability-traceability)
 
 #### Boundaries
 
 - It is not the operational workspace.
 - It is not a registry, prompt catalog, or runtime surface.
 
-<a id="concept-traceability"></a>
+#### Questions
 
-### Concept: Traceability
+No open questions are currently recorded.
 
-Concept id: `concept-traceability`
+### concept-traceability: Traceability
 
 #### Definition
 
@@ -491,9 +504,9 @@ It names the continuity by which later work remains understandable as derived fr
 
 #### Related Concepts
 
-- `Artifact Contract`
-- `Boundary Discipline`
-- `Self-Evolving Working Form`
+- Other relations: [`concept-artifact-contract`](#concept-artifact-contract-artifact-contract)
+- Other relations: [`concept-boundary-discipline`](#concept-boundary-discipline-boundary-discipline)
+- Other relations: [`concept-self-evolving-working-form`](#concept-self-evolving-working-form-self-evolving-working-form)
 
 #### Boundaries
 
@@ -501,11 +514,11 @@ It names the continuity by which later work remains understandable as derived fr
 - It is not the artifact contract that expresses it.
 - It is not the same thing as validation.
 
-<a id="concept-boundary-discipline"></a>
+#### Questions
 
-### Concept: Boundary Discipline
+No open questions are currently recorded.
 
-Concept id: `concept-boundary-discipline`
+### concept-boundary-discipline: Boundary Discipline
 
 #### Definition
 
@@ -522,9 +535,9 @@ It names the conceptual distinction between layers of work, especially between u
 
 #### Related Concepts
 
-- `Workflow Stage`
-- `Role`
-- `Transition Condition`
+- Other relations: [`concept-workflow-stage`](#concept-workflow-stage-workflow-stage)
+- Other relations: [`concept-role`](#concept-role-role)
+- Other relations: [`concept-transition-condition`](#concept-transition-condition-transition-condition)
 
 #### Boundaries
 
@@ -532,11 +545,11 @@ It names the conceptual distinction between layers of work, especially between u
 - It is not the same as principle synthesis.
 - It is not a transition condition.
 
-<a id="concept-transition-condition"></a>
+#### Questions
 
-### Concept: Transition Condition
+No open questions are currently recorded.
 
-Concept id: `concept-transition-condition`
+### concept-transition-condition: Transition Condition
 
 #### Definition
 
@@ -553,9 +566,9 @@ It turns the workflow from a loose sequence into a controlled process. A stage c
 
 #### Related Concepts
 
-- `Workflow Stage`
-- `Artifact Contract`
-- `Boundary Discipline`
+- Other relations: [`concept-workflow-stage`](#concept-workflow-stage-workflow-stage)
+- Other relations: [`concept-artifact-contract`](#concept-artifact-contract-artifact-contract)
+- Other relations: [`concept-boundary-discipline`](#concept-boundary-discipline-boundary-discipline)
 
 #### Boundaries
 
@@ -563,11 +576,11 @@ It turns the workflow from a loose sequence into a controlled process. A stage c
 - It does not define the full quality model of the artifact.
 - It is not the same as implementation validation.
 
-<a id="concept-self-evolving-working-form"></a>
+#### Questions
 
-### Concept: Self-Evolving Working Form
+No open questions are currently recorded.
 
-Concept id: `concept-self-evolving-working-form`
+### concept-self-evolving-working-form: Self-Evolving Working Form
 
 #### Definition
 
@@ -584,9 +597,9 @@ It explains why the machine is not only a fixed template pipeline.
 
 #### Related Concepts
 
-- `Idea Machine`
-- `Operational Workspace`
-- `Traceability`
+- Other relations: [`concept-idea-machine`](#concept-idea-machine-idea-machine)
+- Other relations: [`concept-operational-workspace`](#concept-operational-workspace-operational-workspace)
+- Other relations: [`concept-traceability`](#concept-traceability-traceability)
 
 #### Boundaries
 
@@ -594,11 +607,11 @@ It explains why the machine is not only a fixed template pipeline.
 - It is not identical to workflow versioning.
 - It is not a single edit to one artifact.
 
-<a id="concept-human-clarification-loop"></a>
+#### Questions
 
-### Concept: Human Clarification Loop
+No open questions are currently recorded.
 
-Concept id: `concept-human-clarification-loop`
+### concept-human-clarification-loop: Human Clarification Loop
 
 #### Definition
 
@@ -616,10 +629,10 @@ It keeps the machine from treating missing context as something the agent should
 
 #### Related Concepts
 
-- `Workflow Stage`
-- `Idea Artifact`
-- `Artifact Contract`
-- `Traceability`
+- Other relations: [`concept-workflow-stage`](#concept-workflow-stage-workflow-stage)
+- Other relations: [`concept-idea-artifact`](#concept-idea-artifact-idea-artifact)
+- Other relations: [`concept-artifact-contract`](#concept-artifact-contract-artifact-contract)
+- Other relations: [`concept-traceability`](#concept-traceability-traceability)
 
 #### Boundaries
 
@@ -628,41 +641,11 @@ It keeps the machine from treating missing context as something the agent should
 - It does not allow the current stage to silently become a later stage.
 - It does not require every minor uncertainty to be asked immediately.
 
-## 6. Conceptual Map
+#### Questions
 
-```text
-Raw user input
-  -> Idea Capture
-  -> Idea Artifact
-  -> Concept Extraction
-  -> Concept Artifact
-  -> Principle Synthesis
-  -> Principle Artifact
-```
+No open questions are currently recorded.
 
-The workflow sequence is held together by these relations:
-
-- `Idea Machine` contains the overall transformation process.
-- `Workflow Stage` defines a layer of work in the process.
-- `Stage Agent` executes a `Workflow Stage`.
-- `Role` stabilizes the responsibility of a `Stage Agent`.
-- `Mode` changes the execution lens of a stage without changing the role or stage.
-- `Style` fine-tunes the expressive and configurable manner of workflow work while preserving the workflow contract.
-- `Artifact Contract` gives each output a reusable form.
-- `Mini Idea` gives small additions a lighter artifact while routing concept and principle synthesis back into the parent idea.
-- `Multilingual Artifact Form` separates the language of dialogue from the language of produced artifacts.
-- `Registry` makes operational components discoverable.
-- `Operational Workspace` stores the executable working form of the machine.
-- `Project Documentation Layer` stores the human-readable reasons and sub-ideas.
-- `Traceability` describes continuity between later artifacts and their sources.
-- `Boundary Discipline` describes the distinction between layers of work.
-- `Transition Condition` controls movement between stages.
-- `Self-Evolving Working Form` names the machine's ability to change its own forms.
-- `Human Clarification Loop` names the process by which open questions are asked to the human and answered inside the active artifact.
-
-In the mini-idea variant, answers to open questions may affect the parent idea's concept or principle artifacts. When that happens, the parent artifact remains the integration target and the mini-idea remains a cited source.
-
-## 7. Entities and Terms
+## 6. Terms and Non-Concepts
 
 These terms are important in the source corpus but are not treated here as core concepts:
 
@@ -684,8 +667,11 @@ These terms are important in the source corpus but are not treated here as core 
 - `artifact-language`: a frontmatter field that records the language selected for the produced artifact.
 - `PDF`, `HTML`, `Markdown`, and `JSON`: output or representation formats, not styles in this concept artifact.
 
-## 8. Notes for Principle Synthesis
+## 7. Candidate Inputs for Principle Synthesis
 
-The previous version of this concept artifact contained several normative statements and future implementation directions. Those details have been moved into `ideas/machine-of-ideas/machine-of-ideas-principles.md`.
-
-This artifact now keeps the concept layer focused on stable meanings, relations, and boundaries.
+- The relation between `Idea Machine`, `Workflow Stage`, `Artifact Contract`, and `Transition Condition` may support principles for preserving meaningful, controlled transitions between stages.
+- The relation between `Stage Agent`, `Role`, `Mode`, and `Style` may support principles for separating stable responsibility, execution behavior, and expressive adaptation.
+- `Traceability`, `Boundary Discipline`, and `Human Clarification Loop` may support principles for preserving source continuity, preventing premature implementation, and keeping unresolved human choices visible.
+- The tension between a stable workflow contract and `Self-Evolving Working Form` needs normative clarification.
+- The relation between parent ideas and `Mini Idea` needs normative clarification so that local development remains lightweight without hiding parent-level impact.
+- `Multilingual Artifact Form` may support a principle that interaction language and artifact language remain explicit user choices.

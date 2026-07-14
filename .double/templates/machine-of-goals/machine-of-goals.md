@@ -9,13 +9,13 @@ status: draft
 
 ## [Templates](../templates.md)
 
-- [Goal Artifact Template](./goal-artifact-template.md)
+- [Goal Template](./goal-template.md)
 - [Path Options Template](./path-options-template.md)
-- [Plan Artifact Template](./plan-artifact-template.md)
+- [Plan Template](./plan-template.md)
 - [Realization Decision Template](./realization-decision-template.md)
-- [Stage Result Template](./stage-result-template.md)
+- [Stage Attempt Result Template](./stage-attempt-result-template.md)
 - [Validation Result Template](./validation-result-template.md)
-- [Updated Plan State Template](./updated-plan-state-template.md)
+- [Plan State Template](./plan-state-template.md)
 - [Exported Plan Package Template](./exported-plan-package-template.md)
 
 ## Draft Interpretation

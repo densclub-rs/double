@@ -39,8 +39,8 @@ delegation, automation, handoff, or creation of implementation artifacts.
 
 ## Expected Outputs
 
-- stage result
-- updated plan state
+- stage-attempt-result artifact
+- plan-state artifact
 - implementation artifact, handoff artifact, or execution note when applicable
 - discovered risks, blockers, or revision needs
 
@@ -56,4 +56,4 @@ Stop before continuing when:
 ## Workflow Fit
 
 Primary mode for `05-plan-realization`. It normally hands off to
-`validation` after producing a stage result.
+`validation` after producing a stage attempt result.

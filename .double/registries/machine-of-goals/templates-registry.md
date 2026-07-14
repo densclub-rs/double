@@ -4,7 +4,7 @@ submodule: machine-of-goals
 id: templates-registry
 kind: registry
 status: draft
-workflow-version: 0.1.0
+workflow-version: 0.1.5
 ---
 
 # Templates Registry
@@ -16,13 +16,13 @@ outputs.
 
 ## Templates
 
-- `goal-artifact` -> `.double/templates/machine-of-goals/goal-artifact-template.md`
+- `goal-artifact` -> `.double/templates/machine-of-goals/goal-template.md`
 - `path-options` -> `.double/templates/machine-of-goals/path-options-template.md`
-- `plan-artifact` -> `.double/templates/machine-of-goals/plan-artifact-template.md`
+- `plan-artifact` -> `.double/templates/machine-of-goals/plan-template.md`
 - `realization-decision` -> `.double/templates/machine-of-goals/realization-decision-template.md`
-- `stage-result` -> `.double/templates/machine-of-goals/stage-result-template.md`
+- `stage-attempt-result` -> `.double/templates/machine-of-goals/stage-attempt-result-template.md`
 - `validation-result` -> `.double/templates/machine-of-goals/validation-result-template.md`
-- `updated-plan-state` -> `.double/templates/machine-of-goals/updated-plan-state-template.md`
+- `plan-state` -> `.double/templates/machine-of-goals/plan-state-template.md`
 - `exported-plan-package` -> `.double/templates/machine-of-goals/exported-plan-package-template.md`
 
 ## Usage Rule

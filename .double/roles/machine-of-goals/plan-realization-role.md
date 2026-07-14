@@ -32,7 +32,14 @@ preparing a handoff artifact within approved boundaries.
 - create scripts, workflows, checklists, specifications, or handoff artifacts
   only when they serve the current stage
 - update plan state with attempts, changes, blockers, and produced artifacts
+- include author, device or runtime, and second-precision attempt time in each
+  stage attempt result
+- after updating `plan-state`, ask whether to keep the separate attempt artifact
+- when a stage has more than 10 attempt artifacts, ask whether old attempt
+  artifacts should be deleted, compacted, or kept
 - hand results to validation rather than accepting them as final
+- after each response, offer the next useful workflow movement, usually
+  continue execution, dry run, stop for confirmation, or hand off to validation
 
 ## Strict Constraints
 

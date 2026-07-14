@@ -4,7 +4,7 @@ submodule: machine-of-goals
 id: skills-registry
 kind: registry
 status: draft
-workflow-version: 0.1.0
+workflow-version: 0.1.5
 derived-from:
   - .double/workflows/machine-of-goals/machine-of-goals-workflow.md
 ---

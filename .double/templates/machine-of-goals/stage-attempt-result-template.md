@@ -1,7 +1,7 @@
 ---
 style: double
 submodule: machine-of-goals
-id: stage-result-template
+id: stage-attempt-result-template
 kind: template
 status: draft
 workflow-stage: plan-realization
@@ -11,26 +11,34 @@ derived-from:
   - ../../workflows/machine-of-goals/machine-of-goals-workflow.md
 ---
 
-# Template: Stage Result
+# Template: Stage Attempt Result
 
 ```md
 ---
-id: <goal-id>-<stage-id>-result
-kind: stage-result
+id: <goal-id>-<stage-id>-attempt-<attempt-id>
+kind: stage-attempt-result
 status: draft
 produced-by: plan-realization-agent
 workflow-version: <workflow-version>
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
+current-step: 05-plan-realization
+current-mode: <execution|dry-run|explain|planning>
+next-expected-step: 06-plan-validation
+transition-condition: stage has a result that can be validated, or is blocked and needs plan revision
 goal-id: <goal-id>
 plan-id: <plan-id>
 stage-id: <stage-id>
+attempt-id: <attempt-id>
+author: <author-or-agent-id>
+device: <device-or-runtime-id>
+attempted-at: <YYYY-MM-DDTHH:MM:SS+HH:MM>
 derived-from:
   - <plan-artifact-id-or-path>
   - <realization-decision-id-or-path>
 ---
 
-# Stage Result: <Stage Name>
+# Stage Attempt Result: <Stage Name>
 
 ## 1. Stage Context
 
@@ -43,8 +51,12 @@ derived-from:
 
 ## 2. Actions Performed
 
+- Attempt id:
 - Action:
 - Actor:
+- Author:
+- Device / runtime:
+- Attempted at:
 - Mode: <manual|interactive|partial-automation|automatic|external-handoff>
 - Time / cost:
 - Notes:
@@ -82,11 +94,4 @@ derived-from:
 - Result status: <ready-for-validation|blocked|partial|failed|needs-plan-revision>
 - Summary:
 - Recommended next step:
-
-## 8. Workflow State
-
-- Current step: `05-plan-realization`
-- Current mode: `<execution|dry-run|explain|planning>`
-- Next expected step: `06-plan-validation`
-- Transition condition: stage has a result that can be validated, or is blocked and needs plan revision
 ```

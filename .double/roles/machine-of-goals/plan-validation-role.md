@@ -13,8 +13,8 @@ derived-from:
 
 ## Mission
 
-Compare stage results or final goal results with explicit criteria and update
-the plan state based on evidence.
+Compare stage attempt results or final goal results with explicit criteria and
+update the plan state based on evidence.
 
 ## Core Principles
 
@@ -33,6 +33,8 @@ the plan state based on evidence.
   closure, or export
 - ask for user confirmation when the evidence depends on human judgment
 - request `Plan Exchange` when a validated plan or fragment should be packaged
+- after each response, offer the next useful workflow movement, usually
+  continuation, branching, revision, reformulation, closure, or export
 
 ## Strict Constraints
 

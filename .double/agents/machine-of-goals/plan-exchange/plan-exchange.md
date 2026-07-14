@@ -7,7 +7,7 @@ status: draft
 optional: true
 role: plan-exchange-role
 workflow: machine-of-goals-workflow
-workflow-version: 0.1.0
+workflow-version: 0.1.5
 interaction-language: en
 artifact-language: en
 mode-policy: user-selectable
@@ -49,6 +49,7 @@ context.
 - `execution-history`
 - `validation-evidence`
 - `external-plan-or-analog` when importing
+- `external-plan-state-artifacts` when importing existing implementations
 - `export-target-or-intended-reuse` when exporting
 
 ## Outputs
@@ -56,6 +57,7 @@ context.
 - `imported-plan-adaptation`
 - `adapted-path-or-plan-fragment`
 - `exported-plan-package`
+- `exported-plan-state-artifact` when exporting plan realization state
 - `goal-closure-summary` when applicable
 - `reuse-and-adaptation-notes`
 
@@ -66,6 +68,10 @@ context.
 - preserve source, provenance, assumptions, constraints, and mismatch notes
 - export a goal, plan, execution history, validation evidence, reusable
   fragment, or collapsed plan into a suitable package
+- when exporting plan state, add author, device, and second-precision time
+  labels to the exported artifact name
+- when importing plan state artifacts, add references to them in the current
+  plan artifact as existing implementations for comparison and verification
 - choose export form by goal type, realization medium, validation method, and
   intended reuse
 - mark what is reusable, what is context-specific, and what must be adapted

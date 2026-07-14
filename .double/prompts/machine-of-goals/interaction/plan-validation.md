@@ -16,9 +16,9 @@ We are going to validate the current stage or goal result.
 
 Current step: `06-plan-validation`.
 Default mode: `validation`.
-Expected outputs: `validation-result`, `updated-plan-state`.
+Expected outputs: `validation-result`, `plan-state`.
 
-Compare evidence with criteria and mark the result as:
+Compare stage attempt evidence with criteria and mark the result as:
 
 - accepted
 - rejected
@@ -28,3 +28,6 @@ Compare evidence with criteria and mark the result as:
 
 Then decide the next workflow direction: continue, branch, revise, reformulate,
 pause, close, or request export.
+
+After responding, offer the next useful workflow movement. Name the next step,
+mode, responsible agent, and expected artifact when known.

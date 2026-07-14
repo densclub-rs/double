@@ -1,19 +1,37 @@
 ---
 id: machine-of-goals-concepts
 kind: concept-artifact
+mindmap-plugin: basic
 status: release-candidate
 produced-by: concept-extraction-agent
 workflow-version: 0.2.0
-interaction-language: Russian
-artifact-language: Russian
+interaction-language: English
+artifact-language: English
 publication-path: ideas/machine-of-goals/machine-of-goals-concepts.md
 derived-from:
   - machine-of-goals
+  - ideas/machine-of-ideas/machine-of-ideas-concepts.md
 ---
 
 # Concept Artifact: Machine of Goals
 
-## 1. Source Idea
+## 1. Concept Index
+
+- [`concept-goal-as-verifiable-target-state: Goal as Verifiable Target State`](#concept-goal-as-verifiable-target-state-goal-as-verifiable-target-state): A goal expressed as a desired state whose achievement can be verified.
+- [`concept-success-criteria: Success Criteria`](#concept-success-criteria-success-criteria): The criteria for distinguishing achievement, partial achievement, failure, or the need for review.
+- [`concept-initial-state-and-target-state: Initial State and Target State`](#concept-initial-state-and-target-state-initial-state-and-target-state): The pair of states that frames goal achievement as a transition.
+- [`concept-realization-path: Realization Path`](#concept-realization-path-realization-path): A possible strategy for approaching a goal before composing a concrete plan.
+- [`concept-plan-as-transition-model: Plan as Transition Model`](#concept-plan-as-transition-model-plan-as-transition-model): A structured model for moving from the initial state to the target state.
+- [`concept-subgoal-and-partial-achievement: Subgoal and Partial Achievement`](#concept-subgoal-and-partial-achievement-subgoal-and-partial-achievement): Intermediate verifiable states that contribute to a parent goal.
+- [`concept-plan-cost-and-efficiency: Plan Cost and Efficiency`](#concept-plan-cost-and-efficiency-plan-cost-and-efficiency): Measures for comparing execution cost with expected results.
+- [`concept-plan-algorithmization: Plan Algorithmization`](#concept-plan-algorithmization-plan-algorithmization): The transformation of a sufficiently clear plan into a controlled achievement algorithm.
+- [`concept-plan-explanation-and-control: Plan Explanation and Control`](#concept-plan-explanation-and-control-plan-explanation-and-control): The visibility of steps, reasons, checks, parameters, stop points, and review opportunities.
+- [`concept-interactive-and-automatic-execution: Interactive and Automatic Execution`](#concept-interactive-and-automatic-execution-interactive-and-automatic-execution): The range of execution modes from manual through fully automatic.
+- [`concept-executable-collapsed-plan: Executable Collapsed Plan`](#concept-executable-collapsed-plan-executable-collapsed-plan): A reusable form of a plan suitable for automatic execution, handoff, or publication.
+- [`concept-plan-exchange: Plan Exchange`](#concept-plan-exchange-plan-exchange): Reuse and adaptation of successful plans together with their goal context.
+- [`concept-goal-artifact-context: Goal Artifact Context`](#concept-goal-artifact-context-goal-artifact-context): The file and semantic context that keeps a goal, its plan, realization, and evidence together.
+
+## 2. Source Idea
 
 - Source scope: `root idea`
 - Source title: `Machine of Goals`
@@ -22,32 +40,30 @@ derived-from:
 - Relevant sub-ideas: none
 - Published as: `machine-of-goals-concepts.md`
 - Extraction mode: `strict-research`
-- Interaction language: `Russian`
-- Artifact language: `Russian`
+- Interaction language: `English`
+- Artifact language: `English`
 
-## 2. Conceptual Summary
+## 3. Conceptual Summary
 
-`Machine of Goals` описывает систему перехода от намерения к проверяемому достижению. Её центральный концептуальный паттерн: цель задаётся как верифицируемое целевое состояние, затем вокруг неё строятся возможные пути, планы, алгоритмы, режимы исполнения и формы сворачивания плана в автоматический механизм.
+`Machine of Goals` describes a system for moving from intention to verifiable achievement. Its central conceptual pattern is this: a goal is defined as a verifiable target state; then possible paths, plans, algorithms, execution modes, and forms for collapsing the plan into an automatic mechanism are built around it.
 
-Идея держится на различении нескольких уровней: цель не равна плану, план не равен алгоритму, алгоритм не равен автоматическому исполнению, а автоматическое исполнение не отменяет объяснение, контроль и возможность интерактивного пересмотра. Это делает Machine of Goals не просто менеджером задач, а машиной преобразования цели в управляемую структуру действия.
+As a specialized machine within Double, `Machine of Goals` realizes all foundational concepts defined by the [`Machine of Ideas` concept artifact](../machine-of-ideas/machine-of-ideas-concepts.md). Its goal-specific concepts extend that common conceptual foundation rather than replace it.
 
-## 3. Working Definition of Concept
+The idea rests on a distinction between several levels: a goal is not the same as a plan, a plan is not the same as an algorithm, an algorithm is not the same as automatic execution, and automatic execution does not cancel explanation, control, or the possibility of interactive review. This makes Machine of Goals not merely a task manager, but a machine for transforming a goal into a controllable structure of action.
 
-Концепт - это устойчивая смысловая единица идеи.
-Он может описывать сущность, отношение, процесс, различение, напряжение или интерпретационную рамку.
-На этом этапе концепт ещё не является принципом, требованием, задачей или дизайн-решением.
+## 4. Working Definition of Concept
 
-## 4. Core Concepts
+A concept is a stable semantic unit of an idea.
+It may describe an entity, relation, process, distinction, tension, or interpretive frame.
+At this stage, a concept is not yet a principle, requirement, task, or design decision.
 
-<a id="concept-goal-as-verifiable-target-state"></a>
+## 5. Core Concepts
 
-### Concept: Goal as Verifiable Target State
-
-Concept id: `concept-goal-as-verifiable-target-state`
+### concept-goal-as-verifiable-target-state: Goal as Verifiable Target State
 
 #### Definition
 
-Цель - это желаемое состояние, которое можно достаточно ясно описать и затем проверить через сравнение результата с исходной спецификацией. Необходимый уровень формальности этой спецификации зависит от типа цели и должен определяться при проектировании самой цели: программные, личные, социальные и исследовательские цели могут требовать разных форм описания, проверки и доказательства достижения.
+A goal is a desired state that can be described clearly enough and then verified by comparing the result with the original specification. The necessary level of formality for this specification depends on the type of goal and should be determined during the design of the goal itself: software, personal, social, and research goals may require different forms of description, verification, and proof of achievement.
 
 #### Source in Idea
 
@@ -56,34 +72,30 @@ Concept id: `concept-goal-as-verifiable-target-state`
 
 #### Role in the Idea
 
-Этот концепт задаёт основу всей машины: если цель нельзя представить как проверяемое состояние, её трудно превратить в путь, план, алгоритм и критерий завершения.
+This concept sets the foundation for the whole machine: if a goal cannot be represented as a verifiable state, it is difficult to turn it into a path, plan, algorithm, and completion criterion.
 
 #### Related Concepts
 
-- `Initial State and Target State`: задаёт переход, внутри которого цель становится достижимой.
-- `Success Criteria`: делает проверку цели операционально осмысленной.
-- `Plan as Transition Model`: описывает способ перехода к целевому состоянию.
+- Other relations: [`concept-initial-state-and-target-state`](#concept-initial-state-and-target-state-initial-state-and-target-state): defines the transition within which the goal becomes achievable.
+- Other relations: [`concept-success-criteria`](#concept-success-criteria-success-criteria): makes goal verification operationally meaningful.
+- Other relations: [`concept-plan-as-transition-model`](#concept-plan-as-transition-model-plan-as-transition-model): describes the way of moving toward the target state.
 
 #### Boundaries
 
-- Это не мотивация сама по себе.
-- Это не список задач.
-- Это не гарантия достижимости: цель может быть проверяемой, но пока не иметь реалистичного плана.
-- Это не универсально одинаковая формальная спецификация для всех целей: Machine of Goals должна помогать подобрать достаточную степень формальности под тип цели, контекст проверки и будущую возможность планирования.
+- This is not motivation by itself.
+- This is not a task list.
+- This is not a guarantee of achievability: a goal may be verifiable while still lacking a realistic plan.
+- This is not a universally identical formal specification for all goals: Machine of Goals should help choose a sufficient degree of formality for the goal type, verification context, and future possibility of planning.
 
 #### Questions
 
-- [x] Насколько формальной должна быть спецификация целевого состояния для разных типов целей: программных, личных, социальных, исследовательских?
+- [x] How formal should the target-state specification be for different types of goals: software, personal, social, and research goals?
 
-<a id="concept-initial-state-and-target-state"></a>
-
-### Concept: Initial State and Target State
-
-Concept id: `concept-initial-state-and-target-state`
+### concept-initial-state-and-target-state: Initial State and Target State
 
 #### Definition
 
-Пара состояний, через которую цель становится переходом: от текущего положения субъекта к желаемому проверяемому результату. Исходное состояние может быть явно описано в артефакте цели или оставаться имплицитным, если оно достаточно надёжно определяется текущим контекстом субъекта, среды или уже достигнутых целей.
+The pair of states through which a goal becomes a transition: from the subject's current position to the desired verifiable result. The initial state may be explicitly described in the goal artifact or remain implicit if it is reliably enough determined by the current context of the subject, environment, or already achieved goals.
 
 #### Source in Idea
 
@@ -92,35 +104,31 @@ Concept id: `concept-initial-state-and-target-state`
 
 #### Role in the Idea
 
-Этот концепт помогает отделить формулировку желания от модели изменения. Машина целей должна понимать не только "куда прийти", но и "откуда начинается движение". При этом понимание исходной точки не всегда требует полного явного описания: для некоторых целей контекстом служит текущее состояние программного обеспечения на ПК или смартфоне, состояние рабочего проекта, либо состояние субъекта, восстановимое по уже достигнутым и реализованным целям.
+This concept helps separate the formulation of a wish from the model of change. The machine of goals should understand not only "where to arrive", but also "where the movement begins". At the same time, understanding the starting point does not always require a complete explicit description: for some goals, the current state of software on a PC or smartphone, the state of a working project, or the state of the subject recoverable from already achieved and realized goals may serve as context.
 
 #### Related Concepts
 
-- `Goal as Verifiable Target State`: целевое состояние является проверяемым выражением цели.
-- `Plan as Transition Model`: план связывает исходное и целевое состояние.
-- `Subgoal and Partial Achievement`: промежуточные состояния появляются внутри перехода.
+- Other relations: [`concept-goal-as-verifiable-target-state`](#concept-goal-as-verifiable-target-state-goal-as-verifiable-target-state): the target state is the verifiable expression of the goal.
+- Other relations: [`concept-plan-as-transition-model`](#concept-plan-as-transition-model-plan-as-transition-model): the plan connects the initial and target states.
+- Other relations: [`concept-subgoal-and-partial-achievement`](#concept-subgoal-and-partial-achievement-subgoal-and-partial-achievement): intermediate states appear inside the transition.
 
 #### Boundaries
 
-- Это не полный план.
-- Это не метрика успеха сама по себе.
-- Исходное состояние может быть неполным или уточняться в ходе работы.
-- Имплицитное исходное состояние допустимо только тогда, когда оно достаточно понятно из контекста и не мешает проверке цели, выбору пути или построению плана.
-- Если план зависит от скрытых предпосылок среды, субъекта или предыдущих целей, исходное состояние должно быть явно восстановлено перед алгоритмизацией или автоматическим исполнением.
+- This is not a complete plan.
+- This is not a success metric by itself.
+- The initial state may be incomplete or clarified during the work.
+- An implicit initial state is acceptable only when it is sufficiently clear from context and does not interfere with goal verification, path selection, or plan construction.
+- If the plan depends on hidden assumptions about the environment, subject, or previous goals, the initial state should be explicitly reconstructed before algorithmization or automatic execution.
 
 #### Questions
 
-- [x] Должна ли Machine of Goals всегда явно фиксировать исходное состояние, или для некоторых целей оно может быть оставлено имплицитным?
+- [x] Should Machine of Goals always explicitly fix the initial state, or may it be left implicit for some goals?
 
-<a id="concept-success-criteria"></a>
-
-### Concept: Success Criteria
-
-Concept id: `concept-success-criteria`
+### concept-success-criteria: Success Criteria
 
 #### Definition
 
-Критерии, по которым можно судить, достигнута цель, частично достигнута, не достигнута или требует пересмотра.
+Criteria by which one can judge whether the goal has been achieved, partially achieved, not achieved, or requires review.
 
 #### Source in Idea
 
@@ -128,37 +136,33 @@ Concept id: `concept-success-criteria`
 
 #### Role in the Idea
 
-Критерии успеха превращают цель из декларации в проверяемый артефакт. Без них невозможно честно завершить план или сравнить варианты достижения. Пользователь машины целей должен сам выделить верифицируемый результат, который будет являться определяющим критерием достижения успеха. Для программной среды, это может быть верификация возможности выполнения какой-то программы. Для социальной среды, это может быть фото документа, подтверждающее достижение результата.
+Success criteria transform a goal from a declaration into a verifiable artifact. Without them, it is impossible to honestly complete a plan or compare variants of achievement. The user of the machine of goals should themselves identify the verifiable result that will serve as the defining criterion of success. For a software environment, this may be verification that some program can run. For a social environment, this may be a photo of a document confirming the achieved result.
 
 #### Related Concepts
 
-- `Goal as Verifiable Target State`: критерии делают состояние проверяемым.
-- `Plan Explanation and Control`: объяснение плана показывает, какие проверки обязательны.
-- `Plan Cost and Efficiency`: критерии успеха нужны для сравнения стоимости и результата.
+- Other relations: [`concept-goal-as-verifiable-target-state`](#concept-goal-as-verifiable-target-state-goal-as-verifiable-target-state): criteria make the state verifiable.
+- Other relations: [`concept-plan-explanation-and-control`](#concept-plan-explanation-and-control-plan-explanation-and-control): plan explanation shows which checks are mandatory.
+- Other relations: [`concept-plan-cost-and-efficiency`](#concept-plan-cost-and-efficiency-plan-cost-and-efficiency): success criteria are needed to compare cost and result.
 
 #### Boundaries
 
-- Это не мотивация.
-- Это не весь набор ограничений.
-- Критерии успеха не обязаны быть численными, но должны быть достаточно проверяемыми.
-- Для программной среды критерием успеха может быть верификация возможности выполнения программы, скриншот с достижением результата.
-- Для социальной среды критерием успеха может быть скан документа, подтверждающего достижение результата.
-- Пользователь машины целей сам задаёт значимые критерии успеха, которые должны быть определены на уровне описания цели, а так же на уровне выходов из плана реализации цели.
-- Выход из плана реализации цели возможен только при реализации заданных критериев успеха.
+- This is not motivation.
+- This is not the whole set of constraints.
+- Success criteria do not have to be numeric, but they should be sufficiently verifiable.
+- For a software environment, a success criterion may be verification that a program can run, or a screenshot showing the achieved result.
+- For a social environment, a success criterion may be a scan of a document confirming the achieved result.
+- The user of the machine of goals defines the meaningful success criteria, which should be determined both at the level of the goal description and at the level of exits from the goal realization plan.
+- Exiting the goal realization plan is possible only when the defined success criteria have been realized.
 
 #### Questions
 
-- [x] Как различать минимальные критерии достижения и критерии высокого качества результата?
+- [x] How should minimal achievement criteria be distinguished from high-quality-result criteria?
 
-<a id="concept-realization-path"></a>
-
-### Concept: Realization Path
-
-Concept id: `concept-realization-path`
+### concept-realization-path: Realization Path
 
 #### Definition
 
-Возможный способ приблизиться к цели до выбора конкретного плана: прямой, обходной, исследовательский, минимальный, долгосрочный, через обучение, делегирование, инструмент или автоматизация. Возможность использования уже готовых планов реализации целей. Возможность сравнения оценочной стоимости планов реализации. Все найденные пути сохраняются до момента достижения цели. После достижения цели, пользователю предлагается удалить и забыть не реализованные пути, или оставить их на будущее как черновики.
+A possible way to approach the goal before choosing a concrete plan: direct, workaround, research-oriented, minimal, long-term, through learning, delegation, a tool, or automation. The possibility of using ready-made goal realization plans. The possibility of comparing the estimated cost of realization plans. All discovered paths are preserved until the goal is achieved. After the goal is achieved, the user is offered the option to delete and forget unrealized paths, or keep them for the future as drafts.
 
 #### Source in Idea
 
@@ -166,35 +170,31 @@ Concept id: `concept-realization-path`
 
 #### Role in the Idea
 
-Путь находится между целью и планом. Он позволяет сначала увидеть разные стратегии достижения, а затем синтезировать один или несколько конкретных планов.
+A path sits between a goal and a plan. It makes it possible to first see different achievement strategies and then synthesize one or more concrete plans.
 
 #### Related Concepts
 
-- `Strategy Selection`: выбор пути или комбинации путей.
-- `Alternative Plans`: разные планы могут появляться из разных путей.
-- `Plan Cost and Efficiency`: пути сравниваются через ожидаемую цену, риск и применимость.
+- Other relations: [`concept-plan-as-transition-model`](#concept-plan-as-transition-model-plan-as-transition-model): a selected path is developed into a concrete plan.
+- Other relations: [`concept-success-criteria`](#concept-success-criteria-success-criteria): paths remain comparable against the result the goal must verify.
+- Other relations: [`concept-plan-cost-and-efficiency`](#concept-plan-cost-and-efficiency-plan-cost-and-efficiency): paths are compared through expected cost, risk, and applicability.
 
 #### Boundaries
 
-- Путь не является детальным планом.
-- Путь не гарантирует достижение цели.
-- Путь не должен преждевременно становиться архитектурным решением.
-- Пути хранятся до момента достижения цели.
-- Не реализованные пути могут остаться в черновиках или быть удалены по желанию человека.
+- A path is not a detailed plan.
+- A path does not guarantee goal achievement.
+- A path should not prematurely become an architectural decision.
+- Paths are stored until the goal is achieved.
+- Unrealized paths may remain in drafts or be deleted at the person's request.
 
 #### Questions
 
-- [x] Нужно ли хранить отвергнутые пути как отдельный артефакт, чтобы сохранять историю выбора стратегии?
+- [x] Should rejected paths be stored as a separate artifact in order to preserve the history of strategy selection?
 
-<a id="concept-plan-as-transition-model"></a>
-
-### Concept: Plan as Transition Model
-
-Concept id: `concept-plan-as-transition-model`
+### concept-plan-as-transition-model: Plan as Transition Model
 
 #### Definition
 
-План - это связанная модель перехода от исходного состояния к целевому или промежуточному достижимому состоянию, включающая шаги, зависимости, ресурсы, проверки, риски и точки пересмотра. Концептуально план можно понимать как граф переходов: он может быть неполным или неточным, но должен связывать некоторое исходное состояние с целевым состоянием через возможные этапы, подцели или пути.
+A plan is a connected model of transition from the initial state to the target or intermediate achievable state, including steps, dependencies, resources, checks, risks, and review points. Conceptually, a plan can be understood as a graph of transitions: it may be incomplete or imprecise, but it should connect some initial state with the target state through possible stages, subgoals, or paths.
 
 #### Source in Idea
 
@@ -202,35 +202,31 @@ Concept id: `concept-plan-as-transition-model`
 
 #### Role in the Idea
 
-План является главным мостом между формулировкой цели и исполнимым действием. Он превращает выбранный путь в структуру, которую можно объяснять, проверять, менять и потенциально автоматизировать. Минимальным концептуальным контрактом для перехода к реализации является понятность плана: субъект или исполняющий агент должен понимать, как план связывает исходное состояние с целевым, даже если отдельные этапы ещё будут уточняться в ходе исполнения.
+The plan is the main bridge between goal formulation and executable action. It turns the selected path into a structure that can be explained, checked, changed, and potentially automated. The minimal conceptual contract for moving to realization is the understandability of the plan: the subject or executing agent should understand how the plan connects the initial state with the target one, even if some stages will still be clarified during execution.
 
 #### Related Concepts
 
-- `Initial State and Target State`: план связывает эти состояния.
-- `Subgoal and Partial Achievement`: подцели задают промежуточные участки плана.
-- `Plan Automation`: автоматизация возможна только после достаточного структурирования плана.
+- Other relations: [`concept-initial-state-and-target-state`](#concept-initial-state-and-target-state-initial-state-and-target-state): the plan connects these states.
+- Other relations: [`concept-subgoal-and-partial-achievement`](#concept-subgoal-and-partial-achievement-subgoal-and-partial-achievement): subgoals define intermediate sections of the plan.
+- Other relations: [`concept-interactive-and-automatic-execution`](#concept-interactive-and-automatic-execution-interactive-and-automatic-execution): automation becomes possible only after sufficient structuring of the plan.
 
 #### Boundaries
 
-- План не является просто списком задач.
-- План не равен алгоритму, пока не описаны переходы, проверки и контролируемые параметры.
-- План не обязан быть полностью автоматизируемым.
-- План не обязан быть полным или окончательно точным перед началом реализации, если он достаточно понятен для контролируемого движения от исходного состояния к целевому.
-- План не является неизменяемой конструкцией: в процессе исполнения могут появляться или исчезать этапы, открываться новые пути достижения цели или возникать новые подцели.
+- A plan is not merely a list of tasks.
+- A plan is not equal to an algorithm until transitions, checks, and controlled parameters are described.
+- A plan does not have to be fully automatable.
+- A plan does not have to be complete or finally precise before realization begins, if it is understandable enough for controlled movement from the initial state to the target state.
+- A plan is not an immutable construction: during execution, stages may appear or disappear, new paths to the goal may open, or new subgoals may arise.
 
 #### Questions
 
-- [x] Какой минимальный контракт должен иметь план, чтобы считаться готовым для перехода к алгоритмизации?
+- [x] What minimal contract should a plan have in order to be considered ready for the transition to algorithmization?
 
-<a id="concept-subgoal-and-partial-achievement"></a>
-
-### Concept: Subgoal and Partial Achievement
-
-Concept id: `concept-subgoal-and-partial-achievement`
+### concept-subgoal-and-partial-achievement: Subgoal and Partial Achievement
 
 #### Definition
 
-Промежуточные проверяемые состояния внутри большого перехода к цели, которые могут иметь собственные входы, выходы, критерии завершения и вложенные артефакты. Подцель лучше оформлять отдельным каталогом, в котором хранится собственный подплан этой подцели.
+Intermediate verifiable states inside a larger transition toward the goal, which may have their own inputs, outputs, completion criteria, and nested artifacts. A subgoal is better represented as a separate catalog that stores its own subplan.
 
 #### Source in Idea
 
@@ -238,34 +234,30 @@ Concept id: `concept-subgoal-and-partial-achievement`
 
 #### Role in the Idea
 
-Этот концепт позволяет Machine of Goals работать с целями, которые нельзя достигнуть одним линейным действием. Он также связывает логическую декомпозицию цели с файловой структурой Double. Подцель и её подплан могут становиться частями других целей, если эти цели включают похожие повторяющиеся подцели, например определение операционной системы или создание рабочего каталога цели.
+This concept allows Machine of Goals to work with goals that cannot be achieved by one linear action. It also connects the logical decomposition of a goal with the file structure of Double. A subgoal and its subplan may become parts of other goals if those goals include similar repeated subgoals, such as determining the operating system or creating a working catalog for the goal.
 
 #### Related Concepts
 
-- `Plan as Transition Model`: подцели являются частями плана.
-- `Initial State and Target State`: каждая подцель может иметь свои состояния.
-- `Goal Artifact Context`: подцели могут быть вложенными каталогами.
+- Other relations: [`concept-plan-as-transition-model`](#concept-plan-as-transition-model-plan-as-transition-model): subgoals are parts of the plan.
+- Other relations: [`concept-initial-state-and-target-state`](#concept-initial-state-and-target-state-initial-state-and-target-state): each subgoal may have its own states.
+- Other relations: [`concept-goal-artifact-context`](#concept-goal-artifact-context-goal-artifact-context): subgoals may be nested catalogs.
 
 #### Boundaries
 
-- Подцель не является произвольной задачей.
-- Частичное достижение не должно скрывать недостижение исходной цели.
-- Подцель не обязательно требует отдельного полного прохода Machine of Goals, но должна иметь собственный каталог и подплан, если становится устойчивой частью графа достижения.
-- Повторяемая подцель не должна превращаться в оторванный универсальный план: она переносится вместе со своим назначением, входами, выходами и связью с родительской целью.
+- A subgoal is not an arbitrary task.
+- Partial achievement should not hide non-achievement of the original goal.
+- A subgoal does not necessarily require a separate full pass through Machine of Goals, but it should have its own catalog and subplan if it becomes a stable part of the achievement graph.
+- A repeatable subgoal should not turn into a detached universal plan: it is transferred together with its purpose, inputs, outputs, and connection to the parent goal.
 
 #### Questions
 
-- [x] Когда подцель должна становиться отдельным каталогом, а когда оставаться частью плана?
+- [x] When should a subgoal become a separate catalog, and when should it remain part of the plan?
 
-<a id="concept-plan-cost-and-efficiency"></a>
-
-### Concept: Plan Cost and Efficiency
-
-Concept id: `concept-plan-cost-and-efficiency`
+### concept-plan-cost-and-efficiency: Plan Cost and Efficiency
 
 #### Definition
 
-Оценка цены выполнения плана или его этапов через измеримые показатели исполнения и доменные затраты, а также сравнение этой цены с ожидаемым результатом. Общими критериями стоимости этапа могут быть счётчик успешных реализаций, время выполнения этапа и количество ошибок при выполнении этапа; остальные критерии уточняются в процессе работы с конкретными планами.
+An estimate of the cost of executing a plan or its stages through measurable execution indicators and domain-specific costs, as well as a comparison of this cost with the expected result. General stage-cost criteria may include a counter of successful realizations, execution time for the stage, and number of errors during stage execution; the remaining criteria are clarified while working with concrete plans.
 
 #### Source in Idea
 
@@ -273,35 +265,31 @@ Concept id: `concept-plan-cost-and-efficiency`
 
 #### Role in the Idea
 
-Стоимость и эффективность делают планы сравнимыми. Без этого Machine of Goals могла бы генерировать планы, но не помогала бы выбирать между ними. Базовые метрики исполнения позволяют накапливать опыт по этапам плана и со временем оценивать, какие этапы выполняются надёжно, быстро или с большим числом ошибок.
+Cost and efficiency make plans comparable. Without this, Machine of Goals could generate plans, but would not help choose between them. Basic execution metrics make it possible to accumulate experience across plan stages and, over time, evaluate which stages are performed reliably, quickly, or with a large number of errors.
 
 #### Related Concepts
 
-- `Alternative Plans`: разные планы сравниваются по стоимости и эффективности.
-- `Success Criteria`: эффективность требует понимания результата.
-- `Strategy Selection`: выбор стратегии опирается на цену и риск.
+- Other relations: [`concept-realization-path`](#concept-realization-path-realization-path): paths and the plans derived from them can be compared by cost and efficiency.
+- Other relations: [`concept-success-criteria`](#concept-success-criteria-success-criteria): efficiency requires an understanding of the result.
+- Other relations: [`concept-plan-as-transition-model`](#concept-plan-as-transition-model-plan-as-transition-model): plan selection relies on cost and risk.
 
 #### Boundaries
 
-- Стоимость не сводится к деньгам.
-- Эффективность не равна максимальной автоматизации.
-- Низкая стоимость не всегда означает лучший план.
-- Обязательные общие метрики не должны исчерпывать стоимость плана: доменные критерии стоимости уточняются по мере работы с планами.
-- Счётчик успешных реализаций этапа не является гарантией применимости этапа в любой другой цели, потому что план и подцели сохраняют связь с контекстом цели.
+- Cost is not reducible to money.
+- Efficiency is not equal to maximum automation.
+- Low cost does not always mean the best plan.
+- Mandatory general metrics should not exhaust the cost of a plan: domain-specific cost criteria are clarified as work with plans proceeds.
+- A counter of successful stage realizations is not a guarantee that the stage is applicable to any other goal, because the plan and subgoals preserve their connection to the goal context.
 
 #### Questions
 
-- [x] Какие типы стоимости должны быть обязательными в каждом плане, а какие зависят от домена цели?
+- [x] Which types of cost should be mandatory in every plan, and which depend on the goal domain?
 
-<a id="concept-plan-algorithmization"></a>
-
-### Concept: Plan Algorithmization
-
-Concept id: `concept-plan-algorithmization`
+### concept-plan-algorithmization: Plan Algorithmization
 
 #### Definition
 
-Преобразование достаточно ясного плана в алгоритм достижения: последовательность действий, переходов, проверок, параметров, остановок и условий пересмотра. Граница между планом и алгоритмом проходит как граница между проектом и реализацией проекта: план описывает замысел достижения цели, а алгоритм является реализованной формой этого замысла в рабочем каталоге.
+Transformation of a sufficiently clear plan into an achievement algorithm: a sequence of actions, transitions, checks, parameters, stops, and review conditions. The boundary between plan and algorithm passes like the boundary between a project and the realization of a project: the plan describes the intention of achieving the goal, while the algorithm is the realized form of this intention in the working catalog.
 
 #### Source in Idea
 
@@ -309,35 +297,31 @@ Concept id: `concept-plan-algorithmization`
 
 #### Role in the Idea
 
-Алгоритмизация является переходом от планирования к управляемому исполнению. Она не обязательно создаёт программу, но делает план достаточно формальным для объяснения, интерактивного запуска или дальнейшего сворачивания. Реализация алгоритма должна иметь рабочий каталог: это может быть отдельный Git-репозиторий с исходным кодом, каталог генерации сайта по реализации плана или иной рабочий каталог, соответствующий типу цели.
+Algorithmization is the transition from planning to controlled execution. It does not necessarily create a program, but it makes the plan formal enough for explanation, interactive launch, or further collapsing. The realization of the algorithm should have a working catalog: this may be a separate Git repository with source code, a catalog for generating a site from the plan realization, or another working catalog appropriate to the type of goal.
 
 #### Related Concepts
 
-- `Plan as Transition Model`: алгоритм возникает из структурированного плана.
-- `Plan Explanation and Control`: алгоритм должен быть объясним и контролируем.
-- `Executable Collapsed Plan`: часть алгоритмов может быть свёрнута в исполняемую форму.
+- Other relations: [`concept-plan-as-transition-model`](#concept-plan-as-transition-model-plan-as-transition-model): the algorithm emerges from a structured plan.
+- Other relations: [`concept-plan-explanation-and-control`](#concept-plan-explanation-and-control-plan-explanation-and-control): the algorithm should remain explainable and controllable.
+- Other relations: [`concept-executable-collapsed-plan`](#concept-executable-collapsed-plan-executable-collapsed-plan): some algorithms can be collapsed into executable form.
 
 #### Boundaries
 
-- Алгоритмизация не означает генерацию произвольного кода.
-- Алгоритм не отменяет человеческое решение в точках выбора.
-- Не все цели должны быть алгоритмизируемы полностью.
-- План не является алгоритмом сам по себе: план остаётся проектом достижения, а алгоритм является реализацией этого проекта.
-- Реализация алгоритма не должна быть бесконтекстной: рабочий каталог реализации должен быть задан в цели и в плане.
+- Algorithmization does not mean arbitrary code generation.
+- The algorithm does not cancel human decision-making at choice points.
+- Not all goals should be fully algorithmizable.
+- A plan is not an algorithm by itself: the plan remains the project of achievement, while the algorithm is the realization of this project.
+- The realization of an algorithm should not be contextless: the working catalog of realization should be defined in the goal and in the plan.
 
 #### Questions
 
-- [x] Где проходит граница между достаточно объяснимым планом и настоящим алгоритмом достижения?
+- [x] Where is the boundary between a sufficiently explainable plan and a real achievement algorithm?
 
-<a id="concept-plan-explanation-and-control"></a>
-
-### Concept: Plan Explanation and Control
-
-Concept id: `concept-plan-explanation-and-control`
+### concept-plan-explanation-and-control: Plan Explanation and Control
 
 #### Definition
 
-Механизм, который показывает, какие шаги выполняются, почему они выбраны, какие параметры контролируются, где находятся проверки, точки останова и возможности пересмотра. Перед автоматическим или агентским исполнением пользователь может запросить режим `dry run`: агент начинает объяснимое прохождение этапа плана без реальных действий.
+A mechanism that shows which steps are performed, why they were chosen, which parameters are controlled, where checks, stop points, and opportunities for review are located. Before automatic or agentic execution, the user can request `dry run` mode: the agent begins an explainable pass through a plan stage without real actions.
 
 #### Source in Idea
 
@@ -345,35 +329,31 @@ Concept id: `concept-plan-explanation-and-control`
 
 #### Role in the Idea
 
-Этот концепт удерживает Machine of Goals от слепой автоматизации. План должен быть не только исполняемым, но и понятным, останавливаемым и изменяемым. В объяснении перед исполнением агент должен назвать этап плана, который собирается выполнять, объяснить почему выбран именно он, сообщить об уже завершённых этапах и их состоянии, а затем на основании этого состояния объяснить дальнейший выбор пути по графу плана.
+This concept keeps Machine of Goals away from blind automation. A plan should be not only executable, but also understandable, stoppable, and changeable. In the explanation before execution, the agent should name the plan stage it is going to execute, explain why that stage was selected, report on already completed stages and their state, and then, based on that state, explain the further choice of path through the plan graph.
 
 #### Related Concepts
 
-- `Plan Algorithmization`: алгоритм должен сохранять объяснимость.
-- `Interactive and Automatic Execution`: контроль определяет режим исполнения.
-- `Success Criteria`: проверки связывают исполнение с целью.
+- Other relations: [`concept-plan-algorithmization`](#concept-plan-algorithmization-plan-algorithmization): the algorithm should preserve explainability.
+- Other relations: [`concept-interactive-and-automatic-execution`](#concept-interactive-and-automatic-execution-interactive-and-automatic-execution): control defines execution modes.
+- Other relations: [`concept-success-criteria`](#concept-success-criteria-success-criteria): checks connect execution with the goal.
 
 #### Boundaries
 
-- Объяснение плана не является полной документацией системы.
-- Контроль не означает ручное выполнение каждого шага.
-- Точки останова не должны превращать любой план в бесконечное согласование.
-- `Dry run` не является реальным исполнением плана: он служит проверке понятности, выбора следующего этапа и ожидаемого поведения агента до совершения необратимых действий.
-- Объяснение следующего шага не должно быть оторвано от истории исполнения: выбор пути по графу плана должен учитывать состояние уже завершённых этапов.
+- Plan explanation is not complete system documentation.
+- Control does not mean manual execution of every step.
+- Stop points should not turn every plan into endless approval.
+- `Dry run` is not real plan execution: it serves to check understandability, next-stage selection, and the agent's expected behavior before irreversible actions are taken.
+- Explanation of the next step should not be detached from execution history: the choice of path through the plan graph should take into account the state of already completed stages.
 
 #### Questions
 
-- [x] Какие элементы объяснения должны быть обязательны перед запуском автоматически исполняемого плана?
+- [x] Which explanation elements should be mandatory before launching an automatically executable plan?
 
-<a id="concept-interactive-and-automatic-execution"></a>
-
-### Concept: Interactive and Automatic Execution
-
-Concept id: `concept-interactive-and-automatic-execution`
+### concept-interactive-and-automatic-execution: Interactive and Automatic Execution
 
 #### Definition
 
-Диапазон режимов выполнения плана: полностью вручную, интерактивно по этапам, частично автоматически или полностью автоматически там, где это допустимо. Machine of Goals должна стремиться к автоматическому выполнению плана, но границы автоматизации каждый раз выбираются пользователем.
+The range of plan execution modes: fully manual, interactive by stages, partially automatic, or fully automatic where this is acceptable. Machine of Goals should strive toward automatic plan execution, but the boundaries of automation are chosen by the user each time.
 
 #### Source in Idea
 
@@ -381,35 +361,31 @@ Concept id: `concept-interactive-and-automatic-execution`
 
 #### Role in the Idea
 
-Этот концепт показывает, что Machine of Goals не обязана выбирать между человеком и автоматом. Исполнение может менять степень автоматизации в зависимости от риска, ясности, домена и пользовательского контроля. Перед исполнением машина должна спросить, какие пункты плана выполнять автоматически: до определённого этапа, по указанному списку этапов или в полностью контролируемом режиме с полным объяснением.
+This concept shows that Machine of Goals does not have to choose between human and automaton. Execution can change its degree of automation depending on risk, clarity, domain, and user control. Before execution, the machine should ask which plan items to execute automatically: up to a specific stage, according to a specified list of stages, or in a fully controlled mode with full explanation.
 
 #### Related Concepts
 
-- `Plan Explanation and Control`: контроль задаёт безопасные режимы исполнения.
-- `Executable Collapsed Plan`: автоматическая форма является предельным случаем исполнения.
-- `Plan Algorithmization`: алгоритм делает исполнение управляемым.
+- Other relations: [`concept-plan-explanation-and-control`](#concept-plan-explanation-and-control-plan-explanation-and-control): control defines safe execution modes.
+- Other relations: [`concept-executable-collapsed-plan`](#concept-executable-collapsed-plan-executable-collapsed-plan): the automatic form is the limiting case of execution.
+- Other relations: [`concept-plan-algorithmization`](#concept-plan-algorithmization-plan-algorithmization): the algorithm makes execution controllable.
 
 #### Boundaries
 
-- Автоматическое исполнение не является обязательной конечной точкой каждой цели.
-- Интерактивное исполнение не означает отсутствие алгоритма.
-- Ручное выполнение не делает план менее ценным, если цель плохо автоматизируется.
-- Стремление к автоматизации не отменяет пользовательского контроля: машина не должна сама решать, какие пункты плана выполнять автоматически, без подтверждения пользователя.
-- Полностью контролируемое исполнение остаётся допустимым режимом даже тогда, когда план технически можно автоматизировать.
+- Automatic execution is not the mandatory endpoint of every goal.
+- Interactive execution does not mean absence of an algorithm.
+- Manual execution does not make a plan less valuable if the goal is hard to automate.
+- The drive toward automation does not cancel user control: the machine should not decide by itself which plan items to execute automatically without user confirmation.
+- Fully controlled execution remains an acceptable mode even when the plan can technically be automated.
 
 #### Questions
 
-- [x] Как Machine of Goals должна выбирать или предлагать допустимый режим исполнения для конкретного плана?
+- [x] How should Machine of Goals choose or propose an acceptable execution mode for a concrete plan?
 
-<a id="concept-executable-collapsed-plan"></a>
-
-### Concept: Executable Collapsed Plan
-
-Concept id: `concept-executable-collapsed-plan`
+### concept-executable-collapsed-plan: Executable Collapsed Plan
 
 #### Definition
 
-Свёрнутая форма плана, пригодная для автоматического исполнения, передачи в проектирование или публикации как workflow, сценарий агентского исполнения, скрипт, CLI-команда, SDD-спецификация, Markdown-артефакт с возможностью экспорта или другой механизм. Первичный формат свёрнутого плана зависит от типа цели: для целей в вычислительной среде естественной формой могут быть скрипты, для целей проектирования - SDD, для социальных целей - Markdown с возможностью экспорта в сайт или другой читаемый внешний формат.
+A collapsed form of the plan suitable for automatic execution, handoff into design, or publication as a workflow, agentic execution scenario, script, CLI command, SDD specification, Markdown artifact with export capability, or another mechanism. The primary format of a collapsed plan depends on the type of goal: for goals in a computational environment, scripts may be a natural form; for design goals, SDD; for social goals, Markdown with the possibility of export to a website or another readable external format.
 
 #### Source in Idea
 
@@ -417,34 +393,30 @@ Concept id: `concept-executable-collapsed-plan`
 
 #### Role in the Idea
 
-Это один из центральных концептов Machine of Goals: наиболее ценные планы могут становиться повторно используемыми механизмами действия внутри Double.
+This is one of the central concepts of Machine of Goals: the most valuable plans can become reusable mechanisms of action inside Double.
 
 #### Related Concepts
 
-- `Plan Algorithmization`: сворачивание требует алгоритмической формы.
-- `Plan Explanation and Control`: свёрнутый план должен оставаться объяснимым и остановимым.
-- `Plan Exchange`: свёрнутые планы становятся пригодными для обмена.
+- Other relations: [`concept-plan-algorithmization`](#concept-plan-algorithmization-plan-algorithmization): collapsing requires algorithmic form.
+- Other relations: [`concept-plan-explanation-and-control`](#concept-plan-explanation-and-control-plan-explanation-and-control): a collapsed plan should remain explainable and stoppable.
+- Other relations: [`concept-plan-exchange`](#concept-plan-exchange-plan-exchange): collapsed plans become suitable for exchange.
 
 #### Boundaries
 
-- Это не произвольная генерация кода.
-- Это не весь план достижения цели, если человеческие решения остаются вне автоматизируемой части.
-- Свёрнутый план не должен скрывать предпосылки, ограничения и риски.
-- У Double не должно быть единственного универсального первичного формата свёрнутого плана для всех типов целей: формат должен выбираться по среде достижения, способу проверки и ожидаемой форме использования результата.
+- This is not arbitrary code generation.
+- This is not the whole goal achievement plan if human decisions remain outside the automatable part.
+- A collapsed plan should not hide assumptions, constraints, and risks.
+- Double should not have a single universal primary format for collapsed plans across all goal types: the format should be chosen according to the achievement environment, verification method, and expected form of result usage.
 
 #### Questions
 
-- [x] Какие форматы свёрнутых планов должны считаться первичными для Double: Markdown workflow, agent runbook, CLI script, SDD spec или иной формат?
+- [x] Which collapsed-plan formats should be considered primary for Double: Markdown workflow, agent runbook, CLI script, SDD spec, or another format?
 
-<a id="concept-plan-exchange"></a>
-
-### Concept: Plan Exchange
-
-Concept id: `concept-plan-exchange`
+### concept-plan-exchange: Plan Exchange
 
 #### Definition
 
-Обмен удачными свёрнутыми или полуавтоматическими планами внутри экосистемы Double для повторного использования, адаптации и улучшения в контексте соответствующих целей. План всегда связан с целью и может использоваться только как часть достижения поставленной цели; он не является самостоятельным артефактом с произвольным другим контекстом.
+Exchange of successful collapsed or semi-automatic plans inside the Double ecosystem for reuse, adaptation, and improvement in the context of corresponding goals. A plan is always connected to a goal and can be used only as part of achieving the stated goal; it is not an independent artifact with an arbitrary other context.
 
 #### Source in Idea
 
@@ -453,34 +425,30 @@ Concept id: `concept-plan-exchange`
 
 #### Role in the Idea
 
-Этот концепт расширяет Machine of Goals от индивидуального планирования к экосистемной ценности: удачные способы достижения могут становиться повторно используемыми вместе с целевой постановкой, исходными условиями и контекстом проверки. Переносится не "голый план", а связка цели и плана.
+This concept expands Machine of Goals from individual planning to ecosystem value: successful ways of achievement can become reusable together with the goal statement, initial conditions, and verification context. What is transferred is not a "bare plan", but the bundle of goal and plan.
 
 #### Related Concepts
 
-- `Executable Collapsed Plan`: обмен особенно ценен для свёрнутых планов.
-- `Goal Artifact Context`: обмен требует понятной структуры хранения.
-- `Plan Cost and Efficiency`: повторное использование может снижать стоимость достижения похожих целей.
+- Other relations: [`concept-executable-collapsed-plan`](#concept-executable-collapsed-plan-executable-collapsed-plan): exchange is especially valuable for collapsed plans.
+- Other relations: [`concept-goal-artifact-context`](#concept-goal-artifact-context-goal-artifact-context): exchange requires a clear storage structure.
+- Other relations: [`concept-plan-cost-and-efficiency`](#concept-plan-cost-and-efficiency-plan-cost-and-efficiency): reuse can reduce the cost of achieving similar goals.
 
 #### Boundaries
 
-- Обмен планами не означает универсальность плана для любой ситуации.
-- Повторное использование не должно отрывать план от цели, ради которой он был построен.
-- Повторное использование требует адаптации цели, исходного состояния, ограничений и ресурсов, а не только копирования шагов плана.
-- Этот концепт пока не определяет marketplace или социальную модель обмена.
+- Exchanging plans does not mean the plan is universal for every situation.
+- Reuse should not detach the plan from the goal for which it was built.
+- Reuse requires adapting the goal, initial state, constraints, and resources, not only copying the plan steps.
+- This concept does not yet define a marketplace or social model of exchange.
 
 #### Questions
 
-- [x] Какие метаданные нужны плану, чтобы его можно было безопасно повторно использовать в другом контексте?
+- [x] What metadata does a plan need in order to be safely reused in another context?
 
-<a id="concept-goal-artifact-context"></a>
-
-### Concept: Goal Artifact Context
-
-Concept id: `concept-goal-artifact-context`
+### concept-goal-artifact-context: Goal Artifact Context
 
 #### Definition
 
-Файловый и смысловой контекст цели внутри Double: каталог цели, основной Markdown-файл, отдельный файл плана, рабочий каталог реализации, объяснения, параметры, проверки, исполняемые алгоритмы и вложенные подцели. План должен храниться как отдельный файл в каталоге цели с именованием по шаблону `<goal-id>-plan.md`, например `my-first-goal-plan.md`. Рабочий каталог реализации должен задаваться и в цели, и в плане.
+The file and semantic context of a goal inside Double: the goal catalog, main Markdown file, separate plan file, realization working catalog, explanations, parameters, checks, executable algorithms, and nested subgoals. The main goal artifact should use the same base name as the goal directory, for example `my-first-goal/my-first-goal.md`. The plan should be stored as a separate `plan.md` file in the goal catalog. The realization working catalog should be defined both in the goal and in the plan.
 
 #### Source in Idea
 
@@ -488,98 +456,55 @@ Concept id: `concept-goal-artifact-context`
 
 #### Role in the Idea
 
-Этот концепт связывает мышление о целях с воспроизводимым хранением артефактов. Цель становится не только намерением, но и рабочим каталогом, где сохраняются связанные материалы. Отдельный файл плана делает переход от цели к реализации явным и позволяет развивать план без переписывания основного артефакта цели. Рабочий каталог реализации связывает план с местом, где появляется алгоритм: Git-репозиторием, каталогом генерации сайта или другой рабочей средой.
+This concept connects thinking about goals with reproducible artifact storage. A goal becomes not only an intention, but also a working catalog where related materials are preserved. A separate plan file makes the transition from goal to realization explicit and allows the plan to develop without rewriting the main goal artifact. The realization working catalog connects the plan with the place where the algorithm appears: a Git repository, a site generation catalog, or another working environment.
 
 #### Related Concepts
 
-- `Subgoal and Partial Achievement`: подцели могут быть вложенными каталогами.
-- `Plan Exchange`: переносимость плана зависит от структуры артефактов.
-- `Executable Collapsed Plan`: исполняемые формы остаются рядом с целью.
+- Other relations: [`concept-subgoal-and-partial-achievement`](#concept-subgoal-and-partial-achievement-subgoal-and-partial-achievement): subgoals may be nested catalogs.
+- Other relations: [`concept-plan-exchange`](#concept-plan-exchange-plan-exchange): plan portability depends on the artifact structure.
+- Other relations: [`concept-executable-collapsed-plan`](#concept-executable-collapsed-plan-executable-collapsed-plan): executable forms remain next to the goal.
 
 #### Boundaries
 
-- Контекст артефактов не является самим workflow Machine of Goals.
-- Каталог не заменяет концептуальную модель цели.
-- Хранение в Markdown не решает само по себе проверку, исполнение или автоматизацию.
-- План не должен быть скрыт только внутри основного файла цели: для него нужен отдельный файл в каталоге цели.
-- Рабочий каталог реализации не заменяет каталог цели: каталог цели хранит смысловые артефакты, а рабочий каталог реализации содержит исполняемую или публикуемую форму алгоритма.
+- The artifact context is not the Machine of Goals workflow itself.
+- The catalog does not replace the conceptual model of the goal.
+- Markdown storage by itself does not solve verification, execution, or automation.
+- The plan should not be hidden only inside the main goal file: it needs a separate file in the goal catalog.
+- The realization working catalog does not replace the goal catalog: the goal catalog stores semantic artifacts, while the realization working catalog contains the executable or publishable form of the algorithm.
 
 #### Questions
 
-- [x] Должны ли планы, объяснения, параметры и проверки быть отдельными файлами с фиксированными именами или гибким набором артефактов внутри каталога цели?
-
-## 5. Conceptual Map
-
-```text
-Goal as Verifiable Target State
-  -> Success Criteria
-  -> Initial State and Target State
-  -> Realization Path
-  -> Plan as Transition Model
-       -> Subgoal and Partial Achievement
-       -> Plan Cost and Efficiency
-       -> Plan Algorithmization
-            -> Plan Explanation and Control
-            -> Interactive and Automatic Execution
-            -> Executable Collapsed Plan
-                 -> Plan Exchange
-
-Goal Artifact Context
-  supports Goal, Plan, Subgoal, Explanation, Automation, and Exchange artifacts.
-```
-
-- Цель задаёт проверяемое целевое состояние.
-- Исходное и целевое состояние превращают цель в переход.
-- Пути реализации помогают выбирать стратегию до составления конкретного плана.
-- План связывает шаги, зависимости, ресурсы, проверки и риски.
-- Подцели и частичные достижения появляются как промежуточные проверяемые состояния.
-- Подцель лучше хранить отдельным каталогом с собственным подпланом; повторяемые подцели могут использоваться в разных целях, если сохраняют связь с назначением и контекстом родительской цели.
-- Стоимость и эффективность позволяют сравнивать планы.
-- Базовыми метриками стоимости этапа могут быть число успешных реализаций, время выполнения и количество ошибок; остальные критерии уточняются по домену цели и в ходе работы с планами.
-- Алгоритмизация переводит план в более формальную модель исполнения.
-- Объяснение и контроль удерживают исполнение от непрозрачной автоматизации.
-- `Dry run` позволяет пользователю проверить ход агентского исполнения без реальных действий: агент объясняет выбранный этап, состояние завершённых этапов и дальнейший выбор пути по графу плана.
-- Свёрнутый исполняемый план является предельной автоматизированной формой.
-- Обмен планами превращает удачные способы достижения целей в экосистемные артефакты Double.
+- [x] Should plans, explanations, parameters, and checks be separate files with fixed names or a flexible set of artifacts inside the goal catalog?
 
 ## 6. Terms and Non-Concepts
 
-- `Goal Capture`: название раннего этапа workflow, а не самостоятельный ключевой концепт в этом артефакте.
-- `Path Discovery`: название этапа, операционализирующего концепт `Realization Path`.
-- `Plan Synthesis`: название этапа, операционализирующего концепт `Plan as Transition Model`.
-- `Plan Automation`: название этапа, операционализирующего концепты `Plan Algorithmization` и `Executable Collapsed Plan`.
-- `double/goals`: предложенное место хранения; важный термин структуры, но концептуально он покрывается `Goal Artifact Context`.
-- `SDD`: ссылка на внешнюю методологию; важная цель совместимости и возможный первичный формат свёрнутого плана для целей проектирования, но пока не внутренний ключевой концепт Machine of Goals.
-- `CLI`, `workflow`, `script`, `agent process`, `template`, `integration`: возможные формы свёрнутого исполнения, а не отдельные концепты на этом этапе.
-- `resources`, `risks`, `dependencies`, `parameters`, `checks`: важные атрибуты плана, которые сейчас рассматриваются как компоненты `Plan as Transition Model` и `Plan Explanation and Control`.
+- `Goal Capture`: the name of an early workflow stage, not an independent key concept in this artifact.
+- `Path Discovery`: the name of a stage that operationalizes the `Realization Path` concept.
+- `Plan Synthesis`: the name of a stage that operationalizes the `Plan as Transition Model` concept.
+- `Plan Automation`: the name of a stage that operationalizes the `Plan Algorithmization` and `Executable Collapsed Plan` concepts.
+- `double/goals`: the proposed storage location; an important structural term, but conceptually it is covered by `Goal Artifact Context`.
+- `SDD`: a reference to an external methodology; an important compatibility goal and possible primary format of a collapsed plan for design goals, but not yet an internal key concept of Machine of Goals.
+- `CLI`, `workflow`, `script`, `agent process`, `template`, `integration`: possible forms of collapsed execution, not separate concepts at this stage.
+- `resources`, `risks`, `dependencies`, `parameters`, `checks`: important plan attributes that are currently treated as components of `Plan as Transition Model` and `Plan Explanation and Control`.
 
 ## 7. Candidate Inputs for Principle Synthesis
 
-- Цель должна формулироваться как проверяемое состояние, а не только как намерение.
-- Уровень формальности целевого состояния должен определяться при проектировании цели и зависеть от типа цели, контекста проверки и последующей планируемости.
-- План должен сохранять связь с исходным состоянием, целевым состоянием и критериями успеха.
-- План может быть представлен как граф переходов от исходного состояния к целевому; он может быть неполным или неточным, но должен сохранять понятную связь между этими состояниями.
-- Понятность плана является минимальным концептуальным контрактом для перехода к реализации: план должен быть достаточно понятен субъекту или исполняющему агенту, чтобы начать контролируемое исполнение и уточнять его по ходу.
-- Машина должна сначала различать пути достижения, а уже затем синтезировать планы.
-- План должен быть объяснимым до исполнения, особенно перед автоматизацией.
-- Перед автоматическим или агентским исполнением пользователь должен иметь возможность запросить `dry run`, в котором агент объясняет следующий этап без реальных действий.
-- Обязательное объяснение перед исполнением должно включать выбранный этап, причину выбора, состояние уже завершённых этапов и обоснование дальнейшего пути по графу плана.
-- Автоматизация должна быть степенью исполнения, а не обязательной судьбой каждой цели.
-- Machine of Goals должна стремиться к автоматическому выполнению плана, но каждый раз спрашивать пользователя, какие пункты выполнять автоматически: до заданного этапа, по списку этапов или в полностью контролируемом режиме.
-- Свёрнутый план должен сохранять предпосылки, ограничения, контролируемые параметры и точки остановки.
-- Первичный формат свёрнутого плана должен зависеть от типа цели: скрипты для вычислительной среды, SDD для проектирования, Markdown с возможностью экспорта для социальных целей и другие форматы для иных доменов.
-- Повторно используемые планы не должны отделяться от цели: переносима связка цели, исходного состояния, критериев успеха и плана, а не план как самостоятельный универсальный механизм.
-- Структура хранения цели должна поддерживать цель, планы, подцели, проверки, объяснения и исполняемые формы в одном рабочем контексте.
-- План должен быть отдельным файлом в каталоге цели с именованием по шаблону `<goal-id>-plan.md`.
-- Подцель должна иметь отдельный каталог и собственный подплан, особенно если она является повторяемым фрагментом достижения разных целей.
-- Общие метрики стоимости этапа плана: счётчик успешных реализаций, время выполнения и количество ошибок; остальные критерии стоимости должны уточняться в процессе работы с планами.
-- Цель и план должны задавать рабочий каталог реализации, где алгоритм плана воплощается как код, сайт, исполняемый workflow или другая рабочая форма.
-
-## 8. Open Questions
-
-- [x] Насколько формальной должна быть спецификация целевого состояния для разных типов целей?
-- [x] Какой минимальный контракт должен иметь план, чтобы считаться готовым для перехода к алгоритмизации?
-- [x] Какие элементы объяснения обязательны перед запуском автоматически исполняемого плана?
-- [x] Какие форматы свёрнутых планов должны считаться первичными для Double?
-- [x] Какие метаданные нужны плану, чтобы его можно было безопасно повторно использовать в другом контексте?
-- [x] Должны ли планы, объяснения, параметры и проверки быть отдельными файлами с фиксированными именами или гибким набором артефактов внутри каталога цели?
+- A goal should be formulated as a verifiable state, not only as an intention.
+- The level of formality of the target state should be determined during goal design and depend on the type of goal, verification context, and subsequent planability.
+- The plan should preserve its connection to the initial state, target state, and success criteria.
+- A plan may be represented as a graph of transitions from the initial state to the target state; it may be incomplete or imprecise, but it should preserve an understandable connection between these states.
+- The understandability of the plan is the minimal conceptual contract for moving to realization: the plan should be clear enough to the subject or executing agent to begin controlled execution and clarify it along the way.
+- The machine should first distinguish paths of achievement and only then synthesize plans.
+- The plan should be explainable before execution, especially before automation.
+- Before automatic or agentic execution, the user should be able to request `dry run`, in which the agent explains the next stage without real actions.
+- Mandatory explanation before execution should include the selected stage, the reason for selection, the state of already completed stages, and the justification for the further path through the plan graph.
+- Automation should be a degree of execution, not the mandatory destiny of every goal.
+- Machine of Goals should strive toward automatic plan execution, but should ask the user each time which items to execute automatically: up to a specified stage, by a list of stages, or in a fully controlled mode.
+- A collapsed plan should preserve assumptions, constraints, controlled parameters, and stop points.
+- The primary format of a collapsed plan should depend on the type of goal: scripts for a computational environment, SDD for design, Markdown with export capability for social goals, and other formats for other domains.
+- Reusable plans should not be separated from the goal: what is portable is the bundle of goal, initial state, success criteria, and plan, not the plan as an independent universal mechanism.
+- The goal storage structure should support goals, plans, subgoals, checks, explanations, and executable forms in one working context.
+- The plan should be a separate `plan.md` file in the goal catalog.
+- A subgoal should have a separate catalog and its own subplan, especially if it is a repeatable fragment of achieving different goals.
+- General metrics of plan-stage cost: a counter of successful realizations, execution time, and number of errors; the remaining cost criteria should be clarified during work with plans.
+- The goal and the plan should define the realization working catalog where the plan algorithm is embodied as code, a site, an executable workflow, or another working form.

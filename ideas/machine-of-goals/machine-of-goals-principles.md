@@ -4,8 +4,8 @@ kind: principle-artifact
 status: release-candidate
 produced-by: principle-synthesis-agent
 workflow-version: 0.2.0
-interaction-language: Russian
-artifact-language: Russian
+interaction-language: English
+artifact-language: English
 publication-path: ideas/machine-of-goals/machine-of-goals-principles.md
 derived-from:
   - machine-of-goals
@@ -23,428 +23,428 @@ derived-from:
 - Relevant sub-ideas: none
 - Published as: `machine-of-goals-principles.md`
 - Synthesis mode: `strict-research`
-- Interaction language: `Russian`
-- Artifact language: `Russian`
+- Interaction language: `English`
+- Artifact language: `English`
 
 ## 2. Principle Synthesis Summary
 
-Machine of Goals строится вокруг нормативного перехода от намерения к проверяемому действию. Цель должна сначала стать проверяемым целевым состоянием, затем быть связана с исходным состоянием через понятный граф плана, а уже после этого переходить к алгоритмизации, автоматизации или свёрнутой исполняемой форме.
+Machine of Goals is built around a normative transition from intention to verifiable action. A goal should first become a verifiable target state, then be connected with the initial state through an understandable plan graph, and only after that move toward algorithmization, automation, or a collapsed executable form.
 
-Главное напряжение идеи: машина должна стремиться к автоматическому выполнению планов, но не должна превращаться в непрозрачный автомат. Поэтому автоматизация допустима только при сохранении понятности, объяснения, dry run, пользовательского выбора границ исполнения, связи плана с целью и рабочего контекста реализации.
+The main tension of the idea is that the machine should strive toward automatic execution of plans, but it should not turn into an opaque automaton. Therefore, automation is acceptable only while preserving understandability, explanation, dry run, user choice of execution boundaries, the connection between plan and goal, and the working context of realization.
 
 ## 3. Working Definition of Principle
 
-Принцип - это устойчивое нормативное основание, выведенное из идеи и её концептуальной структуры.
-Он направляет или ограничивает будущие решения, но ещё не является требованием, задачей, design-решением, implementation step или generic value statement.
+A principle is a stable normative foundation derived from an idea and its conceptual structure.
+It guides or constrains future decisions, but is not yet a requirement, task, design decision, implementation step, or generic value statement.
 
 ## 4. Core Principles
 
-### Principle: Проверяемость Цели До Планирования
+### Principle: Goal Verifiability Before Planning
 
 #### Statement
 
-Machine of Goals должна начинать работу с цели как проверяемого целевого состояния, а не с набора задач или желаний.
+Machine of Goals should begin with the goal as a verifiable target state, not with a set of tasks or wishes.
 
 #### Derived From
 
 - Source concept(s): `Goal as Verifiable Target State`, `Success Criteria`, `Initial State and Target State`
-- Source relationship, boundary, or tension: цель становится управляемой только через сравнение результата с исходной спецификацией и критериями успеха
+- Source relationship, boundary, or tension: a goal becomes manageable only through comparison of the result with the original specification and success criteria
 - Source idea support: `Summary`, `Raw Description`, `Assumptions`
 - Explicit or inferred: explicit
 
 #### Rationale
 
-Если цель не представлена как проверяемое состояние, машина не может честно построить путь, сравнить варианты планов, завершить исполнение или оценить частичное достижение. При этом степень формальности спецификации должна зависеть от типа цели и определяться при проектировании цели.
+If a goal is not represented as a verifiable state, the machine cannot honestly build a path, compare plan variants, complete execution, or evaluate partial achievement. At the same time, the degree of specification formality should depend on the type of goal and be determined during goal design.
 
 #### Implications Without Implementation
 
-- Будущие стадии должны оценивать цель через проверяемость результата.
-- Критерии успеха должны появляться до выбора окончательного плана.
-- Формальность целевого состояния должна подбираться по домену цели, а не навязываться универсально.
-- Принцип не задаёт формат спецификации цели.
+- Future stages should evaluate the goal through result verifiability.
+- Success criteria should appear before choosing the final plan.
+- The formality of the target state should be selected according to the goal domain, not imposed universally.
+- The principle does not define the format of the goal specification.
 
 #### Boundaries
 
-- Принцип не требует численных метрик для всех целей.
-- Принцип не утверждает, что всякая проверяемая цель достижима.
-- Принцип не заменяет мотивацию, ограничения и контекст субъекта.
+- The principle does not require numeric metrics for all goals.
+- The principle does not claim that every verifiable goal is achievable.
+- The principle does not replace motivation, constraints, and the subject's context.
 
 #### Anti-Patterns
 
-- Начинать с task list без целевого состояния.
-- Автоматизировать действия до определения того, что считается успехом.
-- Требовать одинаково формальную спецификацию для программных, личных, социальных и исследовательских целей.
+- Starting with a task list without a target state.
+- Automating actions before defining what counts as success.
+- Requiring the same level of formal specification for software, personal, social, and research goals.
 
 #### Questions
 
-- Нет.
+- None.
 
-### Principle: План Как Понятный Граф Перехода
+### Principle: Plan as an Understandable Transition Graph
 
 #### Statement
 
-План должен быть понятным графом перехода от исходного состояния к целевому состоянию; он может быть неполным или неточным, но обязан сохранять осмысленную связь между этими состояниями.
+A plan should be an understandable graph of transition from the initial state to the target state; it may be incomplete or imprecise, but it must preserve a meaningful connection between these states.
 
 #### Derived From
 
 - Source concept(s): `Plan as Transition Model`, `Initial State and Target State`, `Subgoal and Partial Achievement`
-- Source relationship, boundary, or tension: план является мостом между целью и исполнимым действием, но не равен алгоритму
+- Source relationship, boundary, or tension: the plan is the bridge between goal and executable action, but is not equal to an algorithm
 - Source idea support: `Raw Description`, `Assumptions`, `Examples / Scenarios`
 - Explicit or inferred: explicit
 
 #### Rationale
 
-Понятность плана является минимальным контрактом для перехода к реализации. Без понятной связи между исходным и целевым состоянием нельзя объяснить дальнейшее движение, выбрать следующий этап, проверить достижение или безопасно изменить план во время исполнения.
+The understandability of the plan is the minimal contract for moving to realization. Without an understandable connection between the initial and target states, it is impossible to explain further movement, choose the next stage, verify achievement, or safely change the plan during execution.
 
 #### Implications Without Implementation
 
-- Будущие плановые артефакты должны сохранять исходное состояние, целевое состояние, этапы, подцели и возможные переходы.
-- План может уточняться во время исполнения, если сохраняется контролируемое движение к цели.
-- Графовая природа плана должна учитываться при выборе пути, пересмотре этапов и появлении новых подцелей.
-- Принцип не предписывает конкретный graph format.
+- Future plan artifacts should preserve the initial state, target state, stages, subgoals, and possible transitions.
+- The plan may be clarified during execution if controlled movement toward the goal is preserved.
+- The graph nature of the plan should be considered when choosing a path, reviewing stages, and introducing new subgoals.
+- The principle does not prescribe a concrete graph format.
 
 #### Boundaries
 
-- План не обязан быть полным перед началом реализации.
-- План не является простым списком задач.
-- Понятность плана не означает, что все детали уже алгоритмизованы.
+- The plan does not have to be complete before realization begins.
+- The plan is not a simple list of tasks.
+- Plan understandability does not mean that all details have already been algorithmized.
 
 #### Anti-Patterns
 
-- Считать план готовым только потому, что есть список действий.
-- Начинать реализацию без понимания, как действия связаны с целевым состоянием.
-- Запрещать изменение плана при появлении новых этапов, путей или подцелей.
+- Treating a plan as ready only because there is a list of actions.
+- Starting realization without understanding how the actions are connected to the target state.
+- Forbidding changes to the plan when new stages, paths, or subgoals appear.
 
 #### Questions
 
-- Нет.
+- None.
 
-### Principle: Цель И План Не Должны Разрываться
+### Principle: Goal and Plan Must Not Be Separated
 
 #### Statement
 
-План должен оставаться связанным с целью, ради которой он построен; повторное использование возможно как перенос или адаптация связки цели, исходного состояния, критериев успеха и плана, а не как использование плана вне контекста.
+A plan should remain connected to the goal for which it was built; reuse is possible as transfer or adaptation of the bundle of goal, initial state, success criteria, and plan, not as use of the plan outside its context.
 
 #### Derived From
 
 - Source concept(s): `Plan Exchange`, `Goal Artifact Context`, `Plan as Transition Model`
-- Source relationship, boundary, or tension: обмен планами создаёт ценность, но план не является самостоятельным универсальным механизмом
+- Source relationship, boundary, or tension: plan exchange creates value, but the plan is not an independent universal mechanism
 - Source idea support: `Raw Description`, `Signals of Value`, `Notes`
 - Explicit or inferred: explicit
 
 #### Rationale
 
-Machine of Goals стремится к повторному использованию удачных способов достижения, но сам план неотделим от цели. Если план переносится без целевой постановки, исходных условий и критериев проверки, теряется основание для безопасного исполнения и оценки результата.
+Machine of Goals strives toward reuse of successful ways of achievement, but the plan itself is inseparable from the goal. If a plan is transferred without the goal statement, initial conditions, and verification criteria, the foundation for safe execution and result evaluation is lost.
 
 #### Implications Without Implementation
 
-- Обмен планами должен сохранять связь с целевым контекстом.
-- Перенос похожей подцели допустим только вместе с назначением, входами, выходами и связью с родительской целью.
-- Метрики успешности этапов не делают этапы универсальными вне цели.
-- Принцип не определяет marketplace или социальную модель обмена.
+- Plan exchange should preserve the connection to the goal context.
+- Transfer of a similar subgoal is acceptable only together with its purpose, inputs, outputs, and connection to the parent goal.
+- Stage success metrics do not make stages universal outside the goal.
+- The principle does not define a marketplace or social model of exchange.
 
 #### Boundaries
 
-- Принцип не запрещает переиспользовать похожие подцели.
-- Принцип не требует копировать всю исходную цель без адаптации.
-- Принцип не утверждает, что у разных целей не может быть похожих плановых фрагментов.
+- The principle does not forbid reusing similar subgoals.
+- The principle does not require copying the entire original goal without adaptation.
+- The principle does not claim that different goals cannot have similar plan fragments.
 
 #### Anti-Patterns
 
-- Публиковать "голый план" без цели и критериев успеха.
-- Копировать этапы плана в новую цель без проверки исходного состояния и ограничений.
-- Считать счётчик успешных реализаций доказательством универсальной применимости этапа.
+- Publishing a "bare plan" without a goal and success criteria.
+- Copying plan stages into a new goal without checking the initial state and constraints.
+- Treating a counter of successful realizations as proof of a stage's universal applicability.
 
 #### Questions
 
-- Нет.
+- None.
 
-### Principle: Автоматизация Под Пользовательским Контролем
+### Principle: Automation Under User Control
 
 #### Statement
 
-Machine of Goals должна стремиться к автоматическому выполнению плана, но каждый раз спрашивать пользователя, какие пункты выполнять автоматически и где должны оставаться контрольные границы.
+Machine of Goals should strive toward automatic plan execution, but should ask the user each time which items to execute automatically and where control boundaries should remain.
 
 #### Derived From
 
 - Source concept(s): `Interactive and Automatic Execution`, `Plan Explanation and Control`, `Executable Collapsed Plan`
-- Source relationship, boundary, or tension: автоматизация является ценностью, но не должна отменять контроль, объяснение и возможность остановки
+- Source relationship, boundary, or tension: automation is valuable, but should not cancel control, explanation, and the possibility of stopping
 - Source idea support: `Raw Description`, `Assumptions`, `Signals of Value`
 - Explicit or inferred: explicit
 
 #### Rationale
 
-Ценность Machine of Goals в том, что план может доходить до исполняемого механизма. Но цели часто различаются по риску, домену и необходимости человеческого решения. Поэтому автоматизация должна быть направлением движения, а не безусловной судьбой каждой цели или каждого этапа.
+The value of Machine of Goals is that a plan can reach an executable mechanism. But goals often differ by risk, domain, and need for human decision-making. Therefore, automation should be a direction of movement, not the unconditional destiny of every goal or every stage.
 
 #### Implications Without Implementation
 
-- Пользователь должен выбирать режим исполнения: до заданного этапа, по списку этапов или полностью контролируемо.
-- Полностью контролируемое исполнение остаётся допустимым даже при технической автоматизируемости плана.
-- Автоматическое исполнение должно сохранять точки остановки и возможность пересмотра.
-- Принцип не задаёт UI или protocol подтверждения.
+- The user should choose the execution mode: up to a specified stage, by a list of stages, or fully controlled.
+- Fully controlled execution remains acceptable even when the plan is technically automatable.
+- Automatic execution should preserve stop points and the possibility of review.
+- The principle does not define a UI or confirmation protocol.
 
 #### Boundaries
 
-- Принцип не запрещает полную автоматизацию.
-- Принцип не требует ручного подтверждения каждого безопасного шага.
-- Принцип не превращает автоматизацию в самоцель.
+- The principle does not forbid full automation.
+- The principle does not require manual confirmation of every safe step.
+- The principle does not turn automation into an end in itself.
 
 #### Anti-Patterns
 
-- Автоматически выполнять этапы без выбранных пользователем границ.
-- Считать интерактивное исполнение признаком плохого плана.
-- Скрывать от пользователя, какие части плана будут выполнены автоматически.
+- Automatically executing stages without user-selected boundaries.
+- Treating interactive execution as a sign of a bad plan.
+- Hiding from the user which parts of the plan will be executed automatically.
 
 #### Questions
 
-- Нет.
+- None.
 
-### Principle: Объяснение До Исполнения
+### Principle: Explanation Before Execution
 
 #### Statement
 
-Перед автоматическим или агентским исполнением план должен быть объяснён через выбранный этап, причину выбора, состояние завершённых этапов и дальнейший путь по графу плана; пользователь должен иметь возможность запросить `dry run`.
+Before automatic or agentic execution, the plan should be explained through the selected stage, the reason for selection, the state of completed stages, and the further path through the plan graph; the user should be able to request `dry run`.
 
 #### Derived From
 
 - Source concept(s): `Plan Explanation and Control`, `Plan as Transition Model`, `Interactive and Automatic Execution`
-- Source relationship, boundary, or tension: исполнение должно быть управляемым, остановимым и объяснимым, особенно при автоматизации
+- Source relationship, boundary, or tension: execution should be controllable, stoppable, and explainable, especially under automation
 - Source idea support: `Raw Description`, `Examples / Scenarios`, `Signals of Value`
 - Explicit or inferred: explicit
 
 #### Rationale
 
-Объяснение удерживает Machine of Goals от слепой автоматизации. Если агент не может объяснить, какой этап выполняет, почему он выбран и как состояние завершённых этапов влияет на следующий путь, пользователь не может контролировать выполнение плана.
+Explanation keeps Machine of Goals away from blind automation. If the agent cannot explain which stage it is executing, why it was selected, and how the state of completed stages affects the next path, the user cannot control plan execution.
 
 #### Implications Without Implementation
 
-- `Dry run` должен служить проверке понятности и ожидаемого поведения до реальных действий.
-- Объяснение следующего шага должно учитывать историю исполнения.
-- Выбор пути по графу плана должен быть обоснован состоянием уже завершённых этапов.
-- Принцип не требует полной документации всей системы перед каждым шагом.
+- `Dry run` should serve to check understandability and expected behavior before real actions.
+- Explanation of the next step should take execution history into account.
+- The choice of path through the plan graph should be justified by the state of already completed stages.
+- The principle does not require complete documentation of the whole system before every step.
 
 #### Boundaries
 
-- `Dry run` не является реальным исполнением.
-- Объяснение не должно превращать каждый шаг в бесконечное согласование.
-- Принцип не утверждает, что все детали внутреннего исполнения должны быть раскрыты одинаково подробно.
+- `Dry run` is not real execution.
+- Explanation should not turn every step into endless approval.
+- The principle does not claim that all internal execution details should be disclosed with the same level of detail.
 
 #### Anti-Patterns
 
-- Запускать агентское исполнение без объяснения выбранного этапа.
-- Игнорировать состояние уже завершённых этапов при выборе следующего пути.
-- Использовать `dry run` как видимость контроля, если агент всё равно совершает реальные действия.
+- Launching agentic execution without explaining the selected stage.
+- Ignoring the state of already completed stages when choosing the next path.
+- Using `dry run` as an appearance of control if the agent still performs real actions.
 
 #### Questions
 
-- Нет.
+- None.
 
-### Principle: План Это Проект, Алгоритм Это Реализация
+### Principle: Plan Is Project, Algorithm Is Realization
 
 #### Statement
 
-Machine of Goals должна различать план как проект достижения цели и алгоритм как реализацию этого проекта в рабочем каталоге.
+Machine of Goals should distinguish the plan as the project of achieving the goal from the algorithm as the realization of this project in the working catalog.
 
 #### Derived From
 
 - Source concept(s): `Plan Algorithmization`, `Goal Artifact Context`, `Executable Collapsed Plan`
-- Source relationship, boundary, or tension: план может быть достаточно объяснимым, но алгоритмом становится только как реализованная форма
+- Source relationship, boundary, or tension: a plan may be sufficiently explainable, but becomes an algorithm only as a realized form
 - Source idea support: `Raw Description`, `Assumptions`, `Notes`
 - Explicit or inferred: explicit
 
 #### Rationale
 
-Различение плана и алгоритма не даёт смешивать мышление о достижении цели с исполняемой реализацией. План задаёт структуру перехода, а алгоритм возникает там, где эта структура воплощается в рабочей среде: Git-репозитории, каталоге генерации сайта, workflow или другой форме исполнения.
+The distinction between plan and algorithm prevents thinking about goal achievement from being mixed with executable realization. The plan defines the structure of the transition, while the algorithm appears where this structure is embodied in a working environment: a Git repository, site generation catalog, workflow, or another form of execution.
 
 #### Implications Without Implementation
 
-- Цель и план должны указывать рабочий каталог реализации.
-- Рабочий каталог реализации должен отличаться от каталога цели, если содержит исполняемую или публикуемую форму алгоритма.
-- Алгоритмизация должна сохранять связь с планом, проверками, остановками и параметрами.
-- Принцип не предписывает, что реализация всегда является кодом.
+- The goal and the plan should indicate the realization working catalog.
+- The realization working catalog should differ from the goal catalog if it contains the executable or publishable form of the algorithm.
+- Algorithmization should preserve the connection to the plan, checks, stops, and parameters.
+- The principle does not prescribe that realization is always code.
 
 #### Boundaries
 
-- План не становится алгоритмом только потому, что он подробный.
-- Алгоритмизация не означает произвольную генерацию кода.
-- Не все цели должны полностью переходить в алгоритм.
+- A plan does not become an algorithm only because it is detailed.
+- Algorithmization does not mean arbitrary code generation.
+- Not all goals should fully transition into an algorithm.
 
 #### Anti-Patterns
 
-- Хранить исполняемую реализацию без связи с целью и планом.
-- Называть план алгоритмом до появления рабочей реализации.
-- Смешивать каталог цели и рабочий каталог реализации так, что теряется смысловой контекст.
+- Storing executable realization without a connection to the goal and plan.
+- Calling a plan an algorithm before a working realization appears.
+- Mixing the goal catalog and the realization working catalog so that the semantic context is lost.
 
 #### Questions
 
-- Нет.
+- None.
 
-### Principle: Формат Свёртывания Должен Следовать Типу Цели
+### Principle: Collapsing Format Should Follow Goal Type
 
 #### Statement
 
-Свёрнутый план должен получать первичный формат по типу цели, среде достижения, способу проверки и ожидаемой форме использования результата.
+A collapsed plan should receive its primary format according to the goal type, achievement environment, verification method, and expected form of result usage.
 
 #### Derived From
 
 - Source concept(s): `Executable Collapsed Plan`, `Goal as Verifiable Target State`, `Goal Artifact Context`
-- Source relationship, boundary, or tension: у Double не должно быть единственного универсального формата свёрнутого плана
+- Source relationship, boundary, or tension: Double should not have a single universal collapsed-plan format
 - Source idea support: `Raw Description`, `Assumptions`, `Signals of Value`
 - Explicit or inferred: explicit
 
 #### Rationale
 
-Цели различаются по среде исполнения. Для вычислительной среды естественным форматом может быть скрипт, для проектирования - SDD, для социальных целей - Markdown с возможностью экспорта в сайт или другой читаемый формат. Универсальный формат исказил бы специфику цели и проверки.
+Goals differ by execution environment. For a computational environment, the natural format may be a script; for design, SDD; for social goals, Markdown with export capability to a website or another readable format. A universal format would distort the specificity of the goal and verification.
 
 #### Implications Without Implementation
 
-- Будущие стадии должны выбирать формат свёрнутого плана по домену.
-- SDD может быть первичным форматом для целей проектирования, не становясь внутренним концептом Machine of Goals.
-- Markdown, scripts, workflows, specs и site-exportable artifacts должны рассматриваться как возможные формы, а не как единая обязательная форма.
-- Принцип не задаёт перечень всех поддерживаемых форматов.
+- Future stages should choose the collapsed-plan format by domain.
+- SDD may be a primary format for design goals without becoming an internal concept of Machine of Goals.
+- Markdown, scripts, workflows, specs, and site-exportable artifacts should be treated as possible forms, not as one mandatory form.
+- The principle does not define the full list of supported formats.
 
 #### Boundaries
 
-- Принцип не запрещает иметь default format для конкретного workflow.
-- Принцип не утверждает, что каждый план должен быть свёрнут.
-- Принцип не превращает формат в критерий достижения цели.
+- The principle does not forbid having a default format for a concrete workflow.
+- The principle does not claim that every plan should be collapsed.
+- The principle does not turn the format into a criterion of goal achievement.
 
 #### Anti-Patterns
 
-- Требовать один формат свёрнутого плана для всех типов целей.
-- Выбирать формат по удобству машины, а не по среде достижения и проверке результата.
-- Считать SDD универсальным форматом для любых целей.
+- Requiring one collapsed-plan format for all types of goals.
+- Choosing the format for the convenience of the machine rather than by the achievement environment and result verification.
+- Treating SDD as a universal format for any goal.
 
 #### Questions
 
-- Нет.
+- None.
 
-### Principle: Подцель Как Собственный Контекст
+### Principle: Subgoal as Its Own Context
 
 #### Statement
 
-Устойчивая подцель должна оформляться как отдельный каталог с собственным подпланом, особенно если она повторяется в разных целях.
+A stable subgoal should be represented as a separate catalog with its own subplan, especially if it repeats across different goals.
 
 #### Derived From
 
 - Source concept(s): `Subgoal and Partial Achievement`, `Goal Artifact Context`, `Plan Exchange`
-- Source relationship, boundary, or tension: подцель является частью родительской цели, но может иметь собственные входы, выходы и подплан
+- Source relationship, boundary, or tension: a subgoal is part of the parent goal, but may have its own inputs, outputs, and subplan
 - Source idea support: `Raw Description`, `Assumptions`, `Notes`
 - Explicit or inferred: explicit
 
 #### Rationale
 
-Подцели позволяют работать с целями, которые нельзя достигнуть одним линейным переходом. Если подцель становится устойчивой частью графа достижения, отдельный каталог и подплан сохраняют её структуру, проверяемость и возможность повторного использования без отрыва от родительской цели.
+Subgoals make it possible to work with goals that cannot be achieved through one linear transition. If a subgoal becomes a stable part of the achievement graph, a separate catalog and subplan preserve its structure, verifiability, and reusability without detaching it from the parent goal.
 
 #### Implications Without Implementation
 
-- Повторяемые подцели вроде определения операционной системы или создания рабочего каталога цели могут становиться reusable fragments.
-- Подцель должна сохранять назначение, входы, выходы и связь с родительской целью.
-- Подплан подцели должен быть доступен как отдельный артефакт внутри её каталога.
-- Принцип не требует полного прохода Machine of Goals для каждой подцели.
+- Repeatable subgoals such as determining the operating system or creating the goal working catalog may become reusable fragments.
+- A subgoal should preserve its purpose, inputs, outputs, and connection to the parent goal.
+- The subgoal subplan should be available as a separate artifact inside its catalog.
+- The principle does not require a full Machine of Goals pass for every subgoal.
 
 #### Boundaries
 
-- Подцель не является произвольной задачей.
-- Подцель не должна скрывать недостижение исходной цели.
-- Повторяемая подцель не становится универсальным планом вне контекста.
+- A subgoal is not an arbitrary task.
+- A subgoal should not hide non-achievement of the original goal.
+- A repeatable subgoal does not become a universal plan outside context.
 
 #### Anti-Patterns
 
-- Смешивать все подцели в одном большом плане без видимой структуры.
-- Переиспользовать подцель без её входов, выходов и родительского назначения.
-- Делать отдельный каталог для любого мелкого шага, который не является устойчивой подцелью.
+- Mixing all subgoals into one large plan without visible structure.
+- Reusing a subgoal without its inputs, outputs, and parent purpose.
+- Creating a separate catalog for any small step that is not a stable subgoal.
 
 #### Questions
 
-- Нет.
+- None.
 
-### Principle: Стоимость Должна Нарастать Из Исполнения
+### Principle: Cost Should Accumulate From Execution
 
 #### Statement
 
-Machine of Goals должна оценивать стоимость плана через базовые метрики исполнения этапов и доменные критерии, уточняемые по мере работы с планами.
+Machine of Goals should evaluate plan cost through basic metrics of stage execution and domain-specific criteria that are clarified as work with plans proceeds.
 
 #### Derived From
 
 - Source concept(s): `Plan Cost and Efficiency`, `Plan as Transition Model`, `Plan Exchange`
-- Source relationship, boundary, or tension: планы должны быть сравнимыми, но стоимость не сводится к деньгам или универсальному score
+- Source relationship, boundary, or tension: plans should be comparable, but cost is not reducible to money or a universal score
 - Source idea support: `Raw Description`, `Assumptions`, `Examples / Scenarios`
 - Explicit or inferred: explicit
 
 #### Rationale
 
-Сравнение планов требует измеримых оснований. Базовые метрики - число успешных реализаций этапа, время выполнения и количество ошибок - дают общий слой наблюдения. Остальные критерии стоимости зависят от домена цели и должны уточняться в реальном опыте работы с планами.
+Plan comparison requires measurable grounds. Basic metrics - the number of successful realizations of a stage, execution time, and number of errors - provide a shared observation layer. The remaining cost criteria depend on the goal domain and should be clarified through real experience of working with plans.
 
 #### Implications Without Implementation
 
-- Стоимость этапа должна учитывать успешность, время и ошибки как общую основу.
-- Доменные стоимости могут включать внимание, деньги, вычислительные ресурсы, социальные усилия, риск или иные затраты.
-- Накопленный опыт исполнения должен помогать сравнивать планы и этапы.
-- Принцип не задаёт формулу эффективности.
+- Stage cost should consider success, time, and errors as a common foundation.
+- Domain-specific costs may include attention, money, computational resources, social effort, risk, or other costs.
+- Accumulated execution experience should help compare plans and stages.
+- The principle does not define an efficiency formula.
 
 #### Boundaries
 
-- Низкая стоимость не всегда означает лучший план.
-- Высокая успешность этапа не доказывает применимость в любой цели.
-- Эффективность не равна максимальной автоматизации.
+- Low cost does not always mean the best plan.
+- High stage success does not prove applicability to any goal.
+- Efficiency is not equal to maximum automation.
 
 #### Anti-Patterns
 
-- Сравнивать планы только по субъективному впечатлению.
-- Сводить стоимость к деньгам или времени без учёта ошибок и успешности.
-- Использовать накопленные метрики вне целевого контекста.
+- Comparing plans only by subjective impression.
+- Reducing cost to money or time without considering errors and success.
+- Using accumulated metrics outside the goal context.
 
 #### Questions
 
-- Нет.
+- None.
 
 ## 5. Principle Map
 
 ```text
-Проверяемость Цели До Планирования
-  -> План Как Понятный Граф Перехода
-       -> Подцель Как Собственный Контекст
-       -> Стоимость Должна Нарастать Из Исполнения
-       -> План Это Проект, Алгоритм Это Реализация
-            -> Объяснение До Исполнения
-            -> Автоматизация Под Пользовательским Контролем
-            -> Формат Свёртывания Должен Следовать Типу Цели
-                 -> Цель И План Не Должны Разрываться
+Goal Verifiability Before Planning
+  -> Plan as an Understandable Transition Graph
+       -> Subgoal as Its Own Context
+       -> Cost Should Accumulate From Execution
+       -> Plan Is Project, Algorithm Is Realization
+            -> Explanation Before Execution
+            -> Automation Under User Control
+            -> Collapsing Format Should Follow Goal Type
+                 -> Goal and Plan Must Not Be Separated
 ```
 
-- Проверяемость цели задаёт основание для планирования.
-- Понятный граф перехода связывает цель с действием.
-- Подцели структурируют сложные планы и сохраняют повторяемые фрагменты в собственном контексте.
-- Метрики стоимости позволяют сравнивать планы на основе опыта исполнения.
-- Алгоритмизация начинается там, где план как проект получает реализацию в рабочем каталоге.
-- Объяснение и dry run удерживают автоматизацию под контролем.
-- Формат свёртывания зависит от типа цели.
-- Обмен и повторное использование допустимы только без разрыва плана с целевым контекстом.
+- Goal verifiability provides the foundation for planning.
+- An understandable transition graph connects the goal with action.
+- Subgoals structure complex plans and preserve repeatable fragments in their own context.
+- Cost metrics make it possible to compare plans on the basis of execution experience.
+- Algorithmization begins where the plan as project receives realization in a working catalog.
+- Explanation and dry run keep automation under control.
+- The collapsing format depends on the goal type.
+- Exchange and reuse are acceptable only without separating the plan from the goal context.
 
 ## 6. Trade-offs and Tensions
 
-- `Автоматизация` vs `пользовательский контроль`: машина должна стремиться к автоматическому выполнению, но каждый запуск требует выбранных пользователем границ автоматизации.
-- `Понятность плана` vs `неполнота плана`: план может стартовать неполным, если сохраняет понятный переход, но слишком слабая понятность блокирует контролируемую реализацию.
-- `Повторное использование` vs `неотделимость от цели`: полезные планы и подцели должны переиспользоваться, но только вместе с назначением, входами, выходами и критериями успеха.
-- `Единый порядок артефактов` vs `доменно-зависимые форматы`: каталог цели должен быть структурным якорем, но свёрнутые формы зависят от типа цели.
-- `Метрики исполнения` vs `доменные стоимости`: общие метрики нужны для сравнения, но не должны вытеснять специфические затраты конкретной цели.
+- `Automation` vs `user control`: the machine should strive toward automatic execution, but each launch requires automation boundaries selected by the user.
+- `Plan understandability` vs `plan incompleteness`: a plan may start incomplete if it preserves an understandable transition, but too weak an understanding blocks controlled realization.
+- `Reuse` vs `inseparability from goal`: useful plans and subgoals should be reused, but only together with purpose, inputs, outputs, and success criteria.
+- `Unified artifact order` vs `domain-dependent formats`: the goal catalog should be the structural anchor, but collapsed forms depend on the type of goal.
+- `Execution metrics` vs `domain-specific costs`: shared metrics are needed for comparison, but they should not displace the specific costs of a concrete goal.
 
 ## 7. Candidate Inputs for Future Stages
 
-- Спроектировать workflow Machine of Goals вокруг перехода `Goal Capture -> Path Discovery -> Plan Synthesis -> Plan Automation`.
-- Определить контракт goal artifact: целевое состояние, исходное состояние, критерии успеха, ограничения, рабочий каталог реализации.
-- Определить контракт plan artifact: `<goal-id>-plan.md`, граф переходов, подцели, проверки, точки остановки, режимы автоматизации, метрики исполнения.
-- Определить контракт subgoal artifact: отдельный каталог, подплан, входы, выходы, критерии завершения и связь с родительской целью.
-- Определить dry run protocol для агентского исполнения без реальных действий.
-- Определить policy выбора режима исполнения: до этапа, по списку этапов, полностью контролируемо.
-- Определить mapping типов целей к форматам свёрнутого плана: scripts, SDD, Markdown export, workflow, agent runbook.
-- Определить правила связи каталога цели и рабочего каталога реализации.
+- Design the Machine of Goals workflow around the transition `Goal Capture -> Path Discovery -> Plan Synthesis -> Plan Automation`.
+- Define the goal artifact contract: target state, initial state, success criteria, constraints, realization working catalog.
+- Define the plan artifact contract: `plan.md`, transition graph, subgoals, checks, stop points, automation modes, execution metrics.
+- Define the subgoal artifact contract: separate catalog, subplan, inputs, outputs, completion criteria, and connection to the parent goal.
+- Define a dry run protocol for agentic execution without real actions.
+- Define the policy for choosing execution mode: up to a stage, by a list of stages, fully controlled.
+- Define the mapping from goal types to collapsed-plan formats: scripts, SDD, Markdown export, workflow, agent runbook.
+- Define rules for linking the goal catalog and the realization working catalog.
 
 ## 8. Rejected or Deferred Candidate Principles
 
-- `Все цели должны быть полностью автоматизируемы`: rejected, потому что источник явно сохраняет ручное, интерактивное и частично автоматическое исполнение.
-- `У Double должен быть единый формат свёрнутого плана`: rejected, потому что формат зависит от типа цели и среды достижения.
-- `План можно переиспользовать как самостоятельный универсальный механизм`: rejected, потому что план неотделим от цели и целевого контекста.
-- `Подцель всегда требует полного отдельного workflow Machine of Goals`: deferred/rejected, потому что подцель должна иметь каталог и подплан, но не обязательно полный отдельный проход.
-- `Стоимость плана можно выразить одной универсальной метрикой`: rejected, потому что есть базовые метрики исполнения, но доменные критерии уточняются в ходе работы с планами.
+- `All goals should be fully automatable`: rejected, because the source explicitly preserves manual, interactive, and partially automatic execution.
+- `Double should have one unified collapsed-plan format`: rejected, because the format depends on the goal type and achievement environment.
+- `A plan can be reused as an independent universal mechanism`: rejected, because the plan is inseparable from the goal and target context.
+- `A subgoal always requires a full separate Machine of Goals workflow`: deferred/rejected, because a subgoal should have a catalog and subplan, but not necessarily a full separate pass.
+- `Plan cost can be expressed by one universal metric`: rejected, because there are basic execution metrics, but domain-specific criteria are clarified during work with plans.

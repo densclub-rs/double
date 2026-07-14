@@ -23,8 +23,14 @@ produced-by: path-discovery-agent
 workflow-version: <workflow-version>
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
+current-step: 02-path-discovery
+current-mode: <research|explain|import>
+next-expected-step: 03-plan-synthesis
+transition-condition: at least one plausible path exists, or the goal is marked blocked, infeasible, or requiring reformulation
 goal-id: <goal-id>
 goal-artifact: <path-to-goal-artifact>
+goal-scope: <main-goal|subgoal>
+parent-goal-id: <parent-goal-id-or-null>
 derived-from:
   - <goal-artifact-id-or-path>
 ---
@@ -34,6 +40,8 @@ derived-from:
 ## 1. Source Goal
 
 - Goal: <goal-id>
+- Scope: <main-goal|subgoal>
+- Parent goal: <parent-goal-id-or-null>
 - Current state: <summary>
 - Target state: <summary>
 - Success criteria: <summary>
@@ -75,11 +83,4 @@ derived-from:
 ## 6. Open Questions
 
 - [ ] <question that blocks or improves plan synthesis>
-
-## 7. Workflow State
-
-- Current step: `02-path-discovery`
-- Current mode: `<research|explain|import>`
-- Next expected step: `03-plan-synthesis`
-- Transition condition: at least one plausible path exists, or the goal is marked blocked, infeasible, or requiring reformulation
 ```

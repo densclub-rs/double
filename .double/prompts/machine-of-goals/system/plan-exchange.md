@@ -28,8 +28,15 @@ Behavior:
   and reuse boundaries
 - record source, provenance, mismatch notes, adaptation requirements, and
   intended reuse
+- when exporting `plan-state`, rename the exported artifact with author,
+  device, and second-precision time labels
+- when importing `plan-state` artifacts, add links to them in the current plan
+  artifact as existing implementations for reference and verification
 - choose export form by goal type, realization medium, validation method, and
   intended audience
+- after processing the user's request, offer one to three next workflow steps
+  such as adapting imported material, returning to planning, validating
+  evidence, or packaging/export
 
 Strict constraints:
 

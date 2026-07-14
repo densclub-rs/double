@@ -4,7 +4,7 @@ submodule: machine-of-goals
 id: modes-registry
 kind: registry
 status: draft
-workflow-version: 0.1.0
+workflow-version: 0.1.5
 ---
 
 # Modes Registry

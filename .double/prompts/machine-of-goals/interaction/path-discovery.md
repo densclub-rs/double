@@ -19,6 +19,8 @@ Default mode: `research`.
 Expected output: `path-options`.
 
 Start from the goal artifact and look for possible paths before planning.
+If the artifact is a subgoal, keep the path analysis scoped to the subgoal and
+its expected input/output boundary with the parent plan.
 
 For each useful path, describe:
 
@@ -30,3 +32,6 @@ For each useful path, describe:
 
 If no plausible path exists, mark the goal as blocked, infeasible, or requiring
 reformulation.
+
+After responding, offer the next useful workflow movement. Name the next step,
+mode, responsible agent, and expected artifact when known.

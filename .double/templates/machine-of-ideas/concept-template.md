@@ -19,6 +19,7 @@ derived-from:
 ---
 id: <concept-artifact-id>
 kind: concept-artifact
+mindmap-plugin: basic
 status: release-candidate
 produced-by: concept-extraction-agent
 workflow-version: <workflow-version>
@@ -32,7 +33,20 @@ derived-from:
 
 # Concept Artifact: <Title>
 
-## 1. Source Idea
+## 1. Concept Index
+
+Use this section as the compact map entry point for the artifact.
+Keep it short enough to work as the first visible layer in a mindmap or markmap.
+Each index item must be a markdown link to the matching detailed concept section.
+Use nested bullets only to show possible conceptual nesting.
+If one concept depends on another at the overview level, place it as a child item under that concept.
+Do not label relationship types here and do not duplicate full definitions.
+
+- [`<concept-id>: <Concept Name>`](#concept-id-concept-name): <one-sentence-description-of-the-concept>
+  - [`<dependent-concept-id>: <Dependent Concept Name>`](#dependent-concept-id-dependent-concept-name): <one-sentence-description-of-the-dependent-concept>
+- [`<independent-concept-id>: <Independent Concept Name>`](#independent-concept-id-independent-concept-name): <one-sentence-description-of-the-concept>
+
+## 2. Source Idea
 
 - Source scope: `root idea plus optional relevant sub-ideas`
 - Source title: `<root-idea-title>`
@@ -44,20 +58,23 @@ derived-from:
 - Interaction language: `<interaction-language>`
 - Artifact language: `<artifact-language>`
 
-## 2. Conceptual Summary
+## 3. Conceptual Summary
 
 A short summary of the conceptual structure of the idea.
 Do not restate the whole idea; describe the main conceptual pattern.
 
-## 3. Working Definition of Concept
+## 4. Working Definition of Concept
 
 A concept is a stable meaning unit of an idea.
 It may describe an entity, relationship, process, distinction, tension, or interpretive frame.
 It is not yet a principle, requirement, task, or design decision.
 
-## 4. Core Concepts
+## 5. Core Concepts
 
-### Concept: <Concept Name>
+Each core concept should use a stable id in its heading.
+This makes the heading usable as both a readable mindmap node and a link target from the Concept Index.
+
+### <concept-id>: <Concept Name>
 
 #### Definition
 
@@ -75,7 +92,9 @@ A concise definition of the concept in this idea.
 
 #### Related Concepts
 
-- `<related-concept-name>`: <relationship>
+- Depends on: [`<related-concept-id>`](#related-concept-id-related-concept-name)
+- Conflicts or tensions: [`<other-concept-id>`](#other-concept-id-other-concept-name)
+- Other relations: [`<another-concept-id>`](#another-concept-id-another-concept-name): <short-relationship-note>
 
 #### Boundaries
 
@@ -87,12 +106,7 @@ A concise definition of the concept in this idea.
 
 - Unanswered questions that remain unclear about this concept.
 - Each unanswered item in this subsection is an open question for this specific concept.
-- When a question is answered, integrate the answer into this concept's definition, boundaries, relationships, source grounding, or the conceptual map, then mark the item as answered or remove it from this subsection.
-
-## 5. Conceptual Map
-
-Describe the relationships between the core concepts.
-Use bullets, a table, or a small diagram if helpful.
+- When a question is answered, integrate the answer into this concept's definition, boundaries, relationships, source grounding, or the Concept Index, then mark the item as answered or remove it from this subsection.
 
 ## 6. Terms and Non-Concepts
 

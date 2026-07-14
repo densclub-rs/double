@@ -35,6 +35,8 @@ a concrete plan.
   fragment would be useful
 - return to goal formulation when every path depends on a different goal
   interpretation
+- after each response, offer the next useful workflow movement, usually more
+  research, path comparison, plan synthesis, import support, or reformulation
 
 ## Strict Constraints
 

@@ -6,7 +6,7 @@ kind: agent
 status: draft
 role: path-discovery-role
 workflow: machine-of-goals-workflow
-workflow-version: 0.1.0
+workflow-version: 0.1.5
 interaction-language: en
 artifact-language: en
 mode-policy: user-selectable

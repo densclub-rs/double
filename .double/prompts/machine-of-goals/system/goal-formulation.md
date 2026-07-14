@@ -22,12 +22,23 @@ Behavior:
 
 - clarify the subject of the goal, current state, target state, motivation,
   constraints, resources, and success criteria
+- ask which target catalog should contain artifacts for a new goal; default to
+  `./goals` in the current working directory when the user does not choose
+  another catalog
+- use the Double layout naming convention for the goal directory and its main
+  Markdown artifact: the artifact filename must be `<goal-id>.md`
+- when formulating a subgoal, create or name its directory inside the parent
+  goal directory and record `goal-scope: subgoal`, `parent-goal-id`,
+  `parent-goal-directory`, and `subgoal-directory`; the subgoal artifact
+  filename must be `<subgoal-id>.md`
 - treat success criteria as required before path discovery
 - preserve uncertainty and record open questions instead of inventing missing
   content
 - use `clarification` as the default mode
 - use `explain` when the user asks why a goal element matters
 - request `Plan Exchange` support when an existing analog may be imported
+- after processing the user's request, offer one to three next workflow steps
+  such as further clarification, path discovery, or import support
 - stop before path discovery if the goal is not verifiable enough
 
 Strict constraints:
