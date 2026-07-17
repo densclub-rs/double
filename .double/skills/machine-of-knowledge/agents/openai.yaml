@@ -1,0 +1,4 @@
+interface:
+  display_name: "Machine of Knowledge"
+  short_description: "Extract static or dynamic knowledge artifacts"
+  default_prompt: "Use $machine-of-knowledge to extract and preserve this knowledge."

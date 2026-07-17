@@ -5,6 +5,9 @@ mindmap-plugin: basic
 
 # [Roles](../.double.md)
 
+## Double Agent
+- [Machine Artifact Maintainer Role](./double-agent/machine-artifact-maintainer-role.md)
+
 ## [Machine of Ideas](./machine-of-ideas/machine-of-ideas.md)
 - [Idea Capture Role](./machine-of-ideas/idea-capture-role.md)
 - [Concept Extractor Role](./machine-of-ideas/concept-extractor-role.md)
@@ -17,3 +20,6 @@ mindmap-plugin: basic
 - [Plan Realization Role](./machine-of-goals/plan-realization-role.md)
 - [Plan Validation Role](./machine-of-goals/plan-validation-role.md)
 - [Plan Exchange Role](./machine-of-goals/plan-exchange-role.md)
+
+## [Machine of Knowledge](./machine-of-knowledge/machine-of-knowledge.md)
+- [Knowledge Extractor Role](./machine-of-knowledge/knowledge-extractor-role.md)

@@ -10,3 +10,6 @@ mindmap-plugin: basic
 
 ## [Machine of Goals](./machine-of-goals/machine-of-goals.md)
 - [Machine of Goals Skill](./machine-of-goals/SKILL.md)
+
+## Machine of Knowledge
+- [Machine of Knowledge Skill](./machine-of-knowledge/SKILL.md)

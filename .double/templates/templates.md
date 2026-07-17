@@ -20,3 +20,6 @@ mindmap-plugin: basic
 - [Validation Result Template](./machine-of-goals/validation-result-template.md)
 - [Plan State Template](./machine-of-goals/plan-state-template.md)
 - [Exported Plan Package Template](./machine-of-goals/exported-plan-package-template.md)
+
+## [Machine of Knowledge](./machine-of-knowledge/machine-of-knowledge.md)
+- [Knowledge Template](./machine-of-knowledge/knowledge-template.md)

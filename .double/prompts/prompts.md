@@ -34,3 +34,11 @@ mindmap-plugin: basic
 - [Plan Realization](./machine-of-goals/interaction/plan-realization.md)
 - [Plan Validation](./machine-of-goals/interaction/plan-validation.md)
 - [Plan Exchange](./machine-of-goals/interaction/plan-exchange.md)
+
+## [Machine of Knowledge](./machine-of-knowledge/machine-of-knowledge.md)
+
+### [System](./machine-of-knowledge/system/system.md)
+- [Knowledge Extraction](./machine-of-knowledge/system/knowledge-extraction.md)
+
+### [Interaction](./machine-of-knowledge/interaction/interaction.md)
+- [Knowledge Extraction](./machine-of-knowledge/interaction/knowledge-extraction.md)

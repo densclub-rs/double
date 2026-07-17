@@ -32,7 +32,7 @@ This establishes the project’s foundational principle:
 
  **Build an open system for accumulating and exchanging knowledge among all *Double* project participants.**
 
-*The accumulated knowledge and skills may be **open**, available to any participant or external user, or **restricted**, available only to specific individuals or behind a paywall.*
+*Knowledge accumulated within the **Double** project is always available to everyone free of charge. Other artifacts may be **open**, **restricted** to specific individuals, or available through a **paid subscription**.*
 
 
 ## Ideas

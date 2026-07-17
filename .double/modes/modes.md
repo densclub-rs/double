@@ -5,6 +5,9 @@ mindmap-plugin: basic
 
 # [Modes](../.double.md)
 
+## [Machine of Knowledge](./machine-of-knowledge/machine-of-knowledge.md)
+- Reuses Machine of Ideas modes for its single extraction step.
+
 ## [Machine of Ideas](./machine-of-ideas/machine-of-ideas.md)
 - [Brainstorm](./machine-of-ideas/brainstorm/brainstorm.md)
 - [Explain](./machine-of-ideas/explain/explain.md)
