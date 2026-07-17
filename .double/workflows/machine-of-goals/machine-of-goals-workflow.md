@@ -4,7 +4,7 @@ submodule: machine-of-goals
 id: machine-of-goals-workflow
 kind: workflow
 status: draft
-version: 0.1.7
+version: 0.1.8
 interaction-language: en
 artifact-language: en
 derived-from:
@@ -54,7 +54,7 @@ the plan may be revised as the goal becomes clearer through execution.
 
 ## Versioning Rule
 
-- current version: `0.1.7`
+- current version: `0.1.8`
 - a new version is created if the structure of steps, artifact contracts, modes,
   execution policy, validation policy, or transition conditions change
 
@@ -79,6 +79,24 @@ same name as that directory.
 
 The goal artifact filename must be `<goal-id>.md`, where `<goal-id>` is the
 name of the goal directory.
+
+## Machine Operating Change Routing Rule
+
+When the user requests the creation, modification, movement, or removal of a
+Machine of Goals operating artifact under `.double/`, activate `double-agent`
+and suspend normal workflow-agent editing for that request.
+
+`double-agent` must follow its planning, validation, explicit change-set
+approval, and per-artifact approval protocol from:
+
+- `.double/agents/double-agent/double-agent.md`
+- `.double/roles/double-agent/machine-artifact-maintainer-role.md`
+
+Read-only inspection or explanation does not require an artifact-change
+approval. A request that mixes Machine of Goals operating changes with user
+artifact changes under `goals/` must be split into separately planned steps.
+The normal Machine of Goals workflow agent remains responsible for the user
+artifact portion.
 
 ## Default State
 

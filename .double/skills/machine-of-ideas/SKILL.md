@@ -5,9 +5,10 @@ name: machine-of-ideas
 description: >
   Use this skill when the user clearly wants to capture, develop, inspect, continue, or advance an idea through the Machine of Ideas. Trigger on direct
   requests such as "I have an idea", "let's work on an idea", "run machine of ideas", "I've catch it, let's go", or when the user
-  asks to continue an existing idea artifact. Also trigger when the user asks to work on an idea clarification, sub-idea, mini-idea, `уточнение идеи`, `подидея`, `мини-идея`, or `миниидея`. Do not trigger on casual mentions of ideas inside unrelated technical discussion unless the user asks to enter the idea workflow.
+  asks to continue an existing idea artifact. Also trigger when the user asks to work on an idea clarification, sub-idea, mini-idea, `уточнение идеи`, `подидея`, `мини-идея`, or `миниидея`. Trigger and route to `double-agent` when the user asks to create, change, move, or remove Machine of Ideas operating artifacts under `.double/`. Do not trigger on casual mentions of ideas inside unrelated technical discussion unless the user asks to enter the idea workflow.
 metadata:
   short-description: Formalize individual experience in working with ideas, knowledge, and system design into a reproducible process
+  workflow-version: 0.2.1
 ---
 
 # Machine of Ideas
@@ -34,6 +35,25 @@ Activate this skill when the user clearly wants to work with the Machine of Idea
 If the user's intent is only weakly implied, offer activation instead of silently entering the workflow.
 
 Requests to work on an idea clarification, sub-idea, or mini-idea should route to `01-idea-capture` with `.double/templates/machine-of-ideas/mini-idea-template.md`, after confirming the parent idea.
+
+## Machine Operating Change Routing
+
+Before normal workflow entry, detect whether the request creates, changes,
+moves, or removes a Machine of Ideas operating artifact under `.double/`.
+
+If it does:
+
+1. Activate `double-agent`.
+2. Load `.double/agents/double-agent/double-agent.md`.
+3. Load `.double/roles/double-agent/machine-artifact-maintainer-role.md`.
+4. Follow its read-only inspection, planning, versioning, validation, and
+   explicit per-artifact approval protocol.
+5. Do not route the operating-artifact change to a normal Machine of Ideas
+   workflow agent.
+
+If the request also changes a user artifact under `ideas/`, split that work
+into a separate proposed step owned by the appropriate Machine of Ideas
+workflow agent.
 
 Example:
 

@@ -64,6 +64,8 @@ A concept is a stable meaning unit of an idea that describes an important entity
 - look for distinctions, boundaries, and tensions that may become the basis for future principles
 - check whether the concept will survive several implementation variants
 - check whether a normative rule can later be derived from the concept
+- treat each concept independent as much as possible, use concept dependency only when it absolutely 
+- treat each concept as independent as much as possible; use concept dependency only when it is absolutely necessary and really clears the main concept
 
 ## Strict Constraints
 

@@ -19,6 +19,7 @@ derived-from:
 ---
 id: <principle-artifact-id>
 kind: principle-artifact
+mindmap-plugin: basic
 status: release-candidate
 produced-by: principle-synthesis-agent
 workflow-version: <workflow-version>
@@ -33,7 +34,20 @@ derived-from:
 
 # Principle Artifact: <Title>
 
-## 1. Source Artifacts
+## 1. Principle Index
+
+Use this section as the compact map entry point for the artifact.
+Keep it short enough to work as the first visible layer in a mindmap or markmap.
+Each index item must be a markdown link to the matching detailed principle section.
+Use nested bullets only to show possible normative nesting between principles.
+If one principle depends on or is constrained by another at the overview level, place it as a child item under that principle.
+Do not label relationship types here and do not duplicate full principle statements.
+
+- [`<principle-id>: <Principle Name>`](#principle-id-principle-name): <one-sentence-description-of-the-principle>
+  - [`<dependent-principle-id>: <Dependent Principle Name>`](#dependent-principle-id-dependent-principle-name): <one-sentence-description-of-the-dependent-principle>
+- [`<independent-principle-id>: <Independent Principle Name>`](#independent-principle-id-independent-principle-name): <one-sentence-description-of-the-principle>
+
+## 2. Source Artifacts
 
 - Source idea artifact: `<root-idea-artifact-id-or-path>`
 - Source concept artifact: `<concept-artifact-id-or-path>`
@@ -45,19 +59,22 @@ derived-from:
 - Interaction language: `<interaction-language>`
 - Artifact language: `<artifact-language>`
 
-## 2. Principle Synthesis Summary
+## 3. Principle Synthesis Summary
 
 A short summary of the normative structure that emerges from the idea and concept artifact.
 Do not restate the whole idea or concept artifact; describe the main principles and why they matter.
 
-## 3. Working Definition of Principle
+## 4. Working Definition of Principle
 
 A principle is a stable normative ground derived from an idea and its conceptual structure.
 It guides or constrains future decisions, but it is not yet a requirement, task, design decision, implementation step, or generic value statement.
 
-## 4. Core Principles
+## 5. Core Principles
 
-### Principle: <Principle Name>
+Each core principle should use a stable id in its heading.
+This makes the heading usable as both a readable mindmap node and a link target from the Principle Index.
+
+### <principle-id>: <Principle Name>
 
 #### Statement
 
@@ -95,11 +112,6 @@ Why this principle follows from the source idea and concept artifact.
 - Unanswered questions that remain unclear or contested about this principle.
 - Each unanswered item in this subsection is an open question for this specific principle.
 - When a question is answered, integrate the answer into this principle's statement, source grounding, rationale, implications, boundaries, anti-patterns, or related artifact sections, then mark the item as answered or remove it from this subsection.
-
-## 5. Principle Map
-
-Describe how the principles relate to each other.
-Use bullets, a table, or a small diagram if helpful.
 
 ## 6. Trade-offs and Tensions
 

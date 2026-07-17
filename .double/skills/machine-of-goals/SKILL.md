@@ -1,9 +1,10 @@
 ---
 name: machine-of-goals
 description: >
-  Use this skill when the user wants to formulate, clarify, inspect, plan, realize, validate, import, export, split, or continue a goal through the Machine of Goals. Trigger on requests about Machine of Goals, goal artifacts, subgoals, subgoal catalogs, path discovery, plan synthesis, subplans, plan realization, plan state artifacts, previous plan implementations, plan validation, plan exchange, reusable plans, collapsed plans, automatically executable plans, or goal workflow state. Do not trigger on casual mentions of goals inside unrelated discussion unless the user asks to enter the Machine of Goals workflow.
+  Use this skill when the user wants to formulate, clarify, inspect, plan, realize, validate, import, export, split, or continue a goal through the Machine of Goals. Trigger on requests about Machine of Goals, goal artifacts, subgoals, subgoal catalogs, path discovery, plan synthesis, subplans, plan realization, plan state artifacts, previous plan implementations, plan validation, plan exchange, reusable plans, collapsed plans, automatically executable plans, or goal workflow state. Trigger and route to `double-agent` when the user asks to create, change, move, or remove Machine of Goals operating artifacts under `.double/`. Do not trigger on casual mentions of goals inside unrelated discussion unless the user asks to enter the Machine of Goals workflow.
 metadata:
   short-description: Transform goals into verifiable target states, paths, plans, realization loops, validation, and reusable plan packages
+  workflow-version: 0.1.8
 ---
 
 # Machine of Goals
@@ -37,6 +38,25 @@ including:
 
 If the user's intent is only weakly implied, offer activation instead of
 silently entering the workflow.
+
+## Machine Operating Change Routing
+
+Before normal workflow entry, detect whether the request creates, changes,
+moves, or removes a Machine of Goals operating artifact under `.double/`.
+
+If it does:
+
+1. Activate `double-agent`.
+2. Load `.double/agents/double-agent/double-agent.md`.
+3. Load `.double/roles/double-agent/machine-artifact-maintainer-role.md`.
+4. Follow its read-only inspection, planning, versioning, validation, and
+   explicit per-artifact approval protocol.
+5. Do not route the operating-artifact change to a normal Machine of Goals
+   workflow agent.
+
+If the request also changes a user artifact under `goals/`, split that work
+into a separate proposed step owned by the appropriate Machine of Goals
+workflow agent.
 
 Example:
 

@@ -19,3 +19,11 @@ mindmap-plugin: basic
 - [Skills Registry](./machine-of-goals/skills-registry.md)
 - [Templates Registry](./machine-of-goals/templates-registry.md)
 - [Workflows Registry](./machine-of-goals/workflows-registry.md)
+
+## [Machine of Knowledge](./machine-of-knowledge/machine-of-knowledge.md)
+- [Agents Registry](./machine-of-knowledge/agents-registry.md)
+- [Modes Registry](./machine-of-knowledge/modes-registry.md)
+- [Roles Registry](./machine-of-knowledge/roles-registry.md)
+- [Skills Registry](./machine-of-knowledge/skills-registry.md)
+- [Templates Registry](./machine-of-knowledge/templates-registry.md)
+- [Workflows Registry](./machine-of-knowledge/workflows-registry.md)
