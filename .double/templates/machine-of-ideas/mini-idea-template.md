@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: mini-idea-template
 kind: template
-status: draft
+status: release-candidate
 workflow-stage: idea-capture
 interaction-language: en
 artifact-language: en
