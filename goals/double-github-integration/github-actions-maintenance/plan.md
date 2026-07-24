@@ -14,7 +14,7 @@ canonical-plan-artifact: ./plan.md
 author: plan-synthesis-agent
 device: codex-runtime
 created-at: 2026-07-22T16:16:01+02:00
-updated-at: 2026-07-23T23:52:34+02:00
+updated-at: 2026-07-24T17:13:52+02:00
 imported-from: null
 goal-scope: subgoal
 parent-goal-id: double-github-integration
@@ -31,9 +31,7 @@ derived-from:
 
 ## 1. Plan Summary
 
-This canonical plan has three complete stages and one partial hosted-validation
-stage. The release contract, local packaging, and workflow adapter each have
-one corresponding stage.
+This canonical plan defines stages to implement and maintain GitHub Actions for Double project. You can use this plan any time you need to make changes in GitHub Actions workflow and/or maintenance scripts.
 
 ## 2. Plan Variant Identity
 
@@ -50,15 +48,11 @@ one corresponding stage.
 | [S01: Specify the Release Contract](#stage-s01) | ✅ done | ✅ accepted | goal, path options, workflow, version knowledge | [S02](#stage-s02), [S03](#stage-s03) | not retained | — |
 | [S02: Implement and Validate Local Packaging](#stage-s02) | ✅ done | ✅ accepted | [S01](#stage-s01) | [S03](#stage-s03), [S04](#stage-s04) | not retained | — |
 | [S03: Adapt and Validate the GitHub Workflow](#stage-s03) | ✅ done | ✅ accepted | [S01](#stage-s01), [S02](#stage-s02) | [S04](#stage-s04) | not retained | — |
-| [S04: Validate the Hosted Release Operation](#stage-s04) | 🟡 partial | 🟡 partial | [S02](#stage-s02), [S03](#stage-s03) | none | not retained | — |
+| [S04: Validate the Hosted Release Operation](#stage-s04) | ✅ done | ✅ accepted | [S02](#stage-s02), [S03](#stage-s03) | none | not retained | — |
 
 ## 4. Blocker
 
-- Blocker: hosted release evidence has not been authorized or collected.
-- Owner: user.
-- Unblock condition: authorize hosted workflow, GitHub Release, and repository
-  retention inspection; alternatively close the goal with explicitly accepted
-  local-only validation.
+- Blocker: none.
 
 ## 5. Stage Attempts
 
@@ -136,15 +130,15 @@ one corresponding stage.
   - verify the adapter still matches the final machine-version contract.
 - Validation:
   - Status: ✅ accepted
-  - Decision: the local workflow adapter is accepted; only hosted evidence is
-    outstanding in S04.
+  - Decision: the local workflow adapter is accepted; S04 subsequently
+    accepted the hosted operation.
 
 <a id="stage-s04"></a>
 
 ### Stage: Validate the Hosted Release Operation
 
 - Stage id: `S04`
-- Status:  🟡 partial
+- Status: ✅ done
 - Purpose: collect authorization-backed evidence that the GitHub-hosted release
   behaves like the accepted local contract.
 - Input state: accepted S02 package implementation and S03 workflow adapter.
@@ -155,9 +149,10 @@ one corresponding stage.
     mismatch rules;
   - record any needed plan revision.
 - Validation:
-  - Status: 🟡 partial
-  - Decision: local evidence is accepted; no hosted run, real GitHub Release,
-    or repository retention setting has been inspected or changed.
+  - Status: ✅ accepted
+  - Decision: on 2026-07-24, the user explicitly confirmed that the pipeline
+    operates successfully in GitHub; this confirmation is accepted as the
+    hosted-validation decision for S04.
 
 ## 7. Shared Boundaries, Risks, and Revision Conditions
 
@@ -173,4 +168,4 @@ one corresponding stage.
 
 ## 8. Open Questions
 
-None. The sole pending decision is whether to authorize S04 hosted validation.
+None.
