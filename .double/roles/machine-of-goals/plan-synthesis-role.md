@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: plan-synthesis-role
 kind: role
-status: draft
+status: release-candidate
 derived-from:
   - ../../workflows/machine-of-goals/machine-of-goals-workflow.md
   - ../../../ideas/machine-of-goals/machine-of-goals-principles.md

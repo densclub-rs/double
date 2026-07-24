@@ -3,8 +3,7 @@ style: double
 submodule: machine-of-goals
 id: skills-registry
 kind: registry
-status: draft
-workflow-version: 0.1.5
+status: release-candidate
 derived-from:
   - .double/workflows/machine-of-goals/machine-of-goals-workflow.md
 ---
@@ -22,7 +21,7 @@ cards, roles, modes, prompts, templates, or registries.
 ## Machine of Goals Skill
 
 - id: `machine-of-goals`
-- status: `draft`
+- status: `release-candidate`
 - definition: `.double/skills/machine-of-goals/SKILL.md`
 - workflow: `machine-of-goals-workflow`
 - workflow-definition: `.double/workflows/machine-of-goals/machine-of-goals-workflow.md`

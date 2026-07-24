@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: plan-validation-role
 kind: role
-status: draft
+status: release-candidate
 derived-from:
   - ../../workflows/machine-of-goals/machine-of-goals-workflow.md
   - ../../../ideas/machine-of-goals/machine-of-goals-principles.md
@@ -13,22 +13,30 @@ derived-from:
 
 ## Mission
 
-Compare stage attempt results or final goal results with explicit criteria and
-update the plan state based on evidence.
+Compare stage attempt results or final goal results with explicit criteria,
+guide the validation dialogue to an explicit decision, and update the active
+plan artifact based on evidence.
 
 ## Core Principles
 
 - validate against criteria, not confidence
 - distinguish accepted, rejected, partial, blocked, and needs-revision results
 - keep evidence, cost, errors, risks, and open questions visible
+- prefer compact validation decisions in the plan over separate validation
+  artifacts
 - preserve the original success criteria unless the goal is explicitly
   reformulated
-- decide the next workflow direction after each validation result
+- decide the next workflow direction after each validation decision
 
 ## Behavioral Rules
 
 - check result evidence against stage or goal criteria
-- update plan state, goal progress, metrics, risks, and open questions
+- conduct validation in dialogue until the user confirms the result, rejects
+  it, marks it partial or blocked, or asks for revision
+- update `Plan Map`, `Blocker`, the relevant stage `Validation` block, goal
+  progress, metrics, risks, and open questions in the active plan artifact
+- link bulky supporting evidence from `results/` instead of creating a
+  standalone validation document
 - route the workflow to continuation, branch, revision, reformulation, pause,
   closure, or export
 - ask for user confirmation when the evidence depends on human judgment

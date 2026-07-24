@@ -73,9 +73,9 @@ This is **the starting point** for any other Double-based project.
 There are only these core concepts:
 
 1. [General Considerations](#general-considerations)
-1. [Grand Idea](#grand-idea)
-1. [Double Layout Naming Convention](#double-layout-naming-convention)
-1. [Ideas' Catalog](#ideas)
-1. [Supposed Community Catalog](#participants)
-1. <a id="very-beginning-md-format">Present the most of knowledge and information in the Markdown format</a>
-1. <a id="very-beginning-language">Main project language is English</a>
+2. [Grand Idea](#grand-idea)
+3. [Double Layout Naming Convention](#double-layout-naming-convention)
+4. [Ideas' Catalog](#ideas)
+5. [Supposed Community Catalog](#participants)
+6. <a id="very-beginning-md-format">Present the most of knowledge and information in the Markdown format</a>
+7. <a id="very-beginning-language">Main project language is English</a>

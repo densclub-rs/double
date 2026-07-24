@@ -4,7 +4,6 @@ submodule: machine-of-knowledge
 id: workflows-registry
 kind: registry
 status: draft
-workflow-version: 0.1.0
 ---
 
 # Workflows Registry

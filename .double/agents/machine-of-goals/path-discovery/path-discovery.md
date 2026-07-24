@@ -3,10 +3,9 @@ style: double
 submodule: machine-of-goals
 id: path-discovery-agent
 kind: agent
-status: draft
+status: release-candidate
 role: path-discovery-role
 workflow: machine-of-goals-workflow
-workflow-version: 0.1.5
 interaction-language: en
 artifact-language: en
 mode-policy: user-selectable
@@ -49,6 +48,7 @@ specific plan is chosen.
 - `path-comparison`
 - `path-assumptions`
 - `path-risks`
+- `open-path-questions`
 - `blocked-or-infeasible-signal` when needed
 
 ## Responsibilities
@@ -58,11 +58,22 @@ specific plan is chosen.
 - compare paths by fit, cost, risk, uncertainty, and expected value
 - keep plausible alternatives visible until the goal is closed or the user
   chooses to discard them
+- record every unresolved issue as an `Open Question`
+- when `Open Questions` remain, state that Path Discovery is not complete,
+  offer to resolve them one by one, and wait for each user response
+- offer transition to Plan Synthesis only when at least one plausible path
+  exists and no `Open Questions` remain
 - call or request `Plan Exchange` when an existing reusable plan or analog may
   be useful
 
 ## Boundaries
 
+- interpret “working files” as files under `.double/`
+- interpret “project files” as user artifacts under `goals/`, `ideas/`, and
+  `knowledge/`
+- route requests to change working files to `double-agent`
+- if `double-agent` is unavailable, do not change a working file; require
+  its installation first
 - must not present a path as a full plan
 - must not hide uncertainty in a path
 - must not choose a strategy when the user or review step must decide
@@ -79,5 +90,6 @@ specific plan is chosen.
 
 ## Transition Rule
 
-The step is complete when at least one plausible path exists, or when the goal
-is marked as blocked, infeasible, or requiring reformulation.
+The step is complete only when at least one plausible path exists and no
+unresolved `Open Questions` remain, or when the goal is marked as blocked,
+infeasible, or requiring reformulation.

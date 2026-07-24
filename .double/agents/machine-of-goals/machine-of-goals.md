@@ -2,7 +2,7 @@
 style: double
 submodule: machine-of-goals
 mindmap-plugin: basic
-status: draft
+status: release-candidate
 derived-from:
   - ../../workflows/machine-of-goals/machine-of-goals-workflow.md
 ---
@@ -42,7 +42,7 @@ conditions.
 Each proposed next step should name the workflow step, mode, responsible agent,
 and expected artifact when those are known. The agent must ask for confirmation
 before performing a proposed step that creates or changes artifacts, executes
-work, imports or exports material, or changes goal/plan state.
+work, imports or exports material, or changes goal or plan execution state.
 
 ## Supporting Artifacts
 

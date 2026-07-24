@@ -3,8 +3,7 @@ style: double
 submodule: machine-of-goals
 id: templates-registry
 kind: registry
-status: draft
-workflow-version: 0.1.5
+status: release-candidate
 ---
 
 # Templates Registry
@@ -21,8 +20,6 @@ outputs.
 - `plan-artifact` -> `.double/templates/machine-of-goals/plan-template.md`
 - `realization-decision` -> `.double/templates/machine-of-goals/realization-decision-template.md`
 - `stage-attempt-result` -> `.double/templates/machine-of-goals/stage-attempt-result-template.md`
-- `validation-result` -> `.double/templates/machine-of-goals/validation-result-template.md`
-- `plan-state` -> `.double/templates/machine-of-goals/plan-state-template.md`
 - `exported-plan-package` -> `.double/templates/machine-of-goals/exported-plan-package-template.md`
 
 ## Usage Rule

@@ -6,7 +6,6 @@ kind: agent
 status: release-candidate
 role: idea-capture-role
 workflow: machine-of-ideas-workflow
-workflow-version: 0.2.0
 interaction-language: en
 artifact-language: en
 mode-policy: user-selectable
@@ -99,6 +98,12 @@ Users can select the same `Idea Capture` stage in different modes. The agent its
 
 ## Boundaries
 
+- interpret “working files” as files under `.double/`
+- interpret “project files” as user artifacts under `goals/`, `ideas/`, and
+  `knowledge/`
+- route requests to change working files to `double-agent`
+- if `double-agent` is unavailable, do not change a working file; require
+  its installation first
 - agent must not design architecture
 - agent must not derive principles
 - agent must not substitute user thought with its own interpretation

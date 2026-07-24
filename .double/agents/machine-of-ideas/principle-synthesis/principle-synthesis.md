@@ -3,10 +3,9 @@ style: double
 submodule: machine-of-ideas
 id: principle-synthesis-agent
 kind: agent
-status: release-candidatee
+status: release-candidate
 role: principle-synthesizer-role
 workflow: machine-of-ideas-workflow
-workflow-version: 0.2.0
 interaction-language: en
 artifact-language: en
 mode-policy: user-selectable
@@ -108,6 +107,12 @@ Optional source material:
 
 ## Boundaries
 
+- interpret “working files” as files under `.double/`
+- interpret “project files” as user artifacts under `goals/`, `ideas/`, and
+  `knowledge/`
+- route requests to change working files to `double-agent`
+- if `double-agent` is unavailable, do not change a working file; require
+  its installation first
 - the agent must not replace principles with project specifications
 - the agent must not lose the connection to the input artifacts
 - the agent must not restate the `concept-artifact` instead of synthesizing principles

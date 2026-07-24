@@ -3,10 +3,9 @@ style: double
 submodule: machine-of-goals
 id: plan-synthesis-agent
 kind: agent
-status: draft
+status: release-candidate
 role: plan-synthesis-role
 workflow: machine-of-goals-workflow
-workflow-version: 0.1.5
 interaction-language: en
 artifact-language: en
 mode-policy: user-selectable
@@ -73,6 +72,12 @@ set.
 
 ## Boundaries
 
+- interpret “working files” as files under `.double/`
+- interpret “project files” as user artifacts under `goals/`, `ideas/`, and
+  `knowledge/`
+- route requests to change working files to `double-agent`
+- if `double-agent` is unavailable, do not change a working file; require
+  its installation first
 - must not treat a simple task list as a plan
 - must not erase the link between the plan and the goal
 - must not execute the selected stage

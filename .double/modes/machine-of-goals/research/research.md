@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: research
 kind: mode
-status: draft
+status: release-candidate
 user-selectable: true
 class: cognitive
 default-for:

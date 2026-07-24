@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: plan-template
 kind: template
-status: draft
+status: release-candidate
 workflow-stage: plan-synthesis
 interaction-language: en
 artifact-language: en
@@ -18,15 +18,9 @@ derived-from:
 ---
 id: <goal-id>-plan
 kind: plan-artifact
-status: draft
 produced-by: plan-synthesis-agent
-workflow-version: <workflow-version>
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
-current-step: 03-plan-synthesis
-current-mode: <planning|review|explain|dry-run>
-next-expected-step: 04-plan-review-and-decision
-transition-condition: plan project is understandable enough to review and choose realization strategy
 goal-id: <goal-id>
 goal-artifact: <path-to-goal-artifact>
 plan-role: <canonical-community|personal-variant|imported-variant|experimental-variant|hybrid-variant>
@@ -37,6 +31,7 @@ canonical-plan-artifact: <goal-directory>/plan.md
 author: <author-or-agent-id-or-null>
 device: <device-or-runtime-id-or-null>
 created-at: <YYYY-MM-DDTHH:MM:SS+HH:MM-or-null>
+updated-at: <YYYY-MM-DDTHH:MM:SS+HH:MM-or-null>
 imported-from: <source-plan-artifact-or-package-or-null>
 goal-scope: <main-goal|subgoal>
 parent-goal-id: <parent-goal-id-or-null>
@@ -46,7 +41,7 @@ selected-paths:
 related-plan-variants:
   - <plan-artifact-id-or-path>
 existing-plan-implementations:
-  - <plan-state-id-or-path>
+  - <plan-artifact-id-or-package-path>
 derived-from:
   - <goal-artifact-id-or-path>
   - <path-options-id-or-path>
@@ -63,8 +58,6 @@ Briefly describe the plan as a transition from current state to target state.
 - Current state:
 - Target state:
 - Success criteria:
-- Active stage:
-- Next expected stage:
 
 ## 2. Plan Variant Identity
 
@@ -81,28 +74,63 @@ Briefly describe the plan as a transition from current state to target state.
 
 ## 3. Plan Map
 
-Use this section for fast review and mindmap visualization. Each stage is a
-TODO item linked to its detailed section. Inputs, outputs, and subgoals are
-listed as nested links.
+Use this section for fast review, stage topology, and execution status. This is
+the single source of stage status and validation status in the plan. `Last
+Attempt` values should be Markdown links to files under `./results/` when those
+artifacts exist. `Last Attempt Time` records when the most recent realization
+attempt for the stage was made.
 
-- [ ] [S01: <Stage 1 Name>](#stage-s01)
-  - outputs: [S02](#stage-s02), [S03](#stage-s03)
-  - subgoals: [<Subgoal Title>](<path-to-subgoal-artifact>)
-- [ ] [S02: <Stage 2 Name>](#stage-s02)
-  - inputs: [S01](#stage-s01)
-  - outputs: [S04](#stage-s04)
-- [ ] [S03: <Stage 3 Name>](#stage-s03)
-  - inputs: [S01](#stage-s01)
-  - outputs: [S04](#stage-s04)
+Status of stage:
 
-## 4. Stage Details
+- ⚪ not-started
+- 🔵 in-progress
+- ✅ done
+- 🟡 partial
+- ⛔ blocked
+- ❌ rejected
+- 🔁 needs-revision
+
+Validation status:
+
+- ⚪ not-validated
+- ✅ accepted
+- 🟡 partial
+- ⛔ blocked
+- ❌ rejected
+- 🔁 needs-revision
+
+| Stage | Status | Validation | Inputs | Outputs | Last Attempt | Last Attempt Time |
+| --- | --- | --- | --- | --- | --- | --- |
+| [S01: <Stage 1 Name>](#stage-s01) | ⚪ not-started | ⚪ not-validated | <goal|path-options|other> | [S02](#stage-s02) | [<attempt-file>.md](./results/<attempt-file>.md) | <YYYY-MM-DDTHH:MM:SS+HH:MM-or-none> |
+| [S02: <Stage 2 Name>](#stage-s02) | ⚪ not-started | ⚪ not-validated | [S01](#stage-s01) | [S03](#stage-s03) | <none-or-link> | <none> |
+
+## 4. Blocker
+
+- Blocker: <none|description>
+- Owner:
+- Needed decision:
+- Unblock condition:
+
+## 5. Stage Attempts
+
+- Save attempt artifacts after plan update: <ask-user|yes|no>
+- Current attempt count: <number>
+- Retention threshold: 10
+- Cleanup decision when attempts exceed threshold: ask-user
+- Attempt artifact directory: `./results/`
+
+| Stage | Attempt | Artifact | Author | Device | Time | Keep |
+| --- | --- | --- | --- | --- | --- | --- |
+| <stage-id> | `<attempt-id>` | [<attempt-file>.md](./results/<attempt-file>.md) | <author> | <device> | <YYYY-MM-DDTHH:MM:SS+HH:MM> | <yes|no|ask> |
+
+## 6. Stage Details
 
 <a id="stage-<stage-id>"></a>
 
 ### Stage: <Stage Name>
 
 - Stage id: `<stage-id>`
-- Status: <not-started|in-progress|done|blocked|rejected>
+- Status: ⚪ not-started
 - Automation level: <manual|interactive|partial|automatic|external>
 - Purpose:
 - Input state:
@@ -118,60 +146,44 @@ listed as nested links.
   - [<Subgoal Title>](<path-to-subgoal-artifact>)
 - Validation criteria:
 - Evidence expected:
+- Validation:
+  - Status: ⚪ not-validated
+  - Confirmed by: <user|agent|external-system|not-needed|none>
+  - Confirmed at: <YYYY-MM-DDTHH:MM:SS+HH:MM-or-null>
+  - Evidence:
+  - Decision:
+  - Notes:
 - Risks:
 - Stop points:
 
-## 5. Shared Dependencies
+## 7. Shared Dependencies
 
 - Internal dependencies:
 - External dependencies:
 - Decision dependencies:
 
-## 6. Shared Risks and Controls
+## 8. Shared Risks and Controls
 
 - Risk:
 - Impact:
 - Mitigation:
 - Stop condition:
 
-## 7. Automation Boundaries
+## 9. Automation Boundaries
 
 - Allowed automatic actions:
 - Actions requiring confirmation:
 - Actions not allowed:
 - Dry-run required before:
 
-## 8. Revision Conditions
+## 10. Revision Conditions
 
 - Revise stage when:
 - Rebuild plan when:
 - Reformulate goal when:
 
-## 9. Open Questions
+## 11. Open Questions
 
 - [ ] <question that affects realization or validation>
 
-## 10. Related Plan Variants
-
-Use this section when multiple plan variants exist for the same goal.
-
-| Variant | Artifact | Role | Author | Device | Time | Selection Status | Use |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| <variant-id> | <plan-artifact-id-or-path> | <canonical-community|personal-variant|imported-variant|experimental-variant|hybrid-variant> | <author> | <device> | <YYYY-MM-DDTHH:MM:SS+HH:MM> | <candidate|selected|superseded|rejected|promoted-to-canonical> | <compare|active|reference|promote|archive> |
-
-- Comparison notes:
-- Selected active plan:
-- Why this plan is active now:
-
-## 11. Existing Plan Implementations
-
-Use this section when importing existing implementations of this plan for
-reference, comparison, or verification.
-
-| Implementation | Plan State Artifact | Author | Device | Time | Use |
-| --- | --- | --- | --- | --- | --- |
-| <implementation-id> | <plan-state-id-or-path> | <author> | <device> | <YYYY-MM-DDTHH:MM:SS+HH:MM> | <reference|comparison|verification> |
-
-- Comparison notes:
-- Verification notes:
 ```

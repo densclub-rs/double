@@ -4,7 +4,6 @@ submodule: machine-of-ideas
 id: modes-registry
 kind: registry
 status: release-candidate
-workflow-version: 0.2.0
 derived-from:
   - ideas/machine-of-ideas/directory-layout/directory-layout.md
 ---

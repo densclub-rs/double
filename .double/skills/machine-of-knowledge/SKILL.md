@@ -18,9 +18,16 @@ Use this skill as a thin activation and routing layer. The canonical process is:
 
 ## Core Routing Rules
 
+- Route requests to create, change, move, or remove a Machine of Knowledge
+  workflow, agent, role, mode, prompt, template, registry, skill, or catalog
+  index under `.double/` to `.double/skills/double-agent/SKILL.md`.
+- Before changing a working file, verify that `double-agent` is installed
+  and available. If it is not, do not change a `.double/` file; require its
+  installation first and then activate the Double Agent Skill.
 - Use `knowledge-type: static` when the artifact does not normally represent a value that must be refreshed.
 - Use `knowledge-type: dynamic` when the current value may change.
 - For dynamic knowledge, require `retrieval-method`, `cached-value`, and `cached-value-date`; invent none of them.
+- Use `retrieval-method` only for the invocation type, such as `local-command`, `local-script`, `rest-api`, or `mcp`; put the exact invocation in `Command`.
 - Keep `access: free-of-charge` for all Double knowledge.
 - Keep machine operating changes under `.double/` and produced knowledge under `knowledge/`.
 - Reuse Machine of Ideas modes as specified by the workflow; do not create additional workflow stages.

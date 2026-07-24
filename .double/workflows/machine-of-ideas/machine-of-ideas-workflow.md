@@ -4,7 +4,6 @@ submodule: machine-of-ideas
 id: machine-of-ideas-workflow
 kind: workflow
 status: release-candidate
-version: 0.2.1
 interaction-language: en
 artifact-language: en
 derived-from:
@@ -22,14 +21,15 @@ derived-from:
 
 This workflow defines the prototype of the basic thinking scheme of the idea machine.
 
-Current version of the flow:
-
 `Idea Capture -> Concept Extraction -> Principle Synthesis`
 
-## Versioning Rule
+## Version Knowledge Rule
 
-- current version: `0.2.1`
-- a new version is created if the structure of steps, artifact contracts, agent roles, language protocol, or transition conditions change
+The machine version is preserved only in
+`knowledge/machine-of-ideas-version/machine-of-ideas-version.md`. Changes to
+the structure of steps, artifact contracts, agent roles, language protocol, or
+transition conditions require the version knowledge to be updated through the
+Double Agent protocol.
 
 ## Catalog Interpretation Rule
 
@@ -44,20 +44,18 @@ If the intended target is ambiguous, the agent should briefly state the assumed 
 ## Machine Operating Change Routing Rule
 
 When the user requests the creation, modification, movement, or removal of a
-Machine of Ideas operating artifact under `.double/`, activate `double-agent`
-and suspend normal workflow-agent editing for that request.
+Machine of Ideas operating artifact under `.double/`, activate
+`.double/skills/double-agent/SKILL.md` and suspend normal workflow-agent
+editing for that request.
 
-`double-agent` must follow its planning, validation, explicit change-set
-approval, and per-artifact approval protocol from:
+Before any working-file change, verify that `double-agent` is installed and
+available. If it is unavailable, do not change a `.double/` file; require
+installation first, then activate the Double Agent Skill.
 
-- `.double/agents/double-agent/double-agent.md`
-- `.double/roles/double-agent/machine-artifact-maintainer-role.md`
-
-Read-only inspection or explanation does not require an artifact-change
-approval. A request that mixes Machine of Ideas operating changes with user
-artifact changes under `ideas/` must be split into separately planned steps.
-The normal Machine of Ideas workflow agent remains responsible for the user
-artifact portion.
+A request that mixes Machine of Ideas operating changes with user artifact
+changes under `ideas/` must be split into separately planned steps. The normal
+Machine of Ideas workflow agent remains responsible for the user artifact
+portion.
 
 ## Entry Protocol
 

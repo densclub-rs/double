@@ -1,9 +1,7 @@
 ---
 id: concept-extraction
 kind: idea-artifact
-status: release-candidate
-produced-by: idea-capture-agent
-workflow-version: 0.1.0
+produced-by: machine-of-ideas/idea-capture-agent
 derived-from:
   - ideas/machine-of-ideas/machine-of-ideas.md
 ---

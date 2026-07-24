@@ -3,8 +3,7 @@ style: double
 submodule: machine-of-goals
 id: roles-registry
 kind: registry
-status: draft
-workflow-version: 0.1.5
+status: release-candidate
 ---
 
 # Roles Registry

@@ -2,7 +2,7 @@
 style: double
 submodule: machine-of-goals
 mindmap-plugin: basic
-status: draft
+status: release-candidate
 ---
 
 # Machine of Goals

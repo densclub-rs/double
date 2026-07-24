@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: exported-plan-package-template
 kind: template
-status: draft
+status: release-candidate
 workflow-stage: plan-packaging-export
 interaction-language: en
 artifact-language: en
@@ -18,26 +18,21 @@ derived-from:
 ---
 id: <goal-id>-exported-plan-package
 kind: exported-plan-package
-status: draft
 produced-by: plan-exchange-agent
-workflow-version: <workflow-version>
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
-current-step: 07-plan-packaging-export
-current-mode: <export|validation|explain>
-next-expected-step: <end>
-transition-condition: goal is closed, paused, transferred, exported, or intentionally left without export
 goal-id: <goal-id>
 plan-id: <plan-id>
 plan-artifacts:
   - <plan-artifact-id-or-path>
-plan-state-artifacts:
-  - <plan-state-id-or-path>
+results-artifacts:
+  - <results-artifact-id-or-path>
 package-type: <markdown-plan|runbook|checklist|workflow|sdd-spec|script-scaffold|handoff-package|exchange-package>
 derived-from:
   - <goal-artifact-id-or-path>
   - <plan-artifact-id-or-path>
-  - <validation-result-id-or-path>
+  - <plan-validation-summary-in-plan-artifact>
+  - <supporting-evidence-artifact-id-or-path>
 ---
 
 # Exported Plan Package: <Goal Title>
@@ -60,8 +55,10 @@ derived-from:
 - Resources:
 - Original plan:
 - Plan variants:
-- Plan state artifacts:
-- Validation evidence:
+- Plan execution state:
+- Results artifacts:
+- Validation decisions in plan:
+- Supporting validation evidence:
 
 ## 3. Reusable Material
 
@@ -69,7 +66,7 @@ derived-from:
 - Reusable subgoals:
 - Reusable checks:
 - Reusable scripts / workflows / specs:
-- Reusable plan state traces:
+- Reusable execution traces:
 - Required adaptations:
 
 ## 4. Context-Specific Assumptions
@@ -88,7 +85,8 @@ Portable sequence or package outline:
 
 - What has been validated:
 - What has not been validated:
-- Evidence links:
+- Validation decision source: <plan-artifact-stage-validation-blocks>
+- Supporting evidence links:
 - Known failure modes:
 
 ## 7. Import Instructions
@@ -104,7 +102,7 @@ Portable sequence or package outline:
 - Remaining work:
 - Recommended next use:
 
-## 9. Plan State Export Notes
+## 9. Plan Export Notes
 
 - Exported plan artifacts:
 - Canonical plan naming rule: the Double community plan for a goal is
@@ -114,9 +112,9 @@ Portable sequence or package outline:
   second-precision `time` labels.
 - Example plan variant export name:
   `plan--author-<author>--device-<device>--time-<YYYYMMDDTHHMMSS>.md`
-- Exported plan state artifacts:
-- Export naming rule: exported `plan-state` artifact names must include
-  `author`, `device`, and second-precision `time` labels.
-- Example plan state export name:
-  `<goal-id>-plan-state--author-<author>--device-<device>--time-<YYYYMMDDTHHMMSS>.md`
+- Exported execution state: include the active plan artifact and relevant
+  `results/` artifacts.
+- Results artifact rule: working and intermediate execution files remain under
+  `<goal-directory>/results/` unless the export package intentionally copies or
+  bundles them.
 ```

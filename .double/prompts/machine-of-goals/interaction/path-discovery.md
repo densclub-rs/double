@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: path-discovery-interaction-prompt
 kind: prompt
-status: draft
+status: release-candidate
 produced-by: path-discovery-agent
 mode: shared
 derived-from:
@@ -32,6 +32,14 @@ For each useful path, describe:
 
 If no plausible path exists, mark the goal as blocked, infeasible, or requiring
 reformulation.
+
+Record unresolved issues only as `Open Questions`. If any `Open Questions`
+remain, state that Path Discovery is not complete and that Plan Synthesis is
+not yet available. Offer to resolve the questions one by one, wait for the
+user's response to the current question, then continue with the next one.
+
+Offer transition to `03-plan-synthesis` only when at least one plausible path
+exists and no `Open Questions` remain.
 
 After responding, offer the next useful workflow movement. Name the next step,
 mode, responsible agent, and expected artifact when known.

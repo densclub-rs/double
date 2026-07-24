@@ -1,9 +1,7 @@
 ---
 id: machine-of-ideas
 kind: idea-artifact
-status: release-candidate
-produced-by: idea-capture-agent
-workflow-version: 0.1.0
+produced-by: machine-of-ideas/idea-capture-agent
 interaction-language: en
 artifact-language: en
 derived-from:

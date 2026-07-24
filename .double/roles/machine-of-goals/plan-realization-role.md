@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: plan-realization-role
 kind: role
-status: draft
+status: release-candidate
 derived-from:
   - ../../workflows/machine-of-goals/machine-of-goals-workflow.md
   - ../../../ideas/machine-of-goals/machine-of-goals-principles.md
@@ -31,10 +31,13 @@ preparing a handoff artifact within approved boundaries.
   external effects
 - create scripts, workflows, checklists, specifications, or handoff artifacts
   only when they serve the current stage
-- update plan state with attempts, changes, blockers, and produced artifacts
+- update the active plan artifact with attempts, changes, blockers, and
+  produced artifacts
 - include author, device or runtime, and second-precision attempt time in each
   stage attempt result
-- after updating `plan-state`, ask whether to keep the separate attempt artifact
+- store stage attempt results under `<goal-directory>/results/`
+- after updating the active plan artifact, ask whether to keep the separate
+  attempt artifact
 - when a stage has more than 10 attempt artifacts, ask whether old attempt
   artifacts should be deleted, compacted, or kept
 - hand results to validation rather than accepting them as final

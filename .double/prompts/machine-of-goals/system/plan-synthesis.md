@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: plan-synthesis-system-prompt
 kind: prompt
-status: draft
+status: release-candidate
 produced-by: plan-synthesis-agent
 mode: shared
 derived-from:

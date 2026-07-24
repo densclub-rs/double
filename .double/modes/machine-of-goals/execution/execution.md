@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: execution
 kind: mode
-status: draft
+status: release-candidate
 user-selectable: true
 class: action
 default-for:
@@ -27,7 +27,10 @@ delegation, automation, handoff, or creation of implementation artifacts.
 - refine the stage when execution reveals missing detail
 - create scripts, workflows, checklists, specs, or handoff artifacts only when
   they serve the current stage
-- update plan state with what was attempted, changed, completed, or blocked
+- update the active plan artifact with what was attempted, changed, completed,
+  or blocked
+- store working and intermediate execution artifacts under
+  `<goal-directory>/results/`
 
 ## Typical Inputs
 
@@ -40,7 +43,7 @@ delegation, automation, handoff, or creation of implementation artifacts.
 ## Expected Outputs
 
 - stage-attempt-result artifact
-- plan-state artifact
+- updated plan artifact
 - implementation artifact, handoff artifact, or execution note when applicable
 - discovered risks, blockers, or revision needs
 

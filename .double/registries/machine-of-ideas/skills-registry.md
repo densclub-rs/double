@@ -4,7 +4,6 @@ submodule: machine-of-ideas
 id: skills-registry
 kind: registry
 status: release-candidate
-workflow-version: 0.2.0
 derived-from:
   - .double/drafts/double-skills.md
   - .double/workflows/machine-of-ideas/machine-of-ideas-workflow.md

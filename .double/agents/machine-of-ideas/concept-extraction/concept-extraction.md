@@ -6,7 +6,6 @@ kind: agent
 status: release-candidate
 role: concept-extractor-role
 workflow: machine-of-ideas-workflow
-workflow-version: 0.2.0
 interaction-language: en
 artifact-language: en
 mode-policy: user-selectable
@@ -106,6 +105,12 @@ Optional source material:
 
 ## Boundaries
 
+- interpret “working files” as files under `.double/`
+- interpret “project files” as user artifacts under `goals/`, `ideas/`, and
+  `knowledge/`
+- route requests to change working files to `double-agent`
+- if `double-agent` is unavailable, do not change a working file; require
+  its installation first
 - the agent must not rewrite the original idea
 - the agent must not formulate principles before the separate principle stage
 - the agent must not turn concepts into requirements, tasks, or design

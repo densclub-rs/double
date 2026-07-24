@@ -20,9 +20,7 @@ derived-from:
 ---
 id: <idea-artifact-id>
 kind: idea-artifact
-status: draft
 produced-by: idea-capture-agent
-workflow-version: <workflow-version>
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
 derived-from:

@@ -3,8 +3,7 @@ style: double
 submodule: machine-of-goals
 id: agents-registry
 kind: registry
-status: draft
-workflow-version: 0.1.5
+status: release-candidate
 ---
 
 # Agents Registry
@@ -16,7 +15,7 @@ workflow-version: 0.1.5
 - stage: `01-goal-formulation`
 - input: `raw-user-goal`, `conversation-context`, `interaction-language`, `artifact-language`
 - optional-input: `existing-goal-artifact`, `parent-goal-artifact`, `related-idea-or-project-context`
-- output: `goal-artifact`, `initial-state-draft`, `target-state-draft`, `success-criteria-draft`, `goal-directory`, `subgoal-directory`
+- output: `goal-artifact`, `initial-state-draft`, `target-state-draft`, `success-criteria-draft`, `open-goal-questions`, `goal-directory`, `subgoal-directory`
 - supported-modes: `clarification`, `explain`, `import`
 - template: `.double/templates/machine-of-goals/goal-template.md`
 - system-prompt: `.double/prompts/machine-of-goals/system/goal-formulation.md`
@@ -30,7 +29,7 @@ workflow-version: 0.1.5
 - stage: `02-path-discovery`
 - input: `goal-artifact`, `initial-state`, `target-state`, `success-criteria`, `constraints-and-resources`
 - optional-input: `existing-analogs`
-- output: `path-options`, `path-comparison`, `path-assumptions`, `path-risks`
+- output: `path-options`, `path-comparison`, `path-assumptions`, `path-risks`, `open-path-questions`
 - supported-modes: `research`, `explain`, `import`
 - template: `.double/templates/machine-of-goals/path-options-template.md`
 - system-prompt: `.double/prompts/machine-of-goals/system/path-discovery.md`
@@ -56,12 +55,12 @@ workflow-version: 0.1.5
 - id: `plan-realization-agent`
 - role: `plan-realization-role`
 - stage: `05-plan-realization`
-- input: `realization-decision`, `selected-plan-stage`, `automation-boundaries`, `stage-validation-criteria`, `working-context`
+- input: `plan-artifact`, `realization-decision`, `selected-plan-stage`, `automation-boundaries`, `stage-validation-criteria`, `working-context`
 - optional-input: `plan-stop-points`
-- output: `stage-attempt-result`, `plan-state`
+- output: `stage-attempt-result`, `updated-plan-artifact`
 - optional-output: `implementation-artifact`, `handoff-artifact`, `blocker-or-revision-note`
 - supported-modes: `execution`, `explain`, `dry-run`, `planning`
-- templates: `.double/templates/machine-of-goals/stage-attempt-result-template.md`, `.double/templates/machine-of-goals/plan-state-template.md`
+- templates: `.double/templates/machine-of-goals/stage-attempt-result-template.md`, `.double/templates/machine-of-goals/plan-template.md`
 - system-prompt: `.double/prompts/machine-of-goals/system/plan-realization.md`
 - interaction-prompt: `.double/prompts/machine-of-goals/interaction/plan-realization.md`
 - definition: `.double/agents/machine-of-goals/plan-realization/plan-realization.md`
@@ -71,11 +70,11 @@ workflow-version: 0.1.5
 - id: `plan-validation-agent`
 - role: `plan-validation-role`
 - stage: `06-plan-validation`
-- input: `stage-attempt-result`, `stage-validation-criteria`, `goal-artifact`, `plan-artifact`, `plan-state`, `execution-evidence`
-- output: `validation-result`, `plan-state`, `goal-progress-note`, `revision-or-continuation-decision`
+- input: `stage-attempt-result`, `stage-validation-criteria`, `goal-artifact`, `plan-artifact`, `execution-evidence`
+- output: `updated-plan-artifact`, `goal-progress-note`, `revision-or-continuation-decision`
 - optional-output: `goal-closure-signal`
 - supported-modes: `validation`, `review`, `explain`
-- templates: `.double/templates/machine-of-goals/validation-result-template.md`, `.double/templates/machine-of-goals/plan-state-template.md`
+- templates: `.double/templates/machine-of-goals/plan-template.md`
 - system-prompt: `.double/prompts/machine-of-goals/system/plan-validation.md`
 - interaction-prompt: `.double/prompts/machine-of-goals/interaction/plan-validation.md`
 - definition: `.double/agents/machine-of-goals/plan-validation/plan-validation.md`
@@ -86,9 +85,9 @@ workflow-version: 0.1.5
 - role: `plan-exchange-role`
 - optional: `true`
 - stage: `cross-step`, `07-plan-packaging-export`
-- input: `goal-artifact`, `plan-artifact`, `plan-state`
-- optional-input: `execution-history`, `validation-evidence`, `external-plan-or-analog`, `external-plan-state-artifacts`, `export-target-or-intended-reuse`
-- output: `imported-plan-adaptation`, `adapted-path-or-plan-fragment`, `exported-plan-package`, `exported-plan-state-artifact`, `reuse-and-adaptation-notes`
+- input: `goal-artifact`, `plan-artifact`
+- optional-input: `execution-history`, `validation-evidence`, `results-artifacts`, `external-plan-or-analog`, `external-plan-implementations`, `export-target-or-intended-reuse`
+- output: `imported-plan-adaptation`, `adapted-path-or-plan-fragment`, `exported-plan-package`, `reuse-and-adaptation-notes`
 - optional-output: `goal-closure-summary`
 - supported-modes: `import`, `export`, `explain`, `validation`
 - template: `.double/templates/machine-of-goals/exported-plan-package-template.md`

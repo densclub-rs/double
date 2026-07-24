@@ -1,9 +1,7 @@
 ---
 id: machine-of-goals
 kind: idea-artifact
-status: draft
-produced-by: idea-capture-agent
-workflow-version: 0.2.0
+produced-by: machine-of-ideas/idea-capture-agent
 interaction-language: English
 artifact-language: English
 derived-from:

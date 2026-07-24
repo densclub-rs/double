@@ -1,9 +1,7 @@
 ---
 id: machine-of-goals-principles
 kind: principle-artifact
-status: release-candidate
-produced-by: principle-synthesis-agent
-workflow-version: 0.2.0
+produced-by: machine-of-ideas/principle-synthesis-agent
 interaction-language: English
 artifact-language: English
 publication-path: ideas/machine-of-goals/machine-of-goals-principles.md

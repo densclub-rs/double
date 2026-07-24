@@ -3,8 +3,7 @@ style: double
 submodule: machine-of-goals
 id: modes-registry
 kind: registry
-status: draft
-workflow-version: 0.1.5
+status: release-candidate
 ---
 
 # Modes Registry

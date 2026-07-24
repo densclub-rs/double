@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: goal-template
 kind: template
-status: draft
+status: release-candidate
 workflow-stage: goal-formulation
 interaction-language: en
 artifact-language: en
@@ -18,15 +18,9 @@ derived-from:
 ---
 id: <goal-id>
 kind: goal-artifact
-status: draft
 produced-by: goal-formulation-agent
-workflow-version: <workflow-version>
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
-current-step: 01-goal-formulation
-current-mode: <clarification|explain|import>
-next-expected-step: 02-path-discovery
-transition-condition: goal is sufficiently clear to search for paths
 goal-catalog: <selected-goal-catalog-or-./goals>
 goal-directory: <goal-catalog>/<goal-id> or <parent-goal-directory>/<subgoal-id>
 goal-artifact: <goal-directory>/<goal-id>.md or <subgoal-directory>/<subgoal-id>.md
@@ -77,10 +71,6 @@ Describe the starting point.
 
 <list of known facts>
 
-### Unknowns
-
-<what is unknown yet>
-
 ### Relevant environment
 
 <social group or environment, local computing, cloud computing, or something else>
@@ -108,7 +98,7 @@ Describe the state that should exist after successful realization.
 
 - Time:
 - Attention:
-- Money:
+- Cost:
 - Technical constraints:
 - Social / legal / ethical constraints:
 - Other:
@@ -122,10 +112,30 @@ Describe the state that should exist after successful realization.
 
 ## 9. Open Questions
 
-- [ ] <question that blocks or improves path discovery>
+- [ ] <question that must be resolved before path discovery>
 
 ## 10. Boundaries / Non-Goals
 
 - What is outside the goal?
 - What should not be optimized or pursued?
+
+## 11. Related Plan Variants
+
+<Use this section when the goal has one or multiple plan variants.>
+
+| Variant | Artifact | Role | Author | Device | Time | Selection Status | Use |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| <variant-id> | <plan-artifact-id-or-path> | <canonical-community|personal-variant|imported-variant|experimental-variant|hybrid-variant> | <author> | <device> | <YYYY-MM-DDTHH:MM:SS+HH:MM> | <candidate|selected|superseded|rejected|promoted-to-canonical> | <compare|active|reference|promote|archive> |
+
+
+## 12. Existing Plan Implementations
+
+<Use this section only when importing existing implementations of a plan for this
+goal, for reference, comparison, or verification. Link to the imported plan or
+package that contains its own execution state and result artifacts.>
+
+| Implementation | Artifact or Package | Author | Device | Time | Use |
+| --- | --- | --- | --- | --- | --- |
+| <implementation-id> | <plan-artifact-or-package-id-or-path> | <author> | <device> | <YYYY-MM-DDTHH:MM:SS+HH:MM> | <reference|comparison|verification> |
+
 ```

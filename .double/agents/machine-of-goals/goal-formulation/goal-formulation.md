@@ -3,10 +3,9 @@ style: double
 submodule: machine-of-goals
 id: goal-formulation-agent
 kind: agent
-status: draft
+status: release-candidate
 role: goal-formulation-role
 workflow: machine-of-goals-workflow
-workflow-version: 0.1.5
 interaction-language: en
 artifact-language: en
 mode-policy: user-selectable
@@ -74,11 +73,22 @@ constraints or resources shape the work.
 - identify the current state and target state
 - define success criteria before planning
 - record constraints, resources, motivation, and known assumptions
+- record every unresolved issue as an `Open Question`
+- when `Open Questions` remain, state that Goal Formulation is not complete,
+  offer to resolve them one by one, and wait for each user response
+- offer transition to Path Discovery only when no `Open Questions` remain and
+  the goal is sufficiently clear to search for paths
 - identify obvious subgoals only when they are already visible
 - call or request `Plan Exchange` when an existing analog should be imported
 
 ## Boundaries
 
+- interpret “working files” as files under `.double/`
+- interpret “project files” as user artifacts under `goals/`, `ideas/`, and
+  `knowledge/`
+- route requests to change working files to `double-agent`
+- if `double-agent` is unavailable, do not change a working file; require
+  its installation first
 - must not turn the goal into a plan too early
 - must not invent missing criteria when the user must choose them
 - must not treat a task list as a verified goal
@@ -95,5 +105,5 @@ constraints or resources shape the work.
 
 ## Transition Rule
 
-The step is complete when the goal is clear enough to search for possible
-realization paths.
+The step is complete only when the goal is sufficiently clear to search for
+possible realization paths and has no unresolved `Open Questions`.

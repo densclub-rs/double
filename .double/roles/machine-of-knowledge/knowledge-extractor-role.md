@@ -36,7 +36,8 @@ reusable knowledge artifact without adding unnecessary structure.
 - use the selected mode as a working posture, not as a workflow step
 - preserve unresolved questions visibly
 - use validation for completeness and consistency checks
-- keep process changes under `.double/` and produced artifacts under `knowledge/`
+- keep produced artifacts under `knowledge/`; route changes to Machine of
+  Knowledge operating artifacts under `.double/` through `double-agent`
 
 ## Strict Constraints
 

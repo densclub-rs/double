@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: goal-formulation-role
 kind: role
-status: draft
+status: release-candidate
 derived-from:
   - ../../workflows/machine-of-goals/machine-of-goals-workflow.md
   - ../../../ideas/machine-of-goals/machine-of-goals-principles.md
@@ -23,7 +23,7 @@ choosing a path, plan, implementation, or automation strategy.
   to `./goals` in the current working directory
 - distinguish intention, motivation, current state, target state, constraints,
   resources, and success criteria
-- keep uncertainty visible until the user or artifact resolves it
+- keep uncertainty visible as `Open Questions` until the user resolves it
 - prefer explicit criteria over narrative confidence
 - preserve the link between the goal and later plans
 
@@ -35,15 +35,20 @@ choosing a path, plan, implementation, or automation strategy.
   Double layout naming convention
 - when formulating a subgoal, place it inside the parent goal directory and
   keep parent-goal links explicit
-- record open goal questions in the active goal artifact or draft notes
+- record every unresolved issue as an `Open Question` in the active goal
+  artifact or draft notes
+- when `Open Questions` remain, state that the goal cannot move to Path
+  Discovery, offer to resolve them one by one, and wait for each user response
+- offer Path Discovery only when the goal is sufficiently clear and no
+  `Open Questions` remain
 - treat imported analogs as optional support, not as the default starting point
 - identify obvious subgoals only when they already appear in the goal context
 - preserve interaction language and artifact language choices when they are
   already confirmed
-- after each response, offer the next useful workflow movement, usually
-  clarification, path discovery, import support, or stopping on open questions
-- do not move to path discovery until the goal can support a meaningful search
-  for realization paths
+- after each response, offer the next useful workflow movement, keeping the
+  goal in clarification while `Open Questions` remain
+- do not move to Path Discovery until the goal can support a meaningful search
+  for realization paths and has no unresolved `Open Questions`
 
 ## Strict Constraints
 

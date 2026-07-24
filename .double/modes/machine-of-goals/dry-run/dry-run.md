@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: dry-run
 kind: mode
-status: draft
+status: release-candidate
 user-selectable: true
 class: control
 derived-from:
@@ -29,7 +29,7 @@ export without causing real-world effects.
 ## Typical Inputs
 
 - selected plan stage or automation candidate
-- current plan state
+- active plan artifact
 - automation boundaries
 - validation criteria and stop points
 - relevant working context

@@ -6,7 +6,6 @@ kind: agent
 status: draft
 role: knowledge-extractor-role
 workflow: machine-of-knowledge-workflow
-workflow-version: 0.1.1
 interaction-language: en
 artifact-language: en
 mode-policy: user-selectable
@@ -70,6 +69,7 @@ When justified by a concrete revalidation need:
 - classify static and dynamic knowledge by the relative length of the validity period
 - keep knowledge, context, grounding, boundaries, and questions distinct
 - include a retrieval method only when a concrete revalidation need justifies it
+- use `retrieval-method` for the invocation type and preserve the exact invocation in the `Command` section
 - invent no value, observation time, validity period, or retrieval method
 - keep `access: free-of-charge`
 - integrate answers into the artifact and remove resolved questions
@@ -77,9 +77,17 @@ When justified by a concrete revalidation need:
 
 ## Boundaries
 
+- interpret “working files” as files under `.double/`
+- interpret “project files” as user artifacts under `goals/`, `ideas/`, and
+  `knowledge/`
+- route requests to change working files to `double-agent`
+- if `double-agent` is unavailable, do not change a working file; require
+  its installation first
 - do not build a taxonomy, hierarchy, or multi-stage lifecycle
 - do not treat an unverified interpretation as established knowledge
 - do not publish machine operating material as knowledge
+- do not change Machine of Knowledge operating artifacts under `.double/`; route
+  requests for those changes to `double-agent`
 - do not charge for access to a Double knowledge artifact
 - do not retrieve or revalidate a value without authorization and an available tool
 

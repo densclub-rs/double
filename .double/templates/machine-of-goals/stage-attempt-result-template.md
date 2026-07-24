@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: stage-attempt-result-template
 kind: template
-status: draft
+status: release-candidate
 workflow-stage: plan-realization
 interaction-language: en
 artifact-language: en
@@ -17,15 +17,10 @@ derived-from:
 ---
 id: <goal-id>-<stage-id>-attempt-<attempt-id>
 kind: stage-attempt-result
-status: draft
 produced-by: plan-realization-agent
-workflow-version: <workflow-version>
+artifact-path: ./results/<goal-id>-<stage-id>-attempt-<attempt-id>.md
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
-current-step: 05-plan-realization
-current-mode: <execution|dry-run|explain|planning>
-next-expected-step: 06-plan-validation
-transition-condition: stage has a result that can be validated, or is blocked and needs plan revision
 goal-id: <goal-id>
 plan-id: <plan-id>
 stage-id: <stage-id>
@@ -39,6 +34,10 @@ derived-from:
 ---
 
 # Stage Attempt Result: <Stage Name>
+
+Save this artifact under `<goal-directory>/results/`. After the attempt is
+recorded, update the active plan artifact, especially `Plan Map`, `Stage
+Attempts`, `Blocker`, and the relevant `Stage Details`.
 
 ## 1. Stage Context
 
@@ -94,4 +93,6 @@ derived-from:
 - Result status: <ready-for-validation|blocked|partial|failed|needs-plan-revision>
 - Summary:
 - Recommended next step:
+- Plan update needed: <yes|no>
+- Plan sections to update: <Plan Map|Stage Attempts|Blocker|Stage Details|other>
 ```

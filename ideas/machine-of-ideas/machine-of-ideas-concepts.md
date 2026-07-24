@@ -2,9 +2,7 @@
 id: machine-of-ideas-concepts
 kind: concept-artifact
 mindmap-plugin: basic
-status: release-candidate
-produced-by: concept-extraction-agent
-workflow-version: 0.1.0
+produced-by: machine-of-ideas/concept-extraction-agent
 interaction-language: en
 artifact-language: en
 publication-path: ideas/machine-of-ideas/machine-of-ideas-concepts.md

@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: realization-decision-template
 kind: template
-status: draft
+status: release-candidate
 workflow-stage: plan-review-and-decision
 interaction-language: en
 artifact-language: en
@@ -17,15 +17,9 @@ derived-from:
 ---
 id: <goal-id>-realization-decision
 kind: realization-decision
-status: draft
 produced-by: plan-synthesis-agent
-workflow-version: <workflow-version>
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
-current-step: 04-plan-review-and-decision
-current-mode: <review|explain|dry-run>
-next-expected-step: 05-plan-realization
-transition-condition: realization start and control boundaries are selected
 goal-id: <goal-id>
 plan-id: <plan-id>
 selected-plan-artifact: <plan-artifact-id-or-path>

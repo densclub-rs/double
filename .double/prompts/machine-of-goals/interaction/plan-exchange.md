@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: plan-exchange-interaction-prompt
 kind: prompt
-status: draft
+status: release-candidate
 produced-by: plan-exchange-agent
 mode: shared
 optional: true
@@ -24,15 +24,15 @@ For import, confirm:
 - source material
 - source context
 - current goal context
-- existing plan-state artifacts to link as previous implementations
+- existing implementation artifacts or packages to link as previous
+  implementations
 - mismatches and adaptation needs
 
 For export, confirm:
 
 - intended reuse or audience
 - export format
-- author, device, and second-precision time labels for exported plan-state
-  artifact names
+- active plan artifact and relevant `results/` artifacts to include
 - validation evidence
 - context-specific assumptions
 - what must remain linked to the original goal

@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: path-options-template
 kind: template
-status: draft
+status: release-candidate
 workflow-stage: path-discovery
 interaction-language: en
 artifact-language: en
@@ -18,15 +18,9 @@ derived-from:
 ---
 id: <goal-id>-path-options
 kind: path-options
-status: draft
 produced-by: path-discovery-agent
-workflow-version: <workflow-version>
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
-current-step: 02-path-discovery
-current-mode: <research|explain|import>
-next-expected-step: 03-plan-synthesis
-transition-condition: at least one plausible path exists, or the goal is marked blocked, infeasible, or requiring reformulation
 goal-id: <goal-id>
 goal-artifact: <path-to-goal-artifact>
 goal-scope: <main-goal|subgoal>

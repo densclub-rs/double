@@ -3,10 +3,9 @@ style: double
 submodule: machine-of-goals
 id: plan-realization-agent
 kind: agent
-status: draft
+status: release-candidate
 role: plan-realization-role
 workflow: machine-of-goals-workflow
-workflow-version: 0.1.5
 interaction-language: en
 artifact-language: en
 mode-policy: user-selectable
@@ -37,6 +36,7 @@ delegation, automation, or external handoff.
 
 ## Inputs
 
+- `plan-artifact`
 - `realization-decision`
 - `selected-plan-stage`
 - `automation-boundaries`
@@ -47,7 +47,7 @@ delegation, automation, or external handoff.
 ## Outputs
 
 - `stage-attempt-result`
-- `plan-state`
+- `updated-plan-artifact`
 - `implementation-artifact` when applicable
 - `handoff-artifact` when applicable
 - `blocker-or-revision-note` when needed
@@ -64,13 +64,20 @@ delegation, automation, or external handoff.
   validation
 - include author, device or runtime, and second-precision attempt time in each
   stage attempt result
-- after recording the attempt in `plan-state`, ask whether the separate
-  attempt artifact should be kept
+- store stage attempt results under `<goal-directory>/results/`
+- after recording the attempt in the active plan artifact, ask whether the
+  separate attempt artifact should be kept
 - when a stage has more than 10 attempt artifacts, ask whether old attempt
   artifacts should be deleted, compacted, or kept
 
 ## Boundaries
 
+- interpret “working files” as files under `.double/`
+- interpret “project files” as user artifacts under `goals/`, `ideas/`, and
+  `knowledge/`
+- route requests to change working files to `double-agent`
+- if `double-agent` is unavailable, do not change a working file; require
+  its installation first
 - must act only within approved boundaries
 - must stop before unapproved external effects
 - must not validate its own result as final
@@ -83,7 +90,7 @@ delegation, automation, or external handoff.
 - Interaction prompt: `.double/prompts/machine-of-goals/interaction/plan-realization.md`
 - Role: `.double/roles/machine-of-goals/plan-realization-role.md`
 - Stage attempt result template: `.double/templates/machine-of-goals/stage-attempt-result-template.md`
-- Plan state template: `.double/templates/machine-of-goals/plan-state-template.md`
+- Plan template: `.double/templates/machine-of-goals/plan-template.md`
 - Modes registry: `.double/registries/machine-of-goals/modes-registry.md`
 - Workflow: `.double/workflows/machine-of-goals/machine-of-goals-workflow.md`
 

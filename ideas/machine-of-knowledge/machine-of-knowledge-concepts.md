@@ -2,9 +2,7 @@
 id: machine-of-knowledge-concepts
 kind: concept-artifact
 mindmap-plugin: basic
-status: release-candidate
-produced-by: concept-extraction-agent
-workflow-version: 0.2.0
+produced-by: machine-of-ideas/concept-extraction-agent
 interaction-language: Russian
 artifact-language: English
 publication-path: ideas/machine-of-knowledge/machine-of-knowledge-concepts.md

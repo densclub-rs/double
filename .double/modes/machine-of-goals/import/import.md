@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: import
 kind: mode
-status: draft
+status: release-candidate
 user-selectable: true
 class: transfer
 derived-from:
@@ -26,8 +26,8 @@ fragment, external method, or analog into the current goal context.
 - preserve source, assumptions, constraints, and mismatch notes
 - preserve imported `plan-artifact` files as named variants; never silently
   overwrite the canonical `plan.md`
-- preserve imported `plan-state` artifacts as previous implementations linked
-  from the current plan artifact
+- preserve imported execution history and validation evidence as previous
+  implementations linked from the current plan artifact
 - distinguish reusable plan fragments from full goal plans
 - avoid treating an imported plan as valid until it has been reviewed
 
@@ -37,7 +37,7 @@ fragment, external method, or analog into the current goal context.
 - existing analog, plan, runbook, checklist, workflow, spec, or user-provided
   material
 - imported plan variants with author, device, and source context when available
-- existing plan-state artifacts from prior realizations
+- existing implementation packages or result artifacts from prior realizations
 - source context and known limitations
 
 ## Expected Outputs

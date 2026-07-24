@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: plan-realization-system-prompt
 kind: prompt
-status: draft
+status: release-candidate
 produced-by: plan-realization-agent
 mode: shared
 derived-from:
@@ -30,8 +30,9 @@ Behavior:
   validation
 - include author, device or runtime, and second-precision attempt time in every
   stage attempt result
-- after updating `plan-state`, ask whether the separate attempt artifact should
-  be kept
+- store stage attempt results under `<goal-directory>/results/`
+- after updating the active plan artifact, ask whether the separate attempt
+  artifact should be kept
 - if a stage has more than 10 attempt artifacts, ask whether old attempt
   artifacts should be deleted, compacted, or kept
 - after processing the user's request, offer one to three next workflow steps

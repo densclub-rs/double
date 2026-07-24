@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: goal-formulation-interaction-prompt
 kind: prompt
-status: draft
+status: release-candidate
 produced-by: goal-formulation-agent
 mode: shared
 derived-from:
@@ -43,6 +43,14 @@ Then collect:
 
 Do not move to path discovery until the target state and success criteria are
 clear enough to support possible realization paths.
+
+Record unresolved issues only as `Open Questions`. If any `Open Questions`
+remain, state that Goal Formulation is not complete and that Path Discovery is
+not yet available. Offer to resolve the questions one by one, wait for the
+user's response to the current question, then continue with the next one.
+
+Offer transition to `02-path-discovery` only when the goal is sufficiently
+clear and no `Open Questions` remain.
 
 After responding, offer the next useful workflow movement. Name the next step,
 mode, responsible agent, and expected artifact when known.

@@ -3,8 +3,7 @@ style: double
 submodule: machine-of-goals
 id: machine-of-goals-workflow
 kind: workflow
-status: draft
-version: 0.1.8
+status: release-candidate
 interaction-language: en
 artifact-language: en
 derived-from:
@@ -52,11 +51,13 @@ During this cycle, plan stages may be refined, validation specifications may be
 created, external implementation may happen, automation may be introduced, and
 the plan may be revised as the goal becomes clearer through execution.
 
-## Versioning Rule
+## Version Knowledge Rule
 
-- current version: `0.1.8`
-- a new version is created if the structure of steps, artifact contracts, modes,
-  execution policy, validation policy, or transition conditions change
+The machine version is preserved only in
+`knowledge/machine-of-goals-version/machine-of-goals-version.md`. Changes to
+the structure of steps, artifact contracts, modes, execution policy, validation
+policy, or transition conditions require the version knowledge to be updated
+through the Double Agent protocol.
 
 ## Catalog Interpretation Rule
 
@@ -83,20 +84,18 @@ name of the goal directory.
 ## Machine Operating Change Routing Rule
 
 When the user requests the creation, modification, movement, or removal of a
-Machine of Goals operating artifact under `.double/`, activate `double-agent`
-and suspend normal workflow-agent editing for that request.
+Machine of Goals operating artifact under `.double/`, activate
+`.double/skills/double-agent/SKILL.md` and suspend normal workflow-agent
+editing for that request.
 
-`double-agent` must follow its planning, validation, explicit change-set
-approval, and per-artifact approval protocol from:
+Before any working-file change, verify that `double-agent` is installed and
+available. If it is unavailable, do not change a `.double/` file; require
+installation first, then activate the Double Agent Skill.
 
-- `.double/agents/double-agent/double-agent.md`
-- `.double/roles/double-agent/machine-artifact-maintainer-role.md`
-
-Read-only inspection or explanation does not require an artifact-change
-approval. A request that mixes Machine of Goals operating changes with user
-artifact changes under `goals/` must be split into separately planned steps.
-The normal Machine of Goals workflow agent remains responsible for the user
-artifact portion.
+A request that mixes Machine of Goals operating changes with user artifact
+changes under `goals/` must be split into separately planned steps. The normal
+Machine of Goals workflow agent remains responsible for the user artifact
+portion.
 
 ## Default State
 
@@ -134,8 +133,23 @@ known.
 
 This guidance is not permission to advance silently. When a next step would
 create or modify artifacts, execute work, call external systems, import or
-export material, or change the goal/plan state, the agent must ask for user
-confirmation before performing that step.
+export material, or change goal or plan execution state, the agent must ask for
+user confirmation before performing that step.
+
+During `01-goal-formulation`, unresolved `Open Questions` keep the goal in
+`clarification`. The agent must state that path discovery is not yet available,
+offer to resolve the questions one by one, and wait for each user response
+before proceeding to the next question. The agent may offer transition to
+`02-path-discovery` only when no open questions remain and the goal is
+sufficiently clear to search for paths.
+
+During `02-path-discovery`, unresolved `Open Questions` keep the goal in
+`research`. The agent must state that Plan Synthesis is not yet available,
+offer to resolve the questions one by one, and wait for each user response
+before proceeding to the next question. The agent may offer transition to
+`03-plan-synthesis` only when at least one plausible path exists and no open
+questions remain, unless the goal is marked blocked, infeasible, or requiring
+reformulation.
 
 The agent may skip the proposal only when the user explicitly asks for no next
 steps, asks for a narrow answer only, or the current state is blocked and no
@@ -172,8 +186,8 @@ Core agents:
   decision checkpoint
 - `plan-realization-agent`: realizes selected plan stages within approved
   boundaries
-- `plan-validation-agent`: validates stage or goal results and updates plan
-  state
+- `plan-validation-agent`: validates stage or goal results and updates the
+  active plan
 
 Optional agent:
 
@@ -190,8 +204,6 @@ Draft artifact templates are defined in
 - `plan-artifact` -> `.double/templates/machine-of-goals/plan-template.md`
 - `realization-decision` -> `.double/templates/machine-of-goals/realization-decision-template.md`
 - `stage-attempt-result` -> `.double/templates/machine-of-goals/stage-attempt-result-template.md`
-- `validation-result` -> `.double/templates/machine-of-goals/validation-result-template.md`
-- `plan-state` -> `.double/templates/machine-of-goals/plan-state-template.md`
 - `exported-plan-package` -> `.double/templates/machine-of-goals/exported-plan-package-template.md`
 
 ## Plan Variant Rule
@@ -233,35 +245,65 @@ decision may choose the canonical `plan.md`, a personal/imported variant, or a
 hybrid plan. Other variants should remain available for comparison, review,
 future promotion, or rejection.
 
-## Plan State Artifact Rule
+## Plan Execution State Rule
 
-Plan execution state is stored in a separate `plan-state` artifact. The plan
-artifact defines the intended transition model; the plan state artifact records
-how a concrete realization of that plan moves through stages over time.
+Plan execution state is stored in the active `plan-artifact`, normally
+`<goal-directory>/plan.md`.
 
-Multiple `plan-state` artifacts may exist for the same plan. This allows the
-machine to compare the current realization with previous or imported
-realizations for reference, verification, cost comparison, and risk analysis.
+The plan artifact defines the intended transition model and records the current
+realization state of that model. The `Plan Map` section is the single
+scan-friendly table for stage topology, emoji stage status, emoji validation
+status, inputs, outputs, last attempt artifact, and last attempt time. The
+`Blocker` section records the current blocking state when execution cannot
+safely continue. The `Stage Attempts` section records the retained attempt
+artifacts for the plan.
+Detailed stage descriptions remain in `Stage Details`; each stage detail
+records the compact validation decision for that stage after the validation
+dialogue has reached a user-confirmed or otherwise explicit decision.
 
-When exporting a `plan-state` artifact, the exported artifact name must include
-labels for:
+When plan execution advances, agents update `plan.md` directly, including:
 
-- author
-- device or runtime
-- time with second precision
+- `Plan Map`
+- `Blocker`
+- `Stage Attempts`
+- the relevant stage detail, including its compact `Validation` block
+- progress, pending work, blockers, risks, and continuation decisions
 
-The export filename pattern is:
+Plan frontmatter stores stable artifact identity and provenance. It must not be
+used as the mutable execution-state surface.
+
+## Execution Results Directory Rule
+
+Working and intermediate files produced while executing a plan must be stored
+under:
 
 ```text
-<goal-id>-plan-state--author-<author>--device-<device>--time-<YYYYMMDDTHHMMSS>.md
+<goal-directory>/results/
 ```
 
-When importing an existing goal, plan, or plan package, any available
-`plan-artifact` and `plan-state` artifacts should not overwrite the current
-canonical plan or current state. Instead, imported plans should be stored as
-named variants and available `plan-state` artifacts should be linked from the
-relevant plan artifact as existing plan implementations, so they can be used as
-references and compared with the current realization.
+This includes stage attempt results, execution evidence, temporary reports,
+implementation notes, handoff artifacts, blocker notes, revision notes, scripts
+or specifications created only to support execution, and similar
+plan-realization material. Validation decisions are recorded concisely in the
+active `plan.md`; supporting evidence may be linked from `results/` when it is
+too large or too operational to keep in the plan.
+
+Canonical intent and decision artifacts stay at the goal-directory root:
+
+- `<goal-id>.md`
+- `path-options.md`
+- `realization-decision.md`
+- `plan.md`
+
+Source code, product files, or external implementation artifacts remain in
+their normal project locations and are linked from the plan or result
+artifacts.
+
+When importing an existing goal, plan, or plan package, imported
+`plan-artifact` variants must not overwrite the current canonical plan.
+Imported execution history and validation evidence should be stored or linked
+as existing plan implementations from the relevant plan artifact so they can be
+used as references and compared with the current realization.
 
 ## Stage Attempt Result Rule
 
@@ -270,9 +312,10 @@ Each concrete attempt to execute a plan stage may produce a
 who or what performed the attempt, which device or runtime was used, and the
 attempt time with second precision.
 
-`stage-attempt-result` artifacts are execution evidence. After the attempt has
-been reflected in the `plan-state` artifact, the agent must ask the user
-whether to keep the attempt artifact as a separate file.
+`stage-attempt-result` artifacts are execution evidence. They are stored in
+`<goal-directory>/results/`. After the attempt has been reflected in the active
+plan artifact, the agent must ask the user whether to keep the attempt artifact
+as a separate file.
 
 If more than 10 attempt artifacts exist for the same plan stage, the agent must
 ask whether old attempt artifacts should be deleted, compacted, or kept. The
@@ -349,8 +392,8 @@ choose next plan stage
 -> refine stage if needed
 -> prepare validation specification if needed
 -> execute, delegate, automate, or hand off externally
--> validate result
--> update plan state
+-> validate result in dialogue until an explicit decision is reached
+-> update plan
 -> revise plan if needed
 -> continue, branch, stop, or close goal
 ```
@@ -372,10 +415,13 @@ external implementation artifact, or a different realization route.
   - identify obvious subgoals when they are already visible and formulate each
     accepted subgoal as its own goal artifact in a subdirectory of the main goal
   - optionally look for an existing analog of the goal or plan
+  - identify unresolved `Open Questions`, state that they block transition,
+    and offer to resolve them one by one
 - produced-outputs:
   - `goal-artifact`
 - transition-condition:
-  - the goal is sufficiently clear to search for possible realization paths
+  - the goal is sufficiently clear to search for possible realization paths and
+    has no unresolved `Open Questions`
 - next-step:
   - `02-path-discovery`
 
@@ -390,11 +436,14 @@ external implementation artifact, or a different realization route.
   - include direct, minimal, exploratory, long-term, delegated, automated,
     tool-based, external, or reusable-plan paths
   - compare paths at a preliminary level by fit, risk, cost, and expected value
+  - identify unresolved `Open Questions`, state that they block transition,
+    and offer to resolve them one by one
 - produced-outputs:
   - `path-options`
 - transition-condition:
-  - at least one plausible path exists, or the goal is marked as blocked,
-    infeasible, or requiring reformulation
+  - at least one plausible path exists and no unresolved `Open Questions`
+    remain, or the goal is marked as blocked, infeasible, or requiring
+    reformulation
 - next-step:
   - `03-plan-synthesis`
 
@@ -450,7 +499,7 @@ external implementation artifact, or a different realization route.
     handoff artifacts when the current stage requires them
 - produced-outputs:
   - `stage-attempt-result`
-  - `plan-state`
+  - `updated-plan-artifact`
 - transition-condition:
   - a stage attempt has produced a result that can be validated, or the stage
     is blocked and needs plan revision
@@ -464,14 +513,18 @@ external implementation artifact, or a different realization route.
 - purpose:
   - validate the result of the current realized stage
   - compare evidence with the stage completion criteria
-  - update plan state, goal progress, metrics, risks, and open questions
+  - conduct validation as a dialogue until the user confirms the stage result,
+    rejects it, marks it partial, or asks for revision
+  - record the compact validation decision in the relevant stage detail of the
+    active plan
+  - update the active plan's `Plan Map`, goal progress, metrics, risks, and
+    open questions
   - decide whether to continue, branch, revise, stop, or close the goal
 - produced-outputs:
-  - `validation-result`
-  - `plan-state`
+  - `updated-plan-artifact`
 - transition-condition:
-  - the stage attempt result has been accepted, rejected, marked partial, or
-    marked as requiring revision
+  - the stage attempt result has an explicit validation decision recorded in
+    the active plan
 - next-step:
   - `05-plan-realization`
   - `07-plan-packaging-export`
@@ -483,10 +536,11 @@ external implementation artifact, or a different realization route.
 - step-id: `07-plan-packaging-export`
 - default-mode: `export`
 - purpose:
-  - optionally package the goal, plan, execution history, validation evidence,
-    reusable fragments, or collapsed plan for future use
-  - export plan state artifacts with author, device, and second-precision time
-    labels in the artifact name
+  - optionally package the goal, plan, execution history, validation decisions
+    and supporting evidence, reusable fragments, or collapsed plan for future
+    use
+  - export plan execution state from the active plan and its `results/`
+    artifacts
   - export non-canonical plan variants with author, device, and
     second-precision time labels in the artifact name
   - export into a suitable form such as Markdown plan, runbook, checklist,

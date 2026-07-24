@@ -5,6 +5,9 @@ mindmap-plugin: basic
 
 # [Skills](../.double.md)
 
+## Double Agent
+- [Double Agent Skill](./double-agent/SKILL.md)
+
 ## [Machine of Ideas](./machine-of-ideas/machine-of-ideas.md)
 - [Machine of Ideas Skill](./machine-of-ideas/SKILL.md)
 

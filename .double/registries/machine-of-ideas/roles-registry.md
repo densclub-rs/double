@@ -4,7 +4,6 @@ submodule: machine-of-ideas
 id: roles-registry
 kind: registry
 status: release-candidate
-workflow-version: 0.2.0
 ---
 
 # Roles Registry

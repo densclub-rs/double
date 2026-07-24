@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: plan-exchange-role
 kind: role
-status: draft
+status: release-candidate
 optional: true
 derived-from:
   - ../../workflows/machine-of-goals/machine-of-goals-workflow.md
@@ -31,10 +31,10 @@ without breaking their connection to goal context.
 
 - preserve source, provenance, assumptions, constraints, and mismatch notes
 - identify which parts are reusable and which are context-specific
-- when exporting `plan-state`, rename the exported artifact with author,
-  device, and second-precision time labels
-- when importing existing `plan-state` artifacts, link them from the current
-  plan artifact as existing implementations instead of replacing current state
+- when exporting execution state, include the active plan artifact and relevant
+  `results/` artifacts
+- when importing existing implementations, link them from the current plan
+  artifact instead of replacing current state
 - reject or block import when source context or criteria are missing
 - require validation evidence before packaging a plan as reusable
 - mark closure, pause, transfer, or package status during export

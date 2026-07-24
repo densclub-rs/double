@@ -19,12 +19,14 @@ derived-from:
 id: <unique-knowledge-id>
 kind: knowledge-artifact
 produced-by: knowledge-extraction-agent
-workflow-version: 0.1.1
 type: <static-or-dynamic>
 value-type: <text-or-binary>
 observed-at: <date-or-date-time-when-the-value-was-last-acquired>
-ttl: <date-time-or-bounded-period-until-which-the-value-may-be-trusted>
+ttl: <human-readable-period-until-which-the-value-may-be-trusted>
+retrieval-method: <local-command-or-local-script-or-rest-api-or-mcp-or-manual>
 ---
+
+<a id="<unique-knowledge-id>"></a>
 
 # <unique-knowledge-id>
 
@@ -44,7 +46,7 @@ ttl: <date-time-or-bounded-period-until-which-the-value-may-be-trusted>
 
 ## Command
 
-<for-dynamic-or-binary-knowledge: describe-how-the-command-obtains-the-value>
+<for-dynamic-or-binary-knowledge: describe the exact invocation that obtains the value>
 
 ```sh
 <command-or-script-reference>

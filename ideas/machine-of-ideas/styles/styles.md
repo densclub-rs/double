@@ -1,9 +1,7 @@
 ---
 id: styles
 kind: mini-idea-artifact
-status: draft
-produced-by: idea-capture-agent
-workflow-version: 0.2.0
+produced-by: machine-of-ideas/idea-capture-agent
 interaction-language: ru
 artifact-language: en
 parent-idea:

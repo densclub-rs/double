@@ -2,7 +2,7 @@
 style: double
 submodule: machine-of-goals
 mindmap-plugin: basic
-status: draft
+status: release-candidate
 ---
 
 # [Machine of Goals](../../.double.md)
@@ -14,8 +14,6 @@ status: draft
 - [Plan Template](./plan-template.md)
 - [Realization Decision Template](./realization-decision-template.md)
 - [Stage Attempt Result Template](./stage-attempt-result-template.md)
-- [Validation Result Template](./validation-result-template.md)
-- [Plan State Template](./plan-state-template.md)
 - [Exported Plan Package Template](./exported-plan-package-template.md)
 
 ## Draft Interpretation

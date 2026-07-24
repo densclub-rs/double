@@ -4,7 +4,6 @@ submodule: machine-of-knowledge
 id: machine-of-knowledge-workflow
 kind: workflow
 status: draft
-version: 0.1.1
 interaction-language: en
 artifact-language: en
 derived-from:
@@ -38,6 +37,27 @@ Machine of Knowledge reuses these common concepts from Machine of Ideas:
 
 This workflow is the canonical source for knowledge-specific behavior.
 
+## Version Knowledge Rule
+
+The machine version is preserved only in
+`knowledge/machine-of-knowledge-version/machine-of-knowledge-version.md`.
+Changes to the workflow, artifact contract, agent role, or transition
+conditions require the version knowledge to be updated through the Double Agent
+Skill.
+
+## Operating Artifact Maintenance
+
+When a request creates, changes, moves, or removes a Machine of Knowledge
+operating artifact under `.double/`, activate
+`.double/skills/double-agent/SKILL.md`.
+
+Before any working-file change, verify that `double-agent` is installed and
+available. If it is unavailable, do not change a `.double/` file; require
+installation first, then activate the Double Agent Skill.
+
+Machine of Knowledge remains responsible for knowledge artifacts under
+`knowledge/`; they are not Machine of Knowledge operating artifacts.
+
 ## Knowledge Catalog Rule
 
 - The project catalog is `./knowledge` in the current Double project.
@@ -68,8 +88,8 @@ Every knowledge artifact must preserve a temporal state that connects:
 
 ```yaml
 observed-at: <when-the-preserved-value-was-observed>
-ttl: <until-when-the-preserved-value-may-be-trusted>
-retrieval-method: <optional-way-to-obtain-a-refreshed-value>
+ttl: <human-readable-period-until-which-the-preserved-value-may-be-trusted>
+retrieval-method: <optional-invocation-type-for-refreshing-the-value>
 ```
 
 Rules:
@@ -77,9 +97,10 @@ Rules:
 - `observed-at` is required for both static and dynamic knowledge.
 - `ttl` is required for both static and dynamic knowledge.
 - `ttl` defines the trust horizon for the last acquired value: until this time, the knowledge may be treated as valid and trusted.
-- `ttl` may be expressed as an exact date, an ISO 8601 date-time, a duration from `observed-at`, or a clearly bounded natural-language period.
+- `ttl` must be a clearly bounded, human-readable period from `observed-at`.
 - `retrieval-method` is optional for both types and is included only when a concrete revalidation need exists.
-- A retrieval method may describe a human procedure, URL, API, query, command, tool, or another reproducible method.
+- `retrieval-method` identifies the invocation type, for example `local-command`, `local-script`, `rest-api`, `mcp`, or `manual`.
+- When a retrieval method is present, record the exact command, request, or procedure in the `Command` section.
 - Observed values, dates, TTL values, and retrieval methods must come from the user, visible sources, or an actual authorized retrieval; the agent must not invent them.
 - Use `YYYY-MM-DD` or an ISO 8601 date-time for `observed-at`, with greater precision when it matters.
 - TTL is a horizon for trusting knowledge as valid, not a guarantee that it remains true throughout that period.
@@ -192,7 +213,7 @@ The step is complete when:
 - statements and values are grounded in visible sources or user input
 - no unresolved question makes the artifact misleading
 
-There is no automatic next step in version `0.1.1`. After completion, offer
+There is no automatic next step. After completion, offer
 validation, revalidation of stale knowledge, or extraction of another knowledge
 item.
 
@@ -202,7 +223,7 @@ item.
 
 - kind: `knowledge-artifact`
 - produced-by: `knowledge-extraction-agent`
-- required-frontmatter: `id`, `kind`, `status`, `produced-by`, `workflow-version`, `interaction-language`, `artifact-language`, `knowledge-type`, `access`, `observed-at`, `ttl`, `derived-from`
+- required-frontmatter: `id`, `kind`, `status`, `produced-by`, `interaction-language`, `artifact-language`, `knowledge-type`, `access`, `observed-at`, `ttl`, `derived-from`
 - optional-frontmatter: `retrieval-method`
 - publication-path: `knowledge/<knowledge-id>/<knowledge-id>.md`
 - access-value: `free-of-charge`

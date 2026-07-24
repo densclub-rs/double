@@ -20,9 +20,7 @@ derived-from:
 id: <concept-artifact-id>
 kind: concept-artifact
 mindmap-plugin: basic
-status: release-candidate
 produced-by: concept-extraction-agent
-workflow-version: <workflow-version>
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
 publication-path: <root-idea-directory>/<root-idea-id>-concepts.md

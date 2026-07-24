@@ -1,9 +1,7 @@
 ---
 id: machine-of-ideas-principles
 kind: principle-artifact
-status: release-candidate
-produced-by: principle-synthesis-agent
-workflow-version: 0.1.0
+produced-by: machine-of-ideas/principle-synthesis-agent
 interaction-language: en
 artifact-language: en
 publication-path: ideas/machine-of-ideas/machine-of-ideas-principles.md
