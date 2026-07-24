@@ -6,6 +6,7 @@ description: >
   asks to continue an existing idea artifact. Also trigger when the user asks to work on an idea clarification, sub-idea, mini-idea, `уточнение идеи`, `подидея`, `мини-идея`, or `миниидея`. Trigger and route to `double-agent` when the user asks to create, change, move, or remove Machine of Ideas operating artifacts under `.double/`. Do not trigger on casual mentions of ideas inside unrelated technical discussion unless the user asks to enter the idea workflow.
 metadata:
   style: double
+  status: release-candidate
   submodule: machine-of-ideas
   short-description: Formalize individual experience in working with ideas, knowledge, and system design into a reproducible process
 ---

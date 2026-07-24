@@ -1,6 +1,7 @@
 ---
 style: double
 submodule: machine-of-ideas
+status: release-candidate
 mindmap-plugin: basic
 ---
 
