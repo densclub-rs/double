@@ -7,7 +7,7 @@ artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-07-19
+observed-at: 2026-07-24
 ttl: one month
 derived-from:
   - knowledge/double-main-modules/double-main-modules.md
@@ -25,4 +25,4 @@ project.
 
 ## Value
 
-`0.2.0`
+`0.2.1`
