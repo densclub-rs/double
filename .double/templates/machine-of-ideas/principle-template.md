@@ -32,45 +32,25 @@ derived-from:
 
 # Principle Artifact: <Title>
 
-## 1. Principle Index
+Idea: [<Root Idea Title>](./<root-idea-id>.md#<root-idea-id>)
 
-Use this section as the compact map entry point for the artifact.
-Keep it short enough to work as the first visible layer in a mindmap or markmap.
-Each index item must be a markdown link to the matching detailed principle section.
-Use nested bullets only to show possible normative nesting between principles.
-If one principle depends on or is constrained by another at the overview level, place it as a child item under that principle.
-Do not label relationship types here and do not duplicate full principle statements.
-
-- [`<principle-id>: <Principle Name>`](#principle-id-principle-name): <one-sentence-description-of-the-principle>
-  - [`<dependent-principle-id>: <Dependent Principle Name>`](#dependent-principle-id-dependent-principle-name): <one-sentence-description-of-the-dependent-principle>
-- [`<independent-principle-id>: <Independent Principle Name>`](#independent-principle-id-independent-principle-name): <one-sentence-description-of-the-principle>
-
-## 2. Source Artifacts
-
-- Source idea artifact: `<root-idea-artifact-id-or-path>`
-- Source concept artifact: `<concept-artifact-id-or-path>`
-- Root idea artifact: `<root-idea-artifact-id-or-path>`
-- Root idea directory: `<root-idea-directory>`
-- Relevant sub-ideas: `<optional-sub-idea-id-or-path-list>`
-- Published as: `<root-idea-id>-principles.md`
-- Synthesis mode: `<brainstorm|explain|strict-research|validation|editor>`
-- Interaction language: `<interaction-language>`
-- Artifact language: `<artifact-language>`
-
-## 3. Principle Synthesis Summary
+## 1. Principle Synthesis Summary
 
 A short summary of the normative structure that emerges from the idea and concept artifact.
 Do not restate the whole idea or concept artifact; describe the main principles and why they matter.
 
-## 4. Working Definition of Principle
+## 2. Working Definition of Principle
 
 A principle is a stable normative ground derived from an idea and its conceptual structure.
 It guides or constrains future decisions, but it is not yet a requirement, task, design decision, implementation step, or generic value statement.
 
-## 5. Core Principles
+## 3. Core Principles
 
-Each core principle should use a stable id in its heading.
-This makes the heading usable as both a readable mindmap node and a link target from the Principle Index.
+Each core principle must use a unique stable id, a matching explicit HTML
+anchor, and the stable id in its heading. Links must target the explicit anchor
+so they remain valid when the readable heading title changes.
+
+<a id="<principle-id>"></a>
 
 ### <principle-id>: <Principle Name>
 
@@ -80,7 +60,7 @@ A concise normative statement.
 
 #### Derived From
 
-- Source concept(s): `<concept-name-or-id>`
+- Source concept(s): [`<Concept Name>`](./<root-idea-id>-concepts.md#<concept-id>)
 - Source relationship, boundary, or tension: `<description>`
 - Source idea support: `<short reference to source idea>`
 - Explicit or inferred: `<explicit|inferred>`
@@ -111,17 +91,17 @@ Why this principle follows from the source idea and concept artifact.
 - Each unanswered item in this subsection is an open question for this specific principle.
 - When a question is answered, integrate the answer into this principle's statement, source grounding, rationale, implications, boundaries, anti-patterns, or related artifact sections, then mark the item as answered or remove it from this subsection.
 
-## 6. Trade-offs and Tensions
+## 4. Trade-offs and Tensions
 
 - Which principles may pull in different directions?
 - What tensions should future stages preserve instead of resolving prematurely?
 
-## 7. Candidate Inputs for Future Stages
+## 5. Candidate Inputs for Future Stages
 
 - Which principles can guide future proposals, designs, specs, or validation?
 - Which principles require more research or user confirmation first?
 
-## 8. Rejected or Deferred Candidate Principles
+## 6. Rejected or Deferred Candidate Principles
 
 - Which plausible principles were not included?
 - Why were they rejected or deferred?

@@ -22,17 +22,23 @@ I will look for stable normative grounds: principles that should guide or constr
 
 The output will be a `Principle Artifact` with:
 
-- source artifacts
 - principle synthesis summary
 - working definition of principle
 - core principle cards
-- principle map
 - trade-offs and tensions
 - candidate inputs for future stages
 - rejected or deferred candidate principles
 - principle-local questions
 
-By default, I will publish it next to the root idea as `<root-idea-id>-principles.md` and add a link to it from the root idea's `Development Artifacts` section. Relevant sub-ideas may be used as source material for that root principle artifact.
+By default, I will publish it next to the root idea as
+`<root-idea-id>-principles.md`. The root idea will remain the central navigation
+index: I will preserve its concept table and create or update
+`13.2 Principles` with a link to the artifact and a complete principle table.
+Every principle will link to its unique explicit anchor, and its related
+concepts will link to their unique explicit anchors in the concept artifact.
+The principle artifact will link back to the root idea's explicit `idea-id`
+anchor. Relevant sub-ideas may be used as source material for that root
+principle artifact.
 
 If I ask open questions, your answers will be integrated into the active `principle-artifact`, not left only in the conversation.
 For principle artifacts, each unanswered item in the `Questions` subsection of a specific principle is an open question for that principle.

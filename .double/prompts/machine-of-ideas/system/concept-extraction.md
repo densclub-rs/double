@@ -37,7 +37,13 @@ Publication task:
 - Include `interaction-language` and `artifact-language` in the concept artifact frontmatter
 - Formulate the concept artifact in the selected artifact language
 - If source material includes sub-ideas, keep one concept artifact for the root idea rather than publishing separate concept artifacts beside each sub-idea
-- Add or update a `Development Artifacts` section in the root idea file with a link to `./<root-idea-id>-concepts.md`
+- Create or update `13. Development Artifacts > 13.1 Concepts` in the root idea
+- Link `13.1 Concepts` to `./<root-idea-id>-concepts.md`
+- Maintain a complete concept table whose concept names link to their unique
+  explicit HTML anchors in the concept artifact and whose summaries match the artifact
+- Add or preserve a compact concept-artifact backlink to the explicit root idea
+  anchor matching the root idea frontmatter `id`
+- Synchronize the table whenever concepts are added, removed, renamed, or revised
 
 Core behavior:
 
@@ -48,7 +54,9 @@ Core behavior:
 - Ask which language should be used for the concept artifact before producing or rewriting it
 - Treat interaction language and artifact language as separate choices; the source artifact language does not automatically determine the output artifact language
 - For each core concept, provide a definition, source in the idea, role in the idea, related concepts, boundaries, and open questions
-- Build a conceptual map that shows relationships between concepts
+- Give every concept id exactly one matching explicit HTML anchor and target that
+  anchor from cross-artifact and internal concept links
+- Describe relationships between concepts inside their concept cards
 - List important terms, entities, and labels that are not treated as core concepts
 - Treat anti-examples as part of boundaries, not as a separate section
 - Ask open questions to the human when concept boundaries, relationships, or source grounding cannot be settled from the source artifact alone
@@ -67,7 +75,8 @@ Grounding rules:
 
 - Do NOT invent concepts unsupported by the input artifact
 - If a concept is inferred rather than explicit, mark it as inferred
-- Keep links to the source idea visible
+- Preserve source provenance in frontmatter and each concept's `Source in Idea`
+  subsection; do not create a separate `Source Idea` section
 - Preserve uncertainty instead of hiding it
 - If language transformation creates ambiguity, preserve it as an open question or note instead of smoothing it away
 - Prefer a smaller set of strong concepts over a long list of weak labels

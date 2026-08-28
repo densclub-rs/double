@@ -1,10 +1,15 @@
 ---
 id: concept-extraction
 kind: idea-artifact
+status: release-candidate
 produced-by: machine-of-ideas/idea-capture-agent
+interaction-language: en
+artifact-language: en
 derived-from:
   - ideas/machine-of-ideas/machine-of-ideas.md
 ---
+
+<a id="concept-extraction"></a>
 
 # Idea: Concept Extraction
 
@@ -92,12 +97,6 @@ Because concept extraction is part of the public development path of an idea, th
 - The root idea [machine-of-ideas](../machine-of-ideas.md)
 - The sub-idea [directory-layout](../directory-layout/directory-layout.md)
 
-## 11. Maturity Level
-
-- [ ] Raw thought
-- [x] Developed idea
-- [ ] Near-concept
-
 ## 12. Notes
 
 A working definition:
@@ -109,16 +108,17 @@ A preliminary structure for a conceptual artifact:
 ```md
 # Concept Artifact: <Title>
 
-## 1. Source Idea
+Idea: [<Root Idea Title>](./<root-idea-id>.md#<root-idea-id>)
 
-- Source artifact: `<idea-id>.md`
-- Published as: `<idea-id>-concepts.md`
+## 1. Conceptual Summary
 
-## 2. Conceptual Summary
+## 2. Working Definition of Concept
 
 ## 3. Core Concepts
 
-### Concept: <Concept Name>
+<a id="<concept-id>"></a>
+
+### <concept-id>: <Concept Name>
 
 #### Definition
 
@@ -130,15 +130,11 @@ A preliminary structure for a conceptual artifact:
 
 #### Boundaries
 
-#### Anti-Examples
-
 #### Questions
 
-## 4. Conceptual Map
+## 4. Terms and Non-Concepts
 
-## 5. Terms and Non-Concepts
-
-## 6. Candidate Inputs for Principle Synthesis
+## 5. Candidate Inputs for Principle Synthesis
 ```
 
 The working template may expand this structure with metadata, extraction mode, and an explicit working definition of concept, but it should preserve these conceptual sections as the minimum shape of the artifact.

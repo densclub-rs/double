@@ -13,35 +13,9 @@ derived-from:
 
 # Concept Artifact: Machine of Goals
 
-## 1. Concept Index
+Idea: [Machine of Goals](./machine-of-goals.md#machine-of-goals)
 
-- [`concept-goal-as-verifiable-target-state: Goal as Verifiable Target State`](#concept-goal-as-verifiable-target-state-goal-as-verifiable-target-state): A goal expressed as a desired state whose achievement can be verified.
-- [`concept-success-criteria: Success Criteria`](#concept-success-criteria-success-criteria): The criteria for distinguishing achievement, partial achievement, failure, or the need for review.
-- [`concept-initial-state-and-target-state: Initial State and Target State`](#concept-initial-state-and-target-state-initial-state-and-target-state): The pair of states that frames goal achievement as a transition.
-- [`concept-realization-path: Realization Path`](#concept-realization-path-realization-path): A possible strategy for approaching a goal before composing a concrete plan.
-- [`concept-plan-as-transition-model: Plan as Transition Model`](#concept-plan-as-transition-model-plan-as-transition-model): A structured model for moving from the initial state to the target state.
-- [`concept-subgoal-and-partial-achievement: Subgoal and Partial Achievement`](#concept-subgoal-and-partial-achievement-subgoal-and-partial-achievement): Intermediate verifiable states that contribute to a parent goal.
-- [`concept-plan-cost-and-efficiency: Plan Cost and Efficiency`](#concept-plan-cost-and-efficiency-plan-cost-and-efficiency): Measures for comparing execution cost with expected results.
-- [`concept-plan-algorithmization: Plan Algorithmization`](#concept-plan-algorithmization-plan-algorithmization): The transformation of a sufficiently clear plan into a controlled achievement algorithm.
-- [`concept-plan-explanation-and-control: Plan Explanation and Control`](#concept-plan-explanation-and-control-plan-explanation-and-control): The visibility of steps, reasons, checks, parameters, stop points, and review opportunities.
-- [`concept-interactive-and-automatic-execution: Interactive and Automatic Execution`](#concept-interactive-and-automatic-execution-interactive-and-automatic-execution): The range of execution modes from manual through fully automatic.
-- [`concept-executable-collapsed-plan: Executable Collapsed Plan`](#concept-executable-collapsed-plan-executable-collapsed-plan): A reusable form of a plan suitable for automatic execution, handoff, or publication.
-- [`concept-plan-exchange: Plan Exchange`](#concept-plan-exchange-plan-exchange): Reuse and adaptation of successful plans together with their goal context.
-- [`concept-goal-artifact-context: Goal Artifact Context`](#concept-goal-artifact-context-goal-artifact-context): The file and semantic context that keeps a goal, its plan, realization, and evidence together.
-
-## 2. Source Idea
-
-- Source scope: `root idea`
-- Source title: `Machine of Goals`
-- Root idea artifact: `ideas/machine-of-goals/machine-of-goals.md`
-- Root idea directory: `ideas/machine-of-goals`
-- Relevant sub-ideas: none
-- Published as: `machine-of-goals-concepts.md`
-- Extraction mode: `strict-research`
-- Interaction language: `English`
-- Artifact language: `English`
-
-## 3. Conceptual Summary
+## 1. Conceptual Summary
 
 `Machine of Goals` describes a system for moving from intention to verifiable achievement. Its central conceptual pattern is this: a goal is defined as a verifiable target state; then possible paths, plans, algorithms, execution modes, and forms for collapsing the plan into an automatic mechanism are built around it.
 
@@ -49,13 +23,15 @@ As a specialized machine within Double, `Machine of Goals` realizes all foundati
 
 The idea rests on a distinction between several levels: a goal is not the same as a plan, a plan is not the same as an algorithm, an algorithm is not the same as automatic execution, and automatic execution does not cancel explanation, control, or the possibility of interactive review. This makes Machine of Goals not merely a task manager, but a machine for transforming a goal into a controllable structure of action.
 
-## 4. Working Definition of Concept
+## 2. Working Definition of Concept
 
 A concept is a stable semantic unit of an idea.
 It may describe an entity, relation, process, distinction, tension, or interpretive frame.
 At this stage, a concept is not yet a principle, requirement, task, or design decision.
 
-## 5. Core Concepts
+## 3. Core Concepts
+
+<a id="concept-goal-as-verifiable-target-state"></a>
 
 ### concept-goal-as-verifiable-target-state: Goal as Verifiable Target State
 
@@ -74,9 +50,9 @@ This concept sets the foundation for the whole machine: if a goal cannot be repr
 
 #### Related Concepts
 
-- Other relations: [`concept-initial-state-and-target-state`](#concept-initial-state-and-target-state-initial-state-and-target-state): defines the transition within which the goal becomes achievable.
-- Other relations: [`concept-success-criteria`](#concept-success-criteria-success-criteria): makes goal verification operationally meaningful.
-- Other relations: [`concept-plan-as-transition-model`](#concept-plan-as-transition-model-plan-as-transition-model): describes the way of moving toward the target state.
+- Other relations: [`concept-initial-state-and-target-state`](#concept-initial-state-and-target-state): defines the transition within which the goal becomes achievable.
+- Other relations: [`concept-success-criteria`](#concept-success-criteria): makes goal verification operationally meaningful.
+- Other relations: [`concept-plan-as-transition-model`](#concept-plan-as-transition-model): describes the way of moving toward the target state.
 
 #### Boundaries
 
@@ -88,6 +64,8 @@ This concept sets the foundation for the whole machine: if a goal cannot be repr
 #### Questions
 
 - [x] How formal should the target-state specification be for different types of goals: software, personal, social, and research goals?
+
+<a id="concept-initial-state-and-target-state"></a>
 
 ### concept-initial-state-and-target-state: Initial State and Target State
 
@@ -106,9 +84,9 @@ This concept helps separate the formulation of a wish from the model of change. 
 
 #### Related Concepts
 
-- Other relations: [`concept-goal-as-verifiable-target-state`](#concept-goal-as-verifiable-target-state-goal-as-verifiable-target-state): the target state is the verifiable expression of the goal.
-- Other relations: [`concept-plan-as-transition-model`](#concept-plan-as-transition-model-plan-as-transition-model): the plan connects the initial and target states.
-- Other relations: [`concept-subgoal-and-partial-achievement`](#concept-subgoal-and-partial-achievement-subgoal-and-partial-achievement): intermediate states appear inside the transition.
+- Other relations: [`concept-goal-as-verifiable-target-state`](#concept-goal-as-verifiable-target-state): the target state is the verifiable expression of the goal.
+- Other relations: [`concept-plan-as-transition-model`](#concept-plan-as-transition-model): the plan connects the initial and target states.
+- Other relations: [`concept-subgoal-and-partial-achievement`](#concept-subgoal-and-partial-achievement): intermediate states appear inside the transition.
 
 #### Boundaries
 
@@ -121,6 +99,8 @@ This concept helps separate the formulation of a wish from the model of change. 
 #### Questions
 
 - [x] Should Machine of Goals always explicitly fix the initial state, or may it be left implicit for some goals?
+
+<a id="concept-success-criteria"></a>
 
 ### concept-success-criteria: Success Criteria
 
@@ -138,9 +118,9 @@ Success criteria transform a goal from a declaration into a verifiable artifact.
 
 #### Related Concepts
 
-- Other relations: [`concept-goal-as-verifiable-target-state`](#concept-goal-as-verifiable-target-state-goal-as-verifiable-target-state): criteria make the state verifiable.
-- Other relations: [`concept-plan-explanation-and-control`](#concept-plan-explanation-and-control-plan-explanation-and-control): plan explanation shows which checks are mandatory.
-- Other relations: [`concept-plan-cost-and-efficiency`](#concept-plan-cost-and-efficiency-plan-cost-and-efficiency): success criteria are needed to compare cost and result.
+- Other relations: [`concept-goal-as-verifiable-target-state`](#concept-goal-as-verifiable-target-state): criteria make the state verifiable.
+- Other relations: [`concept-plan-explanation-and-control`](#concept-plan-explanation-and-control): plan explanation shows which checks are mandatory.
+- Other relations: [`concept-plan-cost-and-efficiency`](#concept-plan-cost-and-efficiency): success criteria are needed to compare cost and result.
 
 #### Boundaries
 
@@ -155,6 +135,8 @@ Success criteria transform a goal from a declaration into a verifiable artifact.
 #### Questions
 
 - [x] How should minimal achievement criteria be distinguished from high-quality-result criteria?
+
+<a id="concept-realization-path"></a>
 
 ### concept-realization-path: Realization Path
 
@@ -172,9 +154,9 @@ A path sits between a goal and a plan. It makes it possible to first see differe
 
 #### Related Concepts
 
-- Other relations: [`concept-plan-as-transition-model`](#concept-plan-as-transition-model-plan-as-transition-model): a selected path is developed into a concrete plan.
-- Other relations: [`concept-success-criteria`](#concept-success-criteria-success-criteria): paths remain comparable against the result the goal must verify.
-- Other relations: [`concept-plan-cost-and-efficiency`](#concept-plan-cost-and-efficiency-plan-cost-and-efficiency): paths are compared through expected cost, risk, and applicability.
+- Other relations: [`concept-plan-as-transition-model`](#concept-plan-as-transition-model): a selected path is developed into a concrete plan.
+- Other relations: [`concept-success-criteria`](#concept-success-criteria): paths remain comparable against the result the goal must verify.
+- Other relations: [`concept-plan-cost-and-efficiency`](#concept-plan-cost-and-efficiency): paths are compared through expected cost, risk, and applicability.
 
 #### Boundaries
 
@@ -187,6 +169,8 @@ A path sits between a goal and a plan. It makes it possible to first see differe
 #### Questions
 
 - [x] Should rejected paths be stored as a separate artifact in order to preserve the history of strategy selection?
+
+<a id="concept-plan-as-transition-model"></a>
 
 ### concept-plan-as-transition-model: Plan as Transition Model
 
@@ -204,9 +188,9 @@ The plan is the main bridge between goal formulation and executable action. It t
 
 #### Related Concepts
 
-- Other relations: [`concept-initial-state-and-target-state`](#concept-initial-state-and-target-state-initial-state-and-target-state): the plan connects these states.
-- Other relations: [`concept-subgoal-and-partial-achievement`](#concept-subgoal-and-partial-achievement-subgoal-and-partial-achievement): subgoals define intermediate sections of the plan.
-- Other relations: [`concept-interactive-and-automatic-execution`](#concept-interactive-and-automatic-execution-interactive-and-automatic-execution): automation becomes possible only after sufficient structuring of the plan.
+- Other relations: [`concept-initial-state-and-target-state`](#concept-initial-state-and-target-state): the plan connects these states.
+- Other relations: [`concept-subgoal-and-partial-achievement`](#concept-subgoal-and-partial-achievement): subgoals define intermediate sections of the plan.
+- Other relations: [`concept-interactive-and-automatic-execution`](#concept-interactive-and-automatic-execution): automation becomes possible only after sufficient structuring of the plan.
 
 #### Boundaries
 
@@ -219,6 +203,8 @@ The plan is the main bridge between goal formulation and executable action. It t
 #### Questions
 
 - [x] What minimal contract should a plan have in order to be considered ready for the transition to algorithmization?
+
+<a id="concept-subgoal-and-partial-achievement"></a>
 
 ### concept-subgoal-and-partial-achievement: Subgoal and Partial Achievement
 
@@ -236,9 +222,9 @@ This concept allows Machine of Goals to work with goals that cannot be achieved 
 
 #### Related Concepts
 
-- Other relations: [`concept-plan-as-transition-model`](#concept-plan-as-transition-model-plan-as-transition-model): subgoals are parts of the plan.
-- Other relations: [`concept-initial-state-and-target-state`](#concept-initial-state-and-target-state-initial-state-and-target-state): each subgoal may have its own states.
-- Other relations: [`concept-goal-artifact-context`](#concept-goal-artifact-context-goal-artifact-context): subgoals may be nested catalogs.
+- Other relations: [`concept-plan-as-transition-model`](#concept-plan-as-transition-model): subgoals are parts of the plan.
+- Other relations: [`concept-initial-state-and-target-state`](#concept-initial-state-and-target-state): each subgoal may have its own states.
+- Other relations: [`concept-goal-artifact-context`](#concept-goal-artifact-context): subgoals may be nested catalogs.
 
 #### Boundaries
 
@@ -250,6 +236,8 @@ This concept allows Machine of Goals to work with goals that cannot be achieved 
 #### Questions
 
 - [x] When should a subgoal become a separate catalog, and when should it remain part of the plan?
+
+<a id="concept-plan-cost-and-efficiency"></a>
 
 ### concept-plan-cost-and-efficiency: Plan Cost and Efficiency
 
@@ -267,9 +255,9 @@ Cost and efficiency make plans comparable. Without this, Machine of Goals could 
 
 #### Related Concepts
 
-- Other relations: [`concept-realization-path`](#concept-realization-path-realization-path): paths and the plans derived from them can be compared by cost and efficiency.
-- Other relations: [`concept-success-criteria`](#concept-success-criteria-success-criteria): efficiency requires an understanding of the result.
-- Other relations: [`concept-plan-as-transition-model`](#concept-plan-as-transition-model-plan-as-transition-model): plan selection relies on cost and risk.
+- Other relations: [`concept-realization-path`](#concept-realization-path): paths and the plans derived from them can be compared by cost and efficiency.
+- Other relations: [`concept-success-criteria`](#concept-success-criteria): efficiency requires an understanding of the result.
+- Other relations: [`concept-plan-as-transition-model`](#concept-plan-as-transition-model): plan selection relies on cost and risk.
 
 #### Boundaries
 
@@ -282,6 +270,8 @@ Cost and efficiency make plans comparable. Without this, Machine of Goals could 
 #### Questions
 
 - [x] Which types of cost should be mandatory in every plan, and which depend on the goal domain?
+
+<a id="concept-plan-algorithmization"></a>
 
 ### concept-plan-algorithmization: Plan Algorithmization
 
@@ -299,9 +289,9 @@ Algorithmization is the transition from planning to controlled execution. It doe
 
 #### Related Concepts
 
-- Other relations: [`concept-plan-as-transition-model`](#concept-plan-as-transition-model-plan-as-transition-model): the algorithm emerges from a structured plan.
-- Other relations: [`concept-plan-explanation-and-control`](#concept-plan-explanation-and-control-plan-explanation-and-control): the algorithm should remain explainable and controllable.
-- Other relations: [`concept-executable-collapsed-plan`](#concept-executable-collapsed-plan-executable-collapsed-plan): some algorithms can be collapsed into executable form.
+- Other relations: [`concept-plan-as-transition-model`](#concept-plan-as-transition-model): the algorithm emerges from a structured plan.
+- Other relations: [`concept-plan-explanation-and-control`](#concept-plan-explanation-and-control): the algorithm should remain explainable and controllable.
+- Other relations: [`concept-executable-collapsed-plan`](#concept-executable-collapsed-plan): some algorithms can be collapsed into executable form.
 
 #### Boundaries
 
@@ -314,6 +304,8 @@ Algorithmization is the transition from planning to controlled execution. It doe
 #### Questions
 
 - [x] Where is the boundary between a sufficiently explainable plan and a real achievement algorithm?
+
+<a id="concept-plan-explanation-and-control"></a>
 
 ### concept-plan-explanation-and-control: Plan Explanation and Control
 
@@ -331,9 +323,9 @@ This concept keeps Machine of Goals away from blind automation. A plan should be
 
 #### Related Concepts
 
-- Other relations: [`concept-plan-algorithmization`](#concept-plan-algorithmization-plan-algorithmization): the algorithm should preserve explainability.
-- Other relations: [`concept-interactive-and-automatic-execution`](#concept-interactive-and-automatic-execution-interactive-and-automatic-execution): control defines execution modes.
-- Other relations: [`concept-success-criteria`](#concept-success-criteria-success-criteria): checks connect execution with the goal.
+- Other relations: [`concept-plan-algorithmization`](#concept-plan-algorithmization): the algorithm should preserve explainability.
+- Other relations: [`concept-interactive-and-automatic-execution`](#concept-interactive-and-automatic-execution): control defines execution modes.
+- Other relations: [`concept-success-criteria`](#concept-success-criteria): checks connect execution with the goal.
 
 #### Boundaries
 
@@ -346,6 +338,8 @@ This concept keeps Machine of Goals away from blind automation. A plan should be
 #### Questions
 
 - [x] Which explanation elements should be mandatory before launching an automatically executable plan?
+
+<a id="concept-interactive-and-automatic-execution"></a>
 
 ### concept-interactive-and-automatic-execution: Interactive and Automatic Execution
 
@@ -363,9 +357,9 @@ This concept shows that Machine of Goals does not have to choose between human a
 
 #### Related Concepts
 
-- Other relations: [`concept-plan-explanation-and-control`](#concept-plan-explanation-and-control-plan-explanation-and-control): control defines safe execution modes.
-- Other relations: [`concept-executable-collapsed-plan`](#concept-executable-collapsed-plan-executable-collapsed-plan): the automatic form is the limiting case of execution.
-- Other relations: [`concept-plan-algorithmization`](#concept-plan-algorithmization-plan-algorithmization): the algorithm makes execution controllable.
+- Other relations: [`concept-plan-explanation-and-control`](#concept-plan-explanation-and-control): control defines safe execution modes.
+- Other relations: [`concept-executable-collapsed-plan`](#concept-executable-collapsed-plan): the automatic form is the limiting case of execution.
+- Other relations: [`concept-plan-algorithmization`](#concept-plan-algorithmization): the algorithm makes execution controllable.
 
 #### Boundaries
 
@@ -378,6 +372,8 @@ This concept shows that Machine of Goals does not have to choose between human a
 #### Questions
 
 - [x] How should Machine of Goals choose or propose an acceptable execution mode for a concrete plan?
+
+<a id="concept-executable-collapsed-plan"></a>
 
 ### concept-executable-collapsed-plan: Executable Collapsed Plan
 
@@ -395,9 +391,9 @@ This is one of the central concepts of Machine of Goals: the most valuable plans
 
 #### Related Concepts
 
-- Other relations: [`concept-plan-algorithmization`](#concept-plan-algorithmization-plan-algorithmization): collapsing requires algorithmic form.
-- Other relations: [`concept-plan-explanation-and-control`](#concept-plan-explanation-and-control-plan-explanation-and-control): a collapsed plan should remain explainable and stoppable.
-- Other relations: [`concept-plan-exchange`](#concept-plan-exchange-plan-exchange): collapsed plans become suitable for exchange.
+- Other relations: [`concept-plan-algorithmization`](#concept-plan-algorithmization): collapsing requires algorithmic form.
+- Other relations: [`concept-plan-explanation-and-control`](#concept-plan-explanation-and-control): a collapsed plan should remain explainable and stoppable.
+- Other relations: [`concept-plan-exchange`](#concept-plan-exchange): collapsed plans become suitable for exchange.
 
 #### Boundaries
 
@@ -409,6 +405,8 @@ This is one of the central concepts of Machine of Goals: the most valuable plans
 #### Questions
 
 - [x] Which collapsed-plan formats should be considered primary for Double: Markdown workflow, agent runbook, CLI script, SDD spec, or another format?
+
+<a id="concept-plan-exchange"></a>
 
 ### concept-plan-exchange: Plan Exchange
 
@@ -427,9 +425,9 @@ This concept expands Machine of Goals from individual planning to ecosystem valu
 
 #### Related Concepts
 
-- Other relations: [`concept-executable-collapsed-plan`](#concept-executable-collapsed-plan-executable-collapsed-plan): exchange is especially valuable for collapsed plans.
-- Other relations: [`concept-goal-artifact-context`](#concept-goal-artifact-context-goal-artifact-context): exchange requires a clear storage structure.
-- Other relations: [`concept-plan-cost-and-efficiency`](#concept-plan-cost-and-efficiency-plan-cost-and-efficiency): reuse can reduce the cost of achieving similar goals.
+- Other relations: [`concept-executable-collapsed-plan`](#concept-executable-collapsed-plan): exchange is especially valuable for collapsed plans.
+- Other relations: [`concept-goal-artifact-context`](#concept-goal-artifact-context): exchange requires a clear storage structure.
+- Other relations: [`concept-plan-cost-and-efficiency`](#concept-plan-cost-and-efficiency): reuse can reduce the cost of achieving similar goals.
 
 #### Boundaries
 
@@ -441,6 +439,8 @@ This concept expands Machine of Goals from individual planning to ecosystem valu
 #### Questions
 
 - [x] What metadata does a plan need in order to be safely reused in another context?
+
+<a id="concept-goal-artifact-context"></a>
 
 ### concept-goal-artifact-context: Goal Artifact Context
 
@@ -458,9 +458,9 @@ This concept connects thinking about goals with reproducible artifact storage. A
 
 #### Related Concepts
 
-- Other relations: [`concept-subgoal-and-partial-achievement`](#concept-subgoal-and-partial-achievement-subgoal-and-partial-achievement): subgoals may be nested catalogs.
-- Other relations: [`concept-plan-exchange`](#concept-plan-exchange-plan-exchange): plan portability depends on the artifact structure.
-- Other relations: [`concept-executable-collapsed-plan`](#concept-executable-collapsed-plan-executable-collapsed-plan): executable forms remain next to the goal.
+- Other relations: [`concept-subgoal-and-partial-achievement`](#concept-subgoal-and-partial-achievement): subgoals may be nested catalogs.
+- Other relations: [`concept-plan-exchange`](#concept-plan-exchange): plan portability depends on the artifact structure.
+- Other relations: [`concept-executable-collapsed-plan`](#concept-executable-collapsed-plan): executable forms remain next to the goal.
 
 #### Boundaries
 
@@ -474,7 +474,7 @@ This concept connects thinking about goals with reproducible artifact storage. A
 
 - [x] Should plans, explanations, parameters, and checks be separate files with fixed names or a flexible set of artifacts inside the goal catalog?
 
-## 6. Terms and Non-Concepts
+## 4. Terms and Non-Concepts
 
 - `Goal Capture`: the name of an early workflow stage, not an independent key concept in this artifact.
 - `Path Discovery`: the name of a stage that operationalizes the `Realization Path` concept.
@@ -485,7 +485,7 @@ This concept connects thinking about goals with reproducible artifact storage. A
 - `CLI`, `workflow`, `script`, `agent process`, `template`, `integration`: possible forms of collapsed execution, not separate concepts at this stage.
 - `resources`, `risks`, `dependencies`, `parameters`, `checks`: important plan attributes that are currently treated as components of `Plan as Transition Model` and `Plan Explanation and Control`.
 
-## 7. Candidate Inputs for Principle Synthesis
+## 5. Candidate Inputs for Principle Synthesis
 
 - A goal should be formulated as a verifiable state, not only as an intention.
 - The level of formality of the target state should be determined during goal design and depend on the type of goal, verification context, and subsequent planability.

@@ -35,7 +35,14 @@ A concept is a stable meaning unit of an idea that describes an important entity
 - treat requests to change a specific idea, concept, or principle artifact as `ideas/` artifact changes
 - if the intended edit target is ambiguous, state the assumed target before editing
 - treat relevant sub-ideas as source material for the root idea's concept artifact
-- add or update the root idea's `Development Artifacts` link to the concept artifact
+- create or update `13. Development Artifacts > 13.1 Concepts` in the root idea
+- link `13.1 Concepts` to the concept artifact and maintain a complete table in
+  which every concept name links to its unique explicit HTML anchor in that artifact
+- require every concept id to have exactly one matching explicit HTML anchor
+- add or preserve a compact backlink from the concept artifact to the explicit
+  root idea anchor that matches the root idea frontmatter `id`
+- synchronize the concept table when concepts are added, removed, renamed, or
+  revised
 - extract only those concepts that help explain the structure of the idea
 - record the source of each concept in the original idea
 - distinguish core concepts from important but supporting terms
@@ -49,7 +56,7 @@ A concept is a stable meaning unit of an idea that describes an important entity
 - treat every unanswered item in a concept's `Questions` subsection as an open question for that specific concept
 - do not create an artifact-level `Open Questions` section in concept artifacts
 - place each concept open question only under the `Questions` subsection of the concept it belongs to
-- keep open questions visible in the corresponding concept's `Questions` subsection until their answers are integrated into concept definitions, boundaries, relationships, source grounding, or the conceptual map
+- keep open questions visible in the corresponding concept's `Questions` subsection until their answers are integrated into concept definitions, boundaries, relationships, or source grounding
 - after integrating an answer, mark the item as answered or remove it from the corresponding concept's `Questions` subsection
 - never store answers, explanations, or resolved-question records under the question itself
 - never create a separate `Resolved Questions` section for normal concept questions

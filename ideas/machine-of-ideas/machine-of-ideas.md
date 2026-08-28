@@ -1,12 +1,15 @@
 ---
 id: machine-of-ideas
 kind: idea-artifact
+status: release-candidate
 produced-by: machine-of-ideas/idea-capture-agent
 interaction-language: en
 artifact-language: en
 derived-from:
   - ideas/ideas.md
 ---
+
+<a id="machine-of-ideas"></a>
 
 # Idea: Machine of Ideas
 
@@ -146,19 +149,54 @@ This adaptability is essential. The point is not obedience to neuro-behaviorist 
 - The sub-idea about principle synthesis in [principle-synthesis](./principle-synthesis/principle-synthesis.md)
 - The general movement from raw expression to structured idea development
 
-## 12. Maturity Level
-
-- [ ] Raw thought
-- [x] Developed idea
-- [ ] Near-concept
-
-## 13. Notes
+## 12. Notes
 
 This directory is the root catalog of the `Machine of Ideas` project documentation.
 
 The current document describes the conceptual level of the machine of ideas. Any future implementation should remain traceable to this description without being confused with the description itself.
 
-## 14. Development Artifacts
+## 13. Development Artifacts
 
-- Concepts: [machine-of-ideas-concepts](./machine-of-ideas-concepts.md)
-- Principles: [machine-of-ideas-principles](./machine-of-ideas-principles.md)
+### 13.1 Concepts
+
+Concept artifact: [Machine of Ideas Concepts](./machine-of-ideas-concepts.md)
+
+| Concept | Summary |
+| --- | --- |
+| [`concept-idea-machine: Idea of Machine`](./machine-of-ideas-concepts.md#concept-idea-machine) | A reproducible and mutable process for turning raw thoughts, observations, and conversations into structured artifacts. |
+| [`concept-idea-artifact: Idea Artifact`](./machine-of-ideas-concepts.md#concept-idea-artifact) | A structured Markdown representation of an idea that provides input for later stages. |
+| [`concept-mini-idea: Mini Idea`](./machine-of-ideas-concepts.md#concept-mini-idea) | A focused idea fragment whose later conceptual and principle work returns to its parent idea. |
+| [`concept-workflow-stage: Workflow Stage`](./machine-of-ideas-concepts.md#concept-workflow-stage) | A named step in the machine's transformation sequence. |
+| [`concept-stage-agent: Stage Agent`](./machine-of-ideas-concepts.md#concept-stage-agent) | A specialized working unit assigned to perform a workflow stage. |
+| [`concept-role: Role`](./machine-of-ideas-concepts.md#concept-role) | A stable responsibility model behind an agent. |
+| [`concept-mode: Mode`](./machine-of-ideas-concepts.md#concept-mode) | A user-selectable execution lens that changes how an agent performs a stage. |
+| [`concept-multilingual-artifact-form: Multilingual Artifact Form`](./machine-of-ideas-concepts.md#concept-multilingual-artifact-form) | The separation between the language of dialogue and the language selected for generated artifacts. |
+| [`concept-artifact-contract: Artifact Contract`](./machine-of-ideas-concepts.md#concept-artifact-contract) | A structured expectation that makes a stage output reusable and discoverable. |
+| [`concept-registry: Registry`](./machine-of-ideas-concepts.md#concept-registry) | A lookup and routing artifact for operational components. |
+| [`concept-operational-workspace: Operational Workspace`](./machine-of-ideas-concepts.md#concept-operational-workspace) | The working layer where the machine's operational forms are organized. |
+| [`concept-project-documentation-layer: Project Documentation Layer`](./machine-of-ideas-concepts.md#concept-project-documentation-layer) | The human-readable space where an idea's origins, meanings, and development artifacts can be studied. |
+| [`concept-traceability: Traceability`](./machine-of-ideas-concepts.md#concept-traceability) | The visible continuity between derived work and its sources. |
+| [`concept-boundary-discipline: Boundary Discipline`](./machine-of-ideas-concepts.md#concept-boundary-discipline) | The separation between conceptual work and later normative or implementation layers. |
+| [`concept-transition-condition: Transition Condition`](./machine-of-ideas-concepts.md#concept-transition-condition) | A condition that determines whether work can move beyond the current stage. |
+| [`concept-self-evolving-working-form: Self-Evolving Working Form`](./machine-of-ideas-concepts.md#concept-self-evolving-working-form) | The machine's capacity to refine its own forms of work through interaction. |
+| [`concept-human-clarification-loop: Human Clarification Loop`](./machine-of-ideas-concepts.md#concept-human-clarification-loop) | A stage-local dialogue through which human answers are integrated into the active artifact. |
+
+### 13.2 Principles
+
+Principle artifact: [Machine of Ideas Principles](./machine-of-ideas-principles.md)
+
+| Principle | Statement | Related Concepts |
+| --- | --- | --- |
+| [Preserve Source Context](./machine-of-ideas-principles.md#principle-preserve-source-context) | Every later artifact should keep a visible, usable connection to the original idea context from which it was derived. | [Idea Artifact](./machine-of-ideas-concepts.md#concept-idea-artifact), [Traceability](./machine-of-ideas-concepts.md#concept-traceability) |
+| [Transform Gradually](./machine-of-ideas-principles.md#principle-transform-gradually) | Move from raw expression to more formal layers through meaningful intermediate transformations. | [Idea of Machine](./machine-of-ideas-concepts.md#concept-idea-machine), [Workflow Stage](./machine-of-ideas-concepts.md#concept-workflow-stage), [Transition Condition](./machine-of-ideas-concepts.md#concept-transition-condition) |
+| [Keep Layers Distinct](./machine-of-ideas-principles.md#principle-keep-layers-distinct) | Keep ideas, concepts, principles, requirements, design decisions, tasks, and implementation details as distinct layers of work. | [Boundary Discipline](./machine-of-ideas-concepts.md#concept-boundary-discipline), [Artifact Contract](./machine-of-ideas-concepts.md#concept-artifact-contract), [Project Documentation Layer](./machine-of-ideas-concepts.md#concept-project-documentation-layer) |
+| [Make Artifacts Contractual](./machine-of-ideas-principles.md#principle-make-artifacts-contractual) | Give every produced artifact a clear contract that makes it usable by later stages. | [Idea Artifact](./machine-of-ideas-concepts.md#concept-idea-artifact), [Artifact Contract](./machine-of-ideas-concepts.md#concept-artifact-contract), [Workflow Stage](./machine-of-ideas-concepts.md#concept-workflow-stage) |
+| [Use Stable Addressable Units](./machine-of-ideas-principles.md#principle-use-stable-addressable-units) | Give core concepts and principles stable explicit identifiers and anchors. | [Traceability](./machine-of-ideas-concepts.md#concept-traceability), [Artifact Contract](./machine-of-ideas-concepts.md#concept-artifact-contract), [Project Documentation Layer](./machine-of-ideas-concepts.md#concept-project-documentation-layer) |
+| [Separate Interaction and Artifact Language](./machine-of-ideas-principles.md#principle-separate-interaction-and-artifact-language) | Choose the language of communication separately from the language of final artifacts. | [Multilingual Artifact Form](./machine-of-ideas-concepts.md#concept-multilingual-artifact-form), [Human Clarification Loop](./machine-of-ideas-concepts.md#concept-human-clarification-loop), [Artifact Contract](./machine-of-ideas-concepts.md#concept-artifact-contract), [Traceability](./machine-of-ideas-concepts.md#concept-traceability) |
+| [Ask and Integrate Open Questions](./machine-of-ideas-principles.md#principle-ask-and-integrate-open-questions) | Ask for human clarification within the active stage and integrate answers into the active artifact. | [Human Clarification Loop](./machine-of-ideas-concepts.md#concept-human-clarification-loop), [Workflow Stage](./machine-of-ideas-concepts.md#concept-workflow-stage), [Artifact Contract](./machine-of-ideas-concepts.md#concept-artifact-contract), [Traceability](./machine-of-ideas-concepts.md#concept-traceability) |
+| [Route Mini-Ideas Through Parent Artifacts](./machine-of-ideas-principles.md#principle-route-mini-ideas-through-parent-artifacts) | Capture a mini-idea separately, then route its later conceptual and principle work into the parent artifacts. | [Mini Idea](./machine-of-ideas-concepts.md#concept-mini-idea), [Artifact Contract](./machine-of-ideas-concepts.md#concept-artifact-contract), [Traceability](./machine-of-ideas-concepts.md#concept-traceability), [Human Clarification Loop](./machine-of-ideas-concepts.md#concept-human-clarification-loop) |
+| [Stabilize Roles, Vary Modes](./machine-of-ideas-principles.md#principle-stabilize-roles-vary-modes) | Preserve the responsibility of a stage through its role while allowing modes to vary its execution lens. | [Stage Agent](./machine-of-ideas-concepts.md#concept-stage-agent), [Role](./machine-of-ideas-concepts.md#concept-role), [Mode](./machine-of-ideas-concepts.md#concept-mode), [Workflow Stage](./machine-of-ideas-concepts.md#concept-workflow-stage) |
+| [Separate Operational Machinery From Project Understanding](./machine-of-ideas-principles.md#principle-separate-operational-machinery-from-project-understanding) | Separate human-readable project understanding from the operational machinery used to process it. | [Operational Workspace](./machine-of-ideas-concepts.md#concept-operational-workspace), [Project Documentation Layer](./machine-of-ideas-concepts.md#concept-project-documentation-layer), [Registry](./machine-of-ideas-concepts.md#concept-registry) |
+| [Preserve Productive Tension](./machine-of-ideas-principles.md#principle-preserve-productive-tension) | Preserve meaningful ambiguity and competing interpretations instead of resolving them prematurely. | [Idea Artifact](./machine-of-ideas-concepts.md#concept-idea-artifact), [Boundary Discipline](./machine-of-ideas-concepts.md#concept-boundary-discipline), [Self-Evolving Working Form](./machine-of-ideas-concepts.md#concept-self-evolving-working-form) |
+| [Evolve Traceably](./machine-of-ideas-principles.md#principle-evolve-traceably) | Let the machine evolve through its own workflow while preserving a traceable process history. | [Self-Evolving Working Form](./machine-of-ideas-concepts.md#concept-self-evolving-working-form), [Traceability](./machine-of-ideas-concepts.md#concept-traceability), [Workflow Stage](./machine-of-ideas-concepts.md#concept-workflow-stage), [Artifact Contract](./machine-of-ideas-concepts.md#concept-artifact-contract) |
+| [Prefer Subjective Fit Over Methodological Purity](./machine-of-ideas-principles.md#principle-prefer-subjective-fit-over-methodological-purity) | Adapt established methods to the subject instead of enforcing a universal doctrine. | [Idea of Machine](./machine-of-ideas-concepts.md#concept-idea-machine), [Self-Evolving Working Form](./machine-of-ideas-concepts.md#concept-self-evolving-working-form), [Project Documentation Layer](./machine-of-ideas-concepts.md#concept-project-documentation-layer) |

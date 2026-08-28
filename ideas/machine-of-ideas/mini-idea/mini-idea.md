@@ -9,6 +9,8 @@ derived-from:
   - ideas/machine-of-ideas/machine-of-ideas.md
 ---
 
+<a id="mini-idea"></a>
+
 # Idea: Mini-Idea
 
 ## 1. Summary
@@ -126,13 +128,6 @@ The goal is not to make mini-ideas second-class or disposable. Their value is di
 - The sub-idea [Directory Layout](../directory-layout/directory-layout.md)
 - The sub-idea [Concept Extraction](../concept-extraction/concept-extraction.md)
 - The sub-idea [Principle Synthesis](../principle-synthesis/principle-synthesis.md)
-- The sub-idea [Styles](../styles/styles.md)
-
-## 13. Maturity Level
-
-- [ ] Raw thought
-- [x] Developed idea
-- [ ] Near-concept
 
 ## 14. Notes
 

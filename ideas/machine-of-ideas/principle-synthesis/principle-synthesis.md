@@ -1,11 +1,16 @@
 ---
 id: principle-synthesis
 kind: idea-artifact
+status: release-candidate
 produced-by: machine-of-ideas/idea-capture-agent
+interaction-language: en
+artifact-language: en
 derived-from:
   - ideas/machine-of-ideas/machine-of-ideas.md
   - ideas/machine-of-ideas/concept-extraction/concept-extraction.md
 ---
+
+<a id="principle-synthesis"></a>
 
 # Idea: Principle Synthesis
 
@@ -95,12 +100,6 @@ The principle artifact also needs a stable publication location. For a source id
 - The sub-idea [directory-layout](../directory-layout/directory-layout.md)
 - The working template [.double/templates/machine-of-ideas/principle-template.md](../../../.double/templates/machine-of-ideas/principle-template.md)
 
-## 11. Maturity Level
-
-- [ ] Raw thought
-- [x] Developed idea
-- [ ] Near-concept
-
 ## 12. Notes
 
 A working definition:
@@ -112,19 +111,17 @@ A preliminary structure for a principle artifact:
 ```md
 # Principle Artifact: <Title>
 
-## 1. Source Artifacts
+Idea: [<Root Idea Title>](./<root-idea-id>.md#<root-idea-id>)
 
-- Source idea artifact: `<idea-id>.md`
-- Source concept artifact: `<idea-id>-concepts.md`
-- Published as: `<idea-id>-principles.md`
+## 1. Principle Synthesis Summary
 
-## 2. Principle Synthesis Summary
+## 2. Working Definition of Principle
 
-## 3. Working Definition of Principle
+## 3. Core Principles
 
-## 4. Core Principles
+<a id="<principle-id>"></a>
 
-### Principle: <Principle Name>
+### <principle-id>: <Principle Name>
 
 #### Statement
 
@@ -140,13 +137,11 @@ A preliminary structure for a principle artifact:
 
 #### Questions
 
-## 5. Principle Map
+## 4. Trade-offs and Tensions
 
-## 6. Trade-offs and Tensions
+## 5. Candidate Inputs for Future Stages
 
-## 7. Candidate Inputs for Future Stages
-
-## 8. Rejected or Deferred Candidate Principles
+## 6. Rejected or Deferred Candidate Principles
 ```
 
 This structure should become the basis for refining the working template `principle-template`.

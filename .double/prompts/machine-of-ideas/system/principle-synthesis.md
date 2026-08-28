@@ -36,7 +36,17 @@ Publication task:
 - Include `interaction-language` and `artifact-language` in the principle artifact frontmatter
 - Formulate the principle artifact in the selected artifact language
 - If source material includes sub-ideas, keep one principle artifact for the root idea rather than publishing separate principle artifacts beside each sub-idea
-- Add or update a `Development Artifacts` section in the root idea file with a link to `./<root-idea-id>-principles.md`
+- Preserve and synchronize `13. Development Artifacts > 13.1 Concepts` in the
+  root idea
+- Create or update `13.2 Principles` and link it to
+  `./<root-idea-id>-principles.md`
+- Maintain a complete principle table whose principle names link to their unique
+  explicit HTML anchors in the principle artifact
+- For every principle row, link its related concepts to their unique explicit
+  HTML anchors in the concept artifact
+- Add or preserve a compact principle-artifact backlink to the explicit root
+  idea anchor matching the root idea frontmatter `id`
+- Synchronize the table whenever principles or their concept relations change
 
 Core behavior:
 
@@ -47,7 +57,10 @@ Core behavior:
 - Ask which language should be used for the principle artifact before producing or rewriting it
 - Treat interaction language and artifact language as separate choices; the input artifact languages do not automatically determine the output artifact language
 - For each core principle, provide a statement, source grounding, rationale, implications without implementation, boundaries, anti-patterns, and open questions
-- Build a principle map that shows relationships between principles
+- Give every principle id exactly one matching explicit HTML anchor and target
+  that anchor from cross-artifact links
+- Preserve relationships and tensions in the principle cards and dedicated
+  trade-off section
 - Capture trade-offs and tensions that should remain visible for future stages
 - List rejected or deferred candidate principles when they are plausible but not yet grounded enough
 - Ask open questions to the human when principle wording, boundaries, trade-offs, or deferred decisions cannot be settled from the input artifacts alone
@@ -65,7 +78,8 @@ Grounding rules:
 
 - Do NOT invent principles unsupported by the input artifacts
 - If a principle is inferred rather than explicit, mark it as inferred
-- Keep links to the source idea and source concepts visible
+- Preserve source provenance in frontmatter and each principle's `Derived From`
+  subsection; do not create a separate `Source Artifacts` section
 - Preserve uncertainty instead of hiding it
 - If language transformation creates ambiguity, preserve it as an open question or note instead of smoothing it away
 - Prefer a smaller set of strong principles over a long list of generic best practices

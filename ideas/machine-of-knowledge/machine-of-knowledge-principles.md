@@ -13,35 +13,19 @@ derived-from:
 
 # Principle Artifact: Machine of Knowledge
 
-## 1. Principle Index
+Idea: [Machine of Knowledge](./machine-of-knowledge.md#machine-of-knowledge)
 
-- [`principle-explicit-knowledge-artifact: Preserve Extracted Knowledge as an Explicit Artifact`](#principle-explicit-knowledge-artifact-preserve-extracted-knowledge-as-an-explicit-artifact): Extracted knowledge is preserved as an explicit artifact rather than remaining only in its source or extraction conversation.
-  - [`principle-knowledge-temporality: Preserve Knowledge According to Its Temporality`](#principle-knowledge-temporality-preserve-knowledge-according-to-its-temporality): Every knowledge artifact exposes enough temporal state to distinguish current knowledge from stale knowledge.
-  - [`principle-perpetually-free-double-knowledge: Keep Double Knowledge Free of Charge Permanently`](#principle-perpetually-free-double-knowledge-keep-double-knowledge-free-of-charge-permanently): Knowledge belonging to Double remains available to everyone free of charge for the lifetime of the project.
-- [`principle-operation-artifact-separation: Separate Machine Operation from Produced Knowledge`](#principle-operation-artifact-separation-separate-machine-operation-from-produced-knowledge): Machine operating material and produced knowledge remain conceptually distinct contexts.
-- [`principle-minimum-adequate-structure: Use the Minimum Adequate Knowledge Structure`](#principle-minimum-adequate-structure-use-the-minimum-adequate-knowledge-structure): The machine introduces only the structure required for honest knowledge extraction, preservation, and interpretation.
-
-## 2. Source Artifacts
-
-- Source idea artifact: [`machine-of-knowledge.md`](./machine-of-knowledge.md)
-- Source concept artifact: [`machine-of-knowledge-concepts.md`](./machine-of-knowledge-concepts.md)
-- Root idea artifact: [`machine-of-knowledge.md`](./machine-of-knowledge.md)
-- Root idea directory: `ideas/machine-of-knowledge/`
-- Relevant sub-ideas: none
-- Published as: `machine-of-knowledge-principles.md`
-- Synthesis mode: `editor`
-- Interaction language: Russian
-- Artifact language: English
-
-## 3. Principle Synthesis Summary
+## 1. Principle Synthesis Summary
 
 Machine of Knowledge is governed by a minimal normative structure: extracted knowledge becomes an explicit artifact; every artifact exposes enough temporal state to distinguish current knowledge from stale knowledge; static and dynamic knowledge differ by the relative length of their validity periods; knowledge belonging to Double remains free of charge permanently; operating material remains distinct from produced knowledge; and the machine introduces no structure beyond what honest preservation requires. Together these principles protect explicitness, temporal clarity, universal free access, separation of concerns, and simplicity without prescribing a particular implementation.
 
-## 4. Working Definition of Principle
+## 2. Working Definition of Principle
 
 A principle is a stable normative ground derived from an idea and its conceptual structure. It guides or constrains future decisions, but it is not yet a requirement, task, design decision, implementation step, or generic value statement.
 
-## 5. Core Principles
+## 3. Core Principles
+
+<a id="principle-explicit-knowledge-artifact"></a>
 
 ### principle-explicit-knowledge-artifact: Preserve Extracted Knowledge as an Explicit Artifact
 
@@ -51,7 +35,7 @@ Knowledge extracted by Machine of Knowledge must be preserved as an explicit kno
 
 #### Derived From
 
-- Source concepts: [`concept-knowledge-extraction`](./machine-of-knowledge-concepts.md#concept-knowledge-extraction-knowledge-extraction), [`concept-knowledge-artifact`](./machine-of-knowledge-concepts.md#concept-knowledge-artifact-knowledge-artifact)
+- Source concepts: [`concept-knowledge-extraction`](./machine-of-knowledge-concepts.md#concept-knowledge-extraction), [`concept-knowledge-artifact`](./machine-of-knowledge-concepts.md#concept-knowledge-artifact)
 - Source relationship, boundary, or tension: knowledge extraction produces a persistent knowledge artifact; an artifact is not an unprocessed source or transcript.
 - Source idea support: `Knowledge Extraction -> Knowledge Artifact` and the stated purpose to extract knowledge and save it as an artifact.
 - Explicit or inferred: explicit
@@ -81,6 +65,8 @@ The machine exists to make knowledge explicit and reusable. If the result remain
 #### Questions
 
 
+<a id="principle-knowledge-temporality"></a>
+
 ### principle-knowledge-temporality: Preserve Knowledge According to Its Temporality
 
 #### Statement
@@ -89,7 +75,7 @@ Every knowledge artifact must expose enough temporal state to determine whether 
 
 #### Derived From
 
-- Source concepts: [`concept-knowledge-temporality`](./machine-of-knowledge-concepts.md#concept-knowledge-temporality-knowledge-temporality), [`concept-static-knowledge`](./machine-of-knowledge-concepts.md#concept-static-knowledge-static-knowledge), [`concept-dynamic-knowledge`](./machine-of-knowledge-concepts.md#concept-dynamic-knowledge-dynamic-knowledge), [`concept-knowledge-temporal-state`](./machine-of-knowledge-concepts.md#concept-knowledge-temporal-state-knowledge-temporal-state)
+- Source concepts: [`concept-knowledge-temporality`](./machine-of-knowledge-concepts.md#concept-knowledge-temporality), [`concept-static-knowledge`](./machine-of-knowledge-concepts.md#concept-static-knowledge), [`concept-dynamic-knowledge`](./machine-of-knowledge-concepts.md#concept-dynamic-knowledge), [`concept-knowledge-temporal-state`](./machine-of-knowledge-concepts.md#concept-knowledge-temporal-state)
 - Source relationship, boundary, or tension: all knowledge may become stale; static and dynamic knowledge differ by time-to-live scale rather than by the presence or absence of temporal state.
 - Source idea support: the explicit distinction between static and dynamic knowledge, refined by the clarification that freshness and staleness belong to all knowledge.
 - Explicit or inferred: explicit
@@ -122,6 +108,8 @@ No knowledge is absolutely timeless. Connecting a preserved value to its observa
 #### Questions
 
 
+<a id="principle-perpetually-free-double-knowledge"></a>
+
 ### principle-perpetually-free-double-knowledge: Keep Double Knowledge Free of Charge Permanently
 
 #### Statement
@@ -130,7 +118,7 @@ All knowledge belonging to the Double project must remain available to everyone 
 
 #### Derived From
 
-- Source concept: [`concept-perpetual-freedom-of-double-knowledge`](./machine-of-knowledge-concepts.md#concept-perpetual-freedom-of-double-knowledge-perpetual-freedom-of-double-knowledge)
+- Source concept: [`concept-perpetual-freedom-of-double-knowledge`](./machine-of-knowledge-concepts.md#concept-perpetual-freedom-of-double-knowledge)
 - Source relationship, boundary, or tension: the freedom condition applies to both static and dynamic knowledge and is independent of age or commercial value; non-knowledge artifacts may follow different access models.
 - Source idea support: the root idea's permanent free-of-charge condition, aligned with the foundational statement in [`Double.md`](../../Double.md).
 - Explicit or inferred: explicit
@@ -160,6 +148,8 @@ Permanent free access makes knowledge an enduring shared foundation of Double ra
 #### Questions
 
 
+<a id="principle-operation-artifact-separation"></a>
+
 ### principle-operation-artifact-separation: Separate Machine Operation from Produced Knowledge
 
 #### Statement
@@ -168,7 +158,7 @@ The operating material of Machine of Knowledge and the knowledge artifacts it pr
 
 #### Derived From
 
-- Source concepts: [`concept-knowledge-artifact`](./machine-of-knowledge-concepts.md#concept-knowledge-artifact-knowledge-artifact), with the supporting structural terms `.double/` and `knowledge/`
+- Source concepts: [`concept-knowledge-artifact`](./machine-of-knowledge-concepts.md#concept-knowledge-artifact), with the supporting structural terms `.double/` and `knowledge/`
 - Source relationship, boundary, or tension: the knowledge artifact is not a workflow, prompt, role, or other machine operating material.
 - Source idea support: the machine's working directory belongs under `.double/`, while produced knowledge belongs under `knowledge/`.
 - Explicit or inferred: inferred from an explicit structural distinction
@@ -198,6 +188,8 @@ Separating how the machine operates from what it knows prevents internal process
 #### Questions
 
 
+<a id="principle-minimum-adequate-structure"></a>
+
 ### principle-minimum-adequate-structure: Use the Minimum Adequate Knowledge Structure
 
 #### Statement
@@ -206,7 +198,7 @@ Machine of Knowledge should introduce only the structure required to extract, pr
 
 #### Derived From
 
-- Source concepts: [`concept-knowledge-artifact`](./machine-of-knowledge-concepts.md#concept-knowledge-artifact-knowledge-artifact), [`concept-knowledge-temporality`](./machine-of-knowledge-concepts.md#concept-knowledge-temporality-knowledge-temporality)
+- Source concepts: [`concept-knowledge-artifact`](./machine-of-knowledge-concepts.md#concept-knowledge-artifact), [`concept-knowledge-temporality`](./machine-of-knowledge-concepts.md#concept-knowledge-temporality)
 - Source relationship, boundary, or tension: every knowledge artifact needs temporal state, but only the information necessary to interpret freshness and support justified revalidation should be retained.
 - Source idea support: repeated instruction that the machine remain simple and straightforward and avoid complex hierarchy, lifecycle, or processing architecture.
 - Explicit or inferred: explicit
@@ -238,14 +230,14 @@ The value of the machine comes from dependable knowledge preservation, not from 
 #### Questions
 
 
-## 6. Trade-offs and Tensions
+## 4. Trade-offs and Tensions
 
 - **Simplicity versus temporal completeness:** all knowledge needs enough temporal state to expose freshness, but this does not justify adding retrieval or refresh machinery where observation time and validity period are sufficient.
 - **Permanent free knowledge versus paid artifacts:** Double may monetize other artifacts, but future stages must preserve a clear boundary so that knowledge is not moved behind paid access through relabeling.
 - **Operational separation versus traceability:** operating material and knowledge artifacts should remain distinct, while still allowing links that explain origin and maintenance.
 - **Preserved usability versus current truth:** a stale value remains interpretable knowledge, but its preservation must not imply that it is still current beyond its validity period.
 
-## 7. Candidate Inputs for Future Stages
+## 5. Candidate Inputs for Future Stages
 
 - A future knowledge artifact template can be evaluated against explicitness, temporality, and minimum adequate structure.
 - A future common temporal-state form can be evaluated by whether value, observation time, and validity period remain connected and understandable for both static and dynamic knowledge.
@@ -254,7 +246,7 @@ The value of the machine comes from dependable knowledge preservation, not from 
 - Future Machine of Knowledge workflow material can be evaluated by whether it stays within `.double/` and produces knowledge artifacts in the `knowledge/` project context.
 - Validation can check that future structures implement these distinctions without introducing unsupported hierarchy or lifecycle concepts.
 
-## 8. Rejected or Deferred Candidate Principles
+## 6. Rejected or Deferred Candidate Principles
 
 - **Automatic refresh of knowledge** is deferred because temporal state does not require retrieval or revalidation to be automatic.
 - **Universal open licensing** is deferred because free-of-charge access does not yet define modification, redistribution, copyright, or license terms.

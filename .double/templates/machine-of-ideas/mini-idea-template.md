@@ -21,6 +21,7 @@ Use this template when the user says they are working on a `mini-idea` or `sub-i
 ---
 id: <mini-idea-artifact-id>
 kind: mini-idea-artifact
+status: draft
 produced-by: idea-capture-agent
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
@@ -34,6 +35,8 @@ derived-from:
   - <parent-idea-or-conversation>
 ---
 
+<a id="<mini-idea-artifact-id>"></a>
+
 # Mini-Idea: <Short title>
 
 ## 1. Summary
@@ -43,7 +46,7 @@ State how it relates to the parent idea.
 
 ## 2. Main Idea Context
 
-- Main idea: `<main-idea-id-or-path>`
+- Main idea: [`<parent-idea-id>`](<parent-idea-artifact-path>#<parent-idea-id>)
 - What part of the main idea does this mini-idea clarify, extend, or correct?
 - Why does it still belong inside the main idea?
 
@@ -89,13 +92,7 @@ If the mini-idea significantly stops matching the meaning of the main idea, stop
 - What is outside this mini-idea?
 - What should remain in the parent idea or in a separate future idea?
 
-## 9. Maturity Level
-
-- [ ] Raw thought
-- [ ] Developed mini-idea
-- [ ] Ready for parent integration
-
-## 10. Parent Integration
+## 9. Parent Integration
 
 - Parent concept integration: `[pending]`
 - Parent principle integration: `[pending]`

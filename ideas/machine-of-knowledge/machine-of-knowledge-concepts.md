@@ -14,37 +14,19 @@ derived-from:
 
 # Concept Artifact: Machine of Knowledge
 
-## 1. Concept Index
+Idea: [Machine of Knowledge](./machine-of-knowledge.md#machine-of-knowledge)
 
-- [`concept-knowledge-extraction: Knowledge Extraction`](#concept-knowledge-extraction-knowledge-extraction): The movement from available material to explicit knowledge.
-- [`concept-knowledge-artifact: Knowledge Artifact`](#concept-knowledge-artifact-knowledge-artifact): The persistent form in which extracted knowledge is preserved.
-- [`concept-knowledge-temporality: Knowledge Temporality`](#concept-knowledge-temporality-knowledge-temporality): The inherent temporal character of knowledge and its practical classification by rate of change.
-  - [`concept-static-knowledge: Static Knowledge`](#concept-static-knowledge-static-knowledge): Knowledge whose meaning changes so slowly that it is deliberately treated as unchanged.
-  - [`concept-dynamic-knowledge: Dynamic Knowledge`](#concept-dynamic-knowledge-dynamic-knowledge): Knowledge whose meaning changes often enough that its current value must be distinguished from earlier values.
-  - [`concept-knowledge-temporal-state: Knowledge Temporal State`](#concept-knowledge-temporal-state-knowledge-temporal-state): The observation time and validity period that make the freshness or staleness of any knowledge explicit.
-- [`concept-perpetual-freedom-of-double-knowledge: Perpetual Freedom of Double Knowledge`](#concept-perpetual-freedom-of-double-knowledge-perpetual-freedom-of-double-knowledge): Knowledge belonging to the Double project remains freely accessible to everyone throughout the project's entire lifetime.
-
-## 2. Source Idea
-
-- Source scope: `root idea`
-- Source title: `Machine of Knowledge`
-- Root idea artifact: [`machine-of-knowledge.md`](./machine-of-knowledge.md)
-- Root idea directory: `ideas/machine-of-knowledge/`
-- Relevant sub-ideas: none
-- Published as: `machine-of-knowledge-concepts.md`
-- Extraction mode: `strict-research`
-- Interaction language: Russian
-- Artifact language: English
-
-## 3. Conceptual Summary
+## 1. Conceptual Summary
 
 Machine of Knowledge is organized around a short semantic movement: material is interpreted as knowledge, and that knowledge is preserved as an artifact. All knowledge is temporally situated and therefore has a temporal state through which its freshness or staleness can be understood. Knowledge whose validity period is very long is classified as static, while knowledge with a short validity period is classified as dynamic. The difference is one of temporal scale rather than the presence or absence of expiration. Independently of this temporal classification, knowledge belonging to the Double project has a permanent freedom condition: it remains freely accessible to everyone for the entire lifetime of the project.
 
-## 4. Working Definition of Concept
+## 2. Working Definition of Concept
 
 A concept is a stable meaning unit of an idea. It may describe an entity, relationship, process, distinction, tension, or interpretive frame. It is not yet a principle, requirement, task, or design decision.
 
-## 5. Core Concepts
+## 3. Core Concepts
+
+<a id="concept-knowledge-extraction"></a>
 
 ### concept-knowledge-extraction: Knowledge Extraction
 
@@ -65,8 +47,8 @@ Knowledge extraction is the interpretive movement through which available materi
 
 #### Related Concepts
 
-- Produces: [`concept-knowledge-artifact`](#concept-knowledge-artifact-knowledge-artifact): extracted knowledge is preserved in artifact form.
-- Classified through: [`concept-knowledge-temporality`](#concept-knowledge-temporality-knowledge-temporality): the nature of the extracted knowledge determines how it is preserved.
+- Produces: [`concept-knowledge-artifact`](#concept-knowledge-artifact): extracted knowledge is preserved in artifact form.
+- Classified through: [`concept-knowledge-temporality`](#concept-knowledge-temporality): the nature of the extracted knowledge determines how it is preserved.
 
 #### Boundaries
 
@@ -76,6 +58,8 @@ Knowledge extraction is the interpretive movement through which available materi
 
 #### Questions
 
+
+<a id="concept-knowledge-artifact"></a>
 
 ### concept-knowledge-artifact: Knowledge Artifact
 
@@ -97,9 +81,9 @@ A knowledge artifact is the persistent, explicit form in which a piece of extrac
 
 #### Related Concepts
 
-- Produced by: [`concept-knowledge-extraction`](#concept-knowledge-extraction-knowledge-extraction).
-- Characterized by: [`concept-knowledge-temporality`](#concept-knowledge-temporality-knowledge-temporality).
-- Carries: [`concept-knowledge-temporal-state`](#concept-knowledge-temporal-state-knowledge-temporal-state), because the represented knowledge may become stale regardless of whether it is classified as static or dynamic.
+- Produced by: [`concept-knowledge-extraction`](#concept-knowledge-extraction).
+- Characterized by: [`concept-knowledge-temporality`](#concept-knowledge-temporality).
+- Carries: [`concept-knowledge-temporal-state`](#concept-knowledge-temporal-state), because the represented knowledge may become stale regardless of whether it is classified as static or dynamic.
 
 #### Boundaries
 
@@ -109,6 +93,8 @@ A knowledge artifact is the persistent, explicit form in which a piece of extrac
 
 #### Questions
 
+
+<a id="concept-knowledge-temporality"></a>
 
 ### concept-knowledge-temporality: Knowledge Temporality
 
@@ -131,10 +117,10 @@ Knowledge temporality is the inherent condition that every piece of knowledge ex
 
 #### Related Concepts
 
-- Classifies: [`concept-knowledge-artifact`](#concept-knowledge-artifact-knowledge-artifact).
-- Specializes into: [`concept-static-knowledge`](#concept-static-knowledge-static-knowledge) and [`concept-dynamic-knowledge`](#concept-dynamic-knowledge-dynamic-knowledge).
-- Expressed through: [`concept-knowledge-temporal-state`](#concept-knowledge-temporal-state-knowledge-temporal-state), which makes freshness and staleness explicit for every knowledge artifact.
-- Informs: [`concept-knowledge-extraction`](#concept-knowledge-extraction-knowledge-extraction): extraction must recognize whether the resulting knowledge is static or dynamic.
+- Classifies: [`concept-knowledge-artifact`](#concept-knowledge-artifact).
+- Specializes into: [`concept-static-knowledge`](#concept-static-knowledge) and [`concept-dynamic-knowledge`](#concept-dynamic-knowledge).
+- Expressed through: [`concept-knowledge-temporal-state`](#concept-knowledge-temporal-state), which makes freshness and staleness explicit for every knowledge artifact.
+- Informs: [`concept-knowledge-extraction`](#concept-knowledge-extraction): extraction must recognize whether the resulting knowledge is static or dynamic.
 
 #### Boundaries
 
@@ -145,6 +131,8 @@ Knowledge temporality is the inherent condition that every piece of knowledge ex
 
 #### Questions
 
+
+<a id="concept-static-knowledge"></a>
 
 ### concept-static-knowledge: Static Knowledge
 
@@ -165,10 +153,10 @@ Static knowledge is knowledge with a validity period long enough that Machine of
 
 #### Related Concepts
 
-- Specializes: [`concept-knowledge-temporality`](#concept-knowledge-temporality-knowledge-temporality).
-- Characterizes: [`concept-knowledge-artifact`](#concept-knowledge-artifact-knowledge-artifact) when its preserved meaning changes only over a very long period.
-- Contrasts with: [`concept-dynamic-knowledge`](#concept-dynamic-knowledge-dynamic-knowledge), whose shorter validity period makes its temporal state operationally significant sooner.
-- Has: [`concept-knowledge-temporal-state`](#concept-knowledge-temporal-state-knowledge-temporal-state) with a comparatively long validity period.
+- Specializes: [`concept-knowledge-temporality`](#concept-knowledge-temporality).
+- Characterizes: [`concept-knowledge-artifact`](#concept-knowledge-artifact) when its preserved meaning changes only over a very long period.
+- Contrasts with: [`concept-dynamic-knowledge`](#concept-dynamic-knowledge), whose shorter validity period makes its temporal state operationally significant sooner.
+- Has: [`concept-knowledge-temporal-state`](#concept-knowledge-temporal-state) with a comparatively long validity period.
 
 #### Boundaries
 
@@ -178,6 +166,8 @@ Static knowledge is knowledge with a validity period long enough that Machine of
 
 #### Questions
 
+
+<a id="concept-dynamic-knowledge"></a>
 
 ### concept-dynamic-knowledge: Dynamic Knowledge
 
@@ -198,9 +188,9 @@ Dynamic knowledge is knowledge with a short validity period, such as days or min
 
 #### Related Concepts
 
-- Specializes: [`concept-knowledge-temporality`](#concept-knowledge-temporality-knowledge-temporality).
-- Contrasts with: [`concept-static-knowledge`](#concept-static-knowledge-static-knowledge), which is deliberately treated as unchanged.
-- Has: [`concept-knowledge-temporal-state`](#concept-knowledge-temporal-state-knowledge-temporal-state) with a comparatively short validity period.
+- Specializes: [`concept-knowledge-temporality`](#concept-knowledge-temporality).
+- Contrasts with: [`concept-static-knowledge`](#concept-static-knowledge), which is deliberately treated as unchanged.
+- Has: [`concept-knowledge-temporal-state`](#concept-knowledge-temporal-state) with a comparatively short validity period.
 
 #### Boundaries
 
@@ -210,6 +200,8 @@ Dynamic knowledge is knowledge with a short validity period, such as days or min
 
 #### Questions
 
+
+<a id="concept-knowledge-temporal-state"></a>
 
 ### concept-knowledge-temporal-state: Knowledge Temporal State
 
@@ -231,10 +223,10 @@ Knowledge temporal state is the freshness-bearing representation shared by all k
 
 #### Related Concepts
 
-- Expresses: [`concept-knowledge-temporality`](#concept-knowledge-temporality-knowledge-temporality) for an individual piece of knowledge.
-- Applies to: [`concept-knowledge-artifact`](#concept-knowledge-artifact-knowledge-artifact) regardless of whether it represents static or dynamic knowledge.
-- Differentiates: [`concept-static-knowledge`](#concept-static-knowledge-static-knowledge) and [`concept-dynamic-knowledge`](#concept-dynamic-knowledge-dynamic-knowledge) through the relative length of their validity periods.
-- Supports: [`concept-knowledge-extraction`](#concept-knowledge-extraction-knowledge-extraction) by keeping extracted knowledge temporally interpretable after initial capture.
+- Expresses: [`concept-knowledge-temporality`](#concept-knowledge-temporality) for an individual piece of knowledge.
+- Applies to: [`concept-knowledge-artifact`](#concept-knowledge-artifact) regardless of whether it represents static or dynamic knowledge.
+- Differentiates: [`concept-static-knowledge`](#concept-static-knowledge) and [`concept-dynamic-knowledge`](#concept-dynamic-knowledge) through the relative length of their validity periods.
+- Supports: [`concept-knowledge-extraction`](#concept-knowledge-extraction) by keeping extracted knowledge temporally interpretable after initial capture.
 
 #### Boundaries
 
@@ -245,6 +237,8 @@ Knowledge temporal state is the freshness-bearing representation shared by all k
 
 #### Questions
 
+
+<a id="concept-perpetual-freedom-of-double-knowledge"></a>
 
 ### concept-perpetual-freedom-of-double-knowledge: Perpetual Freedom of Double Knowledge
 
@@ -265,8 +259,8 @@ Perpetual freedom of Double knowledge is the mandatory and irreversible conditio
 
 #### Related Concepts
 
-- Constrains: [`concept-knowledge-artifact`](#concept-knowledge-artifact-knowledge-artifact): a knowledge artifact that belongs to the Double project must remain freely accessible.
-- Applies across: [`concept-knowledge-temporality`](#concept-knowledge-temporality-knowledge-temporality): neither static nor dynamic status changes the freedom condition.
+- Constrains: [`concept-knowledge-artifact`](#concept-knowledge-artifact): a knowledge artifact that belongs to the Double project must remain freely accessible.
+- Applies across: [`concept-knowledge-temporality`](#concept-knowledge-temporality): neither static nor dynamic status changes the freedom condition.
 - Aligned with project framing: [`Double.md`](../../Double.md) states that knowledge accumulated within Double is always available to everyone free of charge, while other artifacts may be restricted or available through a paid subscription.
 
 #### Boundaries
@@ -279,7 +273,7 @@ Perpetual freedom of Double knowledge is the mandatory and irreversible conditio
 #### Questions
 
 
-## 6. Terms and Non-Concepts
+## 4. Terms and Non-Concepts
 
 - **Machine of Knowledge** is the name of the machine that performs the extraction and preservation movement, not a separate conceptual unit inside that movement.
 - **Machine of Ideas** is the inherited conceptual foundation and related machine. Its common concepts are referenced rather than re-extracted here.
@@ -289,7 +283,7 @@ Perpetual freedom of Double knowledge is the mandatory and irreversible conditio
 - **knowledge artifact template** is a future artifact-form definition. The idea establishes its need but does not yet define its fields.
 - **Markdown** is the expected representation format inherited from Double, not a conceptual distinction specific to this idea.
 
-## 7. Candidate Inputs for Principle Synthesis
+## 5. Candidate Inputs for Principle Synthesis
 
 - The relationship between knowledge extraction and knowledge artifacts may support a principle that extracted knowledge should become explicit and persistent.
 - The inherent temporality of knowledge may support a principle that no knowledge should be understood as absolutely timeless.

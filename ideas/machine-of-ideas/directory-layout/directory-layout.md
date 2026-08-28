@@ -1,10 +1,15 @@
 ---
 id: directory-layout
 kind: idea-artifact
+status: release-candidate
 produced-by: machine-of-ideas/idea-capture-agent
+interaction-language: en
+artifact-language: en
 derived-from:
   - ideas/machine-of-ideas/machine-of-ideas.md
 ---
+
+<a id="directory-layout"></a>
 
 # Idea: Directory Layout
 
@@ -112,12 +117,6 @@ The value of the directory layout is therefore not only technical. It expresses 
 
 - The root idea [machine-of-ideas](../machine-of-ideas.md)
 - The idea rules in [ideas.md](../../ideas.md)
-
-## 11. Maturity Level
-
-- [ ] Raw thought
-- [x] Developed idea
-- [ ] Near-concept
 
 ## 12. Notes
 

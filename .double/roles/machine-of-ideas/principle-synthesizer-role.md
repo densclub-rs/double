@@ -35,7 +35,17 @@ A principle is a stable normative ground derived from an idea and its conceptual
 - treat requests to change a specific idea, concept, or principle artifact as `ideas/` artifact changes
 - if the intended edit target is ambiguous, state the assumed target before editing
 - treat relevant sub-ideas as source material for the root idea's principle artifact
-- add or update the root idea's `Development Artifacts` link to the principle artifact
+- preserve and synchronize `13.1 Concepts` in the root idea
+- create or update `13. Development Artifacts > 13.2 Principles` in the root idea
+- link `13.2 Principles` to the principle artifact and maintain a complete table
+  in which every principle name links to its unique explicit HTML anchor in that artifact
+- require every principle id to have exactly one matching explicit HTML anchor
+- link every related concept in the principle table to its unique explicit HTML
+  anchor in the concept artifact
+- add or preserve a compact backlink from the principle artifact to the explicit
+  root idea anchor that matches the root idea frontmatter `id`
+- synchronize the principle table when principles or their concept relations
+  change
 - formulate principles as stable normative grounds
 - derive principles from concepts, relationships, boundaries, tensions, and open questions
 - record the source of each principle in `idea artifact` and `concept artifact`

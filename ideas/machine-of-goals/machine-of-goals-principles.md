@@ -12,32 +12,24 @@ derived-from:
 
 # Principle Artifact: Machine of Goals
 
-## 1. Source Artifacts
+Idea: [Machine of Goals](./machine-of-goals.md#machine-of-goals)
 
-- Source idea artifact: `ideas/machine-of-goals/machine-of-goals.md`
-- Source concept artifact: `ideas/machine-of-goals/machine-of-goals-concepts.md`
-- Root idea artifact: `ideas/machine-of-goals/machine-of-goals.md`
-- Root idea directory: `ideas/machine-of-goals`
-- Relevant sub-ideas: none
-- Published as: `machine-of-goals-principles.md`
-- Synthesis mode: `strict-research`
-- Interaction language: `English`
-- Artifact language: `English`
-
-## 2. Principle Synthesis Summary
+## 1. Principle Synthesis Summary
 
 Machine of Goals is built around a normative transition from intention to verifiable action. A goal should first become a verifiable target state, then be connected with the initial state through an understandable plan graph, and only after that move toward algorithmization, automation, or a collapsed executable form.
 
 The main tension of the idea is that the machine should strive toward automatic execution of plans, but it should not turn into an opaque automaton. Therefore, automation is acceptable only while preserving understandability, explanation, dry run, user choice of execution boundaries, the connection between plan and goal, and the working context of realization.
 
-## 3. Working Definition of Principle
+## 2. Working Definition of Principle
 
 A principle is a stable normative foundation derived from an idea and its conceptual structure.
 It guides or constrains future decisions, but is not yet a requirement, task, design decision, implementation step, or generic value statement.
 
-## 4. Core Principles
+## 3. Core Principles
 
-### Principle: Goal Verifiability Before Planning
+<a id="principle-goal-verifiability-before-planning"></a>
+
+### principle-goal-verifiability-before-planning: Goal Verifiability Before Planning
 
 #### Statement
 
@@ -45,7 +37,7 @@ Machine of Goals should begin with the goal as a verifiable target state, not wi
 
 #### Derived From
 
-- Source concept(s): `Goal as Verifiable Target State`, `Success Criteria`, `Initial State and Target State`
+- Source concept(s): [Goal as Verifiable Target State](./machine-of-goals-concepts.md#concept-goal-as-verifiable-target-state), [Success Criteria](./machine-of-goals-concepts.md#concept-success-criteria), [Initial State and Target State](./machine-of-goals-concepts.md#concept-initial-state-and-target-state)
 - Source relationship, boundary, or tension: a goal becomes manageable only through comparison of the result with the original specification and success criteria
 - Source idea support: `Summary`, `Raw Description`, `Assumptions`
 - Explicit or inferred: explicit
@@ -77,7 +69,9 @@ If a goal is not represented as a verifiable state, the machine cannot honestly 
 
 - None.
 
-### Principle: Plan as an Understandable Transition Graph
+<a id="principle-plan-as-an-understandable-transition-graph"></a>
+
+### principle-plan-as-an-understandable-transition-graph: Plan as an Understandable Transition Graph
 
 #### Statement
 
@@ -85,7 +79,7 @@ A plan should be an understandable graph of transition from the initial state to
 
 #### Derived From
 
-- Source concept(s): `Plan as Transition Model`, `Initial State and Target State`, `Subgoal and Partial Achievement`
+- Source concept(s): [Plan as Transition Model](./machine-of-goals-concepts.md#concept-plan-as-transition-model), [Initial State and Target State](./machine-of-goals-concepts.md#concept-initial-state-and-target-state), [Subgoal and Partial Achievement](./machine-of-goals-concepts.md#concept-subgoal-and-partial-achievement)
 - Source relationship, boundary, or tension: the plan is the bridge between goal and executable action, but is not equal to an algorithm
 - Source idea support: `Raw Description`, `Assumptions`, `Examples / Scenarios`
 - Explicit or inferred: explicit
@@ -117,7 +111,9 @@ The understandability of the plan is the minimal contract for moving to realizat
 
 - None.
 
-### Principle: Goal and Plan Must Not Be Separated
+<a id="principle-goal-and-plan-must-not-be-separated"></a>
+
+### principle-goal-and-plan-must-not-be-separated: Goal and Plan Must Not Be Separated
 
 #### Statement
 
@@ -125,7 +121,7 @@ A plan should remain connected to the goal for which it was built; reuse is poss
 
 #### Derived From
 
-- Source concept(s): `Plan Exchange`, `Goal Artifact Context`, `Plan as Transition Model`
+- Source concept(s): [Plan Exchange](./machine-of-goals-concepts.md#concept-plan-exchange), [Goal Artifact Context](./machine-of-goals-concepts.md#concept-goal-artifact-context), [Plan as Transition Model](./machine-of-goals-concepts.md#concept-plan-as-transition-model)
 - Source relationship, boundary, or tension: plan exchange creates value, but the plan is not an independent universal mechanism
 - Source idea support: `Raw Description`, `Signals of Value`, `Notes`
 - Explicit or inferred: explicit
@@ -157,7 +153,9 @@ Machine of Goals strives toward reuse of successful ways of achievement, but the
 
 - None.
 
-### Principle: Automation Under User Control
+<a id="principle-automation-under-user-control"></a>
+
+### principle-automation-under-user-control: Automation Under User Control
 
 #### Statement
 
@@ -165,7 +163,7 @@ Machine of Goals should strive toward automatic plan execution, but should ask t
 
 #### Derived From
 
-- Source concept(s): `Interactive and Automatic Execution`, `Plan Explanation and Control`, `Executable Collapsed Plan`
+- Source concept(s): [Interactive and Automatic Execution](./machine-of-goals-concepts.md#concept-interactive-and-automatic-execution), [Plan Explanation and Control](./machine-of-goals-concepts.md#concept-plan-explanation-and-control), [Executable Collapsed Plan](./machine-of-goals-concepts.md#concept-executable-collapsed-plan)
 - Source relationship, boundary, or tension: automation is valuable, but should not cancel control, explanation, and the possibility of stopping
 - Source idea support: `Raw Description`, `Assumptions`, `Signals of Value`
 - Explicit or inferred: explicit
@@ -197,7 +195,9 @@ The value of Machine of Goals is that a plan can reach an executable mechanism. 
 
 - None.
 
-### Principle: Explanation Before Execution
+<a id="principle-explanation-before-execution"></a>
+
+### principle-explanation-before-execution: Explanation Before Execution
 
 #### Statement
 
@@ -205,7 +205,7 @@ Before automatic or agentic execution, the plan should be explained through the 
 
 #### Derived From
 
-- Source concept(s): `Plan Explanation and Control`, `Plan as Transition Model`, `Interactive and Automatic Execution`
+- Source concept(s): [Plan Explanation and Control](./machine-of-goals-concepts.md#concept-plan-explanation-and-control), [Plan as Transition Model](./machine-of-goals-concepts.md#concept-plan-as-transition-model), [Interactive and Automatic Execution](./machine-of-goals-concepts.md#concept-interactive-and-automatic-execution)
 - Source relationship, boundary, or tension: execution should be controllable, stoppable, and explainable, especially under automation
 - Source idea support: `Raw Description`, `Examples / Scenarios`, `Signals of Value`
 - Explicit or inferred: explicit
@@ -237,7 +237,9 @@ Explanation keeps Machine of Goals away from blind automation. If the agent cann
 
 - None.
 
-### Principle: Plan Is Project, Algorithm Is Realization
+<a id="principle-plan-is-project-algorithm-is-realization"></a>
+
+### principle-plan-is-project-algorithm-is-realization: Plan Is Project, Algorithm Is Realization
 
 #### Statement
 
@@ -245,7 +247,7 @@ Machine of Goals should distinguish the plan as the project of achieving the goa
 
 #### Derived From
 
-- Source concept(s): `Plan Algorithmization`, `Goal Artifact Context`, `Executable Collapsed Plan`
+- Source concept(s): [Plan Algorithmization](./machine-of-goals-concepts.md#concept-plan-algorithmization), [Goal Artifact Context](./machine-of-goals-concepts.md#concept-goal-artifact-context), [Executable Collapsed Plan](./machine-of-goals-concepts.md#concept-executable-collapsed-plan)
 - Source relationship, boundary, or tension: a plan may be sufficiently explainable, but becomes an algorithm only as a realized form
 - Source idea support: `Raw Description`, `Assumptions`, `Notes`
 - Explicit or inferred: explicit
@@ -277,7 +279,9 @@ The distinction between plan and algorithm prevents thinking about goal achievem
 
 - None.
 
-### Principle: Collapsing Format Should Follow Goal Type
+<a id="principle-collapsing-format-should-follow-goal-type"></a>
+
+### principle-collapsing-format-should-follow-goal-type: Collapsing Format Should Follow Goal Type
 
 #### Statement
 
@@ -285,7 +289,7 @@ A collapsed plan should receive its primary format according to the goal type, a
 
 #### Derived From
 
-- Source concept(s): `Executable Collapsed Plan`, `Goal as Verifiable Target State`, `Goal Artifact Context`
+- Source concept(s): [Executable Collapsed Plan](./machine-of-goals-concepts.md#concept-executable-collapsed-plan), [Goal as Verifiable Target State](./machine-of-goals-concepts.md#concept-goal-as-verifiable-target-state), [Goal Artifact Context](./machine-of-goals-concepts.md#concept-goal-artifact-context)
 - Source relationship, boundary, or tension: Double should not have a single universal collapsed-plan format
 - Source idea support: `Raw Description`, `Assumptions`, `Signals of Value`
 - Explicit or inferred: explicit
@@ -317,7 +321,9 @@ Goals differ by execution environment. For a computational environment, the natu
 
 - None.
 
-### Principle: Subgoal as Its Own Context
+<a id="principle-subgoal-as-its-own-context"></a>
+
+### principle-subgoal-as-its-own-context: Subgoal as Its Own Context
 
 #### Statement
 
@@ -325,7 +331,7 @@ A stable subgoal should be represented as a separate catalog with its own subpla
 
 #### Derived From
 
-- Source concept(s): `Subgoal and Partial Achievement`, `Goal Artifact Context`, `Plan Exchange`
+- Source concept(s): [Subgoal and Partial Achievement](./machine-of-goals-concepts.md#concept-subgoal-and-partial-achievement), [Goal Artifact Context](./machine-of-goals-concepts.md#concept-goal-artifact-context), [Plan Exchange](./machine-of-goals-concepts.md#concept-plan-exchange)
 - Source relationship, boundary, or tension: a subgoal is part of the parent goal, but may have its own inputs, outputs, and subplan
 - Source idea support: `Raw Description`, `Assumptions`, `Notes`
 - Explicit or inferred: explicit
@@ -357,7 +363,9 @@ Subgoals make it possible to work with goals that cannot be achieved through one
 
 - None.
 
-### Principle: Cost Should Accumulate From Execution
+<a id="principle-cost-should-accumulate-from-execution"></a>
+
+### principle-cost-should-accumulate-from-execution: Cost Should Accumulate From Execution
 
 #### Statement
 
@@ -365,7 +373,7 @@ Machine of Goals should evaluate plan cost through basic metrics of stage execut
 
 #### Derived From
 
-- Source concept(s): `Plan Cost and Efficiency`, `Plan as Transition Model`, `Plan Exchange`
+- Source concept(s): [Plan Cost and Efficiency](./machine-of-goals-concepts.md#concept-plan-cost-and-efficiency), [Plan as Transition Model](./machine-of-goals-concepts.md#concept-plan-as-transition-model), [Plan Exchange](./machine-of-goals-concepts.md#concept-plan-exchange)
 - Source relationship, boundary, or tension: plans should be comparable, but cost is not reducible to money or a universal score
 - Source idea support: `Raw Description`, `Assumptions`, `Examples / Scenarios`
 - Explicit or inferred: explicit
@@ -397,30 +405,7 @@ Plan comparison requires measurable grounds. Basic metrics - the number of succe
 
 - None.
 
-## 5. Principle Map
-
-```text
-Goal Verifiability Before Planning
-  -> Plan as an Understandable Transition Graph
-       -> Subgoal as Its Own Context
-       -> Cost Should Accumulate From Execution
-       -> Plan Is Project, Algorithm Is Realization
-            -> Explanation Before Execution
-            -> Automation Under User Control
-            -> Collapsing Format Should Follow Goal Type
-                 -> Goal and Plan Must Not Be Separated
-```
-
-- Goal verifiability provides the foundation for planning.
-- An understandable transition graph connects the goal with action.
-- Subgoals structure complex plans and preserve repeatable fragments in their own context.
-- Cost metrics make it possible to compare plans on the basis of execution experience.
-- Algorithmization begins where the plan as project receives realization in a working catalog.
-- Explanation and dry run keep automation under control.
-- The collapsing format depends on the goal type.
-- Exchange and reuse are acceptable only without separating the plan from the goal context.
-
-## 6. Trade-offs and Tensions
+## 4. Trade-offs and Tensions
 
 - `Automation` vs `user control`: the machine should strive toward automatic execution, but each launch requires automation boundaries selected by the user.
 - `Plan understandability` vs `plan incompleteness`: a plan may start incomplete if it preserves an understandable transition, but too weak an understanding blocks controlled realization.
@@ -428,7 +413,7 @@ Goal Verifiability Before Planning
 - `Unified artifact order` vs `domain-dependent formats`: the goal catalog should be the structural anchor, but collapsed forms depend on the type of goal.
 - `Execution metrics` vs `domain-specific costs`: shared metrics are needed for comparison, but they should not displace the specific costs of a concrete goal.
 
-## 7. Candidate Inputs for Future Stages
+## 5. Candidate Inputs for Future Stages
 
 - Design the Machine of Goals workflow around the transition `Goal Capture -> Path Discovery -> Plan Synthesis -> Plan Automation`.
 - Define the goal artifact contract: target state, initial state, success criteria, constraints, realization working catalog.
@@ -439,7 +424,7 @@ Goal Verifiability Before Planning
 - Define the mapping from goal types to collapsed-plan formats: scripts, SDD, Markdown export, workflow, agent runbook.
 - Define rules for linking the goal catalog and the realization working catalog.
 
-## 8. Rejected or Deferred Candidate Principles
+## 6. Rejected or Deferred Candidate Principles
 
 - `All goals should be fully automatable`: rejected, because the source explicitly preserves manual, interactive, and partially automatic execution.
 - `Double should have one unified collapsed-plan format`: rejected, because the format depends on the goal type and achievement environment.

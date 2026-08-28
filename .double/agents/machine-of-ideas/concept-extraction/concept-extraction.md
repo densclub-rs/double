@@ -60,8 +60,15 @@ Optional source material:
 - publish the output in the same directory as the root idea artifact
 - name the file `<root-idea-id>-concepts.md`, where `<root-idea-id>` is the root idea file basename
 - when the input includes sub-ideas, treat them as source material for the root idea's concept artifact rather than publishing separate stage artifacts beside each sub-idea
-- after creating or updating the artifact, add or update a `Development Artifacts` section in the root idea file
-- the root idea link should point to `./<root-idea-id>-concepts.md`
+- after creating or updating the artifact, create or update
+  `13. Development Artifacts > 13.1 Concepts` in the root idea
+- link the subsection to `./<root-idea-id>-concepts.md` and maintain a complete
+  table whose concept names link to unique explicit HTML anchors in the artifact
+- require every concept id to have exactly one matching explicit HTML anchor
+- add or preserve a compact backlink to the explicit root idea anchor matching
+  the root idea frontmatter `id`
+- synchronize the concept table when concepts are added, removed, renamed, or
+  revised
 
 ## Supported Modes
 
@@ -91,7 +98,7 @@ Optional source material:
 - formulate the concept artifact in the selected artifact language
 - distinguish concepts from terms, entities, principles, requirements, tasks, and design decisions
 - describe each core concept with definition, source, role, relations, boundaries, and open questions
-- build a conceptual map of relationships between core concepts
+- describe relationships between core concepts inside their concept cards
 - record important terms, entities, and labels that are not core concepts
 - ask open questions when concept boundaries or relationships need human clarification
 - record each concept-level open question under the `Questions` subsection of the concept it belongs to

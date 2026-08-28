@@ -117,14 +117,25 @@ If the user does not explicitly identify the idea target, the system is not cons
 
 ## State Inference from Idea File
 
-If the agent starts from a main idea file, it should inspect the `Development Artifacts` section and infer the current stage as follows:
+If the agent starts from a main idea file, it should inspect the conditional
+`Development Artifacts` section and infer the current stage as follows:
 
-- no concept artifact link: the idea is captured but not yet conceptually extracted; next likely step is `02-concept-extraction`
-- concept artifact link exists, but no principle artifact link exists: concept extraction has been published; next likely step is `03-principle-synthesis`
-- both concept and principle artifact links exist: the first full pass of the machine of ideas is complete
-- a link exists but the target file is missing: the current state is inconsistent and should be handled in `validation` or `editor` mode before transition
+- no `Development Artifacts` section: the idea is captured but has no published
+  concept or principle artifacts; next likely step is `02-concept-extraction`
+- `13.1 Concepts` exists with a concept artifact link and concept table, but
+  `13.2 Principles` does not exist: concept extraction has been published; next
+  likely step is `03-principle-synthesis`
+- both `13.1 Concepts` and `13.2 Principles` exist with their artifact links and
+  tables: the first full pass of the machine of ideas is complete
+- the root idea anchor does not match its frontmatter `id`, a derived artifact
+  backlink is missing, a linked file or explicit concept or principle anchor is
+  missing or duplicated, or a table no longer matches its derived artifact: the
+  current state is inconsistent and should be handled in `validation` or
+  `editor` mode before transition
 
-The source idea file remains the visible status surface for the idea's development.
+The source idea file remains the visible status surface and central navigation
+index for the idea's development. Do not create `Development Artifacts` while
+neither concepts nor principles exist.
 
 ## Root Idea Placement Rule
 
@@ -146,7 +157,11 @@ If the mini-idea develops significant semantic mismatch with the parent idea, th
 
 ## New Idea Status Rule
 
-Every newly created root idea or sub-idea must start with `status: draft` in frontmatter. Later workflow stages may change the status only when the idea has matured through explicit work on the artifact.
+Every newly created root idea or sub-idea must start with `status: draft` in
+frontmatter. Later workflow stages may change the status only when the idea has
+matured through explicit work on the artifact. Idea and mini-idea artifacts do
+not use a separate `Maturity Level` checklist; frontmatter `status` is the
+single source of truth for their document state.
 
 For a project with a root idea and sub-ideas, the root idea artifact is the visible status surface for the whole project. Concept and principle artifacts are formed for the root idea as a whole, using its relevant sub-ideas as source material, and are published next to the root idea artifact.
 
@@ -334,7 +349,12 @@ The agent can:
   - file name: `<root-idea-id>-concepts.md`
   - if the source material includes sub-ideas, the artifact is still published next to the root idea
 - source-idea-update:
-  - add or update `Development Artifacts` link to the concept artifact in the root idea file
+  - create or update `13. Development Artifacts` in the root idea file
+  - create or update `13.1 Concepts` with a link to the concept artifact
+  - maintain a complete concept table whose concept names link to their unique
+    explicit anchors in the concept artifact
+  - ensure the concept artifact links back to the explicit root idea anchor
+  - synchronize the table when concepts are added, removed, renamed, or revised
 - template:
   - `.double/templates/machine-of-ideas/concept-template.md`
 - interaction-prompt:
@@ -381,7 +401,15 @@ The agent can:
   - file name: `<root-idea-id>-principles.md`
   - if the source material includes sub-ideas, the artifact is still published next to the root idea
 - source-idea-update:
-  - add or update `Development Artifacts` link to the principle artifact in the root idea file
+  - create or update `13. Development Artifacts` in the root idea file
+  - preserve and synchronize `13.1 Concepts`
+  - create or update `13.2 Principles` with a link to the principle artifact
+  - maintain a complete principle table whose principle names link to their
+    unique explicit anchors in the principle artifact
+  - link every related concept in the principle table to its unique explicit
+    anchor in the concept artifact
+  - ensure the principle artifact links back to the explicit root idea anchor
+  - synchronize the table when principles or their concept relations change
 - template:
   - `.double/templates/machine-of-ideas/principle-template.md`
 - interaction-prompt:
@@ -406,18 +434,33 @@ The agent can:
 - kind: `idea-artifact`
 - produced-by: `idea-capture-agent`
 - required-frontmatter:
+  - `status`
   - `interaction-language`
   - `artifact-language`
+- stable-anchor: explicit HTML anchor matching frontmatter `id`
 - required-for:
   - `02-concept-extraction`
+
+### mini-idea-artifact
+
+- kind: `mini-idea-artifact`
+- produced-by: `idea-capture-agent`
+- required-frontmatter:
+  - `status`
+  - `interaction-language`
+  - `artifact-language`
+- stable-anchor: explicit HTML anchor matching frontmatter `id`
+- status-source: frontmatter only; do not create a `Maturity Level` section
 
 ### root-idea-artifact
 
 - kind: `idea-artifact`
 - role: root source and visible status surface for a project pass
 - required-frontmatter:
+  - `status`
   - `interaction-language`
   - `artifact-language`
+- stable-anchor: explicit HTML anchor matching frontmatter `id`
 - may include:
   - relevant sub-ideas as source material
 - required-for:
@@ -432,7 +475,13 @@ The agent can:
   - `interaction-language`
   - `artifact-language`
 - publication-path: `ideas/<...>/<root-idea-id>/<root-idea-id>-concepts.md`
-- linked-from-root-idea: `Development Artifacts`
+- linked-from-root-idea: `13. Development Artifacts > 13.1 Concepts`
+- root-idea-index:
+  - concept artifact link
+  - complete concept table with links to unique explicit concept anchors
+- backlink: root idea explicit anchor matching the root idea frontmatter `id`
+- stable-units:
+  - every concept id has one matching unique explicit HTML anchor
 - source-scope:
   - root idea artifact
   - relevant sub-ideas that belong to the same project
@@ -447,7 +496,14 @@ The agent can:
   - `interaction-language`
   - `artifact-language`
 - publication-path: `ideas/<...>/<root-idea-id>/<root-idea-id>-principles.md`
-- linked-from-root-idea: `Development Artifacts`
+- linked-from-root-idea: `13. Development Artifacts > 13.2 Principles`
+- root-idea-index:
+  - principle artifact link
+  - complete principle table with links to unique explicit principle anchors
+  - related concept links targeting unique explicit anchors in the concept artifact
+- backlink: root idea explicit anchor matching the root idea frontmatter `id`
+- stable-units:
+  - every principle id has one matching unique explicit HTML anchor
 - source-scope:
   - root idea artifact
   - concept artifact formed for the root idea

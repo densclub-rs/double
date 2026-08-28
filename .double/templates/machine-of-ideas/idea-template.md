@@ -20,6 +20,7 @@ derived-from:
 ---
 id: <idea-artifact-id>
 kind: idea-artifact
+status: draft
 produced-by: idea-capture-agent
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
@@ -27,6 +28,7 @@ derived-from:
   - <source-idea-or-conversation>
 ---
 
+<a id="<idea-artifact-id>"></a>
 
 # Idea: <Short title>
 
@@ -88,18 +90,32 @@ Write freely, without unnecessary constraints.
 
 - Similar or related thoughts
 
-## 12. Maturity Level
-
-- [ ] Raw thought
-- [ ] Developed idea
-- [ ] Near-concept
-
-## 13. Notes
+## 12. Notes
 
 Any additional thoughts
 
-## 14. Development Artifacts
+## 13. Development Artifacts
 
-- Concepts: `[pending]`
-- Principles: `[pending]`
+Include this section only after at least one concept or principle has been
+published. If neither concepts nor principles exist, omit the entire section.
+
+### 13.1 Concepts
+
+Include this subsection only when a concept artifact exists.
+
+Concept artifact: [<Concept Artifact Title>](./<root-idea-id>-concepts.md)
+
+| Concept | Summary |
+| --- | --- |
+| [`<concept-id>: <Concept Name>`](./<root-idea-id>-concepts.md#<concept-id>) | <one-sentence-description-of-the-concept> |
+
+### 13.2 Principles
+
+Include this subsection only when a principle artifact exists.
+
+Principle artifact: [<Principle Artifact Title>](./<root-idea-id>-principles.md)
+
+| Principle | Statement | Related Concepts |
+| --- | --- | --- |
+| [`<principle-id>: <Principle Name>`](./<root-idea-id>-principles.md#<principle-id>) | <concise-normative-statement> | [`<concept-id>: <Concept Name>`](./<root-idea-id>-concepts.md#<concept-id>) |
 ```

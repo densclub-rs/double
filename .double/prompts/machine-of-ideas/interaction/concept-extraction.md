@@ -22,16 +22,20 @@ I will look for the stable meaning units inside the idea: important entities, re
 
 The output will be a `Concept Artifact` with:
 
-- source idea
 - conceptual summary
 - working definition of concept
 - core concept cards
-- conceptual map
 - terms and non-concepts
 - candidate inputs for principle synthesis
 - concept-local questions
 
-By default, I will publish it next to the root idea as `<root-idea-id>-concepts.md` and add a link to it from the root idea's `Development Artifacts` section. Relevant sub-ideas may be used as source material for that root concept artifact.
+By default, I will publish it next to the root idea as
+`<root-idea-id>-concepts.md`. The root idea will be the central navigation
+index: I will create or update `13. Development Artifacts > 13.1 Concepts` with
+a link to the artifact and a complete table linking every concept to its unique
+explicit anchor. The concept artifact will link back to the root idea's explicit
+`idea-id` anchor. Relevant sub-ideas may be used as source material for that
+root concept artifact.
 
 If I ask open questions, your answers will be integrated into the active `concept-artifact`, not left only in the conversation.
 For concept artifacts, each unanswered item in the `Questions` subsection of a specific concept is an open question for that concept.

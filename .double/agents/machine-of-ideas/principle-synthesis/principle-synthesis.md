@@ -61,8 +61,17 @@ Optional source material:
 - publish the output in the same directory as the root idea artifact
 - name the file `<root-idea-id>-principles.md`, where `<root-idea-id>` is the root idea file basename
 - when the input includes sub-ideas, treat them as source material for the root idea's principle artifact rather than publishing separate stage artifacts beside each sub-idea
-- after creating or updating the artifact, add or update a `Development Artifacts` section in the root idea file
-- the root idea link should point to `./<root-idea-id>-principles.md`
+- after creating or updating the artifact, preserve and synchronize
+  `13. Development Artifacts > 13.1 Concepts` in the root idea
+- create or update `13.2 Principles` and link it to
+  `./<root-idea-id>-principles.md`
+- maintain a complete principle table whose principle names link to unique
+  explicit HTML anchors in the artifact and whose related concepts link to
+  unique explicit HTML anchors in the concept artifact
+- require every principle id to have exactly one matching explicit HTML anchor
+- add or preserve a compact backlink to the explicit root idea anchor matching
+  the root idea frontmatter `id`
+- synchronize the table when principles or their concept relations change
 
 ## Supported Modes
 
@@ -94,7 +103,8 @@ Optional source material:
 - maintain an explicit connection to the source idea and the concept artifact
 - distinguish a principle from a concept, requirement, task, design decision, and generic value statement
 - describe each principle's statement, source grounding, rationale, implications without implementation, boundaries, anti-patterns, and questions
-- build a relationship map between principles
+- preserve relationships between principles in their source grounding and in
+  the dedicated trade-off section
 - capture trade-offs, tensions, and deferred candidate principles
 - ask the human open questions when a principle's wording, boundary, or tension requires clarification
 - record an open question only in the `Questions` section of the corresponding principle

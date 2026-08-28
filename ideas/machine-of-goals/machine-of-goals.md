@@ -1,12 +1,15 @@
 ---
 id: machine-of-goals
 kind: idea-artifact
+status: release-candidate
 produced-by: machine-of-ideas/idea-capture-agent
 interaction-language: English
 artifact-language: English
 derived-from:
   - user request on 2026-05-24
 ---
+
+<a id="machine-of-goals"></a>
 
 # Idea: Machine of Goals
 
@@ -198,13 +201,7 @@ Another example:
 - personal knowledge management
 - project planning
 
-## 12. Maturity Level
-
-- [ ] Raw thought
-- [x] Developed idea
-- [ ] Near-concept
-
-## 13. Notes
+## 12. Notes
 
 Machine of Goals is a separate workflow in Double. The early workflow chain:
 
@@ -238,7 +235,40 @@ plan-state--author-oliver--device-macbook--time-20260707T153012.md
 
 During import, existing `plan-state` artifacts are added to the plan artifact as links to existing realizations. This makes it possible to compare the current realization progress with previous realizations and use them to verify decisions, cost, risks, and the success of individual stages.
 
-## 14. Development Artifacts
+## 13. Development Artifacts
 
-- Concepts: [machine-of-goals-concepts.md](./machine-of-goals-concepts.md)
-- Principles: [machine-of-goals-principles.md](./machine-of-goals-principles.md)
+### 13.1 Concepts
+
+Concept artifact: [Machine of Goals Concepts](./machine-of-goals-concepts.md)
+
+| Concept | Summary |
+| --- | --- |
+| [`concept-goal-as-verifiable-target-state: Goal as Verifiable Target State`](./machine-of-goals-concepts.md#concept-goal-as-verifiable-target-state) | A goal expressed as a desired state whose achievement can be verified. |
+| [`concept-success-criteria: Success Criteria`](./machine-of-goals-concepts.md#concept-success-criteria) | Criteria for distinguishing achievement, partial achievement, failure, or the need for review. |
+| [`concept-initial-state-and-target-state: Initial State and Target State`](./machine-of-goals-concepts.md#concept-initial-state-and-target-state) | The pair of states that frames goal achievement as a transition. |
+| [`concept-realization-path: Realization Path`](./machine-of-goals-concepts.md#concept-realization-path) | A possible strategy for approaching a goal before composing a concrete plan. |
+| [`concept-plan-as-transition-model: Plan as Transition Model`](./machine-of-goals-concepts.md#concept-plan-as-transition-model) | A structured model for moving from the initial state to the target state. |
+| [`concept-subgoal-and-partial-achievement: Subgoal and Partial Achievement`](./machine-of-goals-concepts.md#concept-subgoal-and-partial-achievement) | Intermediate verifiable states that contribute to a parent goal. |
+| [`concept-plan-cost-and-efficiency: Plan Cost and Efficiency`](./machine-of-goals-concepts.md#concept-plan-cost-and-efficiency) | Measures for comparing execution cost with expected results. |
+| [`concept-plan-algorithmization: Plan Algorithmization`](./machine-of-goals-concepts.md#concept-plan-algorithmization) | The transformation of a sufficiently clear plan into a controlled achievement algorithm. |
+| [`concept-plan-explanation-and-control: Plan Explanation and Control`](./machine-of-goals-concepts.md#concept-plan-explanation-and-control) | Visibility of steps, reasons, checks, parameters, stop points, and review opportunities. |
+| [`concept-interactive-and-automatic-execution: Interactive and Automatic Execution`](./machine-of-goals-concepts.md#concept-interactive-and-automatic-execution) | The range of execution modes from manual through fully automatic. |
+| [`concept-executable-collapsed-plan: Executable Collapsed Plan`](./machine-of-goals-concepts.md#concept-executable-collapsed-plan) | A reusable form of a plan suitable for automatic execution, handoff, or publication. |
+| [`concept-plan-exchange: Plan Exchange`](./machine-of-goals-concepts.md#concept-plan-exchange) | Reuse and adaptation of successful plans together with their goal context. |
+| [`concept-goal-artifact-context: Goal Artifact Context`](./machine-of-goals-concepts.md#concept-goal-artifact-context) | The context that keeps a goal, its plan, realization, and evidence together. |
+
+### 13.2 Principles
+
+Principle artifact: [Machine of Goals Principles](./machine-of-goals-principles.md)
+
+| Principle | Statement | Related Concepts |
+| --- | --- | --- |
+| [Goal Verifiability Before Planning](./machine-of-goals-principles.md#principle-goal-verifiability-before-planning) | Begin with a verifiable target state, not with tasks or wishes. | [Goal as Verifiable Target State](./machine-of-goals-concepts.md#concept-goal-as-verifiable-target-state), [Success Criteria](./machine-of-goals-concepts.md#concept-success-criteria), [Initial State and Target State](./machine-of-goals-concepts.md#concept-initial-state-and-target-state) |
+| [Plan as an Understandable Transition Graph](./machine-of-goals-principles.md#principle-plan-as-an-understandable-transition-graph) | Preserve an understandable connection from the initial state to the target state. | [Plan as Transition Model](./machine-of-goals-concepts.md#concept-plan-as-transition-model), [Initial State and Target State](./machine-of-goals-concepts.md#concept-initial-state-and-target-state), [Subgoal and Partial Achievement](./machine-of-goals-concepts.md#concept-subgoal-and-partial-achievement) |
+| [Goal and Plan Must Not Be Separated](./machine-of-goals-principles.md#principle-goal-and-plan-must-not-be-separated) | Keep a plan connected to the goal for which it was built. | [Plan Exchange](./machine-of-goals-concepts.md#concept-plan-exchange), [Goal Artifact Context](./machine-of-goals-concepts.md#concept-goal-artifact-context), [Plan as Transition Model](./machine-of-goals-concepts.md#concept-plan-as-transition-model) |
+| [Automation Under User Control](./machine-of-goals-principles.md#principle-automation-under-user-control) | Automate plan execution only within boundaries selected by the user. | [Interactive and Automatic Execution](./machine-of-goals-concepts.md#concept-interactive-and-automatic-execution), [Plan Explanation and Control](./machine-of-goals-concepts.md#concept-plan-explanation-and-control), [Executable Collapsed Plan](./machine-of-goals-concepts.md#concept-executable-collapsed-plan) |
+| [Explanation Before Execution](./machine-of-goals-principles.md#principle-explanation-before-execution) | Explain the selected path and allow a dry run before automatic or agentic execution. | [Plan Explanation and Control](./machine-of-goals-concepts.md#concept-plan-explanation-and-control), [Plan as Transition Model](./machine-of-goals-concepts.md#concept-plan-as-transition-model), [Interactive and Automatic Execution](./machine-of-goals-concepts.md#concept-interactive-and-automatic-execution) |
+| [Plan Is Project, Algorithm Is Realization](./machine-of-goals-principles.md#principle-plan-is-project-algorithm-is-realization) | Distinguish the plan as a project from the algorithm as its realized form. | [Plan Algorithmization](./machine-of-goals-concepts.md#concept-plan-algorithmization), [Goal Artifact Context](./machine-of-goals-concepts.md#concept-goal-artifact-context), [Executable Collapsed Plan](./machine-of-goals-concepts.md#concept-executable-collapsed-plan) |
+| [Collapsing Format Should Follow Goal Type](./machine-of-goals-principles.md#principle-collapsing-format-should-follow-goal-type) | Select the primary collapsed-plan format according to the goal and its environment. | [Executable Collapsed Plan](./machine-of-goals-concepts.md#concept-executable-collapsed-plan), [Goal as Verifiable Target State](./machine-of-goals-concepts.md#concept-goal-as-verifiable-target-state), [Goal Artifact Context](./machine-of-goals-concepts.md#concept-goal-artifact-context) |
+| [Subgoal as Its Own Context](./machine-of-goals-principles.md#principle-subgoal-as-its-own-context) | Represent a stable subgoal as a separate context with its own subplan. | [Subgoal and Partial Achievement](./machine-of-goals-concepts.md#concept-subgoal-and-partial-achievement), [Goal Artifact Context](./machine-of-goals-concepts.md#concept-goal-artifact-context), [Plan Exchange](./machine-of-goals-concepts.md#concept-plan-exchange) |
+| [Cost Should Accumulate From Execution](./machine-of-goals-principles.md#principle-cost-should-accumulate-from-execution) | Evaluate plan cost through execution metrics and domain-specific criteria. | [Plan Cost and Efficiency](./machine-of-goals-concepts.md#concept-plan-cost-and-efficiency), [Plan as Transition Model](./machine-of-goals-concepts.md#concept-plan-as-transition-model), [Plan Exchange](./machine-of-goals-concepts.md#concept-plan-exchange) |

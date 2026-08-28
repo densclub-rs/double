@@ -1,6 +1,7 @@
 ---
 id: machine-of-knowledge
 kind: idea-artifact
+status: release-candidate
 produced-by: machine-of-ideas/idea-capture-agent
 interaction-language: English
 artifact-language: English
@@ -8,6 +9,8 @@ derived-from:
   - user request on 2026-07-15
   - ../../Double.md
 ---
+
+<a id="machine-of-knowledge"></a>
 
 # Idea: Machine of Knowledge
 
@@ -134,13 +137,7 @@ The artifact remains useful when live retrieval is unavailable because it contai
 - personal knowledge management
 - dynamic information and caching
 
-## 12. Maturity Level
-
-- [ ] Raw thought
-- [x] Developed idea
-- [ ] Near-concept
-
-## 13. Notes
+## 12. Notes
 
 Base project layout:
 
@@ -156,7 +153,30 @@ double/
 
 This layout expresses the central separation: `.double/` contains the machine's working material, and `knowledge/` contains the artifacts created and maintained by the machine.
 
-## 14. Development Artifacts
+## 13. Development Artifacts
 
-- Concepts: [Machine of Knowledge Concepts](./machine-of-knowledge-concepts.md)
-- Principles: [Machine of Knowledge Principles](./machine-of-knowledge-principles.md)
+### 13.1 Concepts
+
+Concept artifact: [Machine of Knowledge Concepts](./machine-of-knowledge-concepts.md)
+
+| Concept | Summary |
+| --- | --- |
+| [`concept-knowledge-extraction: Knowledge Extraction`](./machine-of-knowledge-concepts.md#concept-knowledge-extraction) | The movement from available material to explicit knowledge. |
+| [`concept-knowledge-artifact: Knowledge Artifact`](./machine-of-knowledge-concepts.md#concept-knowledge-artifact) | The persistent form in which extracted knowledge is preserved. |
+| [`concept-knowledge-temporality: Knowledge Temporality`](./machine-of-knowledge-concepts.md#concept-knowledge-temporality) | The temporal character of knowledge and its classification by rate of change. |
+| [`concept-static-knowledge: Static Knowledge`](./machine-of-knowledge-concepts.md#concept-static-knowledge) | Knowledge with a validity period long enough to be treated as unchanged during normal use. |
+| [`concept-dynamic-knowledge: Dynamic Knowledge`](./machine-of-knowledge-concepts.md#concept-dynamic-knowledge) | Knowledge with a short validity period whose current and earlier values must be distinguished. |
+| [`concept-knowledge-temporal-state: Knowledge Temporal State`](./machine-of-knowledge-concepts.md#concept-knowledge-temporal-state) | Observation time and validity period that make freshness or staleness explicit. |
+| [`concept-perpetual-freedom-of-double-knowledge: Perpetual Freedom of Double Knowledge`](./machine-of-knowledge-concepts.md#concept-perpetual-freedom-of-double-knowledge) | Double knowledge remains freely accessible throughout the project's lifetime. |
+
+### 13.2 Principles
+
+Principle artifact: [Machine of Knowledge Principles](./machine-of-knowledge-principles.md)
+
+| Principle | Statement | Related Concepts |
+| --- | --- | --- |
+| [Preserve Extracted Knowledge as an Explicit Artifact](./machine-of-knowledge-principles.md#principle-explicit-knowledge-artifact) | Preserve extracted knowledge as an explicit artifact rather than only in its source or conversation. | [Knowledge Extraction](./machine-of-knowledge-concepts.md#concept-knowledge-extraction), [Knowledge Artifact](./machine-of-knowledge-concepts.md#concept-knowledge-artifact) |
+| [Preserve Knowledge According to Its Temporality](./machine-of-knowledge-principles.md#principle-knowledge-temporality) | Expose enough temporal state to distinguish current knowledge from stale knowledge. | [Knowledge Temporality](./machine-of-knowledge-concepts.md#concept-knowledge-temporality), [Static Knowledge](./machine-of-knowledge-concepts.md#concept-static-knowledge), [Dynamic Knowledge](./machine-of-knowledge-concepts.md#concept-dynamic-knowledge), [Knowledge Temporal State](./machine-of-knowledge-concepts.md#concept-knowledge-temporal-state) |
+| [Keep Double Knowledge Free of Charge Permanently](./machine-of-knowledge-principles.md#principle-perpetually-free-double-knowledge) | Keep all Double knowledge available to everyone free of charge for the project's lifetime. | [Perpetual Freedom of Double Knowledge](./machine-of-knowledge-concepts.md#concept-perpetual-freedom-of-double-knowledge) |
+| [Separate Machine Operation from Produced Knowledge](./machine-of-knowledge-principles.md#principle-operation-artifact-separation) | Keep machine operating material and produced knowledge as distinct contexts. | [Knowledge Artifact](./machine-of-knowledge-concepts.md#concept-knowledge-artifact) |
+| [Use the Minimum Adequate Knowledge Structure](./machine-of-knowledge-principles.md#principle-minimum-adequate-structure) | Introduce only the structure required for honest extraction, preservation, and interpretation. | [Knowledge Artifact](./machine-of-knowledge-concepts.md#concept-knowledge-artifact), [Knowledge Temporality](./machine-of-knowledge-concepts.md#concept-knowledge-temporality) |

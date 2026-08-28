@@ -29,6 +29,19 @@ Template for describing **ideas** should be developed, maintained and located as
 Here is just an example or a prototype for the ideas template file:
 
 ```md
+---
+id: <idea-artifact-id>
+kind: idea-artifact
+status: draft
+produced-by: idea-capture-agent
+interaction-language: <language-code-or-name-used-for-dialogue>
+artifact-language: <language-code-or-name-used-for-this-artifact>
+derived-from:
+  - <source-idea-or-conversation>
+---
+
+<a id="<idea-artifact-id>"></a>
+
 # Idea: <Short title>
 
 ## 1. Summary
@@ -85,13 +98,7 @@ Write freely, without unnecessary constraints.
 
 - Similar or related thoughts
 
-## 12. Maturity Level
-
-- [ ] Raw thought
-- [ ] Developed idea
-- [ ] Near-concept
-
-## 13. Notes
+## 12. Notes
 
 Any additional thoughts
 ```
