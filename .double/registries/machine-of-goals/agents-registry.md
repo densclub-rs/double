@@ -29,7 +29,7 @@ status: release-candidate
 - stage: `02-path-discovery`
 - input: `goal-artifact`, `initial-state`, `target-state`, `success-criteria`, `constraints-and-resources`
 - optional-input: `existing-analogs`
-- output: `path-options`, `path-comparison`, `path-assumptions`, `path-risks`, `open-path-questions`
+- output: `path-options`, `path-comparison`, `path-assumptions`, `path-risks`, `stable-path-ids`, `open-path-questions`
 - supported-modes: `research`, `explain`, `import`
 - template: `.double/templates/machine-of-goals/path-options-template.md`
 - system-prompt: `.double/prompts/machine-of-goals/system/path-discovery.md`
@@ -43,7 +43,7 @@ status: release-candidate
 - stage: `03-plan-synthesis`, `04-plan-review-and-decision`
 - input: `goal-artifact`, `path-options`, `selected-path-or-candidate-paths`, `constraints-and-resources`, `success-criteria`
 - optional-input: `known-risks-and-uncertainties`, `subgoal-artifact`
-- output: `plan-artifact`, `realization-decision`, `automation-boundaries`, `validation-strategy`, `subplan-interface`
+- output: `plan-artifact`, `selectable-path-and-subplan-map`, `realization-decision`, `updated-path-options-when-review-registers-realization`, `automation-boundaries`, `validation-strategy`, `subplan-interface`
 - supported-modes: `planning`, `review`, `explain`, `dry-run`
 - templates: `.double/templates/machine-of-goals/plan-template.md`, `.double/templates/machine-of-goals/realization-decision-template.md`
 - system-prompt: `.double/prompts/machine-of-goals/system/plan-synthesis.md`
@@ -55,12 +55,12 @@ status: release-candidate
 - id: `plan-realization-agent`
 - role: `plan-realization-role`
 - stage: `05-plan-realization`
-- input: `plan-artifact`, `realization-decision`, `selected-plan-stage`, `automation-boundaries`, `stage-validation-criteria`, `working-context`
+- input: `plan-artifact`, `path-options`, `realization-decision`, `selected-realization`, `selected-plan-stage`, `automation-boundaries`, `stage-validation-criteria`, `working-context`
 - optional-input: `plan-stop-points`
-- output: `stage-attempt-result`, `updated-plan-artifact`
+- output: `plan-run`, `run-index`, `updated-path-options-when-needed`
 - optional-output: `implementation-artifact`, `handoff-artifact`, `blocker-or-revision-note`
 - supported-modes: `execution`, `explain`, `dry-run`, `planning`
-- templates: `.double/templates/machine-of-goals/stage-attempt-result-template.md`, `.double/templates/machine-of-goals/plan-template.md`
+- templates: `.double/templates/machine-of-goals/plan-run-template.md`, `.double/templates/machine-of-goals/run-index-template.md`, `.double/templates/machine-of-goals/plan-template.md`, `.double/templates/machine-of-goals/path-options-template.md`
 - system-prompt: `.double/prompts/machine-of-goals/system/plan-realization.md`
 - interaction-prompt: `.double/prompts/machine-of-goals/interaction/plan-realization.md`
 - definition: `.double/agents/machine-of-goals/plan-realization/plan-realization.md`
@@ -70,8 +70,8 @@ status: release-candidate
 - id: `plan-validation-agent`
 - role: `plan-validation-role`
 - stage: `06-plan-validation`
-- input: `stage-attempt-result`, `stage-validation-criteria`, `goal-artifact`, `plan-artifact`, `execution-evidence`
-- output: `updated-plan-artifact`, `goal-progress-note`, `revision-or-continuation-decision`
+- input: `plan-run`, `path-options`, `stage-validation-criteria`, `goal-artifact`, `plan-artifact`, `execution-evidence`
+- output: `updated-plan-run`, `updated-path-options`, `goal-progress-note`, `revision-or-continuation-decision`
 - optional-output: `goal-closure-signal`
 - supported-modes: `validation`, `review`, `explain`
 - templates: `.double/templates/machine-of-goals/plan-template.md`
@@ -86,7 +86,7 @@ status: release-candidate
 - optional: `true`
 - stage: `cross-step`, `07-plan-packaging-export`
 - input: `goal-artifact`, `plan-artifact`
-- optional-input: `execution-history`, `validation-evidence`, `results-artifacts`, `external-plan-or-analog`, `external-plan-implementations`, `export-target-or-intended-reuse`
+- optional-input: `path-options`, `registered-realizations`, `validation-evidence`, `external-plan-or-analog`, `external-plan-realizations`, `export-target-or-intended-reuse`
 - output: `imported-plan-adaptation`, `adapted-path-or-plan-fragment`, `exported-plan-package`, `reuse-and-adaptation-notes`
 - optional-output: `goal-closure-summary`
 - supported-modes: `import`, `export`, `explain`, `validation`

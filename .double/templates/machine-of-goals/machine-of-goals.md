@@ -13,7 +13,8 @@ status: release-candidate
 - [Path Options Template](./path-options-template.md)
 - [Plan Template](./plan-template.md)
 - [Realization Decision Template](./realization-decision-template.md)
-- [Stage Attempt Result Template](./stage-attempt-result-template.md)
+- [Plan Run Template](./plan-run-template.md)
+- [Run Index Template](./run-index-template.md)
 - [Exported Plan Package Template](./exported-plan-package-template.md)
 
 ## Draft Interpretation

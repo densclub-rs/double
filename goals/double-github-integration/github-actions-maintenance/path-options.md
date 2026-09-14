@@ -1,6 +1,7 @@
 ---
 id: github-actions-maintenance-path-options
 kind: path-options
+project-id: double
 produced-by: machine-of-goals/path-discovery-agent
 interaction-language: en
 artifact-language: en
@@ -13,13 +14,15 @@ derived-from:
   - ../../../.github/workflows/release.yml
 ---
 
+<a id="github-actions-maintenance-path-options"></a>
+
 # Path Options: GitHub Actions Maintenance
 
 ## 1. Source Goal
 
-- Goal: `github-actions-maintenance`
+- Goal: [GitHub Actions Maintenance](./github-actions-maintenance.md#github-actions-maintenance)
 - Scope: subgoal
-- Parent goal: `double-github-integration`
+- Parent goal: [Double GitHub Integration](../double-github-integration.md#double-github-integration)
 - Current state: `release.yml` contains the release parsing, package-selection,
   archive, checksum, and GitHub Release logic in one GitHub Actions workflow.
 - Target state: a maintainable release implementation supports the accepted
@@ -46,6 +49,8 @@ derived-from:
 
 ## 3. Path Options
 
+<a id="direct-workflow-rules"></a>
+
 ### Path: Direct Workflow Rules
 
 - Path id: `direct-workflow-rules`
@@ -64,7 +69,10 @@ derived-from:
 - Unknowns: local testing would require reproducing workflow behavior outside
   the workflow or accepting GitHub-only execution.
 - Reuse / import opportunity: reuse the current workflow's logic in place.
+- Plan element: none; retained as an unselected alternative.
 - Recommendation: keep-as-alternative
+
+<a id="shell-script-workflow-adapter"></a>
 
 ### Path: Shell Script with Thin Workflow Adapter
 
@@ -100,7 +108,10 @@ derived-from:
 - Unknowns: local test fixture strategy.
 - Reuse / import opportunity: extract and adapt the current workflow's tag,
   package, checksum, and publication logic.
+- Plan element: [S01: Specify the Release Contract](./plan.md#stage-s01).
 - Recommendation: candidate
+
+<a id="reusable-composite-action"></a>
 
 ### Path: Reusable Composite Action
 
@@ -120,6 +131,7 @@ derived-from:
 - Unknowns: whether future workflows need the same reusable GitHub interface.
 - Reuse / import opportunity: reuse the current workflow steps in a
   GitHub-native component.
+- Plan element: none; rejected before plan synthesis.
 - Recommendation: reject
 
 ## 4. Comparison
@@ -135,6 +147,44 @@ derived-from:
 - `reusable-composite-action`: rejected for the first release implementation
   because it does not satisfy native local package testing.
 
-## 6. Open Questions
+## 6. Computed Plan Style
+
+- Computed style: `multi-pass`
+- Computed from: registered automatic realization
+  [`double-release-shell-workflow`](#double-release-shell-workflow)
+- Rule: registration, rather than file creation or first successful execution,
+  is the style transition point.
+
+<a id="registered-realizations"></a>
+
+## 7. Registered Realizations
+
+<a id="double-release-shell-workflow"></a>
+
+### Realization: Double Release Shell and Workflow
+
+- Realization id: `double-release-shell-workflow`
+- Kind: workflow
+- Definition and implementation:
+  [release program](../../../scripts/double-release.sh) and
+  [GitHub Actions adapter](../../../.github/workflows/release.yml)
+- Exact implementation references:
+  [release program at `3a86411`](https://github.com/densclub-rs/double/blob/3a86411a7b86d677174a36593d1820444412015d/scripts/double-release.sh)
+  and
+  [workflow at `1354130`](https://github.com/densclub-rs/double/blob/135413068f8d0f77e99bbd2680bbbc7efe187e04/.github/workflows/release.yml)
+- Supported path: [Shell Script with Thin Workflow Adapter](#shell-script-workflow-adapter)
+- Registration: registered
+- Readiness: ready
+- Alignment: review-required after the navigation-contract revision
+- Runs: `0` Machine of Goals run artifacts
+- Retained runs: [Run index](./run/index.md#github-actions-maintenance-run-index)
+
+## 8. Run Retention
+
+- Retained runs: [Run index](./run/index.md#github-actions-maintenance-run-index)
+- Maximum terminal runs per realization: `5`
+- Individual run files are not linked from this registry.
+
+## 9. Open Questions
 
 None currently.

@@ -17,26 +17,29 @@ derived-from:
 
 ## Purpose
 
-Used when the agent must compare a stage attempt result or goal result with
-explicit criteria, guide the validation dialogue to an explicit decision, and
-decide what the active plan artifact should become.
+Used when the agent must compare a run stage or final result with explicit
+criteria, guide the validation dialogue to an explicit decision, and update the
+run and aggregate realization statistics.
 
 ## Behavioral Intent
 
 - validate against criteria rather than narrative confidence
 - distinguish accepted, rejected, partial, blocked, and needs-revision results
 - conduct the validation dialogue until an explicit decision is reached
-- record the compact validation decision in the relevant stage detail of the
-  active plan artifact
-- link evidence, checks, errors, elapsed cost, and relevant observations from
-  `results/` when they are too detailed for the plan
-- update metrics and risks where the plan tracks them
+- record validation and terminal result in the current run
+- replace latest `running` result with the terminal result in `path-options.md`
+  without incrementing run count again
+- apply bounded run retention after statistics update
+- validate exact revision and evidence links and update `run/index.md` when
+  retention removes a run
+- revise the plan only when the intended transition model changes
 - decide whether to continue, branch, revise, reformulate, export, pause, or
   close the goal
 
 ## Typical Inputs
 
-- stage-attempt-result artifact
+- plan-run artifact
+- path-options artifact
 - validation criteria
 - goal and plan artifacts
 - execution evidence, logs, files, screenshots, user confirmation, or external
@@ -44,7 +47,8 @@ decide what the active plan artifact should become.
 
 ## Expected Outputs
 
-- updated plan artifact
+- updated plan-run and path-options artifacts
+- updated plan artifact only when revision is required
 - updated goal progress or closure note when applicable
 - revision, branch, continuation, or export decision
 
@@ -61,4 +65,4 @@ Stop before advancing when:
 
 Primary mode for `06-plan-validation`. It is also the gate before closing a
 goal or packaging a reusable plan. The mode does not create a separate
-standalone validation file; it records validation decisions in the active plan.
+standalone validation file; it records validation decisions in the active run.

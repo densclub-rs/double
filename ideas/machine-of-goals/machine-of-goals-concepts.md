@@ -17,7 +17,7 @@ Idea: [Machine of Goals](./machine-of-goals.md#machine-of-goals)
 
 ## 1. Conceptual Summary
 
-`Machine of Goals` describes a system for moving from intention to verifiable achievement. Its central conceptual pattern is this: a goal is defined as a verifiable target state; then possible paths, plans, algorithms, execution modes, and forms for collapsing the plan into an automatic mechanism are built around it.
+`Machine of Goals` describes a system for moving from intention to verifiable achievement. Its central conceptual pattern is this: a goal is defined as a verifiable target state; possible paths become selectable parts of a plan; manual and automatic realizations project that plan into concrete execution mechanisms; bounded working runs preserve current execution experience while aggregate statistics remain in the path and realization registry; and contextual Markdown links keep these relationships traceable within and across projects.
 
 As a specialized machine within Double, `Machine of Goals` realizes all foundational concepts defined by the [`Machine of Ideas` concept artifact](../machine-of-ideas/machine-of-ideas-concepts.md). Its goal-specific concepts extend that common conceptual foundation rather than replace it.
 
@@ -142,7 +142,7 @@ Success criteria transform a goal from a declaration into a verifiable artifact.
 
 #### Definition
 
-A possible way to approach the goal before choosing a concrete plan: direct, workaround, research-oriented, minimal, long-term, through learning, delegation, a tool, or automation. The possibility of using ready-made goal realization plans. The possibility of comparing the estimated cost of realization plans. All discovered paths are preserved until the goal is achieved. After the goal is achieved, the user is offered the option to delete and forget unrealized paths, or keep them for the future as drafts.
+A possible way to approach the goal: direct, workaround, research-oriented, minimal, long-term, through learning, delegation, a tool, or automation. Paths begin as options before plan synthesis. Selected alternatives may later be represented as selectable subplans or branches inside the plan, while `path-options.md` remains available as a living registry of their maturity and realizations. Unrealized paths may be removed over time when they no longer have project value.
 
 #### Source in Idea
 
@@ -150,21 +150,22 @@ A possible way to approach the goal before choosing a concrete plan: direct, wor
 
 #### Role in the Idea
 
-A path sits between a goal and a plan. It makes it possible to first see different achievement strategies and then synthesize one or more concrete plans.
+A path first sits between a goal and a plan, making different achievement strategies visible before plan synthesis. After synthesis, the same path identity can connect a selectable plan branch with its manual or automatic realizations and accumulated execution statistics.
 
 #### Related Concepts
 
-- Other relations: [`concept-plan-as-transition-model`](#concept-plan-as-transition-model): a selected path is developed into a concrete plan.
+- Other relations: [`concept-plan-as-transition-model`](#concept-plan-as-transition-model): selected paths become selectable branches or subplans inside the plan.
+- Other relations: [`concept-plan-realization-registry`](#concept-plan-realization-registry): paths remain visible after planning and acquire registered realizations and statistics.
 - Other relations: [`concept-success-criteria`](#concept-success-criteria): paths remain comparable against the result the goal must verify.
 - Other relations: [`concept-plan-cost-and-efficiency`](#concept-plan-cost-and-efficiency): paths are compared through expected cost, risk, and applicability.
 
 #### Boundaries
 
-- A path is not a detailed plan.
+- A path is not a detailed plan or a separate plan variant.
 - A path does not guarantee goal achievement.
 - A path should not prematurely become an architectural decision.
-- Paths are stored until the goal is achieved.
-- Unrealized paths may remain in drafts or be deleted at the person's request.
+- A path used by a retained plan branch, realization, or statistic should not be removed without resolving those references.
+- Unrealized paths may remain as candidates or be deleted at the person's request.
 
 #### Questions
 
@@ -203,6 +204,151 @@ The plan is the main bridge between goal formulation and executable action. It t
 #### Questions
 
 - [x] What minimal contract should a plan have in order to be considered ready for the transition to algorithmization?
+
+<a id="concept-plan-realization-registry"></a>
+
+### concept-plan-realization-registry: Plan Realization Registry
+
+#### Definition
+
+A living section of `path-options.md` that connects discovered achievement paths and plan subplans with their registered manual or automatic realizations. For every realization it keeps a compact aggregate view: realization identity and kind, supported paths or subplans, run count, latest run time, and latest result. Run count and latest time are updated at run creation; terminal validation replaces the `running` result without incrementing the count again. Individual run files do not need to be linked from the registry.
+
+#### Source in Idea
+
+- Explicit in the integrated mini-idea [`single-pass-and-multi-pass-plans`](./single-pass-and-multi-pass-plans/single-pass-and-multi-pass-plans.md).
+
+#### Role in the Idea
+
+The registry preserves continuity from path discovery to repeated execution without turning the plan into a mutable execution log. It shows which ways of realizing the plan actually exist and how recently and successfully they have been used.
+
+#### Related Concepts
+
+- Other relations: [`concept-realization-path`](#concept-realization-path): registered realizations declare which paths or subplans they support.
+- Other relations: [`concept-computed-plan-style`](#concept-computed-plan-style): registration of an automatic realization changes the computed style.
+- Other relations: [`concept-working-plan-run`](#concept-working-plan-run): completed runs update the aggregate statistics.
+- Other relations: [`concept-plan-cost-and-efficiency`](#concept-plan-cost-and-efficiency): accumulated run statistics support comparison.
+
+#### Boundaries
+
+- The registry is not a permanent index of links to every run file.
+- Aggregate statistics do not replace validation evidence for a concrete run.
+- Removing bounded run logs does not reset accumulated statistics.
+
+#### Questions
+
+- None.
+
+<a id="concept-computed-plan-style"></a>
+
+### concept-computed-plan-style: Computed Plan Style
+
+#### Definition
+
+The `single-pass` or `multi-pass` style derived from the realization registry. A plan without a registered automatic realization is single-pass. Registration of an automatic realization for the plan or one of its subplans changes the computed style to multi-pass. File creation alone is not registration, and the style transition does not wait for the first successful validation.
+
+#### Source in Idea
+
+- Explicit in the integrated mini-idea [`single-pass-and-multi-pass-plans`](./single-pass-and-multi-pass-plans/single-pass-and-multi-pass-plans.md).
+- Related independent idea: [`styles`](../styles/styles.md).
+
+#### Role in the Idea
+
+The computed style selects the workflow appropriate to the current lifecycle of the plan. Single-pass supports one concrete realization. Multi-pass supports repeated execution, bounded working logs, import into another project, and revision of the plan or realization from later execution experience.
+
+#### Related Concepts
+
+- Other relations: [`concept-plan-realization-registry`](#concept-plan-realization-registry): registration is recorded in the registry.
+- Other relations: [`concept-executable-collapsed-plan`](#concept-executable-collapsed-plan): an automatic realization is a collapsed executable projection of the plan or subplan.
+- Other relations: [`concept-plan-exchange`](#concept-plan-exchange): multi-pass plans can be imported into another project as reusable mechanisms.
+
+#### Boundaries
+
+- Style is not inferred from the mere presence of a script or program file.
+- A registered realization may be unvalidated or require alignment review while the plan is already multi-pass.
+- Readiness and alignment are realization statuses, not alternative plan styles.
+
+#### Questions
+
+- [ ] How should the style be recomputed when the final active automatic realization is unregistered or retired?
+
+<a id="concept-working-plan-run"></a>
+
+### concept-working-plan-run: Working Plan Run
+
+#### Definition
+
+A short-lived working instance of the plan created for one concrete execution of a selected realization. It records the plan and realization revisions, selected paths or subplans, stage checkboxes, concise execution notes, state checks, and the result. Its canonical filename is `run/<realization-id>--<YYYYMMDDTHHMMSSZ>.md`.
+
+#### Source in Idea
+
+- Explicit in the integrated mini-idea [`single-pass-and-multi-pass-plans`](./single-pass-and-multi-pass-plans/single-pass-and-multi-pass-plans.md).
+
+#### Role in the Idea
+
+The run is the current operational view of plan execution. It keeps mutable execution state and recent effort outside `plan.md`. Its creation increments persistent launch statistics in `path-options.md`, and terminal validation updates the latest result.
+
+#### Related Concepts
+
+- Other relations: [`concept-plan-as-transition-model`](#concept-plan-as-transition-model): a run instantiates the transition model and selected branches.
+- Other relations: [`concept-plan-realization-registry`](#concept-plan-realization-registry): a run selects one registered realization and updates its statistics.
+- Other relations: [`concept-success-criteria`](#concept-success-criteria): the run validates initial, intermediate, and final states.
+
+#### Boundaries
+
+- A run is not a permanent plan variant or source plan.
+- Working logs are retained only to a configured depth, normally the latest three to five runs per realization.
+- Product artifacts and external evidence are not deleted merely because an old working run log is removed.
+
+#### Questions
+
+- None.
+
+<a id="concept-contextual-artifact-navigation"></a>
+
+### concept-contextual-artifact-navigation: Contextual Artifact Navigation
+
+#### Definition
+
+A traceable relationship between Machine of Goals artifacts expressed as a
+standard Markdown link at the point where the relationship has meaning. Goal
+context links to its plan and related goals, plan elements link to their paths,
+subplans, inputs, outputs, and realizations, and concrete runs link to the exact
+plan and realization revisions they executed. Cross-project use may remain a
+direct reference to the source artifact and does not require export or import.
+
+#### Source in Idea
+
+- Explicit in the goal-artifact context, subgoal reuse, realization, and run
+  descriptions of the main idea.
+
+#### Role in the Idea
+
+Contextual navigation keeps complex and shared goal graphs understandable
+without turning every artifact into the same global menu. It separates the
+human-facing link from machine-readable identity and provenance, preserves an
+obvious return to the source goal, and makes execution history interpretable
+after plans or realizations change.
+
+#### Related Concepts
+
+- Other relations: [`concept-goal-artifact-context`](#concept-goal-artifact-context): the source goal is the understandable origin of its artifacts.
+- Other relations: [`concept-plan-as-transition-model`](#concept-plan-as-transition-model): plan links follow stages, subplans, inputs, and outputs.
+- Other relations: [`concept-plan-realization-registry`](#concept-plan-realization-registry): registered realizations connect plan elements to executable artifacts.
+- Other relations: [`concept-working-plan-run`](#concept-working-plan-run): a run pins the revisions and evidence used in one execution.
+
+#### Boundaries
+
+- A frontmatter id or path is not a substitute for a useful Markdown link.
+- A universal navigation block is not required in every artifact.
+- Direct reference does not copy or adapt the referenced artifact.
+- Provider-side `used-by` backlinks are not required for a consumer to use an
+  artifact from another project.
+- Planning may follow an explicitly mutable `current` reference; realization
+  decisions and runs require an exact revision reference.
+
+#### Questions
+
+- None.
 
 <a id="concept-subgoal-and-partial-achievement"></a>
 
@@ -345,7 +491,7 @@ This concept keeps Machine of Goals away from blind automation. A plan should be
 
 #### Definition
 
-The range of plan execution modes: fully manual, interactive by stages, partially automatic, or fully automatic where this is acceptable. Machine of Goals should strive toward automatic plan execution, but the boundaries of automation are chosen by the user each time.
+The range of plan execution modes: fully manual, interactive by stages, partially automatic, or fully automatic where this is acceptable. Machine of Goals should strive toward automatic plan execution, but the boundaries of automation are chosen by the user each time. Registration of an automatic realization also changes the plan lifecycle from single-pass to multi-pass.
 
 #### Source in Idea
 
@@ -360,6 +506,7 @@ This concept shows that Machine of Goals does not have to choose between human a
 - Other relations: [`concept-plan-explanation-and-control`](#concept-plan-explanation-and-control): control defines safe execution modes.
 - Other relations: [`concept-executable-collapsed-plan`](#concept-executable-collapsed-plan): the automatic form is the limiting case of execution.
 - Other relations: [`concept-plan-algorithmization`](#concept-plan-algorithmization): the algorithm makes execution controllable.
+- Other relations: [`concept-computed-plan-style`](#concept-computed-plan-style): registered automation selects a repeated-execution workflow.
 
 #### Boundaries
 
@@ -379,7 +526,7 @@ This concept shows that Machine of Goals does not have to choose between human a
 
 #### Definition
 
-A collapsed form of the plan suitable for automatic execution, handoff into design, or publication as a workflow, agentic execution scenario, script, CLI command, SDD specification, Markdown artifact with export capability, or another mechanism. The primary format of a collapsed plan depends on the type of goal: for goals in a computational environment, scripts may be a natural form; for design goals, SDD; for social goals, Markdown with the possibility of export to a website or another readable external format.
+A registered automatic realization of the complete plan or one of its subplans, suitable for execution, handoff into design, or publication as a workflow, agentic execution scenario, script, CLI command, SDD specification, Markdown artifact with export capability, or another mechanism. The primary format depends on the type of goal: for goals in a computational environment, scripts may be a natural form; for design goals, SDD; for social goals, Markdown with the possibility of export to a website or another readable external format. Whatever its format, an automatic realization must preserve the plan's validation of initial, required intermediate, and final states.
 
 #### Source in Idea
 
@@ -394,6 +541,7 @@ This is one of the central concepts of Machine of Goals: the most valuable plans
 - Other relations: [`concept-plan-algorithmization`](#concept-plan-algorithmization): collapsing requires algorithmic form.
 - Other relations: [`concept-plan-explanation-and-control`](#concept-plan-explanation-and-control): a collapsed plan should remain explainable and stoppable.
 - Other relations: [`concept-plan-exchange`](#concept-plan-exchange): collapsed plans become suitable for exchange.
+- Other relations: [`concept-plan-realization-registry`](#concept-plan-realization-registry): the realization is registered with coverage, status, and aggregate use statistics.
 
 #### Boundaries
 
@@ -412,7 +560,7 @@ This is one of the central concepts of Machine of Goals: the most valuable plans
 
 #### Definition
 
-Exchange of successful collapsed or semi-automatic plans inside the Double ecosystem for reuse, adaptation, and improvement in the context of corresponding goals. A plan is always connected to a goal and can be used only as part of achieving the stated goal; it is not an independent artifact with an arbitrary other context.
+Exchange and import of multi-pass plans inside the Double ecosystem for reuse, adaptation, and improvement in the context of corresponding goals. A plan is always connected to a goal and can be used only as part of achieving the stated goal; it is not an independent artifact with an arbitrary other context. The reusable package preserves the goal context, plan, selectable paths or subplans, registered realizations, and validation contracts. Bounded working run logs are not required permanent exchange history.
 
 #### Source in Idea
 
@@ -446,7 +594,7 @@ This concept expands Machine of Goals from individual planning to ecosystem valu
 
 #### Definition
 
-The file and semantic context of a goal inside Double: the goal catalog, main Markdown file, separate plan file, realization working catalog, explanations, parameters, checks, executable algorithms, and nested subgoals. The main goal artifact should use the same base name as the goal directory, for example `my-first-goal/my-first-goal.md`. The plan should be stored as a separate `plan.md` file in the goal catalog. The realization working catalog should be defined both in the goal and in the plan.
+The file and semantic context of a goal inside Double: the goal catalog, main Markdown file, `path-options.md` path and realization registry, separate `plan.md`, bounded `run/` working logs, realization working catalog, explanations, parameters, checks, executable algorithms, and nested subgoals. The main goal artifact should use the same base name as the goal directory, for example `my-first-goal/my-first-goal.md`. The plan should be stored as a separate `plan.md` file in the goal catalog. The realization working catalog should be defined both in the goal and in the plan.
 
 #### Source in Idea
 
@@ -469,6 +617,7 @@ This concept connects thinking about goals with reproducible artifact storage. A
 - Markdown storage by itself does not solve verification, execution, or automation.
 - The plan should not be hidden only inside the main goal file: it needs a separate file in the goal catalog.
 - The realization working catalog does not replace the goal catalog: the goal catalog stores semantic artifacts, while the realization working catalog contains the executable or publishable form of the algorithm.
+- The `run/` directory belongs to the goal's operational context but does not become permanent execution history.
 
 #### Questions
 
@@ -494,6 +643,9 @@ This concept connects thinking about goals with reproducible artifact storage. A
 - The understandability of the plan is the minimal conceptual contract for moving to realization: the plan should be clear enough to the subject or executing agent to begin controlled execution and clarify it along the way.
 - The machine should first distinguish paths of achievement and only then synthesize plans.
 - The plan should be explainable before execution, especially before automation.
+- Achievement paths should remain visible in `path-options.md` after planning as selectable plan branches and realization coverage.
+- Registration of an automatic realization for a plan or subplan should compute the multi-pass style immediately, before the first successful validation.
+- Working run logs should be bounded, while aggregate realization statistics remain available.
 - Before automatic or agentic execution, the user should be able to request `dry run`, in which the agent explains the next stage without real actions.
 - Mandatory explanation before execution should include the selected stage, the reason for selection, the state of already completed stages, and the justification for the further path through the plan graph.
 - Automation should be a degree of execution, not the mandatory destiny of every goal.

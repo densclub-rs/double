@@ -28,7 +28,7 @@ For each useful path, describe:
 - expected cost and risk
 - uncertainty and missing evidence
 - whether it can use delegation, tools, automation, or reusable analogs
-- whether it should become a plan candidate
+- whether it should become a selectable plan branch or subplan
 
 If no plausible path exists, mark the goal as blocked, infeasible, or requiring
 reformulation.
@@ -40,6 +40,13 @@ user's response to the current question, then continue with the next one.
 
 Offer transition to `03-plan-synthesis` only when at least one plausible path
 exists and no `Open Questions` remain.
+
+Keep stable path ids: `path-options.md` will remain the living registry after
+planning and later acquire registered realizations and aggregate run statistics.
+
+Link `Source Goal`, give paths explicit anchors, and link a planned path to its
+plan element. Keep external authoritative artifacts as direct references unless
+adaptation is requested.
 
 After responding, offer the next useful workflow movement. Name the next step,
 mode, responsible agent, and expected artifact when known.

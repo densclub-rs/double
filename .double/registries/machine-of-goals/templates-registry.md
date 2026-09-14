@@ -19,7 +19,8 @@ outputs.
 - `path-options` -> `.double/templates/machine-of-goals/path-options-template.md`
 - `plan-artifact` -> `.double/templates/machine-of-goals/plan-template.md`
 - `realization-decision` -> `.double/templates/machine-of-goals/realization-decision-template.md`
-- `stage-attempt-result` -> `.double/templates/machine-of-goals/stage-attempt-result-template.md`
+- `plan-run` -> `.double/templates/machine-of-goals/plan-run-template.md`
+- `run-index` -> `.double/templates/machine-of-goals/run-index-template.md`
 - `exported-plan-package` -> `.double/templates/machine-of-goals/exported-plan-package-template.md`
 
 ## Usage Rule

@@ -24,14 +24,16 @@ Behavior:
 
 - for import, adapt existing material to the current goal, current state,
   target state, criteria, constraints, and resources
-- for export, preserve goal, plan, criteria, context, evidence, assumptions,
-  and reuse boundaries
+- for export, preserve goal, plan, selectable paths, registered realizations,
+  criteria, context, evidence, assumptions, and reuse boundaries
 - record source, provenance, mismatch notes, adaptation requirements, and
   intended reuse
-- when exporting execution state, include the active plan artifact and relevant
-  `results/` artifacts
-- when importing existing implementations, add links to them in the current
-  plan artifact for reference and verification
+- import and export multi-pass plans with `path-options.md`, registered
+  automatic realizations, and their validation contracts
+- register imported realizations and recompute style
+- exclude bounded `run/` working logs by default
+- do not import an authoritative external artifact merely because another
+  project directly references it; preserve contextual source and revision links
 - choose export form by goal type, realization medium, validation method, and
   intended audience
 - after processing the user's request, offer one to three next workflow steps

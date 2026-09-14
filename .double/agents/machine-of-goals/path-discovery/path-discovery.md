@@ -23,8 +23,8 @@ derived-from:
 
 ## Purpose
 
-`Path Discovery` discovers possible ways to reach a formulated goal before a
-specific plan is chosen.
+`Path Discovery` discovers possible ways to reach a formulated goal and creates
+the living path registry used by planning and realization.
 
 ## Position in Workflow
 
@@ -58,6 +58,12 @@ specific plan is chosen.
 - compare paths by fit, cost, risk, uncertainty, and expected value
 - keep plausible alternatives visible until the goal is closed or the user
   chooses to discard them
+- assign stable path ids that can be referenced by plan branches and
+  realizations
+- link the source goal in `Source Goal`, give every path a stable explicit
+  anchor, and link planned paths to their plan stages or subplans
+- link registered realizations to their definitions or implementations and
+  exact revisions when available
 - record every unresolved issue as an `Open Question`
 - when `Open Questions` remain, state that Path Discovery is not complete,
   offer to resolve them one by one, and wait for each user response
@@ -78,6 +84,7 @@ specific plan is chosen.
 - must not hide uncertainty in a path
 - must not choose a strategy when the user or review step must decide
 - must not execute plan stages
+- must not treat a realization medium as a separate plan
 
 ## Required Artifacts
 

@@ -23,9 +23,9 @@ derived-from:
 
 ## Purpose
 
-`Plan Validation` compares stage attempt results or final goal results with
-explicit criteria through dialogue and records the validation decision in the
-active plan artifact.
+`Plan Validation` compares current run results or final goal results with
+explicit criteria, records the decision in the run, and updates aggregate
+realization statistics.
 
 ## Position in Workflow
 
@@ -36,7 +36,8 @@ active plan artifact.
 
 ## Inputs
 
-- `stage-attempt-result`
+- `plan-run`
+- `path-options`
 - `stage-validation-criteria`
 - `goal-artifact`
 - `plan-artifact`
@@ -44,7 +45,10 @@ active plan artifact.
 
 ## Outputs
 
-- `updated-plan-artifact`
+- `updated-plan-run`
+- `updated-run-index` when retention removes a run
+- `updated-path-options`
+- `updated-plan-artifact` when plan revision is required
 - `goal-progress-note`
 - `revision-or-continuation-decision`
 - `goal-closure-signal` when applicable
@@ -54,12 +58,18 @@ active plan artifact.
 - validate results against explicit criteria
 - distinguish accepted, rejected, partial, blocked, and needs-revision results
 - conduct validation in dialogue until an explicit decision is reached
-- record compact validation decisions in the relevant stage detail of the
-  active plan artifact
-- link supporting evidence, checks, errors, elapsed cost, and relevant
-  observations from `results/` when they are too detailed for the plan
-- update `Plan Map`, `Blocker`, metrics, risks, open questions, and goal
-  progress in the active plan artifact
+- record validation decisions, evidence, and terminal result in the current run
+- replace latest `running` result with the terminal result in `path-options.md`
+  without incrementing run count again
+- enforce bounded run retention after terminal statistics update
+- update `run/index.md` and remove the link to a run only when retention removes
+  its file
+- verify contextual links to exact revisions and validation evidence before
+  accepting a terminal result
+- revise `plan.md` only when feedback changes the intended transition model and
+  mark affected realizations `review-required`
+- create or identify a new immutable revision reference whenever `plan.md` is
+  revised for a later decision or run
 - decide whether the workflow should continue, branch, revise, reformulate,
   pause, close, or request export
 
@@ -88,4 +98,4 @@ active plan artifact.
 ## Transition Rule
 
 The step is complete when an explicit validation decision has been recorded in
-the active plan artifact.
+the run and aggregate statistics have been updated.

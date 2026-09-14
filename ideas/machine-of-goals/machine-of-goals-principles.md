@@ -44,7 +44,7 @@ Machine of Goals should begin with the goal as a verifiable target state, not wi
 
 #### Rationale
 
-If a goal is not represented as a verifiable state, the machine cannot honestly build a path, compare plan variants, complete execution, or evaluate partial achievement. At the same time, the degree of specification formality should depend on the type of goal and be determined during goal design.
+If a goal is not represented as a verifiable state, the machine cannot honestly build a path, compare selectable plan paths or realizations, complete execution, or evaluate partial achievement. At the same time, the degree of specification formality should depend on the type of goal and be determined during goal design.
 
 #### Implications Without Implementation
 
@@ -279,6 +279,94 @@ The distinction between plan and algorithm prevents thinking about goal achievem
 
 - None.
 
+<a id="principle-automatic-realization-registration-makes-plan-multi-pass"></a>
+
+### principle-automatic-realization-registration-makes-plan-multi-pass: Automatic Realization Registration Makes a Plan Multi-Pass
+
+#### Statement
+
+Machine of Goals should compute a plan as multi-pass when an automatic realization of the plan or one of its subplans is registered.
+
+#### Derived From
+
+- Source concept(s): [Computed Plan Style](./machine-of-goals-concepts.md#concept-computed-plan-style), [Plan Realization Registry](./machine-of-goals-concepts.md#concept-plan-realization-registry), [Executable Collapsed Plan](./machine-of-goals-concepts.md#concept-executable-collapsed-plan)
+- Source relationship, boundary, or tension: repeatable automation changes the plan lifecycle before its first successful run
+- Source idea support: integrated mini-idea [`single-pass-and-multi-pass-plans`](./single-pass-and-multi-pass-plans/single-pass-and-multi-pass-plans.md)
+- Explicit or inferred: explicit
+
+#### Rationale
+
+Registration makes an automatic realization available for selection and therefore creates the need for repeated execution, refinement, import, and plan feedback. Waiting for successful validation would keep the plan in the wrong workflow precisely while the realization is being tested and improved.
+
+#### Implications Without Implementation
+
+- Creating an implementation file does not by itself change plan style.
+- Registration changes the style immediately from single-pass to multi-pass.
+- A registered realization may remain unvalidated or require alignment review.
+- Multi-pass workflow supports later changes to the plan or realization based on execution experience.
+- Multi-pass plans may be imported into another project together with their goal, paths, realizations, and validation contracts.
+
+#### Boundaries
+
+- Computed style does not certify realization readiness or correctness.
+- Manual and interactive realization alone do not make the plan multi-pass under this rule.
+- Registration does not authorize automatic execution outside user-approved boundaries.
+
+#### Anti-Patterns
+
+- Computing multi-pass from the mere presence of a script file.
+- Waiting for the first successful run before enabling the multi-pass workflow.
+- Treating `multi-pass` as a readiness or alignment status.
+
+#### Questions
+
+- How should style be recomputed when the final active automatic realization is unregistered or retired?
+
+<a id="principle-working-logs-are-bounded-statistics-persist"></a>
+
+### principle-working-logs-are-bounded-statistics-persist: Working Logs Are Bounded, Statistics Persist
+
+#### Statement
+
+Machine of Goals should retain only a bounded recent set of working run logs while preserving aggregate realization statistics in `path-options.md`.
+
+#### Derived From
+
+- Source concept(s): [Working Plan Run](./machine-of-goals-concepts.md#concept-working-plan-run), [Plan Realization Registry](./machine-of-goals-concepts.md#concept-plan-realization-registry), [Plan Cost and Efficiency](./machine-of-goals-concepts.md#concept-plan-cost-and-efficiency)
+- Source relationship, boundary, or tension: current execution needs an understandable working log without creating permanent unbounded operational history
+- Source idea support: integrated mini-idea [`single-pass-and-multi-pass-plans`](./single-pass-and-multi-pass-plans/single-pass-and-multi-pass-plans.md)
+- Explicit or inferred: explicit
+
+#### Rationale
+
+Recent run logs explain how the plan is being realized here and now. Long-term comparison needs only compact statistics showing which realizations exist, how often they have run, when they last ran, and how the latest run ended.
+
+#### Implications Without Implementation
+
+- Each execution creates `run/<realization-id>--<YYYYMMDDTHHMMSSZ>.md`.
+- Run creation increments run count, records latest run time, and sets latest
+  result to `running`; terminal validation replaces the result without a second
+  increment.
+- The normal retained depth is the latest three to five runs per realization.
+- `path-options.md` stores aggregate run count, latest run time, and latest result without links to individual run files.
+- Removing old working logs does not reset aggregate statistics or remove product artifacts and external evidence.
+
+#### Boundaries
+
+- Aggregate statistics do not replace the validation record of an active run.
+- The retention rule applies to working logs, not automatically to outputs created by execution.
+- The principle does not require permanent links from `path-options.md` to run files.
+
+#### Anti-Patterns
+
+- Keeping an unbounded file per execution as permanent plan history.
+- Computing cumulative run count only from files that remain under `run/`.
+- Storing mutable run checkboxes directly in `plan.md`.
+
+#### Questions
+
+- None.
+
 <a id="principle-collapsing-format-should-follow-goal-type"></a>
 
 ### principle-collapsing-format-should-follow-goal-type: Collapsing Format Should Follow Goal Type
@@ -363,6 +451,58 @@ Subgoals make it possible to work with goals that cannot be achieved through one
 
 - None.
 
+<a id="principle-navigation-follows-context"></a>
+
+### principle-navigation-follows-context: Navigation Follows Context
+
+#### Statement
+
+Machine of Goals should place each human-facing Markdown link where the
+relationship it represents is explained, while preserving an understandable
+route to the source goal and pinning exact revisions at execution time.
+
+#### Derived From
+
+- Source concept(s): [Contextual Artifact Navigation](./machine-of-goals-concepts.md#concept-contextual-artifact-navigation), [Goal Artifact Context](./machine-of-goals-concepts.md#concept-goal-artifact-context), [Working Plan Run](./machine-of-goals-concepts.md#concept-working-plan-run)
+- Source relationship, boundary, or tension: navigation must remain useful in complex and cross-project goal graphs without becoming repetitive document chrome
+- Source idea support: `Raw Description`, `Assumptions`, `Notes`
+- Explicit or inferred: explicit
+
+#### Rationale
+
+A repeated global menu does not tell the reader why two artifacts are related.
+Contextual links make the relationship visible where a goal, path, subplan,
+realization, decision, revision, run, or evidence artifact is being interpreted.
+Pinned execution links prevent mutable current files from rewriting the meaning
+of an earlier decision or run.
+
+#### Implications Without Implementation
+
+- Artifact templates should place links inside their existing source, plan,
+  decision, execution, and evidence sections.
+- Frontmatter references remain machine-readable and do not replace links in
+  prose or tables.
+- Direct cross-project reference is distinct from import and export.
+- Provider-side consumer indexes may be computed later and are not required for
+  direct reuse.
+
+#### Boundaries
+
+- Not every artifact must link to every neighboring artifact.
+- The principle does not require a universal navigation block.
+- A link to `current` is not sufficient evidence of the revision used by a run.
+
+#### Anti-Patterns
+
+- Repeating the same navigation menu in every artifact.
+- Listing paths in backticks when a reader needs to follow them.
+- Linking a run only to a mutable `plan.md` without its executed revision.
+- Treating a cross-project link as an implicit import.
+
+#### Questions
+
+- None.
+
 <a id="principle-cost-should-accumulate-from-execution"></a>
 
 ### principle-cost-should-accumulate-from-execution: Cost Should Accumulate From Execution
@@ -412,17 +552,25 @@ Plan comparison requires measurable grounds. Basic metrics - the number of succe
 - `Reuse` vs `inseparability from goal`: useful plans and subgoals should be reused, but only together with purpose, inputs, outputs, and success criteria.
 - `Unified artifact order` vs `domain-dependent formats`: the goal catalog should be the structural anchor, but collapsed forms depend on the type of goal.
 - `Execution metrics` vs `domain-specific costs`: shared metrics are needed for comparison, but they should not displace the specific costs of a concrete goal.
+- `Bounded working history` vs `persistent learning`: detailed recent runs expire, while aggregate realization statistics and plan feedback remain.
+- `Contextual links` vs `global discovery`: local relationships stay readable,
+  while a future computed workspace index may be needed to discover all
+  consumers of a shared artifact.
 
 ## 5. Candidate Inputs for Future Stages
 
 - Design the Machine of Goals workflow around the transition `Goal Capture -> Path Discovery -> Plan Synthesis -> Plan Automation`.
 - Define the goal artifact contract: target state, initial state, success criteria, constraints, realization working catalog.
-- Define the plan artifact contract: `plan.md`, transition graph, subgoals, checks, stop points, automation modes, execution metrics.
+- Define the plan artifact contract: `plan.md`, transition graph, selectable paths and subplans, checks, stop points, and validation states.
+- Define `path-options.md` as the living registry of paths, realizations, computed style input, and aggregate execution statistics.
+- Define the bounded `run/` working-log contract and retention policy.
 - Define the subgoal artifact contract: separate catalog, subplan, inputs, outputs, completion criteria, and connection to the parent goal.
 - Define a dry run protocol for agentic execution without real actions.
 - Define the policy for choosing execution mode: up to a stage, by a list of stages, fully controlled.
 - Define the mapping from goal types to collapsed-plan formats: scripts, SDD, Markdown export, workflow, agent runbook.
 - Define rules for linking the goal catalog and the realization working catalog.
+- Define contextual Markdown link requirements, direct cross-project
+  references, revision pinning, and run-index maintenance.
 
 ## 6. Rejected or Deferred Candidate Principles
 

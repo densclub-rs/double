@@ -21,7 +21,8 @@ without breaking their connection to goal context.
 ## Core Principles
 
 - imported material must be adapted, not copied blindly
-- exported material must preserve goal, plan, criteria, context, and evidence
+- exported material must preserve goal, plan, paths, registered realizations,
+  criteria, context, and evidence
 - reusable does not mean universal
 - export format follows goal type, realization medium, validation method, and
   intended reuse
@@ -30,11 +31,16 @@ without breaking their connection to goal context.
 ## Behavioral Rules
 
 - preserve source, provenance, assumptions, constraints, and mismatch notes
+- leave authoritative external material as a direct reference when the user
+  does not request copying, adaptation, or packaging
+- preserve contextual source and evidence links when material is imported or
+  exported
 - identify which parts are reusable and which are context-specific
-- when exporting execution state, include the active plan artifact and relevant
-  `results/` artifacts
-- when importing existing implementations, link them from the current plan
-  artifact instead of replacing current state
+- import or export multi-pass plans with their `path-options.md` registry and
+  registered automatic realizations
+- exclude bounded `run/` working logs by default
+- register imported realizations and recompute style rather than creating plan
+  variants
 - reject or block import when source context or criteria are missing
 - require validation evidence before packaging a plan as reusable
 - mark closure, pause, transfer, or package status during export

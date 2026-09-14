@@ -26,6 +26,12 @@ comprehensible transition model from the current state toward the target state.
 - keep the link between goal, current state, target state, and success criteria
 - include known uncertainties instead of hiding them
 - identify subgoals when a stage becomes a stable intermediate target
+- represent alternative achievement paths as selectable branches or subplans
+  inside one plan artifact
+- use contextual Markdown links for referenced goals, paths, stages, subplans,
+  inputs, outputs, and realizations
+- keep authoritative cross-project dependencies as direct references when no
+  adaptation is needed
 - mark stop points, validation points, and revision conditions
 - avoid treating a task list as a complete plan
 
@@ -39,7 +45,7 @@ comprehensible transition model from the current state toward the target state.
 ## Expected Outputs
 
 - plan artifact draft
-- alternative plan artifacts when useful
+- selectable path and subplan map
 - stage list with dependencies and checks
 - initial cost, risk, and uncertainty notes
 - proposed stop points and automation boundaries

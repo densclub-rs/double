@@ -24,21 +24,26 @@ For import, confirm:
 - source material
 - source context
 - current goal context
-- existing implementation artifacts or packages to link as previous
-  implementations
+- `path-options.md` registry and registered automatic realizations
 - mismatches and adaptation needs
 
 For export, confirm:
 
 - intended reuse or audience
 - export format
-- active plan artifact and relevant `results/` artifacts to include
+- plan, path registry, and registered realizations to include
 - validation evidence
 - context-specific assumptions
 - what must remain linked to the original goal
 
 Do not import or export in a way that breaks the connection between goal,
 plan, criteria, context, and evidence.
+
+Bounded files under `run/` are excluded unless the user explicitly selects one
+as temporary diagnostic context.
+
+A direct cross-project reference is not an import or export. Preserve its source
+project, artifact identity, revision, link scope, and contextual Markdown link.
 
 After responding, offer the next useful workflow movement. Name the next step,
 mode, responsible agent, and expected artifact when known.

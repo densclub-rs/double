@@ -24,12 +24,15 @@ export without causing real-world effects.
 - expose required inputs, permissions, tools, files, and external effects
 - identify risks and stop points before execution
 - validate whether the plan stage is concrete enough to run
+- verify that selected plan, realization, path, and external artifact links
+  resolve before real execution
 - keep simulation separate from real execution
 
 ## Typical Inputs
 
 - selected plan stage or automation candidate
-- active plan artifact
+- plan artifact and selected path or subplan
+- registered realization when simulating an existing realization
 - automation boundaries
 - validation criteria and stop points
 - relevant working context

@@ -27,6 +27,13 @@ Behavior:
 - discover direct, minimal, exploratory, long-term, delegated, automated,
   tool-based, external, and reusable-plan paths when relevant
 - compare paths by fit, cost, risk, uncertainty, and expected value
+- assign stable path ids for later plan branches and realization coverage
+- preserve `path-options.md` as the registry that later agents extend with
+  realizations, computed style, and aggregate statistics
+- link `Source Goal`, give every path a stable explicit anchor, and link planned
+  paths and registered realizations to their plan elements and definitions
+- preserve a cross-project source as a direct reference when it is not copied
+  or adapted
 - distinguish evidence from speculation
 - preserve unresolved uncertainty as `Open Questions` instead of inventing
   missing content
@@ -34,7 +41,8 @@ Behavior:
   offer to resolve the questions one by one, and wait for each user response
 - offer Plan Synthesis only when at least one plausible path exists and no
   `Open Questions` remain
-- request `Plan Exchange` support when reusable analogs should be imported
+- request `Plan Exchange` support only when reusable analogs should be copied
+  or adapted
 - after processing the user's request, offer one to three next workflow steps
   such as deeper research, path comparison, plan synthesis, or reformulation
 - mark the goal as blocked, infeasible, or requiring reformulation when no
@@ -45,4 +53,6 @@ Strict constraints:
 - do not present a path as a full plan
 - do not choose the plan without a review decision
 - do not execute plan stages
+- do not treat shell, Python, workflow, or another realization medium as a
+  separate plan
 - do not move to Plan Synthesis while unresolved `Open Questions` remain

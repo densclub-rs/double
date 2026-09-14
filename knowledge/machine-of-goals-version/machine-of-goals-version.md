@@ -1,13 +1,14 @@
 ---
 id: machine-of-goals-version
 kind: knowledge-artifact
-produced-by: machine-of-knowledge/knowledge-extraction-agent
+status: release-candidate
+produced-by: knowledge-extraction-agent
 interaction-language: ru
 artifact-language: en
-type: static
+knowledge-type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-07-19
+observed-at: 2026-08-30
 ttl: one month
 derived-from:
   - knowledge/double-main-modules/double-main-modules.md
@@ -25,11 +26,19 @@ project.
 
 ## Value
 
-`0.0.2`
+`0.0.3`
 
 ## Change Note
 
-Version `0.0.2` records the Machine of Goals artifact-contract refactor:
-execution state is stored in the active `plan.md`, `plan-state` is no longer a
-separate artifact, and working/intermediate execution artifacts are stored under
-`<goal-directory>/results/`.
+Version `0.0.3` records the computed multi-pass and plan-run artifact-contract
+refactor:
+
+- each goal has one `plan.md` with selectable paths or subplans
+- `path-options.md` remains the living path and realization registry
+- registering an automatic realization changes computed style from
+  `single-pass` to `multi-pass`
+- mutable execution state is stored in bounded
+  `run/<realization-id>--<YYYYMMDDTHHMMSSZ>.md` working logs
+- aggregate realization statistics survive working-log retention
+- reusable multi-pass import and export preserve goal context, paths,
+  realizations, and validation contracts without requiring run logs

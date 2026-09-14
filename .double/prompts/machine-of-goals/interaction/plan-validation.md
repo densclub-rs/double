@@ -16,9 +16,11 @@ We are going to validate the current stage or goal result.
 
 Current step: `06-plan-validation`.
 Default mode: `validation`.
-Expected output: `updated-plan-artifact`.
+Expected outputs: `updated-plan-run`, `updated-run-index` when retention removes
+a run, `updated-path-options`, and an updated plan only when explicit plan
+revision is required.
 
-Compare stage attempt evidence with criteria and mark the result as:
+Compare current run evidence with criteria and mark the result as:
 
 - accepted
 - rejected
@@ -31,10 +33,14 @@ dialogue with concise questions until an explicit decision is reached. Then
 decide the next workflow direction: continue, branch, revise, reformulate,
 pause, close, or request export.
 
-Record the compact validation decision in the relevant stage `Validation` block
-inside the active plan artifact. Update `Plan Map`, `Blocker`, progress, risks,
-and open questions there as needed. Link supporting evidence from
-`<goal-directory>/results/` when it is too detailed for the plan.
+Record the validation decision in the run. For a terminal result, replace the
+realization's latest `running` result in `path-options.md` without incrementing
+run count again, then apply the configured retention limit. Revise `plan.md`
+only when the intended transition model must change.
+
+Confirm that exact plan and realization revision links and evidence links
+resolve. When retention removes a run, update `run/index.md` without leaving a
+broken link.
 
 After responding, offer the next useful workflow movement. Name the next step,
 mode, responsible agent, and expected artifact when known.

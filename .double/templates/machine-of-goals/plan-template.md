@@ -18,120 +18,78 @@ derived-from:
 ---
 id: <goal-id>-plan
 kind: plan-artifact
+project-id: <stable-project-id>
 produced-by: plan-synthesis-agent
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
 goal-id: <goal-id>
 goal-artifact: <path-to-goal-artifact>
-plan-role: <canonical-community|personal-variant|imported-variant|experimental-variant|hybrid-variant>
-plan-filename: <plan.md-or-plan--author-<author>--device-<device>--time-<YYYYMMDDTHHMMSS>.md>
-variant-id: <canonical-or-author-device-time-specific-id>
-variant-of: <canonical-plan-id-or-null>
-canonical-plan-artifact: <goal-directory>/plan.md
-author: <author-or-agent-id-or-null>
-device: <device-or-runtime-id-or-null>
-created-at: <YYYY-MM-DDTHH:MM:SS+HH:MM-or-null>
-updated-at: <YYYY-MM-DDTHH:MM:SS+HH:MM-or-null>
-imported-from: <source-plan-artifact-or-package-or-null>
+path-options-artifact: <goal-directory>/path-options.md
+plan-artifact: <goal-directory>/plan.md
 goal-scope: <main-goal|subgoal>
+plan-execution-style: <single-pass|multi-pass|not-yet-computed>
 parent-goal-id: <parent-goal-id-or-null>
 parent-plan-artifact: <parent-plan-artifact-or-null>
-selected-paths:
-  - <path-id>
-related-plan-variants:
-  - <plan-artifact-id-or-path>
-existing-plan-implementations:
-  - <plan-artifact-id-or-package-path>
+plan-revision: <positive-integer>
+created-at: <YYYY-MM-DDTHH:MM:SSZ>
+updated-at: <YYYY-MM-DDTHH:MM:SSZ>
 derived-from:
   - <goal-artifact-id-or-path>
   - <path-options-id-or-path>
 ---
 
+<a id="<goal-id>-plan"></a>
+
 # Plan: <Goal Title>
 
 ## 1. Plan Summary
 
-Briefly describe the plan as a transition from current state to target state.
+Briefly describe the plan as one transition model from the current state to the
+target state. Alternative achievement choices belong inside the model as paths,
+branches, or subplans.
 
-- Goal artifact: `<path-to-goal-artifact>`
-- Selected path or hybrid:
-- Current state:
-- Target state:
-- Success criteria:
+- Source goal: [<goal-title>](./<goal-id>.md#<goal-id>)
+- Source paths: [Path and realization registry](./path-options.md#<goal-id>-path-options)
+- Parent plan for a subgoal: [<parent-plan-title>](../plan.md#<parent-goal-id>-plan) or none
 
-## 2. Plan Variant Identity
+### Current State
 
-- Plan role: <canonical-community|personal-variant|imported-variant|experimental-variant|hybrid-variant>
-- Plan filename: `<plan.md-or-plan--author-<author>--device-<device>--time-<YYYYMMDDTHHMMSS>.md>`
-- Canonical plan artifact: `<goal-directory>/plan.md`
-- Variant of:
-- Author:
-- Device / runtime:
-- Created at:
-- Imported from:
-- Active selection status: <candidate|selected|superseded|rejected|promoted-to-canonical>
-- Promotion rule: only replace `plan.md` when the user or responsible community process explicitly chooses this variant as the canonical community plan.
+<summary of the starting state>
+
+### Target State
+
+<summary of the desired state>
+
+### Success Criteria
+
+<summary of the conditions that establish success>
+
+## 2. State Validation Contract
+
+- Initial state checks:
+- Required intermediate state checks:
+- Final state checks:
+- Evidence requirements:
+- Stop when validation cannot be completed:
 
 ## 3. Plan Map
 
-Use this section for fast review, stage topology, and execution status. This is
-the single source of stage status and validation status in the plan. `Last
-Attempt` values should be Markdown links to files under `./results/` when those
-artifacts exist. `Last Attempt Time` records when the most recent realization
-attempt for the stage was made.
+Use this section for stable stage topology. Execution status and checkboxes do
+not belong here; they are instantiated in the selected `plan-run`.
 
-Status of stage:
+| Stage | Kind | Inputs | Outputs | Possible Next Stages | Required Validation |
+| --- | --- | --- | --- | --- | --- |
+| [S01: <Stage 1 Name>](#stage-s01) | <stage|choice|subplan|merge|validation> | [<input artifact>](<input-artifact-link>) | [<output artifact>](<output-artifact-link>) | [S02](#stage-s02) | <check-id> |
+| [S02: <Stage 2 Name>](#stage-s02) | <stage|choice|subplan|merge|validation> | [S01](#stage-s01) | <state-or-artifact> | [S03](#stage-s03) | <check-id> |
 
-- ⚪ not-started
-- 🔵 in-progress
-- ✅ done
-- 🟡 partial
-- ⛔ blocked
-- ❌ rejected
-- 🔁 needs-revision
-
-Validation status:
-
-- ⚪ not-validated
-- ✅ accepted
-- 🟡 partial
-- ⛔ blocked
-- ❌ rejected
-- 🔁 needs-revision
-
-| Stage | Status | Validation | Inputs | Outputs | Last Attempt | Last Attempt Time |
-| --- | --- | --- | --- | --- | --- | --- |
-| [S01: <Stage 1 Name>](#stage-s01) | ⚪ not-started | ⚪ not-validated | <goal|path-options|other> | [S02](#stage-s02) | [<attempt-file>.md](./results/<attempt-file>.md) | <YYYY-MM-DDTHH:MM:SS+HH:MM-or-none> |
-| [S02: <Stage 2 Name>](#stage-s02) | ⚪ not-started | ⚪ not-validated | [S01](#stage-s01) | [S03](#stage-s03) | <none-or-link> | <none> |
-
-## 4. Blocker
-
-- Blocker: <none|description>
-- Owner:
-- Needed decision:
-- Unblock condition:
-
-## 5. Stage Attempts
-
-- Save attempt artifacts after plan update: <ask-user|yes|no>
-- Current attempt count: <number>
-- Retention threshold: 10
-- Cleanup decision when attempts exceed threshold: ask-user
-- Attempt artifact directory: `./results/`
-
-| Stage | Attempt | Artifact | Author | Device | Time | Keep |
-| --- | --- | --- | --- | --- | --- | --- |
-| <stage-id> | `<attempt-id>` | [<attempt-file>.md](./results/<attempt-file>.md) | <author> | <device> | <YYYY-MM-DDTHH:MM:SS+HH:MM> | <yes|no|ask> |
-
-## 6. Stage Details
+## 4. Stage Details
 
 <a id="stage-<stage-id>"></a>
 
 ### Stage: <Stage Name>
 
 - Stage id: `<stage-id>`
-- Status: ⚪ not-started
-- Automation level: <manual|interactive|partial|automatic|external>
+- Kind: <stage|choice|subplan|merge|validation>
 - Purpose:
 - Input state:
 - Output state:
@@ -142,48 +100,67 @@ Validation status:
   - [<Input Stage Name>](#stage-<input-stage-id>)
 - Possible output stages:
   - [<Output Stage Name>](#stage-<output-stage-id>)
-- Related subgoal artifacts:
-  - [<Subgoal Title>](<path-to-subgoal-artifact>)
+- Related paths or subplans:
+  - [<path-or-subplan-label>](./path-options.md#<path-or-subplan-id>)
+- Referenced goal, plan, realization, or artifact:
+  - [<artifact-label>](<artifact-or-anchor-link>)
+  - Relation: <local|parent|child|direct-reference|imported>
+  - Source project: <project-id-or-current>
+  - Source artifact: <artifact-id>
+  - Revision: <current|exact-revision-or-vcs-ref>
+  - Link scope: <project|workspace|remote>
 - Validation criteria:
 - Evidence expected:
-- Validation:
-  - Status: ⚪ not-validated
-  - Confirmed by: <user|agent|external-system|not-needed|none>
-  - Confirmed at: <YYYY-MM-DDTHH:MM:SS+HH:MM-or-null>
-  - Evidence:
-  - Decision:
-  - Notes:
 - Risks:
 - Stop points:
 
-## 7. Shared Dependencies
+## 5. Shared Dependencies
 
 - Internal dependencies:
 - External dependencies:
 - Decision dependencies:
 
-## 8. Shared Risks and Controls
+## 6. Shared Risks and Controls
 
 - Risk:
 - Impact:
 - Mitigation:
 - Stop condition:
 
-## 9. Automation Boundaries
+## 7. Automation Boundaries
 
 - Allowed automatic actions:
 - Actions requiring confirmation:
 - Actions not allowed:
 - Dry-run required before:
 
-## 10. Revision Conditions
+## 8. Revision and Alignment Conditions
 
-- Revise stage when:
-- Rebuild plan when:
-- Reformulate goal when:
+- Revise a stage when:
+- Revise the plan when:
+- Reformulate the goal when:
+- Mark realizations `review-required` when:
+
+## 9. Subgoal Integration Boundaries
+
+Include one block for every delegated subgoal plan.
+
+- Subgoal: [<subgoal-title>](./<subgoal-id>/<subgoal-id>.md#<subgoal-id>)
+- Subgoal plan: [<subgoal-plan-title>](./<subgoal-id>/plan.md#<subgoal-id>-plan)
+- Entry stage: [<stage-label>](#stage-<stage-id>)
+- Input artifact: [<artifact-label>](<artifact-link>)
+- Output artifact: [<artifact-label>](<artifact-link>)
+- Exit stage: [<subgoal-stage-label>](./<subgoal-id>/plan.md#stage-<stage-id>)
+- Parent continuation: [<stage-label>](#stage-<stage-id>)
+
+## 10. Realization and Execution Context
+
+- Current realization decision: [<decision-label>](./realization-decision.md#<goal-id>-realization-decision) or not yet created
+- Registered realizations: [Registry](./path-options.md#registered-realizations)
+- Retained execution attempts: [Run index](./run/index.md#<goal-id>-run-index) or none yet
+- Current immutable plan revision: [<revision>](<immutable-revision-link>) or not yet established
 
 ## 11. Open Questions
 
-- [ ] <question that affects realization or validation>
-
+- [ ] <question that affects planning or validation>
 ```

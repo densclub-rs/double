@@ -20,14 +20,18 @@ fragment, external method, or analog into the current goal context.
 
 ## Behavioral Intent
 
+- do not import an authoritative external artifact when a direct reference is
+  sufficient; import only when material must be copied or adapted
+- preserve contextual Markdown links and exact source revisions
+
 - keep imported material linked to the current goal, current state, target
   state, and success criteria
 - adapt rather than copy blindly
 - preserve source, assumptions, constraints, and mismatch notes
-- preserve imported `plan-artifact` files as named variants; never silently
-  overwrite the canonical `plan.md`
-- preserve imported execution history and validation evidence as previous
-  implementations linked from the current plan artifact
+- import a multi-pass plan by adapting its goal context, `plan.md`,
+  `path-options.md`, registered realizations, and validation contracts
+- register imported realizations and recompute computed style
+- exclude bounded working run logs by default
 - distinguish reusable plan fragments from full goal plans
 - avoid treating an imported plan as valid until it has been reviewed
 
@@ -36,15 +40,15 @@ fragment, external method, or analog into the current goal context.
 - current goal artifact or goal draft
 - existing analog, plan, runbook, checklist, workflow, spec, or user-provided
   material
-- imported plan variants with author, device, and source context when available
-- existing implementation packages or result artifacts from prior realizations
+- imported path and realization registry
+- registered automatic realization artifacts and their source context
 - source context and known limitations
 
 ## Expected Outputs
 
 - adapted goal, path, plan, subgoal, or plan fragment
-- imported plan variants renamed so they do not collide with `plan.md`
-- links from the plan artifact to existing plan implementations
+- adapted single plan with selectable paths or subplans
+- registered realizations in `path-options.md`
 - source and provenance note
 - fit and mismatch analysis
 - review recommendation before execution
@@ -56,7 +60,8 @@ Stop before adopting imported material when:
 - the source goal context is missing
 - success criteria do not match the current goal
 - assumptions or constraints conflict with the current state
-- an imported plan would overwrite `plan.md` without explicit promotion
+- imported paths or validation contracts cannot be reconciled with the current
+  goal
 - user approval is needed to accept the adaptation
 
 ## Workflow Fit

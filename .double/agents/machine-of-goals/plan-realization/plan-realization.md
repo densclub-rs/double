@@ -24,8 +24,8 @@ derived-from:
 
 ## Purpose
 
-`Plan Realization` realizes the selected plan stage through execution,
-delegation, automation, or external handoff.
+`Plan Realization` creates or resumes a working plan run and realizes its
+selected path through execution, delegation, automation, or external handoff.
 
 ## Position in Workflow
 
@@ -37,7 +37,9 @@ delegation, automation, or external handoff.
 ## Inputs
 
 - `plan-artifact`
+- `path-options`
 - `realization-decision`
+- `selected-realization`
 - `selected-plan-stage`
 - `automation-boundaries`
 - `stage-validation-criteria`
@@ -46,8 +48,9 @@ delegation, automation, or external handoff.
 
 ## Outputs
 
-- `stage-attempt-result`
-- `updated-plan-artifact`
+- `plan-run`
+- `run-index`
+- `updated-path-options` when a realization is registered or a run starts
 - `implementation-artifact` when applicable
 - `handoff-artifact` when applicable
 - `blocker-or-revision-note` when needed
@@ -60,15 +63,20 @@ delegation, automation, or external handoff.
 - refine the stage when execution reveals missing detail
 - create specifications, scripts, workflows, checklists, or handoff artifacts
   when the current stage requires them
-- record what changed, what was attempted, and what evidence exists for
-  validation
-- include author, device or runtime, and second-precision attempt time in each
-  stage attempt result
-- store stage attempt results under `<goal-directory>/results/`
-- after recording the attempt in the active plan artifact, ask whether the
-  separate attempt artifact should be kept
-- when a stage has more than 10 attempt artifacts, ask whether old attempt
-  artifacts should be deleted, compacted, or kept
+- create the run as
+  `<goal-directory>/run/<realization-id>--<YYYYMMDDTHHMMSSZ>.md`
+- increment run count and set latest run time and result `running` in
+  `path-options.md` when the run is created
+- record selected paths, stage checkboxes, concise work, blockers, outputs, and
+  validation evidence in the run
+- register automatic realizations in `path-options.md` when the user makes them
+  available and recompute style immediately
+- keep plan and realization revisions in the run
+- require those revisions to resolve to immutable snapshots or VCS permalinks
+- maintain `<goal-directory>/run/index.md` with contextual links to active,
+  pinned, and retained runs
+- link run stages, produced artifacts, and evidence in the sections where they
+  are recorded
 
 ## Boundaries
 
@@ -82,6 +90,7 @@ delegation, automation, or external handoff.
 - must stop before unapproved external effects
 - must not validate its own result as final
 - must not silently revise the goal or whole plan
+- must not store mutable execution state in `plan.md`
 - must not export reusable packages directly
 
 ## Required Artifacts
@@ -89,12 +98,14 @@ delegation, automation, or external handoff.
 - System prompt: `.double/prompts/machine-of-goals/system/plan-realization.md`
 - Interaction prompt: `.double/prompts/machine-of-goals/interaction/plan-realization.md`
 - Role: `.double/roles/machine-of-goals/plan-realization-role.md`
-- Stage attempt result template: `.double/templates/machine-of-goals/stage-attempt-result-template.md`
+- Plan run template: `.double/templates/machine-of-goals/plan-run-template.md`
+- Run index template: `.double/templates/machine-of-goals/run-index-template.md`
 - Plan template: `.double/templates/machine-of-goals/plan-template.md`
 - Modes registry: `.double/registries/machine-of-goals/modes-registry.md`
 - Workflow: `.double/workflows/machine-of-goals/machine-of-goals-workflow.md`
 
 ## Transition Rule
 
-The step is complete when the stage has produced a result that can be
-validated, or when the stage is blocked and needs plan revision.
+The step is complete when the run has produced a stage or final result that can
+be validated, or when the run is blocked and needs plan or realization
+revision.

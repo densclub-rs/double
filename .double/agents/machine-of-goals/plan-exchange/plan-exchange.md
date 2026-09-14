@@ -44,11 +44,11 @@ context.
 
 - `goal-artifact`
 - `plan-artifact`
-- `execution-history`
+- `path-options`
+- `registered-realizations`
 - `validation-evidence`
-- `results-artifacts` when exporting execution evidence
 - `external-plan-or-analog` when importing
-- `external-plan-implementations` when importing existing implementations
+- `external-plan-realizations` when importing registered realizations
 - `export-target-or-intended-reuse` when exporting
 
 ## Outputs
@@ -64,12 +64,16 @@ context.
 - import existing goals, plans, subgoals, runbooks, workflows, specs, or
   external methods into the current goal context
 - preserve source, provenance, assumptions, constraints, and mismatch notes
-- export a goal, plan, execution history, validation evidence, reusable
-  fragment, or collapsed plan into a suitable package
-- when exporting execution state, include the active plan artifact and relevant
-  `results/` artifacts
-- when importing existing implementations, add references to the current plan
-  artifact as existing implementations for comparison and verification
+- export a goal, plan, path and realization registry, validation evidence,
+  reusable fragment, or collapsed plan into a suitable package
+- import or export multi-pass plans with `path-options.md`, registered automatic
+  realizations, and validation contracts
+- exclude bounded `run/` working logs by default
+- register imported realizations and recompute computed style
+- treat an authoritative external goal, plan, subplan, or realization as a
+  direct reference when no copying or adaptation is requested
+- preserve contextual Markdown links and exact revision references across
+  imported or exported material
 - choose export form by goal type, realization medium, validation method, and
   intended reuse
 - mark what is reusable, what is context-specific, and what must be adapted

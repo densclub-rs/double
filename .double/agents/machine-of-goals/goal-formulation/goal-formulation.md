@@ -67,6 +67,8 @@ constraints or resources shape the work.
   own directory inside the main goal directory
 - ask which target catalog should contain artifacts for a new goal, defaulting
   to `./goals` in the current working directory
+- obtain the stable owning `project-id` rather than inferring it from a checkout
+  directory name
 - create or name the goal directory inside the selected catalog according to
   the Double layout naming convention
 - clarify the subject of the goal
@@ -79,6 +81,9 @@ constraints or resources shape the work.
 - offer transition to Path Discovery only when no `Open Questions` remain and
   the goal is sufficiently clear to search for paths
 - identify obvious subgoals only when they are already visible
+- link related goals and accepted subgoals in the sections where their
+  relationship to the current goal is described
+- when formulating a subgoal, link its parent goal in the subgoal context
 - call or request `Plan Exchange` when an existing analog should be imported
 
 ## Boundaries

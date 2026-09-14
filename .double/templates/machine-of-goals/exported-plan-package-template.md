@@ -18,20 +18,20 @@ derived-from:
 ---
 id: <goal-id>-exported-plan-package
 kind: exported-plan-package
+project-id: <stable-project-id>
 produced-by: plan-exchange-agent
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
 goal-id: <goal-id>
 plan-id: <plan-id>
-plan-artifacts:
-  - <plan-artifact-id-or-path>
-results-artifacts:
-  - <results-artifact-id-or-path>
+path-options-id: <path-options-id>
+registered-realizations:
+  - <realization-id-or-artifact>
 package-type: <markdown-plan|runbook|checklist|workflow|sdd-spec|script-scaffold|handoff-package|exchange-package>
 derived-from:
   - <goal-artifact-id-or-path>
   - <plan-artifact-id-or-path>
-  - <plan-validation-summary-in-plan-artifact>
+  - <path-options-id-or-path>
   - <supporting-evidence-artifact-id-or-path>
 ---
 
@@ -47,26 +47,27 @@ derived-from:
 
 ## 2. Source Context
 
-- Goal:
+- Goal: [<goal-title>](<goal-artifact-link>)
 - Current state:
 - Target state:
 - Success criteria:
 - Constraints:
 - Resources:
-- Original plan:
-- Plan variants:
-- Plan execution state:
-- Results artifacts:
-- Validation decisions in plan:
+- Original plan: [<plan-title>](<plan-artifact-link>)
+- Selected paths and subplans: [<path-or-subplan-label>](<path-or-subplan-link>)
+- Computed style: <multi-pass>
+- Registered realizations:
+- Realization alignment statuses:
+- Aggregate realization statistics:
 - Supporting validation evidence:
 
 ## 3. Reusable Material
 
 - Reusable stages:
-- Reusable subgoals:
+- Reusable subgoals: [<subgoal-title>](<subgoal-artifact-link>)
 - Reusable checks:
-- Reusable scripts / workflows / specs:
-- Reusable execution traces:
+- Reusable scripts / workflows / specs: [<artifact-label>](<artifact-link>)
+- Reusable registered realizations: [<realization-label>](<realization-link>)
 - Required adaptations:
 
 ## 4. Context-Specific Assumptions
@@ -104,17 +105,11 @@ Portable sequence or package outline:
 
 ## 9. Plan Export Notes
 
-- Exported plan artifacts:
-- Canonical plan naming rule: the Double community plan for a goal is
-  `plan.md`.
-- Plan variant export naming rule: exported or imported non-canonical
-  `plan-artifact` names must include `author`, `device`, and
-  second-precision `time` labels.
-- Example plan variant export name:
-  `plan--author-<author>--device-<device>--time-<YYYYMMDDTHHMMSS>.md`
-- Exported execution state: include the active plan artifact and relevant
-  `results/` artifacts.
-- Results artifact rule: working and intermediate execution files remain under
-  `<goal-directory>/results/` unless the export package intentionally copies or
-  bundles them.
+- Exported plan artifact: `plan.md`
+- Exported registry artifact: `path-options.md`
+- Exported registered realizations:
+- Required validation contracts: initial, intermediate, and final state checks
+- Working run logs under `run/` are excluded by default.
+- Include a run log only when the user explicitly selects it as temporary
+  diagnostic context; it does not become required permanent package history.
 ```

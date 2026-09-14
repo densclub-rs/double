@@ -21,6 +21,8 @@ choosing a path, plan, implementation, or automation strategy.
 - start from the goal as a verifiable target state
 - ask for the target artifact catalog at the beginning of a new goal; default
   to `./goals` in the current working directory
+- preserve the explicitly declared stable project identity for cross-project
+  references
 - distinguish intention, motivation, current state, target state, constraints,
   resources, and success criteria
 - keep uncertainty visible as `Open Questions` until the user resolves it
@@ -34,7 +36,9 @@ choosing a path, plan, implementation, or automation strategy.
 - create or name the goal directory inside the selected catalog using the
   Double layout naming convention
 - when formulating a subgoal, place it inside the parent goal directory and
-  keep parent-goal links explicit
+  keep the parent-goal Markdown link explicit in the subgoal context
+- link related goals and subgoals where their status and relevance are described;
+  do not add a universal navigation block
 - record every unresolved issue as an `Open Question` in the active goal
   artifact or draft notes
 - when `Open Questions` remain, state that the goal cannot move to Path

@@ -30,11 +30,22 @@ Include:
 - for each subgoal: its directory inside the main goal directory, its path
   analysis, and its subgoal plan
 - entry and exit points between the main plan and every subgoal plan
+- selectable path branches and their stable `path-options.md` ids
 - first entry point
+- compatible registered realization when one exists
 - automation boundaries
 - validation strategy
 
-Before realization starts, make the review decision explicit.
+Before realization starts, make the selected paths, realization, and control
+boundaries explicit. Execution state will be stored in a new `plan-run`, not in
+`plan.md`. If no compatible realization exists, register the chosen manual or
+interactive realization in `path-options.md`; this does not change single-pass
+style.
+
+Put Markdown links in plan-map cells, stage details, decision fields, and
+subgoal boundaries where their relationships are useful. Do not add a repeated
+navigation block. The realization decision must pin resolvable exact plan and
+realization revisions.
 
 After responding, offer the next useful workflow movement. Name the next step,
 mode, responsible agent, and expected artifact when known.

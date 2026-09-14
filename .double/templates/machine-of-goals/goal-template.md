@@ -18,19 +18,18 @@ derived-from:
 ---
 id: <goal-id>
 kind: goal-artifact
+project-id: <stable-project-id>
 produced-by: goal-formulation-agent
+owner-id: double-project
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
-goal-catalog: <selected-goal-catalog-or-./goals>
-goal-directory: <goal-catalog>/<goal-id> or <parent-goal-directory>/<subgoal-id>
-goal-artifact: <goal-directory>/<goal-id>.md or <subgoal-directory>/<subgoal-id>.md
 goal-scope: <main-goal|subgoal>
-parent-goal-id: <parent-goal-id-or-null>
-parent-goal-directory: <parent-goal-directory-or-null>
-subgoal-directory: <subgoal-directory-or-null>
+# Subgoal-only field: parent-goal-id: <parent-goal-id>
 derived-from:
   - <source-conversation-or-artifact>
 ---
+
+<a id="<goal-id>"></a>
 
 # Goal: <Goal Title>
 
@@ -41,6 +40,8 @@ goal directory.
 
 A short description of the goal as a desired verifiable state.
 
+For a subgoal only: Parent goal: [<parent-goal-title>](../<parent-goal-id>.md#<parent-goal-id>)
+
 ## 2. Subject of the Goal
 
 ### Subject
@@ -48,14 +49,6 @@ A short description of the goal as a desired verifiable state.
 * <person>
 * <agent, project, system>
 * <organization, or other actor>
-
-### Owner 
-
-<who is responsible for goal decisions>
-
-### Stakeholders
-
-<optional>
 
 ## 3. Motivation
 
@@ -77,7 +70,7 @@ Describe the starting point.
 
 ### Existing related goals or subgoals
 
-<list of existing goals or subgoals with their import statuses: [none|candidate|imported|rejected]>
+<list of linked goals or subgoals with relation: [none|candidate|direct-reference|imported|rejected], source project, artifact id, revision, and link scope when external>
 
 ## 5. Target State
 
@@ -119,23 +112,12 @@ Describe the state that should exist after successful realization.
 - What is outside the goal?
 - What should not be optimized or pursued?
 
-## 11. Related Plan Variants
+## 11. Machine of Goals Artifacts
 
-<Use this section when the goal has one or multiple plan variants.>
-
-| Variant | Artifact | Role | Author | Device | Time | Selection Status | Use |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| <variant-id> | <plan-artifact-id-or-path> | <canonical-community|personal-variant|imported-variant|experimental-variant|hybrid-variant> | <author> | <device> | <YYYY-MM-DDTHH:MM:SS+HH:MM> | <candidate|selected|superseded|rejected|promoted-to-canonical> | <compare|active|reference|promote|archive> |
-
-
-## 12. Existing Plan Implementations
-
-<Use this section only when importing existing implementations of a plan for this
-goal, for reference, comparison, or verification. Link to the imported plan or
-package that contains its own execution state and result artifacts.>
-
-| Implementation | Artifact or Package | Author | Device | Time | Use |
-| --- | --- | --- | --- | --- | --- |
-| <implementation-id> | <plan-artifact-or-package-id-or-path> | <author> | <device> | <YYYY-MM-DDTHH:MM:SS+HH:MM> | <reference|comparison|verification> |
+- Path and realization registry: [Path options](./path-options.md#<goal-id>-path-options)
+- Plan: [Current plan](./plan.md#<goal-id>-plan)
+- Realization decision: [Current decision](./realization-decision.md#<goal-id>-realization-decision)
+- Retained execution attempts: [Run index](./run/index.md#<goal-id>-run-index)
+- Computed plan style: <single-pass|multi-pass|not-yet-computed>
 
 ```

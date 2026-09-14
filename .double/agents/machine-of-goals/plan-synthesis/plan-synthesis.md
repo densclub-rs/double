@@ -51,8 +51,8 @@ set.
 ## Outputs
 
 - `plan-artifact`
-- `alternative-plan-artifacts` when useful
 - `realization-decision`
+- `updated-path-options` when review registers a manual or interactive realization
 - `automation-boundaries`
 - `validation-strategy`
 - `plan-stop-points`
@@ -65,10 +65,21 @@ set.
 - identify subgoals when a stage becomes a stable intermediate target
 - synthesize a simpler plan for each accepted subgoal
 - record entry and exit points between the main plan and any subgoal plan
-- prepare alternative plans when meaningfully different paths exist
-- support review of plan options and choose or prepare the first entry point
+- represent meaningfully different paths as selectable branches or subplans in
+  one plan artifact
+- support review of path and realization options and prepare the first entry
+  point
+- register a selected manual or interactive realization in `path-options.md`
+  when no compatible realization exists; this does not change single-pass style
 - define automation boundaries, confirmation points, dry-run needs, validation
   strategy, and revision conditions
+- link paths, subplans, inputs, outputs, realizations, evidence, and subgoal
+  integration boundaries where they are used in the plan
+- record direct cross-project references without importing them when the source
+  remains authoritative
+- pin exact plan and realization revisions in the realization decision
+- create or identify an immutable plan revision snapshot or VCS permalink
+  before the realization decision is committed
 
 ## Boundaries
 
@@ -80,8 +91,10 @@ set.
   its installation first
 - must not treat a simple task list as a plan
 - must not erase the link between the plan and the goal
+- must not create separate plan variants for selectable paths
 - must not execute the selected stage
 - must not package the plan for exchange without `Plan Exchange`
+- must not add a universal navigation block
 
 ## Required Artifacts
 

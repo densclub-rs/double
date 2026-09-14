@@ -1,21 +1,20 @@
 ---
 id: github-actions-maintenance
 kind: goal-artifact
-produced-by: machine-of-goals/goal-formulation-agent
+project-id: double
+produced-by: goal-formulation-agent
+owner-id: double-project
 interaction-language: en
 artifact-language: en
-goal-catalog: ./goals
-goal-directory: ./goals/double-github-integration/github-actions-maintenance
-goal-artifact: ./goals/double-github-integration/github-actions-maintenance/github-actions-maintenance.md
 goal-scope: subgoal
 parent-goal-id: double-github-integration
-parent-goal-directory: ./goals/double-github-integration
-subgoal-directory: ./goals/double-github-integration/github-actions-maintenance
 derived-from:
   - source conversation on 2026-07-19
   - ../../../../.github/workflows/release.yml
   - ../double-github-integration.md
 ---
+
+<a id="github-actions-maintenance"></a>
 
 # Goal: GitHub Actions Maintenance
 
@@ -33,17 +32,6 @@ and verifiable over time.
   configuration for the Double project.
 - Module-specific release packages assembled from working files in `.double/`.
 
-### Owner
-
-The Double project community, with the user initiating this subgoal responsible
-for goal decisions during formulation.
-
-### Stakeholders
-
-- Double maintainers and contributors
-- users who receive Double releases or published artifacts
-- agents that maintain or rely on Double repository automation
-
 ## 3. Motivation
 
 - Make the release of each Double machine dependable and reproducible.
@@ -54,25 +42,31 @@ for goal decisions during formulation.
 
 ## 4. Current State
 
-The Double repository contains a GitHub Actions release workflow at
-`.github/workflows/release.yml`. It responds to supported tags or manual
-dispatch, builds release packages, calculates checksums, and creates or updates
-GitHub Releases. It currently supports project tags and Machine of Ideas tags;
-for a Machine of Ideas release it excludes files whose frontmatter status is
-`draft`.
+The release lifecycle defined by this goal is implemented. The repository has
+a reusable release program at `scripts/double-release.sh`, local validation at
+`scripts/test-double-release.sh`, and a thin GitHub Actions adapter at
+`.github/workflows/release.yml`.
 
-The required release lifecycle is now defined at the goal level: a tag selects
-one Double machine and one maturity class. The release package must include
-only working files for that machine from `.double/` whose frontmatter `status`
-matches the selected class.
+A pushed tag or manual-dispatch input selects one Double machine and one
+maturity class. The same release contract is exercised locally and in GitHub
+Actions: the selected machine version is verified, matching working files are
+packaged from `.double/`, a checksum is generated, and publication remains
+restricted to GitHub Actions.
 
 ### Known facts
 
-- `.github/workflows/release.yml` is the current GitHub Actions workflow.
-- The workflow releases tagged project and Machine of Ideas packages.
-- The workflow uses GitHub Actions checkout and the repository GitHub token to
-  create or update releases.
-- This subgoal is the first accepted subgoal of `double-github-integration`.
+- `scripts/double-release.sh` implements the shared `package --tag <tag>` and
+  `publish --tag <tag>` release interface.
+- `scripts/test-double-release.sh` validates representative local packaging
+  behavior and can additionally package a supplied release tag.
+- `.github/workflows/release.yml` tests the selected tag and then invokes the
+  release program as a thin publication adapter.
+- The workflow handles machine release tags matching `machine-*`; the release
+  program applies the accepted machine tag grammar below.
+- The workflow uses GitHub Actions checkout and the automatic repository GitHub
+  token to create or update releases.
+- This subgoal is an accepted subgoal of `double-github-integration`, and its
+  canonical plan has been completed and accepted.
 - Double has multiple machines, including Machine of Ideas and Machine of
   Goals.
 - A machine tag, such as `machine-of-ideas` or `machine-of-goals`, identifies
@@ -129,7 +123,7 @@ secrets and permissions, and local contributor workspaces.
 
 ### Existing related goals or subgoals
 
-- Parent goal: `double-github-integration`.
+- Parent goal: [Double GitHub Integration](../double-github-integration.md#double-github-integration).
 - No child goals are identified at this stage.
 
 ## 5. Target State
@@ -143,6 +137,10 @@ in documentation supported by reproducible validation.
 - Required result:
   - `scripts/` is the working directory for the release program
   - `scripts/double-release.sh` is the release program in that directory
+  - `.github/workflows/` is the directory for GitHub Actions workflows
+  - `.github/workflows/release.yml` configures the release workflow rules
+  - `.github/workflows/release.yml` invokes special scripts to test, create
+    and publish releases
   - `scripts/test-double-release.sh` validates the selected release tag before
     publication; `.github/workflows/release.yml` invokes it as
     `scripts/test-double-release.sh --tag "$RELEASE_TAG"`
@@ -232,7 +230,8 @@ in documentation supported by reproducible validation.
 - Available resources: the Double repository, `.github/workflows/release.yml`,
   the `.double/` machine working files and their frontmatter statuses, GitHub
   Actions, GitHub Releases, repository documentation, and the parent goal.
-- Missing resources: workflow ownership policy and validation evidence.
+- Missing resources: none currently identified; future release-contract
+  changes may require fresh local and hosted validation evidence.
 - Tools or systems: GitHub Actions, GitHub repository settings, Git, local
   validation tools, and any approved workflow-specific tooling.
 - People or organizations: the Double project community, maintainers, and
@@ -252,8 +251,10 @@ None currently.
   `double-general-installer`; those remain separate parent-goal concerns or
   goals.
 
-## 11. Related Plan Variants
+## 11. Machine of Goals Artifacts
 
-| Variant | Artifact | Role | Author | Device | Time | Selection Status | Use |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| `canonical` | [plan.md](./plan.md) | canonical-community | plan-synthesis-agent | codex-runtime | 2026-07-22T16:16:01+02:00 | selected | active |
+- Path and realization registry: [GitHub Actions Maintenance paths](./path-options.md#github-actions-maintenance-path-options)
+- Plan: [GitHub Actions Maintenance plan](./plan.md#github-actions-maintenance-plan)
+- Realization decision: [Shell-script workflow decision](./realization-decision.md#github-actions-maintenance-realization-decision)
+- Retained execution attempts: [Run index](./run/index.md#github-actions-maintenance-run-index)
+- Computed plan style: `multi-pass`

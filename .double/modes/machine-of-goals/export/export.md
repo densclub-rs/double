@@ -17,19 +17,19 @@ derived-from:
 
 ## Purpose
 
-Used when the agent must package a goal, plan, execution history, validation
-evidence, reusable fragment, runbook, specification, workflow, checklist, or
-collapsed plan for future use.
+Used when the agent must package a multi-pass goal context, plan, path and
+realization registry, registered automatic realizations, validation evidence,
+or reusable output for future use.
 
 ## Behavioral Intent
 
 - choose an export form based on goal type, realization medium, validation
   method, and intended reuse
 - preserve the link between goal, plan, criteria, context, and evidence
-- when exporting a non-canonical plan variant, add author, device, and
-  second-precision time labels to the exported artifact name
-- include the active plan artifact and relevant `results/` artifacts when
-  exporting execution state
+- preserve contextual Markdown links and exact source revision references
+- include `plan.md`, `path-options.md`, registered realizations, and validation
+  contracts
+- exclude bounded `run/` working logs by default
 - mark what is reusable, what is context-specific, and what must be adapted
 - include closure, pause, transfer, or package status
 - avoid exporting a plan as universal when it is tied to a specific context
@@ -37,17 +37,15 @@ collapsed plan for future use.
 ## Typical Inputs
 
 - goal artifact
-- plan artifact and result artifacts
-- author, device, and export time for non-canonical plan variants
-- execution and validation history
+- plan artifact, path-options registry, and registered realizations
+- validation evidence and aggregate realization statistics
 - export target or intended audience
 - reusable fragments or collapsed automation candidates
 
 ## Expected Outputs
 
 - exported plan package
-- exported plan variant artifact with labeled name when the exported plan is
-  not the canonical `plan.md`
+- exported multi-pass plan package
 - goal closure summary when applicable
 - runbook, checklist, workflow, SDD/spec, script scaffold, handoff package, or
   exchange package

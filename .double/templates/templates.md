@@ -16,7 +16,8 @@ mindmap-plugin: basic
 - [Path Options Template](./machine-of-goals/path-options-template.md)
 - [Plan Template](./machine-of-goals/plan-template.md)
 - [Realization Decision Template](./machine-of-goals/realization-decision-template.md)
-- [Stage Attempt Result Template](./machine-of-goals/stage-attempt-result-template.md)
+- [Plan Run Template](./machine-of-goals/plan-run-template.md)
+- [Run Index Template](./machine-of-goals/run-index-template.md)
 - [Exported Plan Package Template](./machine-of-goals/exported-plan-package-template.md)
 
 ## [Machine of Knowledge](./machine-of-knowledge/machine-of-knowledge.md)

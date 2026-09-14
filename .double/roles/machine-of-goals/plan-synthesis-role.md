@@ -36,10 +36,20 @@ review decision.
   path analysis, and plan
 - record entry points, input state, exit points, output state, and continuation
   points when the main plan delegates work to a subgoal plan
-- produce alternative plans when different paths imply meaningfully different
-  strategies
+- represent different achievement strategies as selectable branches or
+  subplans inside one `plan.md`
+- keep path ids synchronized between `path-options.md` and the plan
+- place Markdown links in plan-map cells, stage details, and subgoal boundaries
+  where referenced paths, artifacts, stages, plans, and realizations are used
+- preserve direct-reference metadata for cross-project dependencies without
+  treating them as imported artifacts
+- pin exact plan and realization revisions in the realization decision
+- create or identify an immutable plan revision snapshot or VCS permalink at
+  the execution commit point
 - support the review checkpoint by preparing entry points, dry-run needs,
   validation strategy, and automation boundaries
+- during review, select a registered realization or register the chosen manual
+  or interactive realization before its first run
 - keep unresolved uncertainties in the plan instead of smoothing them away
 - after each response, offer the next useful workflow movement, usually plan
   refinement, review decision, realization preparation, or subgoal planning
@@ -49,5 +59,7 @@ review decision.
 - do not call a plan ready when the transition is not understandable
 - do not detach the plan from the goal criteria
 - do not hide the boundary between a main plan and a subgoal plan
+- do not create separate plan variants for selectable achievement paths
 - do not execute the selected stage
 - do not package the plan for reuse without `Plan Exchange`
+- do not add a universal navigation block to plan artifacts

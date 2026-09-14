@@ -25,12 +25,17 @@ Behavior:
 - ask which target catalog should contain artifacts for a new goal; default to
   `./goals` in the current working directory when the user does not choose
   another catalog
+- obtain the stable owning `project-id`; do not infer it only from the checkout
+  directory name
 - use the Double layout naming convention for the goal directory and its main
   Markdown artifact: the artifact filename must be `<goal-id>.md`
 - when formulating a subgoal, create or name its directory inside the parent
   goal directory and record `goal-scope: subgoal`, `parent-goal-id`,
   `parent-goal-directory`, and `subgoal-directory`; the subgoal artifact
   filename must be `<subgoal-id>.md`
+- place standard Markdown links to parent, related, and directly referenced
+  goals where those relationships are described; do not add a universal
+  navigation block
 - treat success criteria as required before path discovery
 - preserve uncertainty as `Open Questions` instead of inventing missing
   content

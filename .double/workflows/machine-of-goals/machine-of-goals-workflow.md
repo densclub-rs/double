@@ -184,10 +184,10 @@ Core agents:
 - `path-discovery-agent`: discovers and compares possible realization paths
 - `plan-synthesis-agent`: creates the plan project and supports the review
   decision checkpoint
-- `plan-realization-agent`: realizes selected plan stages within approved
-  boundaries
-- `plan-validation-agent`: validates stage or goal results and updates the
-  active plan
+- `plan-realization-agent`: creates or resumes a run and realizes selected plan
+  paths within approved boundaries
+- `plan-validation-agent`: validates run or goal results and updates the run
+  and aggregate realization statistics
 
 Optional agent:
 
@@ -203,123 +203,181 @@ Draft artifact templates are defined in
 - `path-options` -> `.double/templates/machine-of-goals/path-options-template.md`
 - `plan-artifact` -> `.double/templates/machine-of-goals/plan-template.md`
 - `realization-decision` -> `.double/templates/machine-of-goals/realization-decision-template.md`
-- `stage-attempt-result` -> `.double/templates/machine-of-goals/stage-attempt-result-template.md`
+- `plan-run` -> `.double/templates/machine-of-goals/plan-run-template.md`
+- `run-index` -> `.double/templates/machine-of-goals/run-index-template.md`
 - `exported-plan-package` -> `.double/templates/machine-of-goals/exported-plan-package-template.md`
 
-## Plan Variant Rule
+## Plan and Path Rule
 
-A goal may have multiple `plan-artifact` variants.
+Each goal has one plan artifact at `<goal-directory>/plan.md`. The plan is the
+stable model of transition from the initial state through required intermediate
+states to the final state. Different achievement alternatives are selectable
+paths, branches, or subplans inside this model, not separate plan variants.
 
-The canonical Double community plan for a goal is stored as:
+`path-options.md` begins as the Path Discovery output and remains a living
+registry after plan synthesis. It records path lifecycle, the corresponding
+plan branch or subplan, registered realizations, and aggregate execution
+statistics. Unrealized paths may be removed over time when they have no retained
+plan, realization, or statistics dependency.
+
+## Plan Realization Registration Rule
+
+A realization is a manual or automatic projection of the complete plan or of
+specific paths or subplans. A shell script, Python program, workflow, agentic
+process, or manual procedure may be registered as a realization.
+
+Every run must select a registered realization. If a single-pass plan has no
+realization yet, Plan Review registers the selected manual or interactive
+realization before the first run. Manual or interactive registration does not
+change the computed style.
+
+Every registered realization has:
+
+- a stable realization id and kind
+- supported paths or subplans
+- registration and readiness status
+- alignment status against the current plan
+- cumulative run count
+- latest run time
+- latest run result
+
+Automatic realizations must implement validation of the initial state, required
+intermediate results, and final state defined by the plan. Creating an
+implementation file does not register it. Registration occurs only when the
+realization is added to the realization registry in `path-options.md`.
+
+## Computed Plan Style Rule
+
+Plan working style is computed from active realization registrations:
+
+- no registered automatic realization -> `single-pass`
+- an automatic realization registered for the plan or a subplan ->
+  `multi-pass`
+
+Registration is the style transition point. The machine does not wait for the
+first successful validation. Readiness and alignment remain separate
+realization statuses and must not be inferred from the computed style.
+
+The single-pass workflow closes after the concrete realization and validation
+of the goal. The multi-pass workflow supports repeated runs, import into another
+project, and revision of the plan or realization from later execution
+experience.
+
+## Contextual Navigation and Artifact Reference Rule
+
+Machine of Goals uses contextual Markdown navigation. A link belongs in the
+section, sentence, list item, or table cell where its relationship is useful;
+artifacts must not add a repeated universal navigation block merely to enumerate
+neighboring files.
+
+Frontmatter references provide machine-readable identity and provenance. They
+do not replace human-facing Markdown links in the artifact body. Standard
+Markdown links are required; wiki-style links and absolute local filesystem
+paths are not portable artifact navigation.
+
+The required contextual relationships are:
+
+- a goal's related-goal and Machine of Goals artifact sections link to the
+  related goal, plan, path registry, decision, and run index artifacts that
+  actually exist
+- a path registry's `Source Goal` links to the goal, each planned path links to
+  its plan stage or subplan anchor, and each registered realization links to its
+  definition or implementation artifact when one exists
+- a plan summary links to its source goal; plan-map and stage-detail links
+  connect stages, paths, subplans, input and output artifacts, realizations, and
+  evidence in the contexts where they are used
+- a subgoal links to its parent goal in its goal context, and the parent plan's
+  integration boundary links to the subgoal, subgoal plan, exchanged artifacts,
+  and continuation stage
+- a realization decision links to the selected plan revision, paths or
+  subplans, realization revision, and first stage
+- a run context links to its source goal, realization decision, exact plan
+  revision, exact realization revision, and selected paths or subplans; run
+  stages, produced artifacts, and evidence link to their sources in the
+  corresponding run sections
+- an exported package links to source artifacts, reusable material, and
+  validation evidence in their existing contextual sections
+
+Artifacts and addressable plan elements use stable explicit HTML anchors. An
+artifact anchor matches its frontmatter `id`; path, realization, and stage
+anchors use their stable ids. Cross-artifact fragment links target these
+explicit anchors rather than renderer-generated heading slugs.
+
+A goal, subgoal, plan, subplan, path, or realization from another project may
+be used without Plan Exchange by declaring a direct reference at the point of
+use. The reference records:
+
+- `relation: direct-reference`
+- stable source `project-id` and `artifact-id`
+- `revision: current` or an exact revision or VCS reference
+- `link-scope: workspace` or `remote`
+- a contextual Markdown link to the referenced artifact or explicit anchor
+
+Every Machine of Goals semantic artifact records the stable `project-id` of
+its owning project. Agents must use the declared id and must not silently infer
+cross-project identity from a checkout directory name.
+
+Direct reference does not copy, adapt, or import the source. The referenced
+artifact keeps its own source-goal context, so navigating into it provides a
+route to its origin without requiring the provider project to maintain a
+consumer backlink. Use Plan Exchange only when material is copied, adapted, or
+packaged.
+
+Planning may explicitly follow `revision: current`. A realization decision and
+every concrete run must pin resolvable exact plan and realization revisions.
+An integer revision without a link to an immutable snapshot or VCS permalink
+is not sufficient. Plan revisions remain versions of the single `plan.md`, not
+alternative plan variants.
+
+## Plan Run Rule
+
+Mutable execution state is stored outside `plan.md`. Every concrete execution
+creates one `plan-run` working artifact:
 
 ```text
-<goal-directory>/plan.md
+<goal-directory>/run/<realization-id>--<YYYYMMDDTHHMMSSZ>.md
 ```
 
-This file represents the plan variant selected by the Double community as the
-main public plan for the goal inside the Double project. It must not be
-overwritten by imported, exported, personal, local, or experimental plan
-variants unless the user explicitly chooses to promote a variant into the
-canonical community plan.
+The run records the plan and realization revisions, selected paths or subplans,
+initial-state validation, stage checkboxes, concise execution notes,
+intermediate validation, blockers, final-state validation, and terminal result.
+The run, not `plan.md`, is the source of execution status.
 
-When a concrete person, agent, organization, device, or runtime proposes a
-different plan variant, that variant should be stored as a separate
-`plan-artifact` file. The file name must include labels that make collisions
-unlikely and make provenance visible:
+Run logs are bounded working context. The default retention depth is the latest
+five terminal runs per realization and may be configured from three to five.
+Active runs do not count toward the terminal-run limit. When the limit is
+exceeded, remove the oldest unpinned terminal run only after the new run has
+updated aggregate statistics. Product artifacts and external evidence are not
+removed with a working run log.
 
-- author
-- device or runtime
-- time with second precision
+`path-options.md` stores cumulative run statistics without links to individual
+run files. The cumulative count must not be recomputed only from the bounded
+contents of `run/`.
 
-The personal or imported plan filename pattern is:
+`run/index.md` is the contextual navigation index for active, pinned, and
+retained run files. It links each retained run to its exact plan and realization
+revisions. `path-options.md` may link to this index from `Run Retention`, but its
+realization statistics table must not link individual run files. When retention
+removes a run, remove its live link from the index only after aggregate
+statistics have been updated; do not leave a broken link.
 
-```text
-plan--author-<author>--device-<device>--time-<YYYYMMDDTHHMMSS>.md
-```
+When a run file is created, increment the realization's cumulative run count,
+set latest run time to the run start time, and set latest result to `running`.
+Terminal validation replaces only latest result; it does not increment the run
+count again.
 
-Imported plan variants must be renamed to this pattern before being written
-into a goal directory. Import must never silently replace `plan.md`.
-
-The current active plan is selected through `Plan Review and Decision`. The
-decision may choose the canonical `plan.md`, a personal/imported variant, or a
-hybrid plan. Other variants should remain available for comparison, review,
-future promotion, or rejection.
-
-## Plan Execution State Rule
-
-Plan execution state is stored in the active `plan-artifact`, normally
-`<goal-directory>/plan.md`.
-
-The plan artifact defines the intended transition model and records the current
-realization state of that model. The `Plan Map` section is the single
-scan-friendly table for stage topology, emoji stage status, emoji validation
-status, inputs, outputs, last attempt artifact, and last attempt time. The
-`Blocker` section records the current blocking state when execution cannot
-safely continue. The `Stage Attempts` section records the retained attempt
-artifacts for the plan.
-Detailed stage descriptions remain in `Stage Details`; each stage detail
-records the compact validation decision for that stage after the validation
-dialogue has reached a user-confirmed or otherwise explicit decision.
-
-When plan execution advances, agents update `plan.md` directly, including:
-
-- `Plan Map`
-- `Blocker`
-- `Stage Attempts`
-- the relevant stage detail, including its compact `Validation` block
-- progress, pending work, blockers, risks, and continuation decisions
-
-Plan frontmatter stores stable artifact identity and provenance. It must not be
-used as the mutable execution-state surface.
-
-## Execution Results Directory Rule
-
-Working and intermediate files produced while executing a plan must be stored
-under:
-
-```text
-<goal-directory>/results/
-```
-
-This includes stage attempt results, execution evidence, temporary reports,
-implementation notes, handoff artifacts, blocker notes, revision notes, scripts
-or specifications created only to support execution, and similar
-plan-realization material. Validation decisions are recorded concisely in the
-active `plan.md`; supporting evidence may be linked from `results/` when it is
-too large or too operational to keep in the plan.
-
-Canonical intent and decision artifacts stay at the goal-directory root:
+Canonical semantic artifacts remain at the goal-directory root:
 
 - `<goal-id>.md`
 - `path-options.md`
 - `realization-decision.md`
 - `plan.md`
 
-Source code, product files, or external implementation artifacts remain in
-their normal project locations and are linked from the plan or result
-artifacts.
+The run navigation artifact remains at `<goal-directory>/run/index.md`.
 
-When importing an existing goal, plan, or plan package, imported
-`plan-artifact` variants must not overwrite the current canonical plan.
-Imported execution history and validation evidence should be stored or linked
-as existing plan implementations from the relevant plan artifact so they can be
-used as references and compared with the current realization.
-
-## Stage Attempt Result Rule
-
-Each concrete attempt to execute a plan stage may produce a
-`stage-attempt-result` artifact. This artifact records what was attempted,
-who or what performed the attempt, which device or runtime was used, and the
-attempt time with second precision.
-
-`stage-attempt-result` artifacts are execution evidence. They are stored in
-`<goal-directory>/results/`. After the attempt has been reflected in the active
-plan artifact, the agent must ask the user whether to keep the attempt artifact
-as a separate file.
-
-If more than 10 attempt artifacts exist for the same plan stage, the agent must
-ask whether old attempt artifacts should be deleted, compacted, or kept. The
-agent must not delete attempt artifacts without explicit confirmation.
+Source code, product files, automatic realization artifacts, and external
+evidence remain in their normal project locations and are identified by the
+realization registration or current run.
 
 ## Import and Existing Analog Rule
 
@@ -329,6 +387,10 @@ During `Goal Formulation`, the machine may look for an existing analog of the
 goal or plan in a local catalog, future marketplace, or user-provided material.
 If a useful analog exists, it may be imported or adapted instead of inventing a
 plan from scratch.
+
+When the source remains authoritative in its original project and no adaptation
+is required, record a contextual direct reference instead of invoking import or
+export. Import remains the path for copied or adapted material.
 
 Until a marketplace exists, the normal working behavior is to formulate and
 clarify the goal directly from the user's description.
@@ -388,13 +450,16 @@ machine:
 
 ```text
 choose next plan stage
+-> select registered realization and plan path
+-> create or resume plan run
 -> explain current stage
 -> refine stage if needed
 -> prepare validation specification if needed
 -> execute, delegate, automate, or hand off externally
 -> validate result in dialogue until an explicit decision is reached
--> update plan
--> revise plan if needed
+-> update run and aggregate realization statistics
+-> revise plan or realization if needed
+-> review realization alignment if either changed
 -> continue, branch, stop, or close goal
 ```
 
@@ -452,7 +517,7 @@ external implementation artifact, or a different realization route.
 - step-id: `03-plan-synthesis`
 - default-mode: `planning`
 - purpose:
-  - turn one or more paths into one or more plan projects
+  - turn one or more paths into selectable branches or subplans of one plan
   - model the plan as a transition from current state to target state
   - synthesize a simpler subgoal plan when the current goal artifact is a
     subgoal
@@ -460,9 +525,12 @@ external implementation artifact, or a different realization route.
     subgoals, and known uncertainties
   - when a main plan delegates a stage to a subgoal plan, record the entry and
     exit points between the main plan and the subgoal plan
+  - link paths, subplans, referenced artifacts, and integration-boundary
+    artifacts where those relationships appear in the plan
+  - allow a local or cross-project artifact to remain a direct reference when
+    no copy or adaptation is required
 - produced-outputs:
   - `plan-artifact`
-  - `alternative-plan-artifacts` when useful
 - transition-condition:
   - at least one plan project is understandable enough to review and choose a
     realization strategy
@@ -475,13 +543,17 @@ external implementation artifact, or a different realization route.
 - default-mode: `review`
 - purpose:
   - act as the commit point before movement through the plan
-  - choose a plan, a hybrid plan, or a first plan branch
+  - choose the path or subplan for the first run
+  - choose a compatible registered realization, or register the selected manual
+    or interactive realization before the first run
   - define the first entry point
   - choose the realization mode
   - set automation boundaries, confirmation points, dry-run needs, validation
     strategy, and plan revision conditions
 - produced-outputs:
   - `realization-decision`
+  - `updated-path-options` when a manual or interactive realization is first
+    registered
 - transition-condition:
   - the user or responsible agent has selected how the plan will start and under
     which control boundaries it may proceed
@@ -493,16 +565,24 @@ external implementation artifact, or a different realization route.
 - step-id: `05-plan-realization`
 - default-mode: `execution`
 - purpose:
+  - create or resume a working `plan-run` for the selected realization and path
+  - create or update `run/index.md` so retained runs remain discoverable
   - execute, delegate, automate, or externally realize the selected plan stage
   - refine the stage when necessary before or during work
   - create additional specifications, scripts, workflows, checklists, or
     handoff artifacts when the current stage requires them
+  - register a new automatic realization in `path-options.md` when the user
+    chooses to make it available for selection
+  - recompute plan style immediately when registration changes
+  - when creating a run, increment run count and set latest run time and
+    `running` result in `path-options.md`
 - produced-outputs:
-  - `stage-attempt-result`
-  - `updated-plan-artifact`
+  - `plan-run`
+  - `run-index`
+  - `updated-path-options` when a realization is registered or a run starts
 - transition-condition:
-  - a stage attempt has produced a result that can be validated, or the stage
-    is blocked and needs plan revision
+  - the run has produced a stage or final result that can be validated, or is
+    blocked and needs plan or realization revision
 - next-step:
   - `06-plan-validation`
 
@@ -511,20 +591,26 @@ external implementation artifact, or a different realization route.
 - step-id: `06-plan-validation`
 - default-mode: `validation`
 - purpose:
-  - validate the result of the current realized stage
+  - validate the result of the current run stage or final run result
   - compare evidence with the stage completion criteria
   - conduct validation as a dialogue until the user confirms the stage result,
     rejects it, marks it partial, or asks for revision
-  - record the compact validation decision in the relevant stage detail of the
-    active plan
-  - update the active plan's `Plan Map`, goal progress, metrics, risks, and
-    open questions
+  - record the validation decision and terminal result in the current run
+  - replace the current realization's latest `running` result with the terminal
+    result in `path-options.md` without incrementing run count again
+  - preserve plan topology in `plan.md`; revise it only when execution feedback
+    changes the intended transition model
+  - enforce bounded run retention after terminal statistics have been updated
+  - remove retired run links from `run/index.md` without leaving broken links
   - decide whether to continue, branch, revise, stop, or close the goal
 - produced-outputs:
-  - `updated-plan-artifact`
+  - `updated-plan-run`
+  - `updated-run-index` when retention removes a run
+  - `updated-path-options`
+  - `updated-plan-artifact` only when plan revision is explicitly required
 - transition-condition:
-  - the stage attempt result has an explicit validation decision recorded in
-    the active plan
+  - the current run result has an explicit validation decision and aggregate
+    statistics have been updated
 - next-step:
   - `05-plan-realization`
   - `07-plan-packaging-export`
@@ -536,13 +622,12 @@ external implementation artifact, or a different realization route.
 - step-id: `07-plan-packaging-export`
 - default-mode: `export`
 - purpose:
-  - optionally package the goal, plan, execution history, validation decisions
-    and supporting evidence, reusable fragments, or collapsed plan for future
-    use
-  - export plan execution state from the active plan and its `results/`
-    artifacts
-  - export non-canonical plan variants with author, device, and
-    second-precision time labels in the artifact name
+  - optionally package the goal, plan, selected paths or subplans, realization
+    registry, registered automatic realizations, validation contracts, and
+    supporting evidence for future use
+  - import or export a multi-pass plan as a reusable mechanism in another
+    project
+  - exclude bounded `run/` working logs by default
   - export into a suitable form such as Markdown plan, runbook, checklist,
     workflow, SDD/spec, script scaffold, handoff package, or exchange package
 - produced-outputs:
@@ -560,4 +645,4 @@ The following contracts are intentionally left for detailed design:
 
 - mode-specific prompts and templates
 - marketplace or reusable-plan lookup protocol
-- import and export package formats
+- marketplace lookup and distribution formats beyond the local package

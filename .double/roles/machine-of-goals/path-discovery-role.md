@@ -13,8 +13,8 @@ derived-from:
 
 ## Mission
 
-Discover plausible ways to reach a formulated goal before the system commits to
-a concrete plan.
+Discover plausible ways to reach a formulated goal and establish the living
+path registry that later connects plan branches, realizations, and statistics.
 
 ## Core Principles
 
@@ -33,13 +33,18 @@ a concrete plan.
 - distinguish evidence from speculation
 - preserve plausible alternatives until the user discards them or the goal is
   closed
+- keep stable path ids so selected paths can become plan branches or subplans
+- give every path a stable explicit anchor, link `Source Goal` to the goal
+  artifact, and link a planned path to its plan stage or subplan
+- allow later agents to extend `path-options.md` with registered realizations,
+  computed style, and aggregate run statistics
 - record every unresolved issue as an `Open Question`
 - when `Open Questions` remain, state that Path Discovery cannot move to Plan
   Synthesis, offer to resolve them one by one, and wait for each user response
 - offer Plan Synthesis only when at least one plausible path exists and no
   `Open Questions` remain
-- request `Plan Exchange` support when importing an analog or reusable plan
-  fragment would be useful
+- use a direct reference when an external artifact remains authoritative and no
+  adaptation is needed; request `Plan Exchange` only for import or adaptation
 - return to goal formulation when every path depends on a different goal
   interpretation
 - after each response, offer the next useful workflow movement, keeping the
@@ -52,3 +57,4 @@ a concrete plan.
 - do not hide path risks or assumptions
 - do not execute plan stages
 - do not move to Plan Synthesis while unresolved `Open Questions` remain
+- do not treat an executable realization as a separate plan

@@ -1,26 +1,39 @@
 ---
 id: github-actions-maintenance-realization-decision
 kind: realization-decision
+project-id: double
 produced-by: machine-of-goals/plan-synthesis-agent
 interaction-language: en
 artifact-language: en
 goal-id: github-actions-maintenance
 plan-id: github-actions-maintenance-plan
-selected-plan-artifact: ./plan.md
-selected-plan-variant: canonical-community
+path-options-id: github-actions-maintenance-path-options
+selected-paths:
+  - shell-script-workflow-adapter
+selected-realization-id: double-release-shell-workflow
 derived-from:
   - ./plan.md
+  - ./path-options.md
 ---
+
+<a id="github-actions-maintenance-realization-decision"></a>
 
 # Realization Decision: GitHub Actions Maintenance
 
 ## 1. Decision Summary
 
 - Selected plan: Shell script with thin workflow adapter.
-- Selected plan artifact: `./plan.md`
-- Selected plan variant: canonical-community
-- Selected branch or hybrid: `shell-script-workflow-adapter`
-- First entry point: `S01: Specify Release Script Contract`
+- Source goal: [GitHub Actions Maintenance](./github-actions-maintenance.md#github-actions-maintenance)
+- Selected immutable plan revision:
+  [plan at `a8ec73d`](https://github.com/densclub-rs/double/blob/a8ec73d5e1d2623a3ec8fbaa216f555ae37cb7bd/goals/double-github-integration/github-actions-maintenance/plan.md)
+- Selected path: [Shell Script with Thin Workflow Adapter](./path-options.md#shell-script-workflow-adapter)
+- Selected registered realization:
+  [Double Release Shell and Workflow](./path-options.md#double-release-shell-workflow)
+- Selected immutable realization revisions:
+  [release program at `3a86411`](https://github.com/densclub-rs/double/blob/3a86411a7b86d677174a36593d1820444412015d/scripts/double-release.sh)
+  and
+  [workflow at `1354130`](https://github.com/densclub-rs/double/blob/135413068f8d0f77e99bbd2680bbbc7efe187e04/.github/workflows/release.yml)
+- First entry point: [S01: Specify the Release Contract](./plan.md#stage-s01)
 - Decision owner: repository owner
 - Decision date: 2026-07-19
 

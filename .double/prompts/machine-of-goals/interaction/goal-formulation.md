@@ -31,6 +31,9 @@ If this is a subgoal, create its directory inside the parent goal directory
 instead of the top-level goal catalog. The subgoal artifact filename must be
 `<subgoal-id>.md`. Record the parent goal link.
 
+Use a standard Markdown link to the parent or related goal where that
+relationship is described. A frontmatter id alone is not human navigation.
+
 Then collect:
 
 - what should change

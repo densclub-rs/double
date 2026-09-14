@@ -13,8 +13,9 @@ derived-from:
 
 ## Mission
 
-Move through a selected plan stage by executing, delegating, automating, or
-preparing a handoff artifact within approved boundaries.
+Create or resume a bounded working run and move through its selected plan path
+by executing, delegating, automating, or preparing a handoff artifact within
+approved boundaries.
 
 ## Core Principles
 
@@ -23,6 +24,7 @@ preparing a handoff artifact within approved boundaries.
 - use dry run when the stage needs simulation before real effects
 - refine the stage when execution reveals missing detail
 - produce evidence for validation
+- keep mutable execution state outside `plan.md`
 
 ## Behavioral Rules
 
@@ -31,15 +33,20 @@ preparing a handoff artifact within approved boundaries.
   external effects
 - create scripts, workflows, checklists, specifications, or handoff artifacts
   only when they serve the current stage
-- update the active plan artifact with attempts, changes, blockers, and
-  produced artifacts
-- include author, device or runtime, and second-precision attempt time in each
-  stage attempt result
-- store stage attempt results under `<goal-directory>/results/`
-- after updating the active plan artifact, ask whether to keep the separate
-  attempt artifact
-- when a stage has more than 10 attempt artifacts, ask whether old attempt
-  artifacts should be deleted, compacted, or kept
+- select a registered realization compatible with the chosen paths or subplans
+- create the working artifact as
+  `<goal-directory>/run/<realization-id>--<YYYYMMDDTHHMMSSZ>.md`
+- create or update `<goal-directory>/run/index.md` with links to active, pinned,
+  and retained runs
+- link the run context to the source goal, decision, selected paths, and exact
+  plan and realization revisions
+- increment the realization run count and set latest run time and `running`
+  result when the working artifact is created
+- update stage checkboxes, concise working notes, blockers, produced artifacts,
+  and validation evidence in the current run
+- when a new automatic realization is made available, register it in
+  `path-options.md` and immediately recompute the plan style
+- treat readiness and alignment as separate from the computed style
 - hand results to validation rather than accepting them as final
 - after each response, offer the next useful workflow movement, usually
   continue execution, dry run, stop for confirmation, or hand off to validation
@@ -47,6 +54,9 @@ preparing a handoff artifact within approved boundaries.
 ## Strict Constraints
 
 - do not silently revise the whole plan or goal
+- do not store execution checkboxes or mutable progress in `plan.md`
 - do not validate the stage as final
 - do not skip required stop points
 - do not export reusable packages directly
+- do not begin a run while its plan or realization revision reference is
+  mutable or unresolvable

@@ -1,25 +1,19 @@
 ---
 id: double-github-integration
 kind: goal-artifact
-produced-by: machine-of-goals/goal-formulation-agent
+project-id: double
+produced-by: goal-formulation-agent
+owner-id: double-project
 interaction-language: en
 artifact-language: en
-current-step: 01-goal-formulation
-current-mode: clarification
-next-expected-step: 02-path-discovery
-transition-condition: goal is sufficiently clear to search for paths and has no open questions
-goal-catalog: ./goals
-goal-directory: ./goals/double-github-integration
-goal-artifact: ./goals/double-github-integration/double-github-integration.md
 goal-scope: main-goal
-parent-goal-id: null
-parent-goal-directory: null
-subgoal-directory: null
 derived-from:
   - source conversation on 2026-07-18
   - ../../.github/workflows/release.yml
   - ../../Double.md
 ---
+
+<a id="double-github-integration"></a>
 
 # Goal: Double GitHub Integration
 
@@ -38,18 +32,6 @@ independently formulated GitHub-related subgoals.
 - GitHub workflows, releases, documentation, project-site publishing, and
   contributor-facing repository operations.
 
-### Owner
-
-The Double project community, with the user initiating this goal responsible
-for goal decisions during formulation.
-
-### Stakeholders
-
-- Double users and readers
-- Double contributors and maintainers
-- agents that use, maintain, or distribute Double artifacts
-- visitors to the Double GitHub site
-
 ## 3. Motivation
 
 - Make Double usable, discoverable, and trustworthy in its GitHub home.
@@ -62,19 +44,22 @@ for goal decisions during formulation.
 
 ## 4. Current State
 
-Double is hosted in a GitHub repository and already contains GitHub release
-automation. The complete desired GitHub integration, project-site contract,
-and subgoal structure have not yet been formulated as one maintained goal.
+Double is hosted in a GitHub repository and has a maintained parent goal,
+canonical integration plan, and an accepted release-maintenance subgoal. The
+GitHub site contract, publishing architecture, and remaining GitHub-related
+subgoals are not yet fully established.
 
 ### Known facts
 
 - The Double repository remote is `git@github.com:soliverr/double.git`.
-- `.github/workflows/release.yml` defines a tagged-release workflow.
-- The release workflow packages project and Machine of Ideas releases and
+- `.github/workflows/release.yml` defines a machine-tag release workflow and
+  delegates testing and publication to the release-maintenance subgoal.
+- The release-maintenance subgoal packages selected machine files and
   publishes GitHub release artifacts with checksums.
 - Double contains foundational project material, a `.double/` operating
   catalog, and a `goals/` catalog.
-- This goal is intended to be a main goal with multiple subgoals.
+- This goal is a main goal with an accepted `github-actions-maintenance`
+  subgoal and room for additional focused subgoals.
 
 ### Relevant environment
 
@@ -84,51 +69,34 @@ workspaces.
 
 ### Existing related goals or subgoals
 
-- `double-general-installer` — candidate related goal; it depends on a stable
-  GitHub source and release/distribution conventions but is not imported into
-  this goal.
-- `github-actions-maintenance` — accepted subgoal for creating and maintaining
-  Double GitHub Actions workflows.
+- `double-general-installer` — candidate; not imported into this goal. It
+  depends on a stable GitHub source and release/distribution conventions.
+- [GitHub Actions Maintenance](./github-actions-maintenance/github-actions-maintenance.md#github-actions-maintenance)
+  — imported accepted subgoal for creating and maintaining Double GitHub
+  Actions workflows.
 
 ## 5. Target State
 
-Double has an explicitly defined, reliable, and maintainable GitHub presence.
-Its project site and in-scope repository operations provide the agreed
-information and functionality; GitHub automation is documented, validated,
-and maintained through focused subgoals.
+The GitHub Actions rules and workflow for Double, together with their
+maintenance, are defined by the `github-actions-maintenance` subgoal.
 
 - Required result:
-  - a maintained parent goal that governs GitHub-related Double subgoals
-  - an agreed and operational GitHub site or GitHub-connected public site for
-    Double
-  - documented, validated GitHub repository operations within the accepted
-    scope
-  - clear ownership and integration boundaries between the parent goal and its
-    subgoals
-  - `.github/workflows/` is the directory for GitHub Actions workflows
-  - `.github/workflows/release.yml` configures the release workflow rules
-  - `.github/workflows/release.yml` invokes special scripts to test, create and publish releases
-- Optional quality improvements: automated quality checks, contribution
-  guidance, issue and pull-request workflows, release improvements, project
-  analytics, and a custom domain.
-- Evidence that would show the target state exists: the public site is
-  reachable and reflects its agreed content; in-scope GitHub workflows run as
-  documented; each accepted subgoal has validation evidence; and the parent
-  goal records how the resulting capabilities are maintained.
+  - `.github/workflows/` exists and is available for GitHub Actions workflow
+    rules
+  - `scripts/` exists and is available for release and validation scripts
+  - GitHub Actions rules and a workflow for maintaining them, fully defined by
+    [github-actions-maintenance.md](./github-actions-maintenance/github-actions-maintenance.md) subgoal
 
 ## 6. Success Criteria
 
-- Minimal success: an approved GitHub-integration plan exists, the agreed
-  GitHub site is operational, and the first essential GitHub-maintenance
-  subgoals have completed with recorded validation.
-- High-quality success: GitHub-facing operations are reproducible, documented,
-  monitored as appropriate, safe for contributors to evolve, and organized as
-  reusable, independently validated subgoals.
-- Partial success: individual GitHub surfaces or workflows exist but lack a
-  coherent parent goal, acceptance criteria, or maintainable operating model.
-- Failure / not achieved: Double has no agreed GitHub site or operational
-  maintenance model, or its GitHub-facing surfaces are unreliable and
-  unvalidated.
+- Minimal success: the accepted `github-actions-maintenance` subgoal defines
+  the GitHub Actions rules and maintenance workflow.
+- High-quality success: those rules and the workflow are reproducible,
+  documented, validated, and maintainable.
+- Partial success: the subgoal exists but its rules or maintenance workflow are
+  incomplete or not validated.
+- Failure / not achieved: no accepted subgoal defines the GitHub Actions rules
+  and workflow for maintaining them.
 
 ## 7. Constraints
 
@@ -150,8 +118,8 @@ and maintained through focused subgoals.
 - Available resources: the Double repository, its GitHub remote, existing
   `.github/` configuration, release workflow, project documentation, and the
   Machine of Goals workflow.
-- Missing resources: accepted site requirements, a subgoal catalog, ownership
-  and maintenance policy, and a selected publishing architecture.
+- Missing resources: accepted site requirements, a selected publishing
+  architecture, and the remaining ownership and maintenance policies.
 - Tools or systems: GitHub repository features, GitHub Actions, GitHub
   Releases, GitHub Pages or an approved alternative, Git, and local tooling.
 - People or organizations: the Double project community, maintainers,
@@ -159,6 +127,7 @@ and maintained through focused subgoals.
 
 ## 9. Open Questions
 
+None currently.
 
 ## 10. Boundaries / Non-Goals
 
@@ -170,8 +139,10 @@ and maintained through focused subgoals.
 - It does not make every future Double feature dependent on GitHub; it covers
   the agreed GitHub environment and its integration with the project.
 
-## 11. Related Plan Variants
+## 11. Machine of Goals Artifacts
 
-| Variant | Artifact | Role | Author | Device | Time | Selection Status | Use |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| `canonical` | [plan.md](./plan.md) | canonical-community | plan-synthesis-agent | codex-runtime | 2026-07-24T00:04:41+02:00 | selected | active |
+- Path and realization registry: [Double GitHub Integration paths](./path-options.md#double-github-integration-path-options)
+- Plan: [Double GitHub Integration plan](./plan.md#double-github-integration-plan)
+- Retained execution attempts: [Run index](./run/index.md#double-github-integration-run-index)
+- Computed plan style: `multi-pass` because the delegated maintenance subplan
+  has a registered automatic realization.

@@ -1,7 +1,14 @@
 ---
 name: machine-of-goals
 description: >
-  Use this skill when the user wants to formulate, clarify, inspect, plan, realize, validate, import, export, split, or continue a goal through the Machine of Goals. Trigger on requests about Machine of Goals, goal artifacts, subgoals, subgoal catalogs, path discovery, plan synthesis, subplans, plan realization, plan execution state, previous plan implementations, plan validation, plan exchange, reusable plans, collapsed plans, automatically executable plans, or goal workflow state. Trigger and route to `double-agent` when the user asks to create, change, move, or remove Machine of Goals operating artifacts under `.double/`. Do not trigger on casual mentions of goals inside unrelated discussion unless the user asks to enter the Machine of Goals workflow.
+  Use this skill when the user wants to formulate, clarify, inspect, plan,
+  realize, validate, import, export, split, or continue a goal through the
+  Machine of Goals. Trigger on goal artifacts, subgoals, path discovery, plan
+  synthesis, registered realizations, computed plan style, working plan runs,
+  validation, plan exchange, reusable plans, or collapsed plans. Trigger and
+  route to `double-agent` when the user asks to change Machine of Goals
+  operating artifacts under `.double/`. Do not trigger on casual mentions of
+  goals inside unrelated discussion unless the user asks to enter the workflow.
 metadata:
   short-description: Transform goals into verifiable target states, paths, plans, realization loops, validation, and reusable plan packages
 ---
@@ -28,8 +35,9 @@ including:
 - synthesizing or revising a plan
 - choosing a realization decision
 - realizing plan stages
-- working with plan execution state or previous plan implementations
-- validating stage attempt results or overall goal achievement
+- working with registered plan realizations, computed plan style, current plan
+  runs, or aggregate realization statistics
+- validating current run results or overall goal achievement
 - importing an existing plan, analog, runbook, workflow, or reusable fragment
 - exporting a plan package, checklist, runbook, workflow,
   specification, or collapsed plan
@@ -155,16 +163,29 @@ validation flow.
 - Import must adapt existing material to the current goal context.
 - Export must preserve the link between goal, plan, criteria, context, and
   validation evidence.
-- The canonical Double community plan for a goal is `plan.md`; imported,
-  exported, personal, local, or experimental plan variants must not overwrite
-  it without explicit promotion.
-- The active plan artifact stores both the intended transition model and the
-  current execution state. Its `Plan Map`, `Blocker`, `Stage Attempts`, and
-  stage-level `Validation` blocks are the main execution-state surface.
-- Working and intermediate plan-execution files belong under
-  `<goal-directory>/results/`.
-- Imported and exported non-canonical plan artifact names must include author,
-  device, and second-precision time labels.
-- Imported execution histories and validation evidence must be linked from the
-  current plan artifact as existing implementations, not used to overwrite the
-  active plan.
+- Human-facing navigation uses contextual standard Markdown links in the
+  sections where artifact relationships are explained; frontmatter references
+  do not replace those links, and a universal navigation block is not required.
+- External goals, plans, subplans, paths, and realizations may remain direct
+  references when no copy or adaptation is requested; direct reference does
+  not require Plan Exchange.
+- Each goal has one plan artifact at `<goal-directory>/plan.md`; alternative
+  achievement paths are selectable branches or subplans inside it.
+- `path-options.md` remains the living registry of paths, registered
+  realizations, computed style input, and aggregate run statistics.
+- Registering an automatic realization for the plan or a subplan changes the
+  computed style from `single-pass` to `multi-pass`; file creation and first
+  successful validation are not transition points.
+- Mutable execution state belongs in
+  `<goal-directory>/run/<realization-id>--<YYYYMMDDTHHMMSSZ>.md`, not in
+  `plan.md`.
+- `<goal-directory>/run/index.md` links active, pinned, and retained run files;
+  `path-options.md` links the index but not individual run files.
+- A realization decision and every run must link resolvable exact plan and
+  realization revisions; `current` is allowed only before the execution commit
+  point.
+- Retain a configured three to five terminal run logs per realization while
+  preserving aggregate statistics in `path-options.md`.
+- Import and export of reusable multi-pass plans preserve goal context, paths,
+  registered realizations, and validation contracts; bounded run logs are not
+  required package history.
