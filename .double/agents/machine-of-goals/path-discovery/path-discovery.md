@@ -24,7 +24,7 @@ derived-from:
 ## Purpose
 
 `Path Discovery` discovers possible ways to reach a formulated goal and creates
-the living path registry used by planning and realization.
+the evolving path-options catalog used by planning and realization.
 
 ## Position in Workflow
 
@@ -58,12 +58,13 @@ the living path registry used by planning and realization.
 - compare paths by fit, cost, risk, uncertainty, and expected value
 - keep plausible alternatives visible until the goal is closed or the user
   chooses to discard them
+- extend the catalog when new plausible paths appear over time
 - assign stable path ids that can be referenced by plan branches and
   realizations
 - link the source goal in `Source Goal`, give every path a stable explicit
   anchor, and link planned paths to their plan stages or subplans
-- link registered realizations to their definitions or implementations and
-  exact revisions when available
+- leave realization registration and execution statistics to section 10 of
+  `plan.md`
 - record every unresolved issue as an `Open Question`
 - when `Open Questions` remain, state that Path Discovery is not complete,
   offer to resolve them one by one, and wait for each user response

@@ -151,6 +151,15 @@ before proceeding to the next question. The agent may offer transition to
 questions remain, unless the goal is marked blocked, infeasible, or requiring
 reformulation.
 
+During `04-plan-review-and-decision`, the agent must conduct an interactive
+review. It must show the user the selectable achievement paths or subplans,
+their material trade-offs, and compatible registered realizations before
+asking the user to confirm the selected path or subplan. The agent may
+recommend an option, but must not select or confirm it on the user's behalf.
+It must wait for explicit user confirmation before committing the realization
+decision, registering a new realization, or advancing to
+`05-plan-realization`.
+
 The agent may skip the proposal only when the user explicitly asks for no next
 steps, asks for a narrow answer only, or the current state is blocked and no
 meaningful workflow movement is available. In that case, the agent should say
@@ -187,7 +196,7 @@ Core agents:
 - `plan-realization-agent`: creates or resumes a run and realizes selected plan
   paths within approved boundaries
 - `plan-validation-agent`: validates run or goal results and updates the run
-  and aggregate realization statistics
+  and the plan's realization registry
 
 Optional agent:
 
@@ -203,9 +212,22 @@ Draft artifact templates are defined in
 - `path-options` -> `.double/templates/machine-of-goals/path-options-template.md`
 - `plan-artifact` -> `.double/templates/machine-of-goals/plan-template.md`
 - `realization-decision` -> `.double/templates/machine-of-goals/realization-decision-template.md`
+- `realization-artifact` -> `.double/templates/machine-of-goals/realization-template.md`
 - `plan-run` -> `.double/templates/machine-of-goals/plan-run-template.md`
 - `run-index` -> `.double/templates/machine-of-goals/run-index-template.md`
 - `exported-plan-package` -> `.double/templates/machine-of-goals/exported-plan-package-template.md`
+
+## Template Provenance Rule
+
+Every artifact created from a Machine of Goals template records the stable
+top-level `id` of that template in its frontmatter `template-id`. The value is
+an identifier, not a filesystem path and not the generated artifact id.
+
+Artifact revisions preserve their original `template-id`. In particular, a
+`realizations/plan-revision-<N>.md` snapshot is a copy of `plan.md`, so it keeps
+`template-id: plan-template`. Imported material receives a Machine of Goals
+`template-id` only when it is adapted into an artifact created from that
+template; an unchanged direct reference keeps its source metadata.
 
 ## Plan and Path Rule
 
@@ -215,10 +237,16 @@ states to the final state. Different achievement alternatives are selectable
 paths, branches, or subplans inside this model, not separate plan variants.
 
 `path-options.md` begins as the Path Discovery output and remains a living
-registry after plan synthesis. It records path lifecycle, the corresponding
-plan branch or subplan, registered realizations, and aggregate execution
-statistics. Unrealized paths may be removed over time when they have no retained
-plan, realization, or statistics dependency.
+catalog after plan synthesis. It records possible achievement paths, their
+comparison and lifecycle, and the corresponding plan branch or subplan. New
+paths may be added over time, and a later realization may select a different
+path. A path must not be removed while a retained plan realization record or
+run still depends on it.
+
+Section 10 of `plan.md` is the living realization registry. It accumulates one
+row for every registered realization choice and owns realization status,
+alignment, and aggregate run statistics. The stable transition topology in the
+other plan sections remains separate from this evolving registry.
 
 ## Plan Realization Registration Rule
 
@@ -226,25 +254,69 @@ A realization is a manual or automatic projection of the complete plan or of
 specific paths or subplans. A shell script, Python program, workflow, agentic
 process, or manual procedure may be registered as a realization.
 
-Every run must select a registered realization. If a single-pass plan has no
-realization yet, Plan Review registers the selected manual or interactive
-realization before the first run. Manual or interactive registration does not
-change the computed style.
+Every run must select a realization record registered in section 10 of
+`plan.md`. If a single-pass plan has no realization yet, Plan Review registers
+the selected manual or interactive realization before the first run. Manual or
+interactive registration does not change the computed style.
 
-Every registered realization has:
+Every realization registry row has:
 
-- a stable realization id and kind
-- supported paths or subplans
+- a stable, unique realization record id and a realization id and kind
+- a link to its persistent `realizations/<realization-record-id>.md` artifact
+- the selected path or subplan
+- the realization decision and registration time
+- the exact plan revision snapshot and realization revision
 - registration and readiness status
 - alignment status against the current plan
 - cumulative run count
 - latest run time
 - latest run result
 
+When another path or subplan is selected, add a new realization row even if it
+uses the same realization mechanism or implementation. Preserve the earlier row
+as history; never replace it with the new selection. If the current plan
+revision already has a snapshot, increment `plan-revision` before appending the
+new row and creating the next snapshot.
+
 Automatic realizations must implement validation of the initial state, required
 intermediate results, and final state defined by the plan. Creating an
 implementation file does not register it. Registration occurs only when the
-realization is added to the realization registry in `path-options.md`.
+realization row is added to section 10 of `plan.md`.
+
+## Plan Realization Artifact Rule
+
+Every user-approved manual or automatic realization must have one persistent
+semantic artifact at:
+
+```text
+<goal-directory>/realizations/<realization-record-id>.md
+```
+
+Create this artifact after the user confirms the path and realization decision
+and before advancing from Plan Review and Decision to the first run. The
+artifact materializes exactly one realization registry row and records the
+decision, selected path or subplan, exact local plan revision, exact realization
+revision, optional exact implementation revision, entry point, control
+boundaries, validation contract, readiness, and alignment.
+
+The realization artifact is not the realization decision and is not
+necessarily the executable implementation. Manual and interactive
+realizations record their procedure in it; automatic realizations may link an
+implementation stored in its normal project location. Creating the artifact
+does not authorize execution and does not by itself certify readiness.
+
+Every run derives from exactly one realization artifact and links back to it.
+The realization artifact links every active, pinned, or retained run created
+from its realization record. A run must not be created or resumed if this
+artifact is missing. When bounded retention removes a run, remove the
+corresponding realization-artifact link only after aggregate statistics have
+been updated.
+
+The artifact's `realization-revision` is a positive integer. Preserve earlier
+revision sections when its procedure, implementation reference, boundaries, or
+validation contract changes. Updating run links or aggregate-derived status
+does not create a new realization revision. Every run pins the explicit anchor
+for the revision it executes.
 
 ## Computed Plan Style Rule
 
@@ -278,23 +350,30 @@ paths are not portable artifact navigation.
 The required contextual relationships are:
 
 - a goal's related-goal and Machine of Goals artifact sections link to the
-  related goal, plan, path registry, decision, and run index artifacts that
+  related goal, plan, path-options catalog, realization registry, decision, and
+  run index artifacts that
   actually exist
-- a path registry's `Source Goal` links to the goal, each planned path links to
-  its plan stage or subplan anchor, and each registered realization links to its
-  definition or implementation artifact when one exists
+- a path-options artifact's `Source Goal` links to the goal and each planned
+  path links to its plan stage or subplan anchor
 - a plan summary links to its source goal; plan-map and stage-detail links
   connect stages, paths, subplans, input and output artifacts, realizations, and
   evidence in the contexts where they are used
+- each realization registry row in section 10 of `plan.md` links its selected
+  path or subplan, decision, realization artifact, exact plan revision snapshot,
+  and realization revision; the section links the shared run index
 - a subgoal links to its parent goal in its goal context, and the parent plan's
   integration boundary links to the subgoal, subgoal plan, exchanged artifacts,
   and continuation stage
-- a realization decision links to the selected plan revision, paths or
-  subplans, realization revision, and first stage
+- a realization decision links to the selected plan revision snapshot under
+  `realizations/`, paths or subplans, realization artifact, realization
+  revision, and first stage
+- a realization artifact links to its goal, registry row, decision, selected
+  path or subplan, exact plan and realization revisions, first stage, retained
+  runs, and shared run index
 - a run context links to its source goal, realization decision, exact plan
-  revision, exact realization revision, and selected paths or subplans; run
-  stages, produced artifacts, and evidence link to their sources in the
-  corresponding run sections
+  revision, realization artifact, exact realization revision, and selected
+  paths or subplans; run stages, produced artifacts, and evidence link to their
+  sources in the corresponding run sections
 - an exported package links to source artifacts, reusable material, and
   validation evidence in their existing contextual sections
 
@@ -323,19 +402,45 @@ route to its origin without requiring the provider project to maintain a
 consumer backlink. Use Plan Exchange only when material is copied, adapted, or
 packaged.
 
-Planning may explicitly follow `revision: current`. A realization decision and
-every concrete run must pin resolvable exact plan and realization revisions.
-An integer revision without a link to an immutable snapshot or VCS permalink
-is not sufficient. Plan revisions remain versions of the single `plan.md`, not
+Planning may explicitly follow `revision: current`. Before a realization
+decision is committed, copy the confirmed current `plan.md` to
+`<goal-directory>/realizations/plan-revision-<N>.md`, where `<N>` is the
+positive integer in `plan-revision`. Rebase relative Markdown links for the
+deeper directory while preserving the plan's semantic content. A snapshot that
+already exists must never be overwritten. A changed plan topology or a new
+realization selection requires the next revision number and a new snapshot;
+aggregate-only updates to an existing realization row do not.
+
+A realization decision and every concrete run must link the exact local plan
+revision snapshot and exact local realization-artifact revision. An exact
+implementation revision is also required when the realization references a
+separate implementation. A VCS permalink may be
+recorded as additional evidence, but it does not replace the local snapshot.
+Plan revisions remain historical copies of the single current `plan.md`, not
 alternative plan variants.
+
+## Plan Revision History Rule
+
+`plan.md` is the current editable transition model. Its realization history is
+stored under `<goal-directory>/realizations/` as immutable plan copies named
+`plan-revision-<N>.md`.
+
+Create the snapshot after the user confirms the selected path or subplan and
+before committing the realization decision. When validation requires a later
+change to the plan topology, or when another realization row is added,
+increment `plan-revision` and create the corresponding new snapshot before
+another decision or run uses that revision. Aggregate-only updates to an
+existing realization row do not create a plan revision. Do not edit or replace
+an existing snapshot.
 
 ## Plan Run Rule
 
 Mutable execution state is stored outside `plan.md`. Every concrete execution
-creates one `plan-run` working artifact:
+is created from an existing realization artifact and creates one `plan-run`
+working artifact:
 
 ```text
-<goal-directory>/run/<realization-id>--<YYYYMMDDTHHMMSSZ>.md
+<goal-directory>/run/<realization-record-id>--<YYYYMMDDTHHMMSSZ>.md
 ```
 
 The run records the plan and realization revisions, selected paths or subplans,
@@ -343,28 +448,41 @@ initial-state validation, stage checkboxes, concise execution notes,
 intermediate validation, blockers, final-state validation, and terminal result.
 The run, not `plan.md`, is the source of execution status.
 
+Concise notes do not permit generated manual instructions to be omitted. Every
+command generated for a human to execute while manually performing a selected
+plan stage must be appended to the current run before or when it is presented,
+in generation order and with its stage, purpose, working context, and current
+disposition. Corrected or replacement commands are appended as new entries;
+earlier commands are not overwritten. The recorded command must be the same
+safe-to-share text presented to the human: literal secrets are never
+interpolated, and protected values are represented by placeholders or
+references. This requirement does not create a full command trace for automatic
+execution.
+
 Run logs are bounded working context. The default retention depth is the latest
-five terminal runs per realization and may be configured from three to five.
+five terminal runs per realization record and may be configured from three to five.
 Active runs do not count toward the terminal-run limit. When the limit is
 exceeded, remove the oldest unpinned terminal run only after the new run has
 updated aggregate statistics. Product artifacts and external evidence are not
 removed with a working run log.
 
-`path-options.md` stores cumulative run statistics without links to individual
-run files. The cumulative count must not be recomputed only from the bounded
-contents of `run/`.
+Section 10 of `plan.md` stores cumulative run statistics without links to
+individual run files. The cumulative count must not be recomputed only from the
+bounded contents of `run/`.
 
-`run/index.md` is the contextual navigation index for active, pinned, and
-retained run files. It links each retained run to its exact plan and realization
-revisions. `path-options.md` may link to this index from `Run Retention`, but its
-realization statistics table must not link individual run files. When retention
-removes a run, remove its live link from the index only after aggregate
-statistics have been updated; do not leave a broken link.
+`run/index.md` is the goal-wide contextual navigation index for active, pinned,
+and retained run files. It links each retained run to its realization artifact
+and exact plan and realization revisions. Each realization artifact is the
+realization-specific parent index for those same retained run files. The
+realization registry in `plan.md` links the realization artifact and shared run
+index but not individual run files. When retention removes a run, remove its
+live links from both indexes only after aggregate statistics have been updated;
+do not leave a broken link.
 
-When a run file is created, increment the realization's cumulative run count,
-set latest run time to the run start time, and set latest result to `running`.
-Terminal validation replaces only latest result; it does not increment the run
-count again.
+When a run file is created, increment the selected realization row's cumulative
+run count in `plan.md`, set latest run time to the run start time, and set latest
+result to `running`. Terminal validation replaces only latest result; it does
+not increment the run count again.
 
 Canonical semantic artifacts remain at the goal-directory root:
 
@@ -372,6 +490,11 @@ Canonical semantic artifacts remain at the goal-directory root:
 - `path-options.md`
 - `realization-decision.md`
 - `plan.md`
+
+Each approved realization has its persistent semantic artifact at
+`<goal-directory>/realizations/<realization-record-id>.md`. Plan revision
+snapshots share this directory but remain distinct
+`plan-revision-<N>.md` artifacts.
 
 The run navigation artifact remains at `<goal-directory>/run/index.md`.
 
@@ -450,14 +573,14 @@ machine:
 
 ```text
 choose next plan stage
--> select registered realization and plan path
+-> select realization record and plan path
 -> create or resume plan run
 -> explain current stage
 -> refine stage if needed
 -> prepare validation specification if needed
 -> execute, delegate, automate, or hand off externally
 -> validate result in dialogue until an explicit decision is reached
--> update run and aggregate realization statistics
+-> update run and the selected realization row in `plan.md`
 -> revise plan or realization if needed
 -> review realization alignment if either changed
 -> continue, branch, stop, or close goal
@@ -496,6 +619,7 @@ external implementation artifact, or a different realization route.
 - default-mode: `research`
 - purpose:
   - discover possible ways to reach the formulated goal
+  - extend or revise the path catalog when new possibilities appear over time
   - discover and analyze possible ways to reach a formulated subgoal when the
     current artifact has `goal-scope: subgoal`
   - include direct, minimal, exploratory, long-term, delegated, automated,
@@ -543,20 +667,33 @@ external implementation artifact, or a different realization route.
 - default-mode: `review`
 - purpose:
   - act as the commit point before movement through the plan
-  - choose the path or subplan for the first run
-  - choose a compatible registered realization, or register the selected manual
-    or interactive realization before the first run
+  - conduct an interactive review with the user
+  - show the selectable paths or subplans and their material trade-offs
+  - show compatible realization records from section 10 of `plan.md` for each
+    relevant path or subplan
+  - ask the user to confirm the selected path or subplan for the first run
+  - after confirmation, choose a compatible realization record or append a new
+    row to section 10 of `plan.md`; selecting another path always creates a new
+    row, even when the realization mechanism is reused
+  - recompute plan style from the realization rows
+  - copy the updated `plan.md` to `realizations/plan-revision-<N>.md` and rebase
+    its relative links
+  - create `realizations/<realization-record-id>.md` from the confirmed
+    realization row and decision before advancing to the first run
   - define the first entry point
   - choose the realization mode
   - set automation boundaries, confirmation points, dry-run needs, validation
     strategy, and plan revision conditions
 - produced-outputs:
+  - `plan-revision-snapshot`
   - `realization-decision`
-  - `updated-path-options` when a manual or interactive realization is first
-    registered
+  - `realization-artifact`
+  - `updated-plan-artifact` when a realization row is appended
 - transition-condition:
-  - the user or responsible agent has selected how the plan will start and under
-    which control boundaries it may proceed
+  - the user has explicitly confirmed the selected path or subplan, the local
+    selected realization row, plan revision snapshot, and realization artifact
+    exist without replacing earlier history, and the user has confirmed how the
+    plan will start, including the control boundaries under which it may proceed
 - next-step:
   - `05-plan-realization`
 
@@ -565,21 +702,28 @@ external implementation artifact, or a different realization route.
 - step-id: `05-plan-realization`
 - default-mode: `execution`
 - purpose:
-  - create or resume a working `plan-run` for the selected realization and path
+  - require the selected persistent realization artifact before execution
+  - create or resume a working `plan-run` from the selected realization
+    artifact and path
+  - add the run link to the realization artifact when a run is created
   - create or update `run/index.md` so retained runs remain discoverable
   - execute, delegate, automate, or externally realize the selected plan stage
+  - record every command generated for human execution of a manual stage in the
+    current run before or when presenting it, without overwriting earlier
+    corrected or superseded commands
   - refine the stage when necessary before or during work
   - create additional specifications, scripts, workflows, checklists, or
     handoff artifacts when the current stage requires them
-  - register a new automatic realization in `path-options.md` when the user
-    chooses to make it available for selection
+  - append a new automatic realization row to section 10 of `plan.md` when the
+    user chooses to make it available for selection
   - recompute plan style immediately when registration changes
   - when creating a run, increment run count and set latest run time and
-    `running` result in `path-options.md`
+    `running` result in the selected realization row in `plan.md`
 - produced-outputs:
   - `plan-run`
+  - `updated-realization-artifact`
   - `run-index`
-  - `updated-path-options` when a realization is registered or a run starts
+  - `updated-plan-artifact` when a realization is registered or a run starts
 - transition-condition:
   - the run has produced a stage or final result that can be validated, or is
     blocked and needs plan or realization revision
@@ -596,21 +740,26 @@ external implementation artifact, or a different realization route.
   - conduct validation as a dialogue until the user confirms the stage result,
     rejects it, marks it partial, or asks for revision
   - record the validation decision and terminal result in the current run
-  - replace the current realization's latest `running` result with the terminal
-    result in `path-options.md` without incrementing run count again
+  - replace the selected realization row's latest `running` result with the
+    terminal result in `plan.md` without incrementing run count again
   - preserve plan topology in `plan.md`; revise it only when execution feedback
     changes the intended transition model
+  - when `plan.md` is revised, increment `plan-revision` and copy the revised
+    plan to a new `realizations/plan-revision-<N>.md` before later execution
   - enforce bounded run retention after terminal statistics have been updated
-  - remove retired run links from `run/index.md` without leaving broken links
+  - remove retired run links from the realization artifact and `run/index.md`
+    without leaving broken links
   - decide whether to continue, branch, revise, stop, or close the goal
 - produced-outputs:
   - `updated-plan-run`
+  - `updated-realization-artifact` when run status or retention changes it
   - `updated-run-index` when retention removes a run
-  - `updated-path-options`
-  - `updated-plan-artifact` only when plan revision is explicitly required
+  - `updated-plan-artifact` for realization statistics and when plan revision is
+    explicitly required
 - transition-condition:
   - the current run result has an explicit validation decision and aggregate
-    statistics have been updated
+    statistics have been updated; when `plan.md` was revised for later use, its
+    new local plan revision snapshot has also been created
 - next-step:
   - `05-plan-realization`
   - `07-plan-packaging-export`
@@ -623,8 +772,8 @@ external implementation artifact, or a different realization route.
 - default-mode: `export`
 - purpose:
   - optionally package the goal, plan, selected paths or subplans, realization
-    registry, registered automatic realizations, validation contracts, and
-    supporting evidence for future use
+    registry, persistent realization artifacts, registered automatic
+    realizations, validation contracts, and supporting evidence for future use
   - import or export a multi-pass plan as a reusable mechanism in another
     project
   - exclude bounded `run/` working logs by default

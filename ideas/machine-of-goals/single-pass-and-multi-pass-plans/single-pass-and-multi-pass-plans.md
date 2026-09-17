@@ -55,7 +55,9 @@ The plan defines a verifiable transition from the initial state to the final sta
 
 Shell scripts, Python programs, manual procedures, workflows, and similar forms are realizations of the plan or of particular subplans. An automatic realization must validate the initial state, required intermediate results, and the final state defined by the plan.
 
-Available realizations and their aggregate execution statistics are recorded in `path-options.md`. The statistics show which realizations exist, how many times each realization has been run, when it was last run, and the result of the latest run. The artifact does not need to link to individual run files.
+Available realizations and their aggregate execution statistics are recorded in the realization registry in `plan.md`. The statistics show which realizations exist, how many times each realization has been run, when it was last run, and the result of the latest run. The registry does not link to individual run files.
+
+After the user approves a path and chooses a manual or automatic realization, the machine creates `realizations/<realization-record-id>.md` before the first run. This persistent realization artifact records the approved execution context and links every active, pinned, or retained run for that realization record.
 
 Creating a run increments the realization run count, records the start time as
 the latest run time, and sets the latest result to `running`. Terminal
@@ -64,10 +66,10 @@ validation replaces that result without incrementing the count again.
 Each concrete execution creates a working run artifact under `run/`. Its filename identifies the realization and the UTC start time:
 
 ```text
-run/<realization-id>--<YYYYMMDDTHHMMSSZ>.md
+run/<realization-record-id>--<YYYYMMDDTHHMMSSZ>.md
 ```
 
-Run artifacts are short-lived working logs that record the selected paths, checked stages, concise execution notes, and result. The retained depth is bounded, normally to the latest three to five runs per realization. Aggregate statistics in `path-options.md` survive removal of old run files.
+Run artifacts are short-lived working logs that record the selected paths, checked stages, concise execution notes, and result. When the machine generates commands for a human to execute while manually performing a stage, the run records every such command in generation order, including corrected or superseded commands. The retained depth is bounded, normally to the latest three to five runs per realization. Their links are maintained in the persistent realization artifact and the shared run index. Aggregate statistics in `plan.md` survive removal of old run files.
 
 ## 5. Key Points
 
@@ -77,8 +79,11 @@ Run artifacts are short-lived working logs that record the selected paths, check
 - A general computed style designation is sufficient at the plan level; the detailed behavior belongs to the selected workflow.
 - The plan defines the transition and its state validation contract; selectable achievement alternatives are subplans or path options within it.
 - Shell scripts, Python programs, manual procedures, and workflows are realizations of the plan or its subplans.
+- Every approved manual or automatic realization has a persistent artifact before its first run, and that artifact links its retained runs.
 - Each execution creates a bounded working run log rather than a permanent realization-history artifact.
-- `path-options.md` retains aggregate realization statistics without links to individual run files.
+- Every command generated for manual execution of a stage is recorded in that
+  run before or when it is presented to the human.
+- `plan.md` retains aggregate realization statistics without links to individual run files.
 - Both the plan and its realization may evolve between runs.
 - A script may be a collapsed executable form of the plan that is refined through actual runs.
 - Errors and observations discovered while running the script may lead to changes not only in the script but also in the source plan.

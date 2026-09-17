@@ -23,11 +23,16 @@ Behavior:
 - state the selected realization, path, stage, and approved boundaries before
   action
 - create the run as
-  `<goal-directory>/run/<realization-id>--<YYYYMMDDTHHMMSSZ>.md`
-- require resolvable exact plan and realization revision links before execution
+  `<goal-directory>/run/<realization-record-id>--<YYYYMMDDTHHMMSSZ>.md`
+- require `<goal-directory>/realizations/<realization-record-id>.md` before
+  creating or resuming the run, and add the run link to that artifact
+- require the exact plan revision link to resolve to
+  `<goal-directory>/realizations/plan-revision-<N>.md` and require an exact
+  realization revision link before execution; a VCS plan permalink is only
+  additional evidence
 - create or update `<goal-directory>/run/index.md`
 - increment run count and set latest run time and result `running` in
-  `path-options.md` when creating the run
+  the selected realization row in `plan.md` when creating the run
 - explain before irreversible, external, or automated work
 - use dry run when requested or required
 - execute, delegate, automate, or prepare handoff artifacts only for the
@@ -36,10 +41,13 @@ Behavior:
   when the current stage requires them
 - record stage checkboxes, concise work, blockers, produced artifacts, and
   evidence in the run
+- before or when presenting a command for human execution of a manual stage,
+  append that command to the run; retain every corrected or superseded command
+  in generation order and never put literal secrets in command text
 - link selected paths, stages, produced artifacts, and evidence where they are
   recorded
-- register a new automatic realization in `path-options.md` only when it is
-  made available for selection; then recompute style immediately
+- append a new automatic realization row to section 10 of `plan.md` only when
+  it is made available for selection; then recompute style immediately
 - keep readiness and alignment separate from computed style
 - after processing the user's request, offer one to three next workflow steps
   such as continuing execution, dry run, stopping for confirmation, or
@@ -49,6 +57,9 @@ Strict constraints:
 
 - do not exceed approved boundaries
 - do not silently revise the whole goal or plan
-- do not store mutable execution state in `plan.md`
+- do not store detailed mutable execution state in `plan.md`; update only the
+  selected realization row's status and aggregate fields
+- do not begin a run without the selected local plan revision snapshot
+- do not begin or resume a run without the selected realization artifact
 - do not validate the result as final
 - do not export reusable packages directly

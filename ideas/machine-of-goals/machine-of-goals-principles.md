@@ -322,13 +322,55 @@ Registration makes an automatic realization available for selection and therefor
 
 - How should style be recomputed when the final active automatic realization is unregistered or retired?
 
+<a id="principle-approved-realization-has-artifact-before-runs"></a>
+
+### principle-approved-realization-has-artifact-before-runs: Approved Realization Has an Artifact Before Runs
+
+#### Statement
+
+Machine of Goals should create a persistent realization artifact for every user-approved manual or automatic realization before creating any run from it.
+
+#### Derived From
+
+- Source concept(s): [Plan Realization Artifact](./machine-of-goals-concepts.md#concept-plan-realization-artifact), [Working Plan Run](./machine-of-goals-concepts.md#concept-working-plan-run), [Contextual Artifact Navigation](./machine-of-goals-concepts.md#concept-contextual-artifact-navigation)
+- Source relationship, boundary, or tension: a decision selects how to proceed, while repeated or manual execution needs a stable parent context from which concrete attempts are discoverable
+- Source idea support: user-provided artifact-lifecycle requirement
+- Explicit or inferred: explicit
+
+#### Rationale
+
+Without a realization artifact, the approved choice exists only as a registry row and decision while its concrete attempts are scattered under `run/`. A persistent artifact makes the chosen realization understandable before execution and provides one durable place for its contract and retained run links.
+
+#### Implications Without Implementation
+
+- Approval of a path and realization materializes `realizations/<realization-record-id>.md` before the first run.
+- Manual, interactive, partial-automation, automatic, and external-handoff realizations follow the same artifact rule.
+- Every run links back to its realization artifact, and the artifact links every active, pinned, or retained run.
+- Removing a run through retention also removes its link from the realization artifact without deleting aggregate statistics.
+
+#### Boundaries
+
+- The realization artifact does not replace the realization decision, implementation source, plan registry, or run log.
+- Artifact creation does not authorize execution or prove readiness.
+- The run list is retention-bounded; the realization artifact itself is persistent while its registry record is retained.
+
+#### Anti-Patterns
+
+- Creating a run directly from a decision or registry row without a realization artifact.
+- Treating an implementation file as the realization artifact merely because it exists.
+- Linking runs only from a shared goal-wide index with no realization-specific parent context.
+
+#### Questions
+
+- None.
+
 <a id="principle-working-logs-are-bounded-statistics-persist"></a>
 
 ### principle-working-logs-are-bounded-statistics-persist: Working Logs Are Bounded, Statistics Persist
 
 #### Statement
 
-Machine of Goals should retain only a bounded recent set of working run logs while preserving aggregate realization statistics in `path-options.md`.
+Machine of Goals should retain only a bounded recent set of working run logs while preserving aggregate realization statistics in `plan.md` and contextual retained-run links in each realization artifact.
 
 #### Derived From
 
@@ -343,25 +385,37 @@ Recent run logs explain how the plan is being realized here and now. Long-term c
 
 #### Implications Without Implementation
 
-- Each execution creates `run/<realization-id>--<YYYYMMDDTHHMMSSZ>.md`.
+- Each execution creates `run/<realization-record-id>--<YYYYMMDDTHHMMSSZ>.md` from an existing realization artifact.
 - Run creation increments run count, records latest run time, and sets latest
   result to `running`; terminal validation replaces the result without a second
   increment.
 - The normal retained depth is the latest three to five runs per realization.
-- `path-options.md` stores aggregate run count, latest run time, and latest result without links to individual run files.
+- `plan.md` stores aggregate run count, latest run time, and latest result without links to individual run files.
+- `realizations/<realization-record-id>.md` links every active, pinned, or retained run for that realization.
+- Every command generated for a human to execute while manually performing a
+  plan stage is appended to the current run in generation order before or when
+  it is presented. A corrected or replacement command is a new entry rather
+  than an overwrite of the earlier command.
 - Removing old working logs does not reset aggregate statistics or remove product artifacts and external evidence.
 
 #### Boundaries
 
 - Aggregate statistics do not replace the validation record of an active run.
 - The retention rule applies to working logs, not automatically to outputs created by execution.
-- The principle does not require permanent links from `path-options.md` to run files.
+- The manual-command requirement preserves generated instructions, not literal
+  secrets and not a complete trace of commands executed inside an automatic
+  realization.
+- The principle does not require individual run links in the aggregate plan registry.
 
 #### Anti-Patterns
 
 - Keeping an unbounded file per execution as permanent plan history.
 - Computing cumulative run count only from files that remain under `run/`.
 - Storing mutable run checkboxes directly in `plan.md`.
+- Giving the user a command for manual stage execution without first recording
+  the same safe-to-share command in the current run.
+- Replacing a failed generated command in place and thereby losing what the
+  user was previously instructed to run.
 
 #### Questions
 
@@ -562,7 +616,8 @@ Plan comparison requires measurable grounds. Basic metrics - the number of succe
 - Design the Machine of Goals workflow around the transition `Goal Capture -> Path Discovery -> Plan Synthesis -> Plan Automation`.
 - Define the goal artifact contract: target state, initial state, success criteria, constraints, realization working catalog.
 - Define the plan artifact contract: `plan.md`, transition graph, selectable paths and subplans, checks, stop points, and validation states.
-- Define `path-options.md` as the living registry of paths, realizations, computed style input, and aggregate execution statistics.
+- Define `path-options.md` as the living catalog of achievement paths and `plan.md` section 10 as the realization registry, computed-style input, and aggregate execution statistics source.
+- Create a persistent realization artifact for every approved manual or automatic realization before its first run.
 - Define the bounded `run/` working-log contract and retention policy.
 - Define the subgoal artifact contract: separate catalog, subplan, inputs, outputs, completion criteria, and connection to the parent goal.
 - Define a dry run protocol for agentic execution without real actions.

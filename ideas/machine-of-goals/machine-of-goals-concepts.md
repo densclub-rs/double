@@ -211,7 +211,7 @@ The plan is the main bridge between goal formulation and executable action. It t
 
 #### Definition
 
-A living section of `path-options.md` that connects discovered achievement paths and plan subplans with their registered manual or automatic realizations. For every realization it keeps a compact aggregate view: realization identity and kind, supported paths or subplans, run count, latest run time, and latest result. Run count and latest time are updated at run creation; terminal validation replaces the `running` result without incrementing the count again. Individual run files do not need to be linked from the registry.
+A living section of `plan.md` that connects discovered achievement paths and plan subplans with their registered manual or automatic realizations. For every realization it keeps a compact aggregate view: realization identity and kind, realization artifact, supported paths or subplans, run count, latest run time, and latest result. Run count and latest time are updated at run creation; terminal validation replaces the `running` result without incrementing the count again. Individual run files are linked from the realization artifact rather than from the aggregate registry.
 
 #### Source in Idea
 
@@ -225,6 +225,7 @@ The registry preserves continuity from path discovery to repeated execution with
 
 - Other relations: [`concept-realization-path`](#concept-realization-path): registered realizations declare which paths or subplans they support.
 - Other relations: [`concept-computed-plan-style`](#concept-computed-plan-style): registration of an automatic realization changes the computed style.
+- Other relations: [`concept-plan-realization-artifact`](#concept-plan-realization-artifact): every approved registry record has a persistent execution context.
 - Other relations: [`concept-working-plan-run`](#concept-working-plan-run): completed runs update the aggregate statistics.
 - Other relations: [`concept-plan-cost-and-efficiency`](#concept-plan-cost-and-efficiency): accumulated run statistics support comparison.
 
@@ -271,13 +272,46 @@ The computed style selects the workflow appropriate to the current lifecycle of 
 
 - [ ] How should the style be recomputed when the final active automatic realization is unregistered or retired?
 
+<a id="concept-plan-realization-artifact"></a>
+
+### concept-plan-realization-artifact: Plan Realization Artifact
+
+#### Definition
+
+A persistent semantic artifact at `realizations/<realization-record-id>.md` created after the user approves a path and manual or automatic realization and before the first run begins. It binds one realization record to the decision, selected path or subplan, exact plan revision, exact realization revision or manual procedure, execution boundaries, validation strategy, and links to every active, pinned, or retained run created from that realization record.
+
+#### Source in Idea
+
+- Explicit in the requirement that approval of a realization path must materialize an artifact from which its runs are discoverable.
+
+#### Role in the Idea
+
+The artifact is the stable parent context between a realization decision and its bounded execution attempts. It makes a realization inspectable before execution and keeps its retained runs discoverable without turning either `plan.md` or `path-options.md` into a list of individual run links.
+
+#### Related Concepts
+
+- Other relations: [`concept-plan-realization-registry`](#concept-plan-realization-registry): the registry row links to its realization artifact and retains aggregate statistics.
+- Other relations: [`concept-working-plan-run`](#concept-working-plan-run): every run derives from and links back to one realization artifact.
+- Other relations: [`concept-contextual-artifact-navigation`](#concept-contextual-artifact-navigation): the artifact owns contextual links to its retained runs.
+
+#### Boundaries
+
+- The realization artifact is not the approval decision; it materializes the approved choice for execution.
+- The realization artifact is not necessarily executable source code; a manual realization records the procedure, while an automatic realization may reference an implementation and exact revision elsewhere.
+- The artifact is persistent even though the run logs linked from it are retention-bounded.
+- A run must not be created before its realization artifact exists.
+
+#### Questions
+
+- None.
+
 <a id="concept-working-plan-run"></a>
 
 ### concept-working-plan-run: Working Plan Run
 
 #### Definition
 
-A short-lived working instance of the plan created for one concrete execution of a selected realization. It records the plan and realization revisions, selected paths or subplans, stage checkboxes, concise execution notes, state checks, and the result. Its canonical filename is `run/<realization-id>--<YYYYMMDDTHHMMSSZ>.md`.
+A short-lived working instance of the plan created for one concrete execution of a selected realization artifact. It records the plan and realization revisions, selected paths or subplans, stage checkboxes, concise execution notes, state checks, and the result. For a manually performed stage, it also records every command generated by the machine for the human to execute, in generation order. Its canonical filename is `run/<realization-record-id>--<YYYYMMDDTHHMMSSZ>.md`.
 
 #### Source in Idea
 
@@ -285,17 +319,23 @@ A short-lived working instance of the plan created for one concrete execution of
 
 #### Role in the Idea
 
-The run is the current operational view of plan execution. It keeps mutable execution state and recent effort outside `plan.md`. Its creation increments persistent launch statistics in `path-options.md`, and terminal validation updates the latest result.
+The run is the current operational view of plan execution. It keeps mutable execution state and recent effort outside `plan.md`. Its creation adds a contextual link in the realization artifact and increments persistent launch statistics in the plan realization registry; terminal validation updates both retained-run navigation and the latest aggregate result.
 
 #### Related Concepts
 
 - Other relations: [`concept-plan-as-transition-model`](#concept-plan-as-transition-model): a run instantiates the transition model and selected branches.
 - Other relations: [`concept-plan-realization-registry`](#concept-plan-realization-registry): a run selects one registered realization and updates its statistics.
+- Other relations: [`concept-plan-realization-artifact`](#concept-plan-realization-artifact): a run is created from and remains linked by one persistent realization artifact.
 - Other relations: [`concept-success-criteria`](#concept-success-criteria): the run validates initial, intermediate, and final states.
 
 #### Boundaries
 
 - A run is not a permanent plan variant or source plan.
+- Recording every command generated for manual stage execution is a required
+  exception to the otherwise concise working log; it does not require a full
+  command-by-command trace of automatic execution.
+- Generated manual commands must not contain literal credentials or other
+  secrets; use placeholders or references to protected inputs instead.
 - Working logs are retained only to a configured depth, normally the latest three to five runs per realization.
 - Product artifacts and external evidence are not deleted merely because an old working run log is removed.
 
@@ -594,7 +634,7 @@ This concept expands Machine of Goals from individual planning to ecosystem valu
 
 #### Definition
 
-The file and semantic context of a goal inside Double: the goal catalog, main Markdown file, `path-options.md` path and realization registry, separate `plan.md`, bounded `run/` working logs, realization working catalog, explanations, parameters, checks, executable algorithms, and nested subgoals. The main goal artifact should use the same base name as the goal directory, for example `my-first-goal/my-first-goal.md`. The plan should be stored as a separate `plan.md` file in the goal catalog. The realization working catalog should be defined both in the goal and in the plan.
+The file and semantic context of a goal inside Double: the goal catalog, main Markdown file, `path-options.md` path catalog, separate `plan.md` with its realization registry, persistent realization artifacts under `realizations/`, bounded `run/` working logs, realization working catalog, explanations, parameters, checks, executable algorithms, and nested subgoals. The main goal artifact should use the same base name as the goal directory, for example `my-first-goal/my-first-goal.md`. The plan should be stored as a separate `plan.md` file in the goal catalog. The realization working catalog should be defined both in the goal and in the plan.
 
 #### Source in Idea
 

@@ -36,11 +36,11 @@ without breaking their connection to goal context.
 - preserve contextual source and evidence links when material is imported or
   exported
 - identify which parts are reusable and which are context-specific
-- import or export multi-pass plans with their `path-options.md` registry and
-  registered automatic realizations
+- import or export multi-pass plans with their `path-options.md` catalog,
+  section 10 realization registry, and registered automatic realizations
 - exclude bounded `run/` working logs by default
-- register imported realizations and recompute style rather than creating plan
-  variants
+- append imported realization rows to section 10 of `plan.md` and recompute
+  style rather than creating plan variants
 - reject or block import when source context or criteria are missing
 - require validation evidence before packaging a plan as reusable
 - mark closure, pause, transfer, or package status during export

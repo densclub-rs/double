@@ -41,8 +41,9 @@ user's response to the current question, then continue with the next one.
 Offer transition to `03-plan-synthesis` only when at least one plausible path
 exists and no `Open Questions` remain.
 
-Keep stable path ids: `path-options.md` will remain the living registry after
-planning and later acquire registered realizations and aggregate run statistics.
+Keep stable path ids: `path-options.md` remains the evolving catalog of possible
+paths after planning, and new paths may be added later. Realization records and
+their aggregate run statistics belong in section 10 of `plan.md`.
 
 Link `Source Goal`, give paths explicit anchors, and link a planned path to its
 plan element. Keep external authoritative artifacts as direct references unless

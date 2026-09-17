@@ -24,14 +24,16 @@ For import, confirm:
 - source material
 - source context
 - current goal context
-- `path-options.md` registry and registered automatic realizations
+- `path-options.md` catalog, section 10 realization registry, and registered
+  automatic realizations
 - mismatches and adaptation needs
 
 For export, confirm:
 
 - intended reuse or audience
 - export format
-- plan, path registry, and registered realizations to include
+- plan with its realization registry, path-options catalog, and registered
+  realizations to include
 - validation evidence
 - context-specific assumptions
 - what must remain linked to the original goal

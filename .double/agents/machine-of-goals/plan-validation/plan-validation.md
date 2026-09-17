@@ -25,7 +25,7 @@ derived-from:
 
 `Plan Validation` compares current run results or final goal results with
 explicit criteria, records the decision in the run, and updates aggregate
-realization statistics.
+statistics in the selected plan realization row.
 
 ## Position in Workflow
 
@@ -41,14 +41,17 @@ realization statistics.
 - `stage-validation-criteria`
 - `goal-artifact`
 - `plan-artifact`
+- `selected-realization-record`
+- `realization-artifact`
 - `execution-evidence`
 
 ## Outputs
 
 - `updated-plan-run`
+- `updated-realization-artifact` when run status or retention changes it
 - `updated-run-index` when retention removes a run
-- `updated-path-options`
-- `updated-plan-artifact` when plan revision is required
+- `updated-plan-artifact` for realization statistics and when plan revision is required
+- `plan-revision-snapshot` when a revised plan will be used later
 - `goal-progress-note`
 - `revision-or-continuation-decision`
 - `goal-closure-signal` when applicable
@@ -59,17 +62,19 @@ realization statistics.
 - distinguish accepted, rejected, partial, blocked, and needs-revision results
 - conduct validation in dialogue until an explicit decision is reached
 - record validation decisions, evidence, and terminal result in the current run
-- replace latest `running` result with the terminal result in `path-options.md`
-  without incrementing run count again
+- replace latest `running` result with the terminal result in the selected
+  realization row in `plan.md` without incrementing run count again
 - enforce bounded run retention after terminal statistics update
-- update `run/index.md` and remove the link to a run only when retention removes
-  its file
+- update the realization artifact and `run/index.md`; remove their links to a
+  run only when retention removes its file
 - verify contextual links to exact revisions and validation evidence before
   accepting a terminal result
 - revise `plan.md` only when feedback changes the intended transition model and
   mark affected realizations `review-required`
-- create or identify a new immutable revision reference whenever `plan.md` is
-  revised for a later decision or run
+- whenever `plan.md` is revised for a later decision or run, increment its
+  `plan-revision`, copy it to
+  `<goal-directory>/realizations/plan-revision-<N>.md`, rebase relative links,
+  and never overwrite an existing snapshot
 - decide whether the workflow should continue, branch, revise, reformulate,
   pause, close, or request export
 
@@ -84,6 +89,8 @@ realization statistics.
 - must not accept results without evidence or user confirmation where required
 - must not change success criteria to fit the result
 - must not execute the next stage
+- must not allow later execution to use a revised `plan.md` until its local
+  revision snapshot exists
 - must not package reusable artifacts without `Plan Exchange`
 
 ## Required Artifacts
@@ -98,4 +105,5 @@ realization statistics.
 ## Transition Rule
 
 The step is complete when an explicit validation decision has been recorded in
-the run and aggregate statistics have been updated.
+the run, aggregate statistics have been updated, and any revised `plan.md`
+intended for later use has its new local plan revision snapshot.

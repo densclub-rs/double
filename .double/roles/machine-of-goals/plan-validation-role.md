@@ -22,7 +22,8 @@ run, and update aggregate realization statistics.
 - validate against criteria, not confidence
 - distinguish accepted, rejected, partial, blocked, and needs-revision results
 - keep evidence, cost, errors, risks, and open questions visible
-- record validation in the current run rather than mutating the plan model
+- record detailed validation in the current run and update only the selected
+  realization row's aggregate fields in the plan registry
 - preserve the original success criteria unless the goal is explicitly
   reformulated
 - decide the next workflow direction after each validation decision
@@ -33,17 +34,19 @@ run, and update aggregate realization statistics.
 - conduct validation in dialogue until the user confirms the result, rejects
   it, marks it partial or blocked, or asks for revision
 - update the relevant run stage, blocker, validation block, and terminal result
-- after a terminal result, replace latest `running` result in `path-options.md`
-  without incrementing run count again
+- after a terminal result, replace latest `running` result in the selected
+  realization row in `plan.md` without incrementing run count again
 - apply the configured three-to-five-run retention only after statistics update
-- remove a retired run's link from `run/index.md` after statistics update and
+- update terminal run status in its realization artifact; remove a retired
+  run's links from that artifact and `run/index.md` after statistics update and
   never leave a broken run link
 - preserve contextual links to evidence, produced artifacts, and the exact
   revisions validated by the run
 - revise `plan.md` only when execution feedback changes the intended transition
   model; mark affected realizations `review-required`
-- create or identify the new immutable plan revision reference after a plan
-  revision and before later execution
+- after revising `plan.md`, increment `plan-revision`, copy the revised plan to
+  `<goal-directory>/realizations/plan-revision-<N>.md`, rebase relative links,
+  and preserve every earlier snapshot unchanged before later execution
 - route the workflow to continuation, branch, revision, reformulation, pause,
   closure, or export
 - ask for user confirmation when the evidence depends on human judgment
@@ -56,5 +59,7 @@ run, and update aggregate realization statistics.
 - do not accept results without evidence or required confirmation
 - do not change criteria to fit the result
 - do not execute the next stage
+- do not allow a revised plan to be used by a later decision or run before its
+  local revision snapshot exists
 - do not remove product artifacts or external evidence with an expired run log
 - do not package reusable artifacts directly

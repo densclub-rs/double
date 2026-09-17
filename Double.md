@@ -41,6 +41,8 @@ Despite the presence of many files in the project directory, ***at the very begi
 
 Ideas are the most general concepts and principles to develop and grow **Double** project. They should describe a philosophy behind a technical solution accepted for the project.
 
+<a id="double-layout-naming-convention"></a>
+
 ### Double layout naming convention
 
 * use [kebab case](https://en.wikipedia.org/wiki/Letter_case#Kebab_case) for naming

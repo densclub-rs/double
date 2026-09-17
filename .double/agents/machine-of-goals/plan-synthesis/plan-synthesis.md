@@ -47,12 +47,17 @@ set.
 - `constraints-and-resources`
 - `success-criteria`
 - `known-risks-and-uncertainties`
+- `user-confirmed-path-or-subplan` during `04-plan-review-and-decision`
 
 ## Outputs
 
 - `plan-artifact`
+- `plan-revision-snapshot`
 - `realization-decision`
-- `updated-path-options` when review registers a manual or interactive realization
+- `realization-artifact`
+- `user-confirmed-path-selection`
+- `realization-record`
+- `updated-plan-artifact` when review appends a realization row
 - `automation-boundaries`
 - `validation-strategy`
 - `plan-stop-points`
@@ -67,10 +72,16 @@ set.
 - record entry and exit points between the main plan and any subgoal plan
 - represent meaningfully different paths as selectable branches or subplans in
   one plan artifact
-- support review of path and realization options and prepare the first entry
-  point
-- register a selected manual or interactive realization in `path-options.md`
-  when no compatible realization exists; this does not change single-pass style
+- conduct the review interactively by showing the user the selectable paths or
+  subplans, material trade-offs, and compatible registered realizations
+- ask the user to confirm the selected path or subplan and wait for an explicit
+  response before preparing the committed realization decision
+- prepare the first entry point only after the path or subplan is confirmed
+- append the selected realization to section 10 of `plan.md` when no compatible
+  row exists; manual or interactive registration does not change single-pass
+  style
+- create a new realization row whenever another path or subplan is selected,
+  even if the same realization mechanism is reused
 - define automation boundaries, confirmation points, dry-run needs, validation
   strategy, and revision conditions
 - link paths, subplans, inputs, outputs, realizations, evidence, and subgoal
@@ -78,8 +89,13 @@ set.
 - record direct cross-project references without importing them when the source
   remains authoritative
 - pin exact plan and realization revisions in the realization decision
-- create or identify an immutable plan revision snapshot or VCS permalink
-  before the realization decision is committed
+- create the immutable local plan revision snapshot after the realization row
+  is registered and before the realization decision is committed
+- create that snapshot by copying the confirmed `plan.md` to
+  `<goal-directory>/realizations/plan-revision-<N>.md`, rebasing relative links
+  for the deeper directory, and never overwriting an existing snapshot
+- create `<goal-directory>/realizations/<realization-record-id>.md` from the
+  confirmed row and decision before advancing to plan realization
 
 ## Boundaries
 
@@ -92,6 +108,16 @@ set.
 - must not treat a simple task list as a plan
 - must not erase the link between the plan and the goal
 - must not create separate plan variants for selectable paths
+- must not select or confirm a path or subplan on the user's behalf
+- must not commit a realization decision, register a new realization, or
+  advance to plan realization before explicit user confirmation of the selected
+  path or subplan
+- must not use a VCS permalink as a replacement for the local plan revision
+  snapshot
+- must not commit the realization decision before the selected local plan
+  revision snapshot exists
+- must not advance to plan realization before the persistent realization
+  artifact exists
 - must not execute the selected stage
 - must not package the plan for exchange without `Plan Exchange`
 - must not add a universal navigation block
@@ -103,12 +129,15 @@ set.
 - Role: `.double/roles/machine-of-goals/plan-synthesis-role.md`
 - Template: `.double/templates/machine-of-goals/plan-template.md`
 - Decision template: `.double/templates/machine-of-goals/realization-decision-template.md`
+- Realization template: `.double/templates/machine-of-goals/realization-template.md`
 - Modes registry: `.double/registries/machine-of-goals/modes-registry.md`
 - Workflow: `.double/workflows/machine-of-goals/machine-of-goals-workflow.md`
 
 ## Transition Rule
 
 The planning part is complete when at least one plan project is understandable
-enough to review. The review part is complete when the user or responsible
-agent has selected how the plan will start and under which control boundaries
-it may proceed.
+enough to review. The review part is complete only when the user has explicitly
+confirmed the selected path or subplan and how the plan will start, including
+the realization and control boundaries under which it may proceed, and the
+selected realization row, local plan revision snapshot, and persistent
+realization artifact have been created.

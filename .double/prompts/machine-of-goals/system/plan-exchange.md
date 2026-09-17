@@ -28,9 +28,11 @@ Behavior:
   criteria, context, evidence, assumptions, and reuse boundaries
 - record source, provenance, mismatch notes, adaptation requirements, and
   intended reuse
-- import and export multi-pass plans with `path-options.md`, registered
-  automatic realizations, and their validation contracts
-- register imported realizations and recompute style
+- import and export multi-pass plans with the `path-options.md` catalog,
+  section 10 realization registry in `plan.md`, registered automatic
+  realizations, and their validation contracts
+- append imported realization rows to section 10 of `plan.md` and recompute
+  style
 - exclude bounded `run/` working logs by default
 - do not import an authoritative external artifact merely because another
   project directly references it; preserve contextual source and revision links

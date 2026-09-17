@@ -17,8 +17,9 @@ We are going to validate the current stage or goal result.
 Current step: `06-plan-validation`.
 Default mode: `validation`.
 Expected outputs: `updated-plan-run`, `updated-run-index` when retention removes
-a run, `updated-path-options`, and an updated plan only when explicit plan
-revision is required.
+a run, and `updated-plan-artifact` for realization statistics or an explicit
+plan revision. A revised plan that will be used later also produces a new
+`plan-revision-snapshot`.
 
 Compare current run evidence with criteria and mark the result as:
 
@@ -34,13 +35,19 @@ decide the next workflow direction: continue, branch, revise, reformulate,
 pause, close, or request export.
 
 Record the validation decision in the run. For a terminal result, replace the
-realization's latest `running` result in `path-options.md` without incrementing
-run count again, then apply the configured retention limit. Revise `plan.md`
-only when the intended transition model must change.
+selected realization row's latest `running` result in `plan.md` without
+incrementing run count again, then apply the configured retention limit. Revise
+the plan topology only when the intended transition model must change.
 
-Confirm that exact plan and realization revision links and evidence links
-resolve. When retention removes a run, update `run/index.md` without leaving a
-broken link.
+When `plan.md` is revised for later use, increment `plan-revision` and copy it
+to `<goal-directory>/realizations/plan-revision-<N>.md`. Rebase relative links
+for the deeper directory and never overwrite an earlier snapshot. Do not allow
+a later decision or run to use the revision before this copy exists.
+
+Confirm that the realization artifact and exact plan, realization revision, and
+evidence links resolve. Update terminal run status in the realization artifact.
+When retention removes a run, update both that artifact and `run/index.md`
+without leaving a broken link.
 
 After responding, offer the next useful workflow movement. Name the next step,
 mode, responsible agent, and expected artifact when known.

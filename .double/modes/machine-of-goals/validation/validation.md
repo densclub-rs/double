@@ -27,19 +27,23 @@ run and aggregate realization statistics.
 - distinguish accepted, rejected, partial, blocked, and needs-revision results
 - conduct the validation dialogue until an explicit decision is reached
 - record validation and terminal result in the current run
-- replace latest `running` result with the terminal result in `path-options.md`
-  without incrementing run count again
+- replace latest `running` result with the terminal result in the selected
+  realization row in `plan.md` without incrementing run count again
 - apply bounded run retention after statistics update
-- validate exact revision and evidence links and update `run/index.md` when
-  retention removes a run
-- revise the plan only when the intended transition model changes
+- validate exact revision and evidence links, update terminal run status in the
+  realization artifact, and update both it and `run/index.md` when retention
+  removes a run
+- revise the plan only when the intended transition model changes; increment
+  `plan-revision` and create a new
+  `realizations/plan-revision-<N>.md` copy before later use
 - decide whether to continue, branch, revise, reformulate, export, pause, or
   close the goal
 
 ## Typical Inputs
 
 - plan-run artifact
-- path-options artifact
+- realization artifact
+- path-options artifact and plan realization registry
 - validation criteria
 - goal and plan artifacts
 - execution evidence, logs, files, screenshots, user confirmation, or external
@@ -47,8 +51,10 @@ run and aggregate realization statistics.
 
 ## Expected Outputs
 
-- updated plan-run and path-options artifacts
+- updated plan-run and plan realization registry
+- updated realization artifact when run status or retention changes it
 - updated plan artifact only when revision is required
+- new local plan revision snapshot when the revised plan will be used later
 - updated goal progress or closure note when applicable
 - revision, branch, continuation, or export decision
 
@@ -59,6 +65,7 @@ Stop before advancing when:
 - evidence is missing or contradictory
 - the result cannot be compared with the criteria
 - the stage outcome changes the plan enough to require review
+- a revised plan intended for later use has no new local revision snapshot
 - the goal itself may need reformulation
 
 ## Workflow Fit

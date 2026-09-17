@@ -18,6 +18,7 @@ derived-from:
 ---
 id: <goal-id>-path-options
 kind: path-options
+template-id: path-options-template
 project-id: <stable-project-id>
 produced-by: path-discovery-agent
 interaction-language: <language-code-or-name-used-for-dialogue>
@@ -55,7 +56,7 @@ derived-from:
 
 <a id="<path-id>"></a>
 
-### Path: <Path Name>
+### 3.<path-number>. Path: <Path Name>
 
 - Path id: `<path-id>`
 - Path type: <direct|minimal|exploratory|long-term|delegated|automated|tool-based|external|reusable-plan|hybrid>
@@ -75,46 +76,13 @@ derived-from:
 
 | Path | Fit | Cost | Risk | Uncertainty | Expected Value | Recommendation |
 | --- | --- | --- | --- | --- | --- | --- |
-| <path-id> | <low/medium/high> | <low/medium/high> | <low/medium/high> | <low/medium/high> | <low/medium/high> | <recommendation> |
+| [<path-id>](#<path-id>) | <low/medium/high> | <low/medium/high> | <low/medium/high> | <low/medium/high> | <low/medium/high> | <recommendation> |
 
 ## 5. Rejected or Deferred Paths
 
 - <path>: <reason-or-removal-decision>
 
-## 6. Computed Plan Style
-
-- Computed style: <single-pass|multi-pass>
-- Computed from: <no-registered-automatic-realization|registered-automatic-realization-id>
-- Last recomputed at: <YYYY-MM-DDTHH:MM:SSZ>
-- Rule: registration of an automatic realization changes the style to
-  `multi-pass`; file creation and successful validation are not transition
-  points.
-
-<a id="registered-realizations"></a>
-
-## 7. Registered Realizations
-
-| Realization | Kind | Definition / Implementation | Revision | Supported Paths / Subplans | Registration | Readiness | Alignment | Runs | Last Run | Last Result |
-| --- | --- | --- | --- | --- | --- | --- | --- | ---: | --- | --- |
-| <a id="<realization-id>"></a>`<realization-id>` | <manual|shell|python|workflow|agentic|external> | [<artifact-label>](<artifact-link>) | [<exact-revision>](<immutable-revision-link>) or `current` before decision | [<path-or-subplan>](./plan.md#<path-or-subplan-id>) | <registered|retired> | <draft|ready|unvalidated|failed> | <aligned|review-required|incompatible> | <count> | <YYYY-MM-DDTHH:MM:SSZ-or-never> | <running|succeeded|partial|failed|blocked|cancelled|precondition-failed|never> |
-
-Statistics are cumulative and remain after bounded run files are removed.
-Individual files under `run/` are identified by naming convention and are not
-linked from this table.
-
-When a run is created, increment `Runs`, set `Last Run` to the UTC start time,
-and set `Last Result` to `running`. Terminal validation replaces `Last Result`
-without incrementing `Runs` again.
-
-## 8. Run Retention
-
-- Retained runs: [Run index](./run/index.md#<goal-id>-run-index)
-- Filename: `<realization-id>--<YYYYMMDDTHHMMSSZ>.md`
-- Maximum terminal runs per realization: <3|4|5, default 5>
-- Active runs count toward limit: no
-- Remove oldest unpinned terminal run after statistics update: yes
-
-## 9. Open Questions
+## 6. Open Questions
 
 - [ ] <question that blocks or improves plan synthesis>
 ```

@@ -18,6 +18,7 @@ derived-from:
 ---
 id: <goal-id>
 kind: goal-artifact
+template-id: goal-template
 project-id: <stable-project-id>
 produced-by: goal-formulation-agent
 owner-id: double-project
@@ -114,9 +115,12 @@ Describe the state that should exist after successful realization.
 
 ## 11. Machine of Goals Artifacts
 
-- Path and realization registry: [Path options](./path-options.md#<goal-id>-path-options)
+- Possible realization paths: [Path options](./path-options.md#<goal-id>-path-options)
 - Plan: [Current plan](./plan.md#<goal-id>-plan)
+- Plan realization registry: [Realizations](./plan.md#realization-registry)
+- Current plan revision used by realization: [Plan revision <N>](./realizations/plan-revision-<N>.md#<goal-id>-plan) or not yet created
 - Realization decision: [Current decision](./realization-decision.md#<goal-id>-realization-decision)
+- Current realization: [<realization-label>](./realizations/<realization-record-id>.md#<realization-record-id>) or not yet created
 - Retained execution attempts: [Run index](./run/index.md#<goal-id>-run-index)
 - Computed plan style: <single-pass|multi-pass|not-yet-computed>
 

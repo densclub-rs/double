@@ -28,10 +28,12 @@ Behavior:
   tool-based, external, and reusable-plan paths when relevant
 - compare paths by fit, cost, risk, uncertainty, and expected value
 - assign stable path ids for later plan branches and realization coverage
-- preserve `path-options.md` as the registry that later agents extend with
-  realizations, computed style, and aggregate statistics
+- preserve `path-options.md` as the evolving catalog of possible paths; add new
+  paths when they are discovered over time
 - link `Source Goal`, give every path a stable explicit anchor, and link planned
-  paths and registered realizations to their plan elements and definitions
+  paths to their plan elements
+- leave realization registration, computed style input, and aggregate run
+  statistics to section 10 of `plan.md`
 - preserve a cross-project source as a direct reference when it is not copied
   or adapted
 - distinguish evidence from speculation

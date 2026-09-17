@@ -8,7 +8,7 @@ artifact-language: en
 knowledge-type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-08-30
+observed-at: 2026-09-15
 ttl: one month
 derived-from:
   - knowledge/double-main-modules/double-main-modules.md
@@ -26,19 +26,26 @@ project.
 
 ## Value
 
-`0.0.3`
+`0.0.4`
 
 ## Change Note
 
-Version `0.0.3` records the computed multi-pass and plan-run artifact-contract
-refactor:
+Version `0.0.4` records the persistent realization-artifact contract:
 
 - each goal has one `plan.md` with selectable paths or subplans
-- `path-options.md` remains the living path and realization registry
+- `path-options.md` remains the living path catalog, while section 10 of
+  `plan.md` is the realization registry and aggregate-statistics source
 - registering an automatic realization changes computed style from
   `single-pass` to `multi-pass`
+- approving either a manual or automatic realization creates
+  `realizations/<realization-record-id>.md` before the first run
+- the persistent realization artifact records the selected path, plan and
+  realization revisions, procedure or implementation, control boundaries, and
+  validation contract
+- every run links to its realization artifact, which links all active, pinned,
+  and retained runs for that realization record
 - mutable execution state is stored in bounded
-  `run/<realization-id>--<YYYYMMDDTHHMMSSZ>.md` working logs
+  `run/<realization-record-id>--<YYYYMMDDTHHMMSSZ>.md` working logs
 - aggregate realization statistics survive working-log retention
 - reusable multi-pass import and export preserve goal context, paths,
-  realizations, and validation contracts without requiring run logs
+  realization artifacts, and validation contracts without requiring run logs

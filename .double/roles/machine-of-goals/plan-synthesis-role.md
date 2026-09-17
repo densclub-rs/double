@@ -44,12 +44,24 @@ review decision.
 - preserve direct-reference metadata for cross-project dependencies without
   treating them as imported artifacts
 - pin exact plan and realization revisions in the realization decision
-- create or identify an immutable plan revision snapshot or VCS permalink at
-  the execution commit point
+- at the execution commit point, update section 10 of `plan.md`, then copy the
+  confirmed plan to `<goal-directory>/realizations/plan-revision-<N>.md`, rebase
+  relative links for the deeper directory, and never overwrite an existing
+  snapshot
+- materialize the approved realization as
+  `<goal-directory>/realizations/<realization-record-id>.md` after the decision
+  and snapshot are ready and before advancing to execution
 - support the review checkpoint by preparing entry points, dry-run needs,
   validation strategy, and automation boundaries
-- during review, select a registered realization or register the chosen manual
-  or interactive realization before its first run
+- during review, show the user the selectable paths or subplans, their material
+  trade-offs, and compatible registered realizations
+- ask the user to confirm the selected path or subplan explicitly and wait for
+  the response; a recommendation must remain distinguishable from the user's
+  decision
+- only after path confirmation, select a compatible realization row or append
+  the chosen manual or interactive realization before its first run
+- append a new row whenever another path or subplan is selected, even if the
+  same realization mechanism or implementation is reused
 - keep unresolved uncertainties in the plan instead of smoothing them away
 - after each response, offer the next useful workflow movement, usually plan
   refinement, review decision, realization preparation, or subgoal planning
@@ -60,6 +72,15 @@ review decision.
 - do not detach the plan from the goal criteria
 - do not hide the boundary between a main plan and a subgoal plan
 - do not create separate plan variants for selectable achievement paths
+- do not select or confirm a path or subplan on the user's behalf
+- do not commit the realization decision or advance to realization before the
+  user explicitly confirms the selected path or subplan
+- do not replace the required local plan revision snapshot with only a VCS
+  permalink
+- do not commit the realization decision before the selected local plan
+  revision snapshot exists
+- do not advance to realization before the persistent realization artifact
+  exists
 - do not execute the selected stage
 - do not package the plan for reuse without `Plan Exchange`
 - do not add a universal navigation block to plan artifacts

@@ -18,6 +18,7 @@ derived-from:
 ---
 id: <goal-id>-plan
 kind: plan-artifact
+template-id: plan-template
 project-id: <stable-project-id>
 produced-by: plan-synthesis-agent
 interaction-language: <language-code-or-name-used-for-dialogue>
@@ -31,6 +32,8 @@ plan-execution-style: <single-pass|multi-pass|not-yet-computed>
 parent-goal-id: <parent-goal-id-or-null>
 parent-plan-artifact: <parent-plan-artifact-or-null>
 plan-revision: <positive-integer>
+# Use null before the execution commit point.
+plan-revision-artifact: <goal-directory>/realizations/plan-revision-<N>.md
 created-at: <YYYY-MM-DDTHH:MM:SSZ>
 updated-at: <YYYY-MM-DDTHH:MM:SSZ>
 derived-from:
@@ -49,7 +52,7 @@ target state. Alternative achievement choices belong inside the model as paths,
 branches, or subplans.
 
 - Source goal: [<goal-title>](./<goal-id>.md#<goal-id>)
-- Source paths: [Path and realization registry](./path-options.md#<goal-id>-path-options)
+- Source paths: [Path options](./path-options.md#<goal-id>-path-options)
 - Parent plan for a subgoal: [<parent-plan-title>](../plan.md#<parent-goal-id>-plan) or none
 
 ### Current State
@@ -143,22 +146,43 @@ not belong here; they are instantiated in the selected `plan-run`.
 
 ## 9. Subgoal Integration Boundaries
 
-Include one block for every delegated subgoal plan.
+Add one row for every delegated subgoal plan.
 
-- Subgoal: [<subgoal-title>](./<subgoal-id>/<subgoal-id>.md#<subgoal-id>)
-- Subgoal plan: [<subgoal-plan-title>](./<subgoal-id>/plan.md#<subgoal-id>-plan)
-- Entry stage: [<stage-label>](#stage-<stage-id>)
-- Input artifact: [<artifact-label>](<artifact-link>)
-- Output artifact: [<artifact-label>](<artifact-link>)
-- Exit stage: [<subgoal-stage-label>](./<subgoal-id>/plan.md#stage-<stage-id>)
-- Parent continuation: [<stage-label>](#stage-<stage-id>)
+| Subgoal | Subgoal Plan | Entry Stage | Input Artifact | Output Artifact | Exit Stage | Parent Continuation |
+| --- | --- | --- | --- | --- | --- | --- |
+| [<subgoal-title>](./<subgoal-id>/<subgoal-id>.md#<subgoal-id>) | [<subgoal-plan-title>](./<subgoal-id>/plan.md#<subgoal-id>-plan) | [<stage-label>](#stage-<stage-id>) | [<artifact-label>](<artifact-link>) | [<artifact-label>](<artifact-link>) | [<subgoal-stage-label>](./<subgoal-id>/plan.md#stage-<stage-id>) | [<stage-label>](#stage-<stage-id>) |
 
-## 10. Realization and Execution Context
+<a id="realization-registry"></a>
 
-- Current realization decision: [<decision-label>](./realization-decision.md#<goal-id>-realization-decision) or not yet created
-- Registered realizations: [Registry](./path-options.md#registered-realizations)
-- Retained execution attempts: [Run index](./run/index.md#<goal-id>-run-index) or none yet
-- Current immutable plan revision: [<revision>](<immutable-revision-link>) or not yet established
+## 10. Realization Registry
+
+Add a new row whenever a realization is registered. Selecting another path or
+subplan always creates a new row, even when it reuses the same realization
+mechanism or implementation. Preserve earlier rows as realization history.
+
+| Record | Realization Artifact | Realization | Kind | Selected Path or Subplan | Decision | Plan Revision | Realization Revision | Registration | Readiness | Alignment | Runs | Last Run | Last Result |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---: | --- | --- |
+| <a id="<realization-record-id>"></a>`<realization-record-id>` | [<realization-label>](./realizations/<realization-record-id>.md#<realization-record-id>) | [<realization-label>](<definition-or-implementation-link>) | <manual|shell|python|workflow|agentic|external> | [<path-or-subplan-label>](./path-options.md#<path-or-subplan-id>) | [<decision-label>](./realization-decision.md#<goal-id>-realization-decision) | [Revision <N>](./realizations/plan-revision-<N>.md#<goal-id>-plan) | [Revision <R>](./realizations/<realization-record-id>.md#<realization-record-id>-revision-<R>) | <registered|retired> at <YYYY-MM-DDTHH:MM:SSZ> | <draft|ready|unvalidated|failed> | <aligned|review-required|incompatible> | <count> | <YYYY-MM-DDTHH:MM:SSZ-or-never> | <running|succeeded|partial|failed|blocked|cancelled|precondition-failed|never> |
+
+`plan-execution-style` is computed from active rows: it is `multi-pass` when
+at least one automatic realization is registered and `single-pass` otherwise.
+Registration is the transition point.
+
+Statistics are cumulative and remain after bounded run files are removed.
+Individual retained runs are linked from each realization artifact and the
+shared [run index](./run/index.md#<goal-id>-run-index), not from this registry.
+Retain three to five terminal runs per realization record, with five as the
+default.
+
+After path confirmation and registry update, copy this `plan.md` to
+`./realizations/plan-revision-<N>.md`, rebase relative links for the deeper
+directory, and never overwrite an existing snapshot. A VCS permalink may be
+recorded as additional evidence. A new realization row or topology change
+creates the next plan revision; aggregate-only updates to an existing row do
+not.
+
+After the decision is committed, create the linked
+`./realizations/<realization-record-id>.md` before any run is created.
 
 ## 11. Open Questions
 

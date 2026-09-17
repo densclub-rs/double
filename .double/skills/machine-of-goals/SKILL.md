@@ -111,6 +111,19 @@ Synthesis is not yet available, and offer to resolve the questions one by one.
 Offer transition to `03-plan-synthesis` only when at least one plausible path
 exists and no `Open Questions` remain.
 
+During `04-plan-review-and-decision`, show the user the selectable paths or
+subplans, their material trade-offs, and the compatible registered
+realizations. Ask the user to confirm the selected path or subplan explicitly.
+A recommendation is allowed, but neither the skill nor the responsible agent
+may make the selection on the user's behalf. Do not commit the realization
+decision or advance to `05-plan-realization` until the user confirms the
+selection, the selected realization row has been added to section 10 of
+`plan.md`, and the updated plan has been copied to
+`realizations/plan-revision-<N>.md` without overwriting earlier history. A
+different selected path always creates a new realization row, even when it
+reuses the same realization mechanism. Before advancing, create the persistent
+`realizations/<realization-record-id>.md` artifact for the approved realization.
+
 ## Active Response Rule
 
 After processing a Machine of Goals request, offer one to three concrete next
@@ -166,26 +179,50 @@ validation flow.
 - Human-facing navigation uses contextual standard Markdown links in the
   sections where artifact relationships are explained; frontmatter references
   do not replace those links, and a universal navigation block is not required.
+- Every artifact created from a Machine of Goals template records that
+  template's stable top-level `id` in frontmatter `template-id`; revisions and
+  plan revision snapshots preserve it.
 - External goals, plans, subplans, paths, and realizations may remain direct
   references when no copy or adaptation is requested; direct reference does
   not require Plan Exchange.
 - Each goal has one plan artifact at `<goal-directory>/plan.md`; alternative
   achievement paths are selectable branches or subplans inside it.
-- `path-options.md` remains the living registry of paths, registered
-  realizations, computed style input, and aggregate run statistics.
+- `path-options.md` remains the living catalog of possible achievement paths.
+  Paths may be added, deprecated, or selected later without replacing retained
+  realization history.
+- Section 10 of `plan.md` is the realization registry and owns realization
+  records, computed style input, readiness, alignment, and aggregate run
+  statistics. A different selected path always creates a new row with a unique
+  realization record id.
+- Every approved manual or automatic realization has one persistent
+  `<goal-directory>/realizations/<realization-record-id>.md` artifact. Create it
+  after the decision and local plan snapshot and before any run.
 - Registering an automatic realization for the plan or a subplan changes the
   computed style from `single-pass` to `multi-pass`; file creation and first
   successful validation are not transition points.
 - Mutable execution state belongs in
-  `<goal-directory>/run/<realization-id>--<YYYYMMDDTHHMMSSZ>.md`, not in
+  `<goal-directory>/run/<realization-record-id>--<YYYYMMDDTHHMMSSZ>.md`, not in
   `plan.md`.
+- Every command generated for human execution of a manual plan stage must be
+  appended to the current run before or when it is presented. Preserve
+  generation order and corrected or superseded commands; use placeholders or
+  protected-input references instead of literal secrets.
+- Immutable copies of plan revisions used by realizations belong in
+  `<goal-directory>/realizations/plan-revision-<N>.md`. Rebase relative links
+  when copying `plan.md`, and never overwrite an existing revision snapshot.
 - `<goal-directory>/run/index.md` links active, pinned, and retained run files;
-  `path-options.md` links the index but not individual run files.
-- A realization decision and every run must link resolvable exact plan and
-  realization revisions; `current` is allowed only before the execution commit
-  point.
-- Retain a configured three to five terminal run logs per realization while
-  preserving aggregate statistics in `path-options.md`.
+  each realization artifact links its own retained runs, while the plan
+  realization registry links the artifact and index but not individual run
+  files.
+- A realization decision and every run must link the exact local
+  `realizations/plan-revision-<N>.md` snapshot and the exact realization
+  revision; `current` is allowed only before the execution commit point.
+- A realization decision is not committed until the selectable paths or
+  subplans have been shown to the user and the user has explicitly confirmed
+  the selected path or subplan.
+- Retain a configured three to five terminal run logs per realization record while
+  preserving aggregate statistics in the corresponding `plan.md` realization
+  row.
 - Import and export of reusable multi-pass plans preserve goal context, paths,
   registered realizations, and validation contracts; bounded run logs are not
   required package history.

@@ -18,6 +18,7 @@ derived-from:
 ---
 id: <goal-id>-exported-plan-package
 kind: exported-plan-package
+template-id: exported-plan-package-template
 project-id: <stable-project-id>
 produced-by: plan-exchange-agent
 interaction-language: <language-code-or-name-used-for-dialogue>
@@ -26,7 +27,7 @@ goal-id: <goal-id>
 plan-id: <plan-id>
 path-options-id: <path-options-id>
 registered-realizations:
-  - <realization-id-or-artifact>
+  - <realization-record-id-or-artifact>
 package-type: <markdown-plan|runbook|checklist|workflow|sdd-spec|script-scaffold|handoff-package|exchange-package>
 derived-from:
   - <goal-artifact-id-or-path>
@@ -56,7 +57,7 @@ derived-from:
 - Original plan: [<plan-title>](<plan-artifact-link>)
 - Selected paths and subplans: [<path-or-subplan-label>](<path-or-subplan-link>)
 - Computed style: <multi-pass>
-- Registered realizations:
+- Plan realization registry: [<realization-registry-label>](<plan-artifact-link>#realization-registry)
 - Realization alignment statuses:
 - Aggregate realization statistics:
 - Supporting validation evidence:
@@ -67,7 +68,8 @@ derived-from:
 - Reusable subgoals: [<subgoal-title>](<subgoal-artifact-link>)
 - Reusable checks:
 - Reusable scripts / workflows / specs: [<artifact-label>](<artifact-link>)
-- Reusable registered realizations: [<realization-label>](<realization-link>)
+- Reusable registered realizations: [<realization-label>](<plan-artifact-link>#<realization-record-id>)
+- Persistent realization artifacts: [<realization-label>](<realization-artifact-link>)
 - Required adaptations:
 
 ## 4. Context-Specific Assumptions
@@ -106,8 +108,10 @@ Portable sequence or package outline:
 ## 9. Plan Export Notes
 
 - Exported plan artifact: `plan.md`
-- Exported registry artifact: `path-options.md`
-- Exported registered realizations:
+- Exported path-options artifact: `path-options.md`
+- Exported realization registry: section 10 of `plan.md`
+- Exported registered realization records:
+- Exported persistent realization artifacts:
 - Required validation contracts: initial, intermediate, and final state checks
 - Working run logs under `run/` are excluded by default.
 - Include a run log only when the user explicitly selects it as temporary

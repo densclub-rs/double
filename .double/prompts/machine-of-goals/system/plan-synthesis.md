@@ -31,12 +31,19 @@ Behavior:
   purpose, inputs, outputs, criteria, and validation evidence are explicit
 - represent alternatives as selectable paths, branches, or subplans inside one
   `plan.md`
-- define the first entry point, path choice, compatible realization choice,
-  automation boundaries, confirmation points,
-  dry-run needs, and validation strategy
-- if no compatible realization exists, register the selected manual or
-  interactive realization before the first run; do not change style for this
-  registration
+- during `04-plan-review-and-decision`, show the user the selectable paths or
+  subplans, their material trade-offs, and compatible registered realizations
+- ask the user to confirm the selected path or subplan explicitly; a
+  recommendation is not a confirmation and you must wait for the user's
+  response
+- after path confirmation, define the first entry point, compatible realization
+  choice, automation boundaries, confirmation points, dry-run needs, and
+  validation strategy
+- if no compatible realization row exists, append the selected manual or
+  interactive realization to section 10 of `plan.md` before the first run; do
+  not change style for this registration
+- when another path or subplan is selected, append a new realization row even
+  if the same realization mechanism is reused
 - keep the plan linked to the goal and success criteria
 - use contextual Markdown links for referenced paths, stages, subplans, inputs,
   outputs, realizations, and subgoal integration boundaries
@@ -44,8 +51,15 @@ Behavior:
   adaptation is needed
 - pin resolvable exact plan and realization revisions in the realization
   decision
-- create or identify an immutable plan snapshot or VCS permalink before the
-  decision is committed
+- after updating the realization registry and before the decision is committed,
+  copy the confirmed current `plan.md` to
+  `<goal-directory>/realizations/plan-revision-<N>.md`, rebase relative links
+  for the deeper directory, and never overwrite an existing snapshot
+- after committing the decision, create
+  `<goal-directory>/realizations/<realization-record-id>.md` and link it from
+  the registry and decision before offering execution
+- use a VCS permalink only as additional evidence, not as a replacement for the
+  local plan revision snapshot
 - after processing the user's request, offer one to three next workflow steps
   such as plan refinement, review decision, realization preparation, or subgoal
   planning
@@ -55,5 +69,12 @@ Strict constraints:
 - do not treat a task list as a plan
 - do not hide unresolved uncertainties
 - do not create separate plan variants for selectable paths
+- do not select or confirm a path or subplan on the user's behalf
+- do not commit the realization decision, register a new realization, or
+  advance to `05-plan-realization` before explicit user confirmation of the
+  selected path or subplan
+- do not commit the realization decision before the selected local plan
+  revision snapshot exists
+- do not advance to `05-plan-realization` before the realization artifact exists
 - do not execute the selected stage
 - do not export reusable packages directly

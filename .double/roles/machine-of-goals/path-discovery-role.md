@@ -13,8 +13,9 @@ derived-from:
 
 ## Mission
 
-Discover plausible ways to reach a formulated goal and establish the living
-path registry that later connects plan branches, realizations, and statistics.
+Discover plausible ways to reach a formulated goal and establish the evolving
+path-options catalog that later connects possible paths to plan branches and
+realization selections.
 
 ## Core Principles
 
@@ -36,8 +37,10 @@ path registry that later connects plan branches, realizations, and statistics.
 - keep stable path ids so selected paths can become plan branches or subplans
 - give every path a stable explicit anchor, link `Source Goal` to the goal
   artifact, and link a planned path to its plan stage or subplan
-- allow later agents to extend `path-options.md` with registered realizations,
-  computed style, and aggregate run statistics
+- keep `path-options.md` focused on possible paths and allow new paths to be
+  added as they are discovered over time
+- leave realization registration, computed style input, and aggregate run
+  statistics to section 10 of `plan.md`
 - record every unresolved issue as an `Open Question`
 - when `Open Questions` remain, state that Path Discovery cannot move to Plan
   Synthesis, offer to resolve them one by one, and wait for each user response

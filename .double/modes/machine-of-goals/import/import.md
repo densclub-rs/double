@@ -29,8 +29,10 @@ fragment, external method, or analog into the current goal context.
 - adapt rather than copy blindly
 - preserve source, assumptions, constraints, and mismatch notes
 - import a multi-pass plan by adapting its goal context, `plan.md`,
-  `path-options.md`, registered realizations, and validation contracts
-- register imported realizations and recompute computed style
+  `path-options.md` catalog, section 10 realization registry, and validation
+  contracts
+- append imported realization rows to section 10 of `plan.md` and recompute
+  computed style
 - exclude bounded working run logs by default
 - distinguish reusable plan fragments from full goal plans
 - avoid treating an imported plan as valid until it has been reviewed
@@ -40,7 +42,7 @@ fragment, external method, or analog into the current goal context.
 - current goal artifact or goal draft
 - existing analog, plan, runbook, checklist, workflow, spec, or user-provided
   material
-- imported path and realization registry
+- imported path-options catalog and plan realization registry
 - registered automatic realization artifacts and their source context
 - source context and known limitations
 
@@ -48,7 +50,7 @@ fragment, external method, or analog into the current goal context.
 
 - adapted goal, path, plan, subgoal, or plan fragment
 - adapted single plan with selectable paths or subplans
-- registered realizations in `path-options.md`
+- registered realization rows in section 10 of `plan.md`
 - source and provenance note
 - fit and mismatch analysis
 - review recommendation before execution

@@ -42,10 +42,10 @@ status: release-candidate
 - role: `plan-synthesis-role`
 - stage: `03-plan-synthesis`, `04-plan-review-and-decision`
 - input: `goal-artifact`, `path-options`, `selected-path-or-candidate-paths`, `constraints-and-resources`, `success-criteria`
-- optional-input: `known-risks-and-uncertainties`, `subgoal-artifact`
-- output: `plan-artifact`, `selectable-path-and-subplan-map`, `realization-decision`, `updated-path-options-when-review-registers-realization`, `automation-boundaries`, `validation-strategy`, `subplan-interface`
+- optional-input: `known-risks-and-uncertainties`, `subgoal-artifact`, `explicit-user-path-confirmation-during-review`
+- output: `plan-artifact`, `plan-revision-snapshot-after-confirmation`, `selectable-path-and-subplan-map`, `interactive-path-review`, `user-confirmed-path-selection`, `realization-record`, `realization-decision-after-confirmation`, `realization-artifact-after-confirmation`, `updated-plan-realization-registry`, `automation-boundaries`, `validation-strategy`, `subplan-interface`
 - supported-modes: `planning`, `review`, `explain`, `dry-run`
-- templates: `.double/templates/machine-of-goals/plan-template.md`, `.double/templates/machine-of-goals/realization-decision-template.md`
+- templates: `.double/templates/machine-of-goals/plan-template.md`, `.double/templates/machine-of-goals/realization-decision-template.md`, `.double/templates/machine-of-goals/realization-template.md`
 - system-prompt: `.double/prompts/machine-of-goals/system/plan-synthesis.md`
 - interaction-prompt: `.double/prompts/machine-of-goals/interaction/plan-synthesis.md`
 - definition: `.double/agents/machine-of-goals/plan-synthesis/plan-synthesis.md`
@@ -55,12 +55,12 @@ status: release-candidate
 - id: `plan-realization-agent`
 - role: `plan-realization-role`
 - stage: `05-plan-realization`
-- input: `plan-artifact`, `path-options`, `realization-decision`, `selected-realization`, `selected-plan-stage`, `automation-boundaries`, `stage-validation-criteria`, `working-context`
+- input: `plan-artifact`, `plan-realization-registry`, `plan-revision-snapshot`, `path-options`, `realization-decision`, `selected-realization-record`, `realization-artifact`, `selected-plan-stage`, `automation-boundaries`, `stage-validation-criteria`, `working-context`
 - optional-input: `plan-stop-points`
-- output: `plan-run`, `run-index`, `updated-path-options-when-needed`
+- output: `plan-run`, `updated-realization-artifact`, `run-index`, `updated-plan-realization-registry-when-needed`
 - optional-output: `implementation-artifact`, `handoff-artifact`, `blocker-or-revision-note`
 - supported-modes: `execution`, `explain`, `dry-run`, `planning`
-- templates: `.double/templates/machine-of-goals/plan-run-template.md`, `.double/templates/machine-of-goals/run-index-template.md`, `.double/templates/machine-of-goals/plan-template.md`, `.double/templates/machine-of-goals/path-options-template.md`
+- templates: `.double/templates/machine-of-goals/realization-template.md`, `.double/templates/machine-of-goals/plan-run-template.md`, `.double/templates/machine-of-goals/run-index-template.md`, `.double/templates/machine-of-goals/plan-template.md`
 - system-prompt: `.double/prompts/machine-of-goals/system/plan-realization.md`
 - interaction-prompt: `.double/prompts/machine-of-goals/interaction/plan-realization.md`
 - definition: `.double/agents/machine-of-goals/plan-realization/plan-realization.md`
@@ -70,9 +70,9 @@ status: release-candidate
 - id: `plan-validation-agent`
 - role: `plan-validation-role`
 - stage: `06-plan-validation`
-- input: `plan-run`, `path-options`, `stage-validation-criteria`, `goal-artifact`, `plan-artifact`, `execution-evidence`
-- output: `updated-plan-run`, `updated-path-options`, `goal-progress-note`, `revision-or-continuation-decision`
-- optional-output: `goal-closure-signal`
+- input: `plan-run`, `realization-artifact`, `path-options`, `plan-realization-registry`, `stage-validation-criteria`, `goal-artifact`, `plan-artifact`, `execution-evidence`
+- output: `updated-plan-run`, `updated-realization-artifact`, `updated-plan-realization-registry`, `goal-progress-note`, `revision-or-continuation-decision`
+- optional-output: `updated-plan-artifact`, `plan-revision-snapshot-after-revision`, `goal-closure-signal`
 - supported-modes: `validation`, `review`, `explain`
 - templates: `.double/templates/machine-of-goals/plan-template.md`
 - system-prompt: `.double/prompts/machine-of-goals/system/plan-validation.md`
@@ -86,7 +86,7 @@ status: release-candidate
 - optional: `true`
 - stage: `cross-step`, `07-plan-packaging-export`
 - input: `goal-artifact`, `plan-artifact`
-- optional-input: `path-options`, `registered-realizations`, `validation-evidence`, `external-plan-or-analog`, `external-plan-realizations`, `export-target-or-intended-reuse`
+- optional-input: `path-options`, `plan-realization-registry`, `registered-realizations`, `validation-evidence`, `external-plan-or-analog`, `external-plan-realizations`, `export-target-or-intended-reuse`
 - output: `imported-plan-adaptation`, `adapted-path-or-plan-fragment`, `exported-plan-package`, `reuse-and-adaptation-notes`
 - optional-output: `goal-closure-summary`
 - supported-modes: `import`, `export`, `explain`, `validation`

@@ -17,9 +17,9 @@ derived-from:
 
 ## Purpose
 
-Used when the agent must package a multi-pass goal context, plan, path and
-realization registry, registered automatic realizations, validation evidence,
-or reusable output for future use.
+Used when the agent must package a multi-pass goal context, plan with its
+realization registry, path-options catalog, registered automatic realizations,
+validation evidence, or reusable output for future use.
 
 ## Behavioral Intent
 
@@ -27,8 +27,9 @@ or reusable output for future use.
   method, and intended reuse
 - preserve the link between goal, plan, criteria, context, and evidence
 - preserve contextual Markdown links and exact source revision references
-- include `plan.md`, `path-options.md`, registered realizations, and validation
-  contracts
+- include `plan.md` with its section 10 realization registry,
+  `path-options.md`, persistent realization artifacts, registered
+  realizations, and validation contracts
 - exclude bounded `run/` working logs by default
 - mark what is reusable, what is context-specific, and what must be adapted
 - include closure, pause, transfer, or package status
@@ -37,7 +38,8 @@ or reusable output for future use.
 ## Typical Inputs
 
 - goal artifact
-- plan artifact, path-options registry, and registered realizations
+- plan artifact with realization registry, path-options catalog, and registered
+  realizations
 - validation evidence and aggregate realization statistics
 - export target or intended audience
 - reusable fragments or collapsed automation candidates

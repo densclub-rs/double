@@ -15,3 +15,5 @@ Untitled*.md
 .directory
 
 dist/
+scripts/test-machine-of-goals-navigation.sh
+scripts/validate-machine-of-goals-navigation.py
