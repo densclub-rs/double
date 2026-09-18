@@ -187,6 +187,12 @@ A plan is a connected model of transition from the initial state to the target o
 
 The plan is the main bridge between goal formulation and executable action. It turns the selected path into a structure that can be explained, checked, changed, and potentially automated. The minimal conceptual contract for moving to realization is the understandability of the plan: the subject or executing agent should understand how the plan connects the initial state with the target one, even if some stages will still be clarified during execution.
 
+Before the first realization is registered, the plan remains one mutable draft:
+all clarifications update `plan.md`, and no revision snapshot is created. The
+first realization freezes revision 1 as its executable baseline. Once any
+realization exists, a later semantic clarification creates the next immutable
+plan revision and requires affected realizations to be reviewed for alignment.
+
 #### Related Concepts
 
 - Other relations: [`concept-initial-state-and-target-state`](#concept-initial-state-and-target-state): the plan connects these states.
@@ -200,6 +206,8 @@ The plan is the main bridge between goal formulation and executable action. It t
 - A plan does not have to be fully automatable.
 - A plan does not have to be complete or finally precise before realization begins, if it is understandable enough for controlled movement from the initial state to the target state.
 - A plan is not an immutable construction: during execution, stages may appear or disappear, new paths to the goal may open, or new subgoals may arise.
+- Registry statistics, displayed progress, and another realization registered
+  against unchanged plan content do not constitute a semantic plan revision.
 
 #### Questions
 
@@ -234,6 +242,8 @@ The registry preserves continuity from path discovery to repeated execution with
 - The registry is not a permanent index of links to every run file.
 - Aggregate statistics do not replace validation evidence for a concrete run.
 - Removing bounded run logs does not reset accumulated statistics.
+- Adding or updating registry state does not by itself create a plan revision;
+  revision identity follows semantic changes to the transition model.
 
 #### Questions
 
@@ -319,7 +329,15 @@ A short-lived working instance of the plan created for one concrete execution of
 
 #### Role in the Idea
 
-The run is the current operational view of plan execution. It keeps mutable execution state and recent effort outside `plan.md`. Its creation adds a contextual link in the realization artifact and increments persistent launch statistics in the plan realization registry; terminal validation updates both retained-run navigation and the latest aggregate result.
+The run is the current operational view and source of truth for plan execution.
+It keeps mutable execution state and recent effort outside `plan.md`. Its stage
+map uses emoji progress markers so that the state of the exact pinned plan
+revision can be scanned quickly. A mutable current `plan.md` may project those
+markers into its Plan Map only when the run executes the current revision and
+the topology still matches. Its creation adds a contextual link in the
+realization artifact and increments persistent launch statistics in the plan
+realization registry; terminal validation updates both retained-run navigation
+and the latest aggregate result.
 
 #### Related Concepts
 
@@ -331,6 +349,10 @@ The run is the current operational view of plan execution. It keeps mutable exec
 #### Boundaries
 
 - A run is not a permanent plan variant or source plan.
+- Its emoji markers are a presentation of explicit run status, not a second
+  source of execution state.
+- An immutable plan revision snapshot must never be changed to mirror run
+  progress. Historical-revision progress remains visible in the run artifact.
 - Recording every command generated for manual stage execution is a required
   exception to the otherwise concise working log; it does not require a full
   command-by-command trace of automatic execution.

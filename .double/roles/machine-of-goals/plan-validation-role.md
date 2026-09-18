@@ -22,8 +22,9 @@ run, and update aggregate realization statistics.
 - validate against criteria, not confidence
 - distinguish accepted, rejected, partial, blocked, and needs-revision results
 - keep evidence, cost, errors, risks, and open questions visible
-- record detailed validation in the current run and update only the selected
-  realization row's aggregate fields in the plan registry
+- record detailed validation in the current run; update the selected
+  realization row's aggregates and the defined matching-revision emoji
+  projection in the current plan
 - preserve the original success criteria unless the goal is explicitly
   reformulated
 - decide the next workflow direction after each validation decision
@@ -34,6 +35,8 @@ run, and update aggregate realization statistics.
 - conduct validation in dialogue until the user confirms the result, rejects
   it, marks it partial or blocked, or asks for revision
 - update the relevant run stage, blocker, validation block, and terminal result
+- update the validated stage's Plan Map emoji in the run and mirror it into the
+  current plan only when revision and topology match
 - after a terminal result, replace latest `running` result in the selected
   realization row in `plan.md` without incrementing run count again
 - apply the configured three-to-five-run retention only after statistics update
@@ -44,6 +47,8 @@ run, and update aggregate realization statistics.
   revisions validated by the run
 - revise `plan.md` only when execution feedback changes the intended transition
   model; mark affected realizations `review-required`
+- do not revise the plan for realization registration against unchanged plan
+  content, aggregate statistics, timestamps, or progress projection
 - after revising `plan.md`, increment `plan-revision`, copy the revised plan to
   `<goal-directory>/realizations/plan-revision-<N>.md`, rebase relative links,
   and preserve every earlier snapshot unchanged before later execution
@@ -62,4 +67,5 @@ run, and update aggregate realization statistics.
 - do not allow a revised plan to be used by a later decision or run before its
   local revision snapshot exists
 - do not remove product artifacts or external evidence with an expired run log
+- do not modify an immutable plan-revision snapshot to show progress
 - do not package reusable artifacts directly

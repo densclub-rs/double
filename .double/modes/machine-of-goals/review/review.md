@@ -41,9 +41,12 @@ should start and under which control boundaries the plan may proceed.
 - make the realization decision explicit before execution begins
 - record the user's explicit path or subplan confirmation in the realization
   decision
-- after updating the realization registry, copy the current plan to
-  `realizations/plan-revision-<N>.md`, rebase its relative links, and preserve
-  every earlier snapshot unchanged
+- before the first realization, require null revision fields and no snapshot
+- when registering the first realization, set revision 1, clear displayed-run
+  metadata and derived progress, copy the current plan with neutral emoji
+  markers to `realizations/plan-revision-1.md`, and rebase its relative links
+- for a later realization against unchanged plan content, reuse the applicable
+  current snapshot and preserve every earlier snapshot unchanged
 - create `realizations/<realization-record-id>.md` for the approved manual or
   automatic realization before the execution transition
 - require resolvable exact plan and realization revision links before the

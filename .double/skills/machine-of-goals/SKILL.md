@@ -118,8 +118,8 @@ A recommendation is allowed, but neither the skill nor the responsible agent
 may make the selection on the user's behalf. Do not commit the realization
 decision or advance to `05-plan-realization` until the user confirms the
 selection, the selected realization row has been added to section 10 of
-`plan.md`, and the updated plan has been copied to
-`realizations/plan-revision-<N>.md` without overwriting earlier history. A
+`plan.md`, and the first executable baseline or current applicable revision
+snapshot exists without overwriting earlier history. A
 different selected path always creates a new realization row, even when it
 reuses the same realization mechanism. Before advancing, create the persistent
 `realizations/<realization-record-id>.md` artifact for the approved realization.
@@ -194,6 +194,11 @@ validation flow.
   records, computed style input, readiness, alignment, and aggregate run
   statistics. A different selected path always creates a new row with a unique
   realization record id.
+- Before the first realization, keep `plan-revision` and
+  `plan-revision-artifact` null, refine only `plan.md`, and create no snapshot.
+  The first realization freezes revision 1. Later semantic plan clarification
+  increments the revision; another realization against unchanged plan content
+  does not.
 - Every approved manual or automatic realization has one persistent
   `<goal-directory>/realizations/<realization-record-id>.md` artifact. Create it
   after the decision and local plan snapshot and before any run.
@@ -201,8 +206,10 @@ validation flow.
   computed style from `single-pass` to `multi-pass`; file creation and first
   successful validation are not transition points.
 - Mutable execution state belongs in
-  `<goal-directory>/run/<realization-record-id>--<YYYYMMDDTHHMMSSZ>.md`, not in
-  `plan.md`.
+  `<goal-directory>/run/<realization-record-id>--<YYYYMMDDTHHMMSSZ>.md`. The
+  current `plan.md` may mirror only the run's derived emoji progress in its
+  Plan Map when the pinned revision and stage topology match; the run remains
+  authoritative, and immutable plan-revision snapshots are never updated.
 - Every command generated for human execution of a manual plan stage must be
   appended to the current run before or when it is presented. Preserve
   generation order and corrected or superseded commands; use placeholders or

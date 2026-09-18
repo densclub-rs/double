@@ -62,6 +62,8 @@ statistics in the selected plan realization row.
 - distinguish accepted, rejected, partial, blocked, and needs-revision results
 - conduct validation in dialogue until an explicit decision is reached
 - record validation decisions, evidence, and terminal result in the current run
+- update the run's Plan Map emoji after the validation decision and mirror it
+  into current `plan.md` only when revision and topology match
 - replace latest `running` result with the terminal result in the selected
   realization row in `plan.md` without incrementing run count again
 - enforce bounded run retention after terminal statistics update
@@ -71,6 +73,8 @@ statistics in the selected plan realization row.
   accepting a terminal result
 - revise `plan.md` only when feedback changes the intended transition model and
   mark affected realizations `review-required`
+- do not create a revision for realization registration against unchanged plan
+  content, aggregate statistics, timestamps, or progress projection
 - whenever `plan.md` is revised for a later decision or run, increment its
   `plan-revision`, copy it to
   `<goal-directory>/realizations/plan-revision-<N>.md`, rebase relative links,
@@ -91,6 +95,7 @@ statistics in the selected plan realization row.
 - must not execute the next stage
 - must not allow later execution to use a revised `plan.md` until its local
   revision snapshot exists
+- must not update an immutable plan-revision snapshot with execution progress
 - must not package reusable artifacts without `Plan Exchange`
 
 ## Required Artifacts

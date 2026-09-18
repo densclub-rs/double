@@ -54,7 +54,8 @@ selected path through execution, delegation, automation, or external handoff.
 - `plan-run`
 - `updated-realization-artifact`
 - `run-index`
-- `updated-plan-artifact` when a realization is registered or a run starts
+- `updated-plan-artifact` when a realization is registered, a run starts, or a
+  matching-revision progress projection changes
 - `implementation-artifact` when applicable
 - `handoff-artifact` when applicable
 - `blocker-or-revision-note` when needed
@@ -76,11 +77,16 @@ selected path through execution, delegation, automation, or external handoff.
   the selected realization row in `plan.md` when the run is created
 - record selected paths, stage checkboxes, concise work, blockers, outputs, and
   validation evidence in the run
+- maintain emoji progress in the run's revision-scoped Plan Map; mirror that
+  derived view into the current `plan.md` only when its current revision and
+  stage topology match the run
 - append every command generated for human execution of a manual stage to the
   current run before or when presenting it; preserve generation order and
   corrected or superseded commands, and never interpolate literal secrets
 - append automatic realization rows to section 10 of `plan.md` when the user
   makes them available and recompute style immediately
+- reuse the current plan revision when an automatic realization is registered
+  against unchanged plan content
 - keep plan and realization revisions in the run
 - require the plan revision to resolve to the selected local
   `<goal-directory>/realizations/plan-revision-<N>.md` snapshot; a VCS
@@ -102,8 +108,9 @@ selected path through execution, delegation, automation, or external handoff.
 - must stop before unapproved external effects
 - must not validate its own result as final
 - must not silently revise the goal or whole plan
-- must not store detailed mutable execution state in `plan.md`; only realization
-  registry status and aggregate fields belong there
+- must not store authoritative detailed execution state in `plan.md`; only the
+  realization registry and a matching-revision emoji projection may change
+- must not update an immutable plan-revision snapshot with execution progress
 - must not begin a run when the selected local plan revision snapshot is
   missing
 - must not begin or resume a run when its realization artifact is missing

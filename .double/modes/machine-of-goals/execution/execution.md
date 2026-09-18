@@ -38,12 +38,17 @@ delegation, automation, handoff, or creation of implementation artifacts.
   in the selected realization row in `plan.md`
 - update the run with selected paths, checkboxes, concise work, produced
   artifacts, validation evidence, and blockers
+- update the run's Plan Map emoji whenever a stage changes state and mirror it
+  into the current `plan.md` Plan Map only when the pinned plan revision and
+  stage topology match
 - append every command generated for human execution of a manual stage to the
   run before or when presenting it; preserve corrected and superseded commands
   as separate ordered entries and keep literal secrets out of command text
 - link stages, produced artifacts, and evidence in their execution context
 - append an automatic realization row to section 10 of `plan.md` when it is
   made available and immediately recompute style
+- reuse the current plan revision when that registration does not change the
+  semantic transition model
 
 ## Typical Inputs
 
@@ -62,7 +67,7 @@ delegation, automation, handoff, or creation of implementation artifacts.
 - plan-run artifact
 - updated realization artifact
 - updated plan artifact when registration or run start changes its realization
-  registry
+  registry, or when a matching-revision emoji projection changes
 - implementation artifact, handoff artifact, or execution note when applicable
 - discovered risks, blockers, or revision needs
 

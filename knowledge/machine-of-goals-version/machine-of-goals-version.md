@@ -8,10 +8,12 @@ artifact-language: en
 knowledge-type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-09-15
+observed-at: 2026-09-18
 ttl: one month
 derived-from:
   - knowledge/double-main-modules/double-main-modules.md
+  - ideas/machine-of-goals/machine-of-goals.md
+  - .double/workflows/machine-of-goals/machine-of-goals-workflow.md
   - user-provided project versioning decision
 ---
 
@@ -26,26 +28,23 @@ project.
 
 ## Value
 
-`0.0.4`
+`0.0.6`
 
 ## Change Note
 
-Version `0.0.4` records the persistent realization-artifact contract:
+Version `0.0.6` makes plan revision history realization-triggered:
 
-- each goal has one `plan.md` with selectable paths or subplans
-- `path-options.md` remains the living path catalog, while section 10 of
-  `plan.md` is the realization registry and aggregate-statistics source
-- registering an automatic realization changes computed style from
-  `single-pass` to `multi-pass`
-- approving either a manual or automatic realization creates
-  `realizations/<realization-record-id>.md` before the first run
-- the persistent realization artifact records the selected path, plan and
-  realization revisions, procedure or implementation, control boundaries, and
-  validation contract
-- every run links to its realization artifact, which links all active, pinned,
-  and retained runs for that realization record
-- mutable execution state is stored in bounded
-  `run/<realization-record-id>--<YYYYMMDDTHHMMSSZ>.md` working logs
-- aggregate realization statistics survive working-log retention
-- reusable multi-pass import and export preserve goal context, paths,
-  realization artifacts, and validation contracts without requiring run logs
+- before the first realization, `plan.md` is the only plan artifact, both plan
+  revision frontmatter fields are null, and every clarification updates the
+  main plan without creating a snapshot
+- registering the first realization freezes revision 1 as the first immutable
+  executable baseline
+- after a realization exists, a semantic clarification of the transition model
+  increments the plan revision and creates the corresponding snapshot
+- realizations pinned to an earlier revision require alignment review after a
+  semantic plan change
+- registering another realization against unchanged plan content, updating
+  registry statistics or timestamps, and projecting run progress do not create
+  a plan revision
+- immutable plan revision snapshots retain neutral progress and are never
+  rewritten

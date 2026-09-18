@@ -73,13 +73,21 @@ derived-from:
 - Evidence:
 - Decision: <accepted|rejected|partial|blocked|needs-revision>
 
-## 3. Run Plan
+## 3. Plan Map
 
 Instantiate only the stages and path branches selected for this run.
 
-| Stage | Status | Validation | Started | Finished | Result |
-| --- | --- | --- | --- | --- | --- |
-| [<stage-id>](../plan.md#stage-<stage-id>) | <not-started|in-progress|done|partial|blocked|failed|needs-revision> | <not-validated|accepted|partial|blocked|rejected|needs-revision> | <time-or-null> | <time-or-null> | <summary> |
+This map visualizes execution of the exact plan revision linked in Run Context.
+It is the source of the emoji projection optionally mirrored into the current
+`plan.md`; the immutable plan-revision snapshot is never changed.
+
+Legend: `⚪` not started; `🔄` in progress; `🟠` awaiting validation; `✅`
+accepted; `🟡` partial; `⛔` blocked; `❌` failed or rejected; `🛠️` needs
+revision; `➖` not selected.
+
+| Progress | Stage | Status | Validation | Started | Finished | Result |
+| --- | --- | --- | --- | --- | --- | --- |
+| ⚪ | [<stage-id>](../realizations/plan-revision-<N>.md#stage-<stage-id>) | <not-started|in-progress|done|partial|blocked|failed|needs-revision|not-selected> | <not-validated|accepted|partial|blocked|rejected|needs-revision|not-applicable> | <time-or-null> | <time-or-null> | <summary> |
 
 ## 4. Working Log
 

@@ -24,8 +24,9 @@ or preparing a handoff artifact within approved boundaries.
 - use dry run when the stage needs simulation before real effects
 - refine the stage when execution reveals missing detail
 - produce evidence for validation
-- keep detailed mutable execution state outside `plan.md`; only realization
-  registry status and aggregate fields belong there
+- keep authoritative detailed mutable execution state in the run; `plan.md`
+  may contain only realization registry state and a derived matching-revision
+  emoji projection
 
 ## Behavioral Rules
 
@@ -52,12 +53,16 @@ or preparing a handoff artifact within approved boundaries.
   and `running` result in `plan.md` when the working artifact is created
 - update stage checkboxes, concise working notes, blockers, produced artifacts,
   and validation evidence in the current run
+- update the run's Plan Map emoji with every stage-state transition and mirror
+  it into current `plan.md` only when revision and topology match
 - append every command generated for human execution of a manual stage to the
   current run before or when presenting it; keep corrected and superseded
   commands as ordered entries and use protected-input references or
   placeholders instead of literal secrets
 - when a new automatic realization is made available, append it to section 10
   of `plan.md` and immediately recompute the plan style
+- reuse the current plan revision when that registration does not change the
+  plan's semantic transition model
 - treat readiness and alignment as separate from the computed style
 - hand results to validation rather than accepting them as final
 - after each response, offer the next useful workflow movement, usually
@@ -66,7 +71,9 @@ or preparing a handoff artifact within approved boundaries.
 ## Strict Constraints
 
 - do not silently revise the whole plan or goal
-- do not store execution checkboxes or mutable progress in `plan.md`
+- do not store execution checkboxes or authoritative mutable progress in
+  `plan.md`; only the defined emoji projection is allowed
+- do not modify an immutable plan-revision snapshot to show progress
 - do not validate the stage as final
 - do not skip required stop points
 - do not export reusable packages directly

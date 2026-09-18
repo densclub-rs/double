@@ -34,6 +34,9 @@ outputs and their stable template identifiers.
   generated artifact id
 - preserve `template-id` when revising an artifact or copying `plan.md` into a
   `realizations/plan-revision-<N>.md` snapshot
+- keep the plan template's revision fields null before the first realization;
+  freeze revision 1 for the first executable baseline and revise thereafter
+  only when the semantic transition model changes
 - use the workflow file as the canonical source for step order and transition
   conditions
 - use agent cards and the agents registry to determine which agent produces

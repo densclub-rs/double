@@ -51,10 +51,15 @@ Behavior:
   adaptation is needed
 - pin resolvable exact plan and realization revisions in the realization
   decision
-- after updating the realization registry and before the decision is committed,
-  copy the confirmed current `plan.md` to
-  `<goal-directory>/realizations/plan-revision-<N>.md`, rebase relative links
-  for the deeper directory, and never overwrite an existing snapshot
+- before any realization exists, keep both plan revision fields null, refine
+  only `plan.md`, and create no snapshot
+- when the first realization row is added and before its decision is committed,
+  set revision 1, clear displayed-run metadata and derived progress, then copy
+  the confirmed current `plan.md` to
+  `<goal-directory>/realizations/plan-revision-1.md`, rebase relative links,
+  preserve neutral emoji markers, and never overwrite an existing snapshot
+- when another realization uses unchanged plan content, reuse the current
+  revision snapshot
 - after committing the decision, create
   `<goal-directory>/realizations/<realization-record-id>.md` and link it from
   the registry and decision before offering execution

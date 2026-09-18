@@ -27,6 +27,8 @@ run and aggregate realization statistics.
 - distinguish accepted, rejected, partial, blocked, and needs-revision results
 - conduct the validation dialogue until an explicit decision is reached
 - record validation and terminal result in the current run
+- update the validated stage's Plan Map emoji in the run and mirror it in the
+  current `plan.md` only when revision and topology match
 - replace latest `running` result with the terminal result in the selected
   realization row in `plan.md` without incrementing run count again
 - apply bounded run retention after statistics update
@@ -36,6 +38,8 @@ run and aggregate realization statistics.
 - revise the plan only when the intended transition model changes; increment
   `plan-revision` and create a new
   `realizations/plan-revision-<N>.md` copy before later use
+- do not revise for realization registration against unchanged plan content,
+  aggregate statistics, timestamps, or progress projection
 - decide whether to continue, branch, revise, reformulate, export, pause, or
   close the goal
 
@@ -53,7 +57,8 @@ run and aggregate realization statistics.
 
 - updated plan-run and plan realization registry
 - updated realization artifact when run status or retention changes it
-- updated plan artifact only when revision is required
+- updated plan artifact when a matching-revision emoji projection or aggregate
+  statistics change, and when revision is required
 - new local plan revision snapshot when the revised plan will be used later
 - updated goal progress or closure note when applicable
 - revision, branch, continuation, or export decision

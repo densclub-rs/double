@@ -62,6 +62,27 @@ Before algorithm execution, the machine should provide a mechanism for explainin
 
 The progress of plan execution should be stored separately from the plan itself. The plan describes the model of transition from the initial state to the target state. After the user approves an achievement path and chooses a manual or automatic realization, the machine creates a persistent realization artifact under `realizations/` before the first run begins. This artifact is the stable execution context for that registered choice: it connects the decision, selected path, exact plan and realization revisions, control boundaries, and the retained runs created from it. Each concrete execution then creates a working run artifact under `run/` that records completed or blocked stages, checks, concise execution notes, and result. Run artifacts are short-lived working logs retained only to a configured bounded depth, normally the latest three to five runs per realization.
 
+Before any realization is registered, `plan.md` is the only plan artifact and
+all clarifications are applied directly to it. Its `plan-revision` and
+`plan-revision-artifact` remain `null`; draft refinement does not create
+revision snapshots. Registering the first realization freezes the first
+executable baseline as revision 1 so that the realization can pin an immutable
+plan. After at least one realization exists, a semantic clarification of the
+transition model creates the next revision and snapshot, while the earlier
+realizations remain pinned to their earlier revisions and require alignment
+review. Registry statistics, execution-progress projection, and registration
+of another realization against an unchanged plan do not create a new plan
+revision.
+
+Execution progress should also be easy to scan. While a concrete plan revision
+is being executed, its stage map may show emoji progress markers as a derived
+view of one explicitly linked run. The run remains the source of truth. A
+mutable `plan.md` may mirror that view only when the run executes its current
+revision and the stage topology still matches. An immutable
+`realizations/plan-revision-<N>.md` snapshot is never rewritten to display
+later progress; a run against a historical revision shows the same visual map
+inside the run artifact instead.
+
 `path-options.md` remains useful after planning as a living catalog of achievement paths. Section 10 of `plan.md` records which manual or automatic realizations exist, which paths or subplans they support, how many times they have been run, the latest run time, and the latest result. These aggregate statistics remain after old working run logs are removed and do not require links to individual run files.
 
 Machine of Goals artifacts should remain understandable when goals become
@@ -109,9 +130,12 @@ The idea of Machine of Goals is part of the Double ecosystem, just like the idea
 - realization registration
 - aggregate realization statistics
 - bounded working run log
+- revision-scoped visual execution progress
 - contextual artifact navigation
 - direct cross-project artifact reference
 - pinned plan and realization revision
+- draft plan refinement before the first realization
+- realization-triggered plan revision history
 - steps and dependencies
 - sequential sections of the plan
 - parallel sections of the plan

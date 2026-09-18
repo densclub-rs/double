@@ -52,7 +52,8 @@ set.
 ## Outputs
 
 - `plan-artifact`
-- `plan-revision-snapshot`
+- `plan-revision-snapshot` only when the first executable baseline is frozen
+  or an already realized plan is semantically revised
 - `realization-decision`
 - `realization-artifact`
 - `user-confirmed-path-selection`
@@ -89,11 +90,15 @@ set.
 - record direct cross-project references without importing them when the source
   remains authoritative
 - pin exact plan and realization revisions in the realization decision
-- create the immutable local plan revision snapshot after the realization row
-  is registered and before the realization decision is committed
-- create that snapshot by copying the confirmed `plan.md` to
-  `<goal-directory>/realizations/plan-revision-<N>.md`, rebasing relative links
-  for the deeper directory, and never overwriting an existing snapshot
+- while no realization exists, keep both revision fields null, refine only
+  `plan.md`, and create no revision snapshot
+- for the first realization, set revision 1 after its row is registered and
+  before its decision is committed, then copy the confirmed `plan.md` to
+  `<goal-directory>/realizations/plan-revision-1.md`, rebase relative links,
+  clear displayed-run metadata and derived progress to neutral emoji markers,
+  and never overwrite an existing snapshot
+- when another realization uses unchanged plan content, reuse the current
+  revision snapshot instead of incrementing it
 - create `<goal-directory>/realizations/<realization-record-id>.md` from the
   confirmed row and decision before advancing to plan realization
 
@@ -114,8 +119,8 @@ set.
   path or subplan
 - must not use a VCS permalink as a replacement for the local plan revision
   snapshot
-- must not commit the realization decision before the selected local plan
-  revision snapshot exists
+- must not commit the first realization decision before baseline revision 1
+  exists, or a later decision before its applicable revision snapshot exists
 - must not advance to plan realization before the persistent realization
   artifact exists
 - must not execute the selected stage

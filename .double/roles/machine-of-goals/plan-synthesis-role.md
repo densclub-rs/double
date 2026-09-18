@@ -44,10 +44,15 @@ review decision.
 - preserve direct-reference metadata for cross-project dependencies without
   treating them as imported artifacts
 - pin exact plan and realization revisions in the realization decision
-- at the execution commit point, update section 10 of `plan.md`, then copy the
-  confirmed plan to `<goal-directory>/realizations/plan-revision-<N>.md`, rebase
-  relative links for the deeper directory, and never overwrite an existing
-  snapshot
+- before the first realization, keep both plan revision frontmatter fields
+  null, refine only `plan.md`, and create no revision snapshot
+- at the first execution commit point, update section 10, set revision 1, and
+  copy the confirmed plan to
+  `<goal-directory>/realizations/plan-revision-1.md`; clear displayed-run
+  metadata and derived progress to neutral emoji markers, rebase relative links
+  for the deeper directory, and never overwrite an existing snapshot
+- reuse the current revision when another realization is registered against
+  unchanged plan content
 - materialize the approved realization as
   `<goal-directory>/realizations/<realization-record-id>.md` after the decision
   and snapshot are ready and before advancing to execution
@@ -77,8 +82,8 @@ review decision.
   user explicitly confirms the selected path or subplan
 - do not replace the required local plan revision snapshot with only a VCS
   permalink
-- do not commit the realization decision before the selected local plan
-  revision snapshot exists
+- do not commit the first realization decision before baseline revision 1
+  exists; later decisions require the current applicable revision snapshot
 - do not advance to realization before the persistent realization artifact
   exists
 - do not execute the selected stage

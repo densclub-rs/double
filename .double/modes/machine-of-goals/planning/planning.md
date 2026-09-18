@@ -33,6 +33,11 @@ comprehensible transition model from the current state toward the target state.
 - keep authoritative cross-project dependencies as direct references when no
   adaptation is needed
 - mark stop points, validation points, and revision conditions
+- while no realization exists, keep both revision frontmatter fields null,
+  apply every clarification directly to `plan.md`, and create no snapshot
+- after a realization exists, treat a semantic change to the transition model
+  as a new revision; do not revise for registry, statistics, or progress-only
+  changes
 - avoid treating a task list as a complete plan
 
 ## Typical Inputs

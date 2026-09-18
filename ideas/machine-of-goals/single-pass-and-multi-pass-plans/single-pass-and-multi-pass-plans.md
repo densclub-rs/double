@@ -84,6 +84,11 @@ Run artifacts are short-lived working logs that record the selected paths, check
 - Every command generated for manual execution of a stage is recorded in that
   run before or when it is presented to the human.
 - `plan.md` retains aggregate realization statistics without links to individual run files.
+- Before the first realization, all plan clarification happens in `plan.md`
+  without revision snapshots. The first realization freezes revision 1; later
+  semantic plan clarification creates the next revision.
+- Registry statistics, progress projection, and another realization against
+  unchanged plan content do not create a plan revision.
 - Both the plan and its realization may evolve between runs.
 - A script may be a collapsed executable form of the plan that is refined through actual runs.
 - Errors and observations discovered while running the script may lead to changes not only in the script but also in the source plan.
@@ -100,7 +105,7 @@ Run artifacts are short-lived working logs that record the selected paths, check
 ## 7. Open Questions
 
 - [x] Is being single-pass or multi-pass a property of the plan itself, a selected way of using it, or a computed style?
-- [ ] How should changes to the plan between passes be distinguished from changes only to its concrete executable realization?
+- [x] How should changes to the plan between passes be distinguished from changes only to its concrete executable realization? A plan revision is created only for a semantic clarification of `plan.md` after a realization exists; realization-only, registry, statistics, and progress changes do not revise the plan.
 - [x] Should each run record the exact revisions of the plan and realization under which it was executed? Yes; the run must retain resolvable references to both revisions.
 - [x] What execution details need to be preserved so that the next pass can use the experience of the previous one?
 - [ ] At what point should a modified script lead to a corresponding change in the source plan?

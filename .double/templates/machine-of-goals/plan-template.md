@@ -31,9 +31,9 @@ goal-scope: <main-goal|subgoal>
 plan-execution-style: <single-pass|multi-pass|not-yet-computed>
 parent-goal-id: <parent-goal-id-or-null>
 parent-plan-artifact: <parent-plan-artifact-or-null>
-plan-revision: <positive-integer>
-# Use null before the execution commit point.
-plan-revision-artifact: <goal-directory>/realizations/plan-revision-<N>.md
+# Keep both fields null until the first realization is registered.
+plan-revision: <positive-integer-or-null>
+plan-revision-artifact: <plan-revision-artifact-path-or-null>
 created-at: <YYYY-MM-DDTHH:MM:SSZ>
 updated-at: <YYYY-MM-DDTHH:MM:SSZ>
 derived-from:
@@ -77,13 +77,27 @@ branches, or subplans.
 
 ## 3. Plan Map
 
-Use this section for stable stage topology. Execution status and checkboxes do
-not belong here; they are instantiated in the selected `plan-run`.
+Use this section for stable stage topology. The `Progress` column is a derived
+visual projection of one explicitly named run, not the source of execution
+state. Detailed status and validation remain in that `plan-run`.
 
-| Stage | Kind | Inputs | Outputs | Possible Next Stages | Required Validation |
-| --- | --- | --- | --- | --- | --- |
-| [S01: <Stage 1 Name>](#stage-s01) | <stage|choice|subplan|merge|validation> | [<input artifact>](<input-artifact-link>) | [<output artifact>](<output-artifact-link>) | [S02](#stage-s02) | <check-id> |
-| [S02: <Stage 2 Name>](#stage-s02) | <stage|choice|subplan|merge|validation> | [S01](#stage-s01) | <state-or-artifact> | [S03](#stage-s03) | <check-id> |
+- Displayed run: [<run-label>](./run/<realization-record-id>--<YYYYMMDDTHHMMSSZ>.md#<run-id>) or none
+- Displayed plan revision: [Revision <N>](./realizations/plan-revision-<N>.md#<goal-id>-plan) or none
+- Progress synchronized at: <YYYY-MM-DDTHH:MM:SSZ-or-never>
+
+Mirror progress here only when the displayed run executes the current
+`plan-revision` and its topology matches this map. Otherwise clear the
+projection and use the run's revision-scoped Plan Map. Never modify an
+immutable plan-revision snapshot to show execution progress.
+
+Legend: `⚪` not started; `🔄` in progress; `🟠` awaiting validation; `✅`
+accepted; `🟡` partial; `⛔` blocked; `❌` failed or rejected; `🛠️` needs
+revision; `➖` not selected.
+
+| Progress | Stage | Kind | Inputs | Outputs | Possible Next Stages | Required Validation |
+| --- | --- | --- | --- | --- | --- | --- |
+| ⚪ | [S01: <Stage 1 Name>](#stage-s01) | <stage|choice|subplan|merge|validation> | [<input artifact>](<input-artifact-link>) | [<output artifact>](<output-artifact-link>) | [S02](#stage-s02) | <check-id> |
+| ⚪ | [S02: <Stage 2 Name>](#stage-s02) | <stage|choice|subplan|merge|validation> | [S01](#stage-s01) | <state-or-artifact> | [S03](#stage-s03) | <check-id> |
 
 ## 4. Stage Details
 
@@ -174,12 +188,20 @@ shared [run index](./run/index.md#<goal-id>-run-index), not from this registry.
 Retain three to five terminal runs per realization record, with five as the
 default.
 
-After path confirmation and registry update, copy this `plan.md` to
-`./realizations/plan-revision-<N>.md`, rebase relative links for the deeper
-directory, and never overwrite an existing snapshot. A VCS permalink may be
-recorded as additional evidence. A new realization row or topology change
-creates the next plan revision; aggregate-only updates to an existing row do
-not.
+Before the first realization is registered, keep both revision fields null,
+apply every clarification directly to this `plan.md`, and do not create a
+snapshot. When the first realization is registered, set `plan-revision` to 1,
+set `plan-revision-artifact`, and copy this plan to
+`./realizations/plan-revision-1.md`. Rebase relative links for the deeper
+directory and never overwrite an existing snapshot. Before copying, clear the
+displayed run, synchronization time, and derived progress so the snapshot has
+neutral markers and contains no mutable execution presentation.
+
+After a realization exists, a semantic clarification of the transition model
+increments the revision and creates its snapshot before later use. A new
+realization against unchanged plan content, aggregate-only registry changes,
+and progress projection do not create a revision. A VCS permalink may be
+recorded as additional evidence.
 
 After the decision is committed, create the linked
 `./realizations/<realization-record-id>.md` before any run is created.

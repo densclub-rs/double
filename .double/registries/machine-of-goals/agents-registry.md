@@ -43,7 +43,7 @@ status: release-candidate
 - stage: `03-plan-synthesis`, `04-plan-review-and-decision`
 - input: `goal-artifact`, `path-options`, `selected-path-or-candidate-paths`, `constraints-and-resources`, `success-criteria`
 - optional-input: `known-risks-and-uncertainties`, `subgoal-artifact`, `explicit-user-path-confirmation-during-review`
-- output: `plan-artifact`, `plan-revision-snapshot-after-confirmation`, `selectable-path-and-subplan-map`, `interactive-path-review`, `user-confirmed-path-selection`, `realization-record`, `realization-decision-after-confirmation`, `realization-artifact-after-confirmation`, `updated-plan-realization-registry`, `automation-boundaries`, `validation-strategy`, `subplan-interface`
+- output: `plan-artifact`, `plan-revision-snapshot-when-first-baseline-is-frozen`, `selectable-path-and-subplan-map`, `interactive-path-review`, `user-confirmed-path-selection`, `realization-record`, `realization-decision-after-confirmation`, `realization-artifact-after-confirmation`, `updated-plan-realization-registry`, `automation-boundaries`, `validation-strategy`, `subplan-interface`
 - supported-modes: `planning`, `review`, `explain`, `dry-run`
 - templates: `.double/templates/machine-of-goals/plan-template.md`, `.double/templates/machine-of-goals/realization-decision-template.md`, `.double/templates/machine-of-goals/realization-template.md`
 - system-prompt: `.double/prompts/machine-of-goals/system/plan-synthesis.md`

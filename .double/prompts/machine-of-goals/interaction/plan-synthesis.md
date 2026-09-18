@@ -16,8 +16,9 @@ We are going to turn selected path options into a plan project.
 
 Current steps: `03-plan-synthesis` and `04-plan-review-and-decision`.
 Default mode: `planning`.
-Expected outputs: `plan-artifact`, `plan-revision-snapshot` after path
-confirmation, `realization-decision`, and the persistent `realization-artifact`
+Expected outputs: `plan-artifact`; `plan-revision-snapshot` when the first
+executable baseline is frozen or an existing realized plan is semantically
+revised; `realization-decision`; and the persistent `realization-artifact`
 created before execution.
 
 The plan should explain how the current state can move toward the target state.
@@ -49,15 +50,20 @@ boundaries explicit through an interactive review:
 4. Only after confirmation, select a compatible realization row or append a
    new row to section 10 of `plan.md`. A different selected path or subplan
    always creates a new row, even when the same mechanism is reused.
-5. Copy the updated `plan.md` to
-   `<goal-directory>/realizations/plan-revision-<N>.md`. Rebase relative links
-   for the deeper directory and never overwrite an existing snapshot.
+5. If this is the first realization, set revision 1 and copy the updated
+   `plan.md` to `<goal-directory>/realizations/plan-revision-1.md`. Rebase
+   relative links and clear displayed-run metadata and derived progress. If a
+   later realization uses unchanged plan content, reuse the current snapshot.
 6. Create `realizations/<realization-record-id>.md`, link it from the decision
    and registry row, and only then offer transition to `05-plan-realization`.
 
-Execution state will be stored in a new `plan-run`, not in `plan.md`.
+Authoritative execution state will be stored in a new `plan-run`. Current
+`plan.md` may later mirror only its matching-revision emoji projection.
 Registering a manual or interactive realization does not change single-pass
 style.
+
+Before any realization exists, keep both revision fields null and apply all
+plan clarification directly to `plan.md` without creating snapshots.
 
 Put Markdown links in plan-map cells, stage details, decision fields, and
 subgoal boundaries where their relationships are useful. Do not add a repeated

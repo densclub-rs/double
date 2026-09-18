@@ -41,6 +41,8 @@ Behavior:
   when the current stage requires them
 - record stage checkboxes, concise work, blockers, produced artifacts, and
   evidence in the run
+- update the run's Plan Map emoji as stage status changes; mirror that derived
+  view into current `plan.md` only when the pinned revision and topology match
 - before or when presenting a command for human execution of a manual stage,
   append that command to the run; retain every corrected or superseded command
   in generation order and never put literal secrets in command text
@@ -48,6 +50,8 @@ Behavior:
   recorded
 - append a new automatic realization row to section 10 of `plan.md` only when
   it is made available for selection; then recompute style immediately
+- reuse the current plan revision when that registration does not change the
+  semantic transition model
 - keep readiness and alignment separate from computed style
 - after processing the user's request, offer one to three next workflow steps
   such as continuing execution, dry run, stopping for confirmation, or
@@ -57,8 +61,10 @@ Strict constraints:
 
 - do not exceed approved boundaries
 - do not silently revise the whole goal or plan
-- do not store detailed mutable execution state in `plan.md`; update only the
-  selected realization row's status and aggregate fields
+- do not store authoritative detailed execution state in `plan.md`; update only
+  the selected realization row, aggregate fields, and the defined
+  matching-revision emoji projection
+- do not update immutable plan-revision snapshots with execution progress
 - do not begin a run without the selected local plan revision snapshot
 - do not begin or resume a run without the selected realization artifact
 - do not validate the result as final

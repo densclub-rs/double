@@ -34,15 +34,23 @@ dialogue with concise questions until an explicit decision is reached. Then
 decide the next workflow direction: continue, branch, revise, reformulate,
 pause, close, or request export.
 
-Record the validation decision in the run. For a terminal result, replace the
-selected realization row's latest `running` result in `plan.md` without
-incrementing run count again, then apply the configured retention limit. Revise
-the plan topology only when the intended transition model must change.
+Record the validation decision in the run and update the stage's Plan Map
+emoji. Mirror it into current `plan.md` only when revision and topology match;
+never update an immutable plan-revision snapshot. For a terminal result,
+replace the selected realization row's latest `running` result in `plan.md`
+without incrementing run count again, then apply the configured retention
+limit. Revise the plan topology only when the intended transition model must
+change.
 
 When `plan.md` is revised for later use, increment `plan-revision` and copy it
 to `<goal-directory>/realizations/plan-revision-<N>.md`. Rebase relative links
 for the deeper directory and never overwrite an earlier snapshot. Do not allow
 a later decision or run to use the revision before this copy exists.
+
+Create that revision only for a semantic clarification of the transition model
+after a realization exists. Realization registration against unchanged plan
+content, aggregate statistics, timestamps, and progress projection do not
+revise the plan.
 
 Confirm that the realization artifact and exact plan, realization revision, and
 evidence links resolve. Update terminal run status in the realization artifact.

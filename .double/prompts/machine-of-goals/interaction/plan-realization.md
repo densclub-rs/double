@@ -34,8 +34,10 @@ Before action, state:
 Use dry run when requested or required. Create or resume
 `<goal-directory>/run/<realization-record-id>--<YYYYMMDDTHHMMSSZ>.md`. Stop when the
 next action would exceed approved boundaries or when the run result is ready
-for validation. Keep detailed mutable status and checkboxes in the run; update
-only the realization row's aggregate fields in `plan.md`.
+for validation. Keep detailed mutable status and checkboxes in the run. Update
+its revision-scoped Plan Map emoji as stage state changes. The current
+`plan.md` may mirror that projection only when its revision and topology match
+the run; never change an immutable plan-revision snapshot for progress.
 
 Before or when showing the user any command generated for manual execution of
 the selected stage, append the same safe-to-share command to the current run.
@@ -52,6 +54,9 @@ Before execution, require the exact plan revision link to resolve to
 resolvable realization revision link. A VCS plan permalink may supplement but
 must not replace the local snapshot. Maintain `run/index.md`, and link stages,
 outputs, and evidence in their run contexts.
+
+When an automatic realization is registered against unchanged plan content,
+reuse the current plan revision; registration alone does not revise the plan.
 
 After responding, offer the next useful workflow movement. Name the next step,
 mode, responsible agent, and expected artifact when known.

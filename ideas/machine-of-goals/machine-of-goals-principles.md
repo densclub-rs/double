@@ -92,6 +92,13 @@ The understandability of the plan is the minimal contract for moving to realizat
 
 - Future plan artifacts should preserve the initial state, target state, stages, subgoals, and possible transitions.
 - The plan may be clarified during execution if controlled movement toward the goal is preserved.
+- Before the first realization, every clarification updates only `plan.md` and
+  does not create a revision snapshot.
+- The first registered realization freezes revision 1 as the first executable
+  baseline. A later semantic clarification creates the next revision and marks
+  affected realizations for alignment review.
+- Registry, statistics, and presentation-only progress changes do not create a
+  plan revision when the transition model is unchanged.
 - The graph nature of the plan should be considered when choosing a path, reviewing stages, and introducing new subgoals.
 - The principle does not prescribe a concrete graph format.
 
@@ -106,6 +113,9 @@ The understandability of the plan is the minimal contract for moving to realizat
 - Treating a plan as ready only because there is a list of actions.
 - Starting realization without understanding how the actions are connected to the target state.
 - Forbidding changes to the plan when new stages, paths, or subgoals appear.
+- Creating plan-revision snapshots while the plan is still an unrealized draft.
+- Creating a new plan revision only because another realization is registered
+  against unchanged plan content.
 
 #### Questions
 
@@ -390,7 +400,10 @@ Recent run logs explain how the plan is being realized here and now. Long-term c
   result to `running`; terminal validation replaces the result without a second
   increment.
 - The normal retained depth is the latest three to five runs per realization.
-- `plan.md` stores aggregate run count, latest run time, and latest result without links to individual run files.
+- `plan.md` stores aggregate run count, latest run time, and latest result
+  without links to individual run files. Its Plan Map may additionally mirror
+  emoji progress from one explicitly linked run when revision and topology
+  match.
 - `realizations/<realization-record-id>.md` links every active, pinned, or retained run for that realization.
 - Every command generated for a human to execute while manually performing a
   plan stage is appended to the current run in generation order before or when
@@ -406,12 +419,17 @@ Recent run logs explain how the plan is being realized here and now. Long-term c
   secrets and not a complete trace of commands executed inside an automatic
   realization.
 - The principle does not require individual run links in the aggregate plan registry.
+- The run remains the authoritative execution record; the Plan Map projection
+  is presentation-only and immutable revision snapshots never receive it.
 
 #### Anti-Patterns
 
 - Keeping an unbounded file per execution as permanent plan history.
 - Computing cumulative run count only from files that remain under `run/`.
-- Storing mutable run checkboxes directly in `plan.md`.
+- Storing mutable run checkboxes or authoritative execution details directly in
+  `plan.md` instead of the run.
+- Mirroring progress from a different plan revision or changing an immutable
+  revision snapshot to show later execution state.
 - Giving the user a command for manual stage execution without first recording
   the same safe-to-share command in the current run.
 - Replacing a failed generated command in place and thereby losing what the

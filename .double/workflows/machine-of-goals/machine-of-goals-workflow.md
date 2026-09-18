@@ -274,9 +274,9 @@ Every realization registry row has:
 
 When another path or subplan is selected, add a new realization row even if it
 uses the same realization mechanism or implementation. Preserve the earlier row
-as history; never replace it with the new selection. If the current plan
-revision already has a snapshot, increment `plan-revision` before appending the
-new row and creating the next snapshot.
+as history; never replace it with the new selection. Registering another
+realization against unchanged plan content reuses the current plan revision and
+does not increment `plan-revision`.
 
 Automatic realizations must implement validation of the initial state, required
 intermediate results, and final state defined by the plan. Creating an
@@ -402,14 +402,27 @@ route to its origin without requiring the provider project to maintain a
 consumer backlink. Use Plan Exchange only when material is copied, adapted, or
 packaged.
 
-Planning may explicitly follow `revision: current`. Before a realization
-decision is committed, copy the confirmed current `plan.md` to
-`<goal-directory>/realizations/plan-revision-<N>.md`, where `<N>` is the
-positive integer in `plan-revision`. Rebase relative Markdown links for the
-deeper directory while preserving the plan's semantic content. A snapshot that
-already exists must never be overwritten. A changed plan topology or a new
-realization selection requires the next revision number and a new snapshot;
-aggregate-only updates to an existing realization row do not.
+Planning before the first realization explicitly follows `revision: current`.
+During this draft phase, keep both `plan-revision` and
+`plan-revision-artifact` null, apply every clarification directly to `plan.md`,
+and do not create a revision snapshot.
+
+Before the first realization decision is committed, set `plan-revision` to 1,
+set `plan-revision-artifact` to the corresponding local path, and copy the
+confirmed current `plan.md` to
+`<goal-directory>/realizations/plan-revision-1.md`. This is the first immutable
+executable baseline. Before copying, clear any displayed-run metadata and
+derived progress markers so the snapshot contains the stable transition model
+rather than mutable execution presentation. Rebase relative Markdown links for
+the deeper directory while preserving the plan's semantic content.
+
+After at least one realization exists, a semantic clarification of the current
+transition model increments `plan-revision`, updates
+`plan-revision-artifact`, and creates the corresponding snapshot before the
+revised plan is used by a decision or run. A snapshot that already exists must
+never be overwritten. Registering another realization against unchanged plan
+content, aggregate registry updates, and progress projection do not create a
+new revision.
 
 A realization decision and every concrete run must link the exact local plan
 revision snapshot and exact local realization-artifact revision. An exact
@@ -421,17 +434,26 @@ alternative plan variants.
 
 ## Plan Revision History Rule
 
-`plan.md` is the current editable transition model. Its realization history is
-stored under `<goal-directory>/realizations/` as immutable plan copies named
-`plan-revision-<N>.md`.
+`plan.md` is always the current editable transition model. Before it has any
+registered realization, it is an unrealized draft: `plan-revision` and
+`plan-revision-artifact` are null, every clarification updates only `plan.md`,
+and no revision history exists.
 
-Create the snapshot after the user confirms the selected path or subplan and
-before committing the realization decision. When validation requires a later
-change to the plan topology, or when another realization row is added,
-increment `plan-revision` and create the corresponding new snapshot before
-another decision or run uses that revision. Aggregate-only updates to an
-existing realization row do not create a plan revision. Do not edit or replace
-an existing snapshot.
+Registering the first realization freezes the confirmed plan as immutable
+revision 1 under `<goal-directory>/realizations/plan-revision-1.md`. This
+baseline gives the realization decision and later runs an exact local plan
+reference; it does not imply that draft clarification had created earlier
+revisions.
+
+Once a realization exists, any later semantic clarification of the intended
+transition model increments `plan-revision` and creates the corresponding new
+snapshot before that revised plan is used by another decision or run. Mark
+realizations pinned to an earlier revision `review-required`. Registration of
+another realization against the unchanged plan, aggregate-only registry
+updates, timestamps, and matching-revision progress projection do not create a
+plan revision. Do not edit or replace an existing snapshot. Every snapshot has
+no displayed run and neutral progress markers because revision history
+preserves the transition model, not execution state.
 
 ## Plan Run Rule
 
@@ -444,9 +466,28 @@ working artifact:
 ```
 
 The run records the plan and realization revisions, selected paths or subplans,
-initial-state validation, stage checkboxes, concise execution notes,
-intermediate validation, blockers, final-state validation, and terminal result.
-The run, not `plan.md`, is the source of execution status.
+initial-state validation, stage statuses, concise execution notes, intermediate
+validation, blockers, final-state validation, and terminal result. Its Plan Map
+uses these visual markers:
+
+- `⚪` not started
+- `🔄` in progress
+- `🟠` performed and awaiting validation
+- `✅` validated and accepted
+- `🟡` partial
+- `⛔` blocked
+- `❌` failed or rejected
+- `🛠️` needs revision
+- `➖` not selected for this run
+
+The run, not `plan.md`, is the source of execution status. The current mutable
+`plan.md` may project one explicitly linked run into its Plan Map only when the
+run's pinned `plan-revision` equals the plan's current revision and the stage
+topology matches. Keep the displayed run, revision, and last synchronization
+time next to the map. Clear the projection when no run is being displayed.
+Never update an immutable `realizations/plan-revision-<N>.md` snapshot with
+execution progress. When a run uses an older revision, its own Plan Map is the
+revision-scoped visual view.
 
 Concise notes do not permit generated manual instructions to be omitted. Every
 command generated for a human to execute while manually performing a selected
@@ -676,8 +717,9 @@ external implementation artifact, or a different realization route.
     row to section 10 of `plan.md`; selecting another path always creates a new
     row, even when the realization mechanism is reused
   - recompute plan style from the realization rows
-  - copy the updated `plan.md` to `realizations/plan-revision-<N>.md` and rebase
-    its relative links
+  - when this is the first realization, set the plan revision to 1 and freeze
+    `realizations/plan-revision-1.md`; otherwise reuse the current revision when
+    the plan content has not changed
   - create `realizations/<realization-record-id>.md` from the confirmed
     realization row and decision before advancing to the first run
   - define the first entry point
@@ -685,15 +727,16 @@ external implementation artifact, or a different realization route.
   - set automation boundaries, confirmation points, dry-run needs, validation
     strategy, and plan revision conditions
 - produced-outputs:
-  - `plan-revision-snapshot`
+  - `plan-revision-snapshot` when the first executable baseline is frozen
   - `realization-decision`
   - `realization-artifact`
   - `updated-plan-artifact` when a realization row is appended
 - transition-condition:
-  - the user has explicitly confirmed the selected path or subplan, the local
-    selected realization row, plan revision snapshot, and realization artifact
-    exist without replacing earlier history, and the user has confirmed how the
-    plan will start, including the control boundaries under which it may proceed
+  - the user has explicitly confirmed the selected path or subplan; the local
+    selected realization row, current plan revision snapshot, and realization
+    artifact exist without replacing earlier history; and the user has
+    confirmed how the plan will start, including the control boundaries under
+    which it may proceed
 - next-step:
   - `05-plan-realization`
 
@@ -717,13 +760,19 @@ external implementation artifact, or a different realization route.
   - append a new automatic realization row to section 10 of `plan.md` when the
     user chooses to make it available for selection
   - recompute plan style immediately when registration changes
+  - reuse the current plan revision when registration does not change the
+    semantic transition model
   - when creating a run, increment run count and set latest run time and
     `running` result in the selected realization row in `plan.md`
+  - maintain emoji progress in the run's Plan Map and, when the pinned revision
+    and topology match the current plan, mirror it as a derived projection in
+    the current `plan.md` Plan Map
 - produced-outputs:
   - `plan-run`
   - `updated-realization-artifact`
   - `run-index`
-  - `updated-plan-artifact` when a realization is registered or a run starts
+  - `updated-plan-artifact` when a realization is registered, a run starts, or
+    a matching-revision progress projection changes
 - transition-condition:
   - the run has produced a stage or final result that can be validated, or is
     blocked and needs plan or realization revision
@@ -740,10 +789,13 @@ external implementation artifact, or a different realization route.
   - conduct validation as a dialogue until the user confirms the stage result,
     rejects it, marks it partial, or asks for revision
   - record the validation decision and terminal result in the current run
+  - update the run's Plan Map emoji after validation and mirror it in the
+    current `plan.md` only when its revision and topology still match
   - replace the selected realization row's latest `running` result with the
     terminal result in `plan.md` without incrementing run count again
-  - preserve plan topology in `plan.md`; revise it only when execution feedback
-    changes the intended transition model
+  - preserve plan topology in `plan.md`; an emoji-only progress projection is
+    not a topology revision, while execution feedback changes the plan only
+    when it changes the intended transition model
   - when `plan.md` is revised, increment `plan-revision` and copy the revised
     plan to a new `realizations/plan-revision-<N>.md` before later execution
   - enforce bounded run retention after terminal statistics have been updated
