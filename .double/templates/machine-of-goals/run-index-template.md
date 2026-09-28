@@ -20,7 +20,7 @@ id: <goal-id>-run-index
 kind: run-index
 template-id: run-index-template
 project-id: <stable-project-id>
-produced-by: plan-realization-agent
+produced-by: machine-of-goals/plan-realization-agent
 artifact-path: ./run/index.md
 goal-id: <goal-id>
 derived-from:

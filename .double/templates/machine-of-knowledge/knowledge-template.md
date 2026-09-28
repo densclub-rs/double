@@ -18,7 +18,7 @@ derived-from:
 ---
 id: <unique-knowledge-id>
 kind: knowledge-artifact
-produced-by: knowledge-extraction-agent
+produced-by: machine-of-knowledge/knowledge-extraction-agent
 type: <static-or-dynamic>
 value-type: <text-or-binary>
 observed-at: <date-or-date-time-when-the-value-was-last-acquired>

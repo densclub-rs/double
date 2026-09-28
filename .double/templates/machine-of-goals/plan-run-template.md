@@ -20,7 +20,7 @@ id: <goal-id>-run-<realization-record-id>-<YYYYMMDDTHHMMSSZ>
 kind: plan-run
 template-id: plan-run-template
 project-id: <stable-project-id>
-produced-by: plan-realization-agent
+produced-by: machine-of-goals/plan-realization-agent
 artifact-path: ./run/<realization-record-id>--<YYYYMMDDTHHMMSSZ>.md
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>

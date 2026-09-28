@@ -22,7 +22,7 @@ Use this template when the user says they are working on a `mini-idea` or `sub-i
 id: <mini-idea-artifact-id>
 kind: mini-idea-artifact
 status: draft
-produced-by: idea-capture-agent
+produced-by: machine-of-ideas/idea-capture-agent
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
 parent-idea:

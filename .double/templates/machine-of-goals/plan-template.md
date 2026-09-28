@@ -20,7 +20,7 @@ id: <goal-id>-plan
 kind: plan-artifact
 template-id: plan-template
 project-id: <stable-project-id>
-produced-by: plan-synthesis-agent
+produced-by: machine-of-goals/plan-synthesis-agent
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
 goal-id: <goal-id>

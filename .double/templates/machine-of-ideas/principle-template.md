@@ -20,7 +20,7 @@ derived-from:
 id: <principle-artifact-id>
 kind: principle-artifact
 mindmap-plugin: basic
-produced-by: principle-synthesis-agent
+produced-by: machine-of-ideas/principle-synthesis-agent
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
 publication-path: <root-idea-directory>/<root-idea-id>-principles.md

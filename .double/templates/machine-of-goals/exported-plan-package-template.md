@@ -20,7 +20,7 @@ id: <goal-id>-exported-plan-package
 kind: exported-plan-package
 template-id: exported-plan-package-template
 project-id: <stable-project-id>
-produced-by: plan-exchange-agent
+produced-by: machine-of-goals/plan-exchange-agent
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
 goal-id: <goal-id>

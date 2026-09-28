@@ -20,7 +20,7 @@ id: <realization-record-id>
 kind: realization-artifact
 template-id: realization-template
 project-id: <stable-project-id>
-produced-by: plan-synthesis-agent
+produced-by: machine-of-goals/plan-synthesis-agent
 artifact-path: ./realizations/<realization-record-id>.md
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>

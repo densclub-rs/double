@@ -20,7 +20,7 @@ id: <goal-id>-path-options
 kind: path-options
 template-id: path-options-template
 project-id: <stable-project-id>
-produced-by: path-discovery-agent
+produced-by: machine-of-goals/path-discovery-agent
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
 goal-id: <goal-id>

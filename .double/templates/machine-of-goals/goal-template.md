@@ -20,7 +20,7 @@ id: <goal-id>
 kind: goal-artifact
 template-id: goal-template
 project-id: <stable-project-id>
-produced-by: goal-formulation-agent
+produced-by: machine-of-goals/goal-formulation-agent
 owner-id: double-project
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>

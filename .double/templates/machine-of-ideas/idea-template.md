@@ -21,7 +21,7 @@ derived-from:
 id: <idea-artifact-id>
 kind: idea-artifact
 status: draft
-produced-by: idea-capture-agent
+produced-by: machine-of-ideas/idea-capture-agent
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
 derived-from:
