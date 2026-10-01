@@ -170,6 +170,32 @@ EOF
 }
 
 cd "$fixture_dir"
+begin_test 'machine list follows the current catalog and deduplicates machine directories'
+mkdir -p 'catalog workspace/.double/agents/custom-machine'
+mkdir -p 'catalog workspace/.double/workflows/custom-machine'
+mkdir -p 'catalog workspace/.double/skills/double-agent/nested-directory'
+mkdir -p 'catalog workspace/.double/templates/machine-of-knowledge'
+touch 'catalog workspace/.double/agents/not-a-machine.md'
+(
+  cd 'catalog workspace'
+  run_release list-machines > list.out 2> list.err
+  tail -n +2 list.out > names.out
+  printf '%s\n' custom-machine double-agent machine-of-knowledge > expected.out
+  diff -u expected.out names.out
+  [ ! -s list.err ]
+  mv .double/agents/custom-machine .double/agents/renamed-machine
+  run_release list-machines > renamed.out
+  grep -Fxq renamed-machine renamed.out
+  mkdir -p empty/.double missing
+  (cd empty && run_release list-machines) > empty.out 2> empty.err
+  [ "$(wc -l < empty.out | tr -d ' ')" -eq 1 ]
+  [ ! -s empty.err ]
+  (cd missing && run_release list-machines) > missing.out 2> missing.err
+  grep -Fq 'Working catalog .double was not found' missing.err
+  [ ! -e dist ]
+)
+pass_test
+
 git init -q
 git config user.email release-test@example.invalid
 git config user.name release-test
@@ -246,6 +272,70 @@ begin_test 'publish is restricted outside GitHub Actions'
 run_release publish --tag machine-of-ideas-1.2.4 > publish.out 2> publish.err
 grep -Fq 'Publish is restricted to GitHub Actions' publish.err
 pass_test
+
+begin_test 'local package includes working changes, untracked files, and all statuses'
+write_machine_version_knowledge machine-of-ideas 2.0.0
+printf '\nLocal edit\n' >> .double/agents/machine-of-ideas/stable.md
+write_machine_file '.double/agents/machine-of-ideas/new file.md' draft
+run_release package --machine machine-of-ideas > local.out 2> local.err
+local_archive=dist/double-machine-of-ideas-2.0.0-local.tar.gz
+for filename in stable.md draft.md rc.md missing-status.md 'new file.md'; do
+  assert_contains "$local_archive" ".double/agents/machine-of-ideas/$filename"
+done
+! assert_contains "$local_archive" .double/agents/machine-of-goals/draft.md
+tar -xOf "$local_archive" .double/agents/machine-of-ideas/stable.md > exported.md
+grep -Fxq 'Local edit' exported.md
+grep -Fxq 'version: 2.0.0' exported.md
+! grep -q '^version:' .double/agents/machine-of-ideas/stable.md
+(cd dist && sha256sum -c SHA256SUMS.txt)
+run_release package --tag machine-of-ideas-1.2.4 > tagged.out 2> tagged.err
+! tar -xOf dist/double-machine-of-ideas-1.2.4.tar.gz .double/agents/machine-of-ideas/stable.md | grep -Fxq 'Local edit'
+! assert_contains dist/double-machine-of-ideas-1.2.4.tar.gz '.double/agents/machine-of-ideas/new file.md'
+pass_test
+
+begin_test 'all three machines can be packaged from a directory without Git'
+mkdir 'plain workspace'
+cd 'plain workspace'
+for selected_machine in machine-of-ideas machine-of-goals machine-of-knowledge; do
+  write_machine_file ".double/templates/$selected_machine/example.md" draft
+  write_machine_version_knowledge "$selected_machine" 3.2.1
+done
+# Block Git explicitly: this directory happens to be inside the fixture repo.
+mkdir bin
+printf '#!/usr/bin/env bash\nexit 99\n' > bin/git
+chmod +x bin/git
+for selected_machine in machine-of-ideas machine-of-goals machine-of-knowledge; do
+  PATH="$PWD/bin:$PATH" run_release package --machine "$selected_machine" > local.out 2> local.err
+  assert_contains "dist/double-$selected_machine-3.2.1-local.tar.gz" ".double/templates/$selected_machine/example.md"
+done
+pass_test
+
+begin_test 'local arguments, empty selection, and publish without a tag do not create packages'
+mv dist saved-dist
+run_release package > missing.out 2> missing.err
+run_release package --machine ../invalid > invalid.out 2> invalid.err
+run_release package --machine machine-of-ideas --tag machine-of-ideas-3.2.1 > conflict.out 2> conflict.err
+run_release publish --machine machine-of-ideas > publish.out 2> publish.err
+grep -Fq 'required for publish' publish.err
+mv .double/templates/machine-of-ideas .double/templates/other
+run_release package --machine machine-of-ideas > empty.out 2> empty.err
+grep -Fq 'No local files matched' empty.err
+[ ! -e dist ]
+pass_test
+
+begin_test 'local package rejects missing or invalid version knowledge'
+capture_status run_release package --machine machine-of-goals > version.out 2> version.err
+[ "$command_status" -eq 0 ]
+mv knowledge/machine-of-goals-version knowledge/saved-version
+capture_status run_release package --machine machine-of-goals > version.out 2> version.err
+[ "$command_status" -eq 1 ]
+grep -Fq 'Machine version knowledge is missing' version.err
+write_machine_version_knowledge machine-of-goals invalid
+capture_status run_release package --machine machine-of-goals > version.out 2> version.err
+[ "$command_status" -eq 1 ]
+grep -Fq 'Invalid local machine version' version.err
+pass_test
+cd "$fixture_dir"
 
 test_release_tag_package
 

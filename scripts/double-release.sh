@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Package or publish a tagged Double machine release.
+# Package a local or tagged Double machine release, or publish a tagged release.
 # Implementation of the github-actions-maintenance subplan.
 
 set -u
@@ -33,8 +33,15 @@ printf '%sImplementation of subplan:%s %sgithub-actions-maintenance%s\n' "$color
 usage() {
   printf '%sUsage:%s\n' "$color_bold" "$color_reset"
   cat <<'EOF'
+  scripts/double-release.sh list-machines
   scripts/double-release.sh package --tag <machine>-<major>.<minor>.<patch>[-dev|-rc]
+  scripts/double-release.sh package --machine <machine-of-ideas|machine-of-goals|machine-of-knowledge>
   scripts/double-release.sh publish --tag <machine>-<major>.<minor>.<patch>[-dev|-rc]
+
+Without --tag, package reads the current directory (no Git repository required),
+includes all machine Markdown files regardless of status, and uses local version
+knowledge. Output: dist/double-<machine>-<version>-local.tar.gz and SHA256SUMS.txt.
+Use either --tag or --machine. Publish always requires --tag.
 EOF
 }
 
@@ -102,6 +109,7 @@ command_name="${1:-}"
 shift || true
 
 tag=""
+machine=""
 while [ "$#" -gt 0 ]; do
   case "$1" in
     --tag)
@@ -110,6 +118,14 @@ while [ "$#" -gt 0 ]; do
         exit 0
       fi
       tag="$2"
+      shift 2
+      ;;
+    --machine)
+      if [ "$#" -lt 2 ]; then
+        warning 'Missing value for --machine; no package was created.'
+        exit 0
+      fi
+      machine="$2"
       shift 2
       ;;
     --help|-h)
@@ -123,43 +139,77 @@ while [ "$#" -gt 0 ]; do
   esac
 done
 
+if [ "$command_name" = 'list-machines' ]; then
+  if [ ! -d .double ]; then
+    warning 'Working catalog .double was not found in the current directory.'
+    exit 0
+  fi
+  for machine_dir in .double/*/*; do
+    [ -d "$machine_dir" ] || continue
+    printf '%s\n' "${machine_dir##*/}"
+  done | LC_ALL=C sort -u
+  exit 0
+fi
+
 if [ "$command_name" != 'package' ] && [ "$command_name" != 'publish' ]; then
   usage >&2
   exit 0
 fi
 
 if [ -z "$tag" ]; then
-  warning 'A release tag is required; no package was created.'
+  if [ "$command_name" = 'publish' ]; then
+    warning 'A release tag is required for publish; no package was created.'
+    exit 0
+  fi
+  case "$machine" in
+    machine-of-ideas|machine-of-goals|machine-of-knowledge) ;;
+    *) warning 'Select --machine machine-of-ideas, machine-of-goals, or machine-of-knowledge; no package was created.'; exit 0 ;;
+  esac
+  required_status=''
+elif [ -n "$machine" ]; then
+  warning 'Use either --tag or --machine; no package was created.'
   exit 0
-fi
-
-if [[ ! "$tag" =~ ^([a-z0-9][a-z0-9-]*)-([0-9]+\.[0-9]+\.[0-9]+)(-(dev|rc))?$ ]]; then
+elif [[ ! "$tag" =~ ^([a-z0-9][a-z0-9-]*)-([0-9]+\.[0-9]+\.[0-9]+)(-(dev|rc))?$ ]]; then
   warning "Invalid release tag: $tag; no package was created."
   exit 0
+else
+  machine="${BASH_REMATCH[1]}"
+  version="${BASH_REMATCH[2]}"
+  release_class="${BASH_REMATCH[4]:-stable}"
+
+  case "$release_class" in
+    dev) required_status='draft' ;;
+    rc) required_status='release-candidate' ;;
+    stable) required_status='stable' ;;
+  esac
+
+  if ! git rev-parse --verify --quiet "refs/tags/$tag" >/dev/null; then
+    warning "Git tag does not exist: $tag; no package was created."
+    exit 0
+  fi
 fi
 
-machine="${BASH_REMATCH[1]}"
-version="${BASH_REMATCH[2]}"
-release_class="${BASH_REMATCH[4]:-stable}"
-
-case "$release_class" in
-  dev) required_status='draft' ;;
-  rc) required_status='release-candidate' ;;
-  stable) required_status='stable' ;;
-esac
-
-if ! git rev-parse --verify --quiet "refs/tags/$tag" >/dev/null; then
-  warning "Git tag does not exist: $tag; no package was created."
-  exit 0
-fi
+read_source() {
+  if [ -n "$tag" ]; then
+    git show "$tag:$1"
+  else
+    cat "$1"
+  fi
+}
 
 version_knowledge_path="knowledge/${machine}-version/${machine}-version.md"
-version_knowledge_contents="$(git show "$tag:$version_knowledge_path" 2>/dev/null)" || {
+version_knowledge_contents="$(read_source "$version_knowledge_path" 2>/dev/null)" || {
   error "Machine version knowledge is missing: $version_knowledge_path."
   exit 1
 }
 machine_version="$(printf '%s\n' "$version_knowledge_contents" | knowledge_value)"
-if [ "$machine_version" != "$version" ]; then
+if [ -z "$tag" ]; then
+  if [[ ! "$machine_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    error "Invalid local machine version: '${machine_version:-missing}'."
+    exit 1
+  fi
+  version="$machine_version"
+elif [ "$machine_version" != "$version" ]; then
   error "Machine version mismatch: tag is '$version', knowledge value is '${machine_version:-missing}'."
   exit 1
 fi
@@ -173,19 +223,23 @@ cleanup() {
 }
 trap cleanup EXIT HUP INT TERM
 
-git ls-tree -r --name-only "$tag" -- .double \
+if [ -n "$tag" ]; then
+  git ls-tree -r --name-only "$tag" -- .double
+elif [ -d .double ]; then
+  find .double -type f -name '*.md'
+fi \
   | awk -v selected_machine="/$machine/" \
       'index($0, selected_machine) && $0 ~ /\.md$/ { print }' \
   > "$candidate_file"
 
 while IFS= read -r path; do
   [ -n "$path" ] || continue
-  contents="$(git show "$tag:$path")" || {
-    warning "Could not read $path from $tag; candidate was excluded."
+  contents="$(read_source "$path")" || {
+    warning "Could not read $path; candidate was excluded."
     continue
   }
   status="$(printf '%s\n' "$contents" | frontmatter_value status)"
-  if [ "$status" != "$required_status" ]; then
+  if [ -n "$required_status" ] && [ "$status" != "$required_status" ]; then
     warning "Excluded $path: status '${status:-missing}' does not match '$required_status'."
     continue
   fi
@@ -193,18 +247,18 @@ while IFS= read -r path; do
 done < "$candidate_file"
 
 if [ ! -s "$selected_file" ]; then
-  warning "No $required_status files matched machine '$machine'; no package or GitHub Release was created."
+  warning "No ${required_status:-local} files matched machine '$machine'; no package or GitHub Release was created."
   exit 0
 fi
 
 while IFS= read -r path; do
   [ -n "$path" ] || continue
   mkdir -p "$temporary_dir/$(dirname "$path")"
-  git show "$tag:$path" | with_export_version "$version" > "$temporary_dir/$path"
+  read_source "$path" | with_export_version "$version" > "$temporary_dir/$path"
 done < "$selected_file"
 
 output_dir='dist'
-archive_name="double-$tag.tar.gz"
+archive_name="double-${tag:-$machine-$version-local}.tar.gz"
 archive_path="$output_dir/$archive_name"
 mkdir -p "$output_dir"
 tar -C "$temporary_dir" -czf "$archive_path" .double

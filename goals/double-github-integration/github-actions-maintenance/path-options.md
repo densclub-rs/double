@@ -1,6 +1,7 @@
 ---
 id: github-actions-maintenance-path-options
 kind: path-options
+template-id: path-options-template
 project-id: double
 produced-by: machine-of-goals/path-discovery-agent
 interaction-language: en
@@ -23,8 +24,8 @@ derived-from:
 - Goal: [GitHub Actions Maintenance](./github-actions-maintenance.md#github-actions-maintenance)
 - Scope: subgoal
 - Parent goal: [Double GitHub Integration](../double-github-integration.md#double-github-integration)
-- Current state: `release.yml` contains the release parsing, package-selection,
-  archive, checksum, and GitHub Release logic in one GitHub Actions workflow.
+- Current state: the repository contains a shared release script, local tests,
+  and a thin GitHub Actions adapter to preserve and maintain.
 - Target state: a maintainable release implementation supports the accepted
   module tag and status-filtering contract, is callable on a local laptop for
   package testing, and is invoked autonomously by GitHub Actions for releases.
@@ -41,11 +42,9 @@ derived-from:
   - `./github-actions-maintenance.md`
   - `.github/workflows/release.yml`
   - Machine of Goals path-discovery materials
-- Existing analogs checked: the current `release.yml` is the local analog; no
-  reusable local release script exists.
-- Known limitations of discovery: the exact shell-script interface, directory,
-  and test cases remain planning decisions; no implementation or GitHub run was
-  performed.
+- Existing analogs checked: the repository release script, local tests, and workflow.
+- Known limitations of discovery: the alternatives describe architectural choices;
+  this catalog does not certify current local or hosted behavior.
 
 ## 3. Path Options
 
@@ -58,7 +57,7 @@ derived-from:
 - Description: extend the Bash blocks embedded in `release.yml` to parse the
   accepted tags, select the matching `.double` machine files, package them, and
   publish the result.
-- Why it is plausible: the current workflow already implements these concerns
+- Why it is plausible: the release concerns can be expressed
   directly in GitHub Actions.
 - Required resources: `release.yml`, GitHub Actions, GitHub Releases, and
   workflow-only validation.
@@ -68,7 +67,8 @@ derived-from:
 - Expected value: medium
 - Unknowns: local testing would require reproducing workflow behavior outside
   the workflow or accepting GitHub-only execution.
-- Reuse / import opportunity: reuse the current workflow's logic in place.
+- Reuse / import opportunity: adapt the shared release logic into workflow steps.
+- Lifecycle: discovered
 - Plan element: none; retained as an unselected alternative.
 - Recommendation: keep-as-alternative
 
@@ -105,11 +105,12 @@ derived-from:
     published GitHub Release assets are not subject to that retention rule
 - Expected cost: medium
 - Expected value: high
-- Unknowns: local test fixture strategy.
-- Reuse / import opportunity: extract and adapt the current workflow's tag,
-  package, checksum, and publication logic.
+- Unknowns: none blocking plan synthesis; fixture coverage is checked in S02.
+- Reuse / import opportunity: maintain the existing shared script and
+  thin adapter with the same tag, package, checksum, and publication contract.
+- Lifecycle: included-in-plan
 - Plan element: [S01: Specify the Release Contract](./plan.md#stage-s01).
-- Recommendation: candidate
+- Recommendation: include-in-plan
 
 <a id="reusable-composite-action"></a>
 
@@ -131,6 +132,7 @@ derived-from:
 - Unknowns: whether future workflows need the same reusable GitHub interface.
 - Reuse / import opportunity: reuse the current workflow steps in a
   GitHub-native component.
+- Lifecycle: deprecated
 - Plan element: none; rejected before plan synthesis.
 - Recommendation: reject
 
@@ -138,53 +140,15 @@ derived-from:
 
 | Path | Fit | Cost | Risk | Uncertainty | Expected Value | Recommendation |
 | --- | --- | --- | --- | --- | --- | --- |
-| `direct-workflow-rules` | medium | low | medium | low | medium | keep-as-alternative |
-| `shell-script-workflow-adapter` | high | medium | medium | medium | high | candidate |
-| `reusable-composite-action` | low | medium | medium | medium | low | reject |
+| [direct-workflow-rules](#direct-workflow-rules) | medium | low | medium | low | medium | keep-as-alternative |
+| [shell-script-workflow-adapter](#shell-script-workflow-adapter) | high | medium | medium | medium | high | include-in-plan |
+| [reusable-composite-action](#reusable-composite-action) | low | medium | medium | medium | low | reject |
 
 ## 5. Rejected or Deferred Paths
 
 - `reusable-composite-action`: rejected for the first release implementation
   because it does not satisfy native local package testing.
 
-## 6. Computed Plan Style
-
-- Computed style: `multi-pass`
-- Computed from: registered automatic realization
-  [`double-release-shell-workflow`](#double-release-shell-workflow)
-- Rule: registration, rather than file creation or first successful execution,
-  is the style transition point.
-
-<a id="registered-realizations"></a>
-
-## 7. Registered Realizations
-
-<a id="double-release-shell-workflow"></a>
-
-### Realization: Double Release Shell and Workflow
-
-- Realization id: `double-release-shell-workflow`
-- Kind: workflow
-- Definition and implementation:
-  [release program](../../../scripts/double-release.sh) and
-  [GitHub Actions adapter](../../../.github/workflows/release.yml)
-- Exact implementation references:
-  [release program at `3a86411`](https://github.com/densclub-rs/double/blob/3a86411a7b86d677174a36593d1820444412015d/scripts/double-release.sh)
-  and
-  [workflow at `1354130`](https://github.com/densclub-rs/double/blob/135413068f8d0f77e99bbd2680bbbc7efe187e04/.github/workflows/release.yml)
-- Supported path: [Shell Script with Thin Workflow Adapter](#shell-script-workflow-adapter)
-- Registration: registered
-- Readiness: ready
-- Alignment: review-required after the navigation-contract revision
-- Runs: `0` Machine of Goals run artifacts
-- Retained runs: [Run index](./run/index.md#github-actions-maintenance-run-index)
-
-## 8. Run Retention
-
-- Retained runs: [Run index](./run/index.md#github-actions-maintenance-run-index)
-- Maximum terminal runs per realization: `5`
-- Individual run files are not linked from this registry.
-
-## 9. Open Questions
+## 6. Open Questions
 
 None currently.

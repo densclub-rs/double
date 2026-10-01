@@ -1,8 +1,9 @@
 ---
 id: double-github-integration
 kind: goal-artifact
+template-id: goal-template
 project-id: double
-produced-by: goal-formulation-agent
+produced-by: machine-of-goals/goal-formulation-agent
 owner-id: double-project
 interaction-language: en
 artifact-language: en
@@ -101,7 +102,7 @@ maintenance, are defined by the `github-actions-maintenance` subgoal.
 ## 7. Constraints
 
 - Time: not yet specified.
-- Attention: formulate and realize the work incrementally through focused
+- Attention: formulate and carry out the work incrementally through focused
   subgoals; do not turn the parent goal into a single unbounded task list.
 - Money: no budget specified; prefer GitHub-native and freely available tools
   unless a later decision approves otherwise.
@@ -141,8 +142,7 @@ None currently.
 
 ## 11. Machine of Goals Artifacts
 
-- Path and realization registry: [Double GitHub Integration paths](./path-options.md#double-github-integration-path-options)
-- Plan: [Double GitHub Integration plan](./plan.md#double-github-integration-plan)
-- Retained execution attempts: [Run index](./run/index.md#double-github-integration-run-index)
-- Computed plan style: `multi-pass` because the delegated maintenance subplan
-  has a registered automatic realization.
+- Possible achievement paths: [Path options](./path-options.md#double-github-integration-path-options)
+- Plan: [Current plan](./plan.md#double-github-integration-plan)
+- Plan registry: [Registry](./plan.md#realization-registry)
+- Computed plan style: `single-pass`

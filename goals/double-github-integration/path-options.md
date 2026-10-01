@@ -1,6 +1,7 @@
 ---
 id: double-github-integration-path-options
 kind: path-options
+template-id: path-options-template
 project-id: double
 produced-by: machine-of-goals/path-discovery-agent
 interaction-language: en
@@ -21,9 +22,22 @@ derived-from:
 
 - Goal: [Double GitHub Integration](./double-github-integration.md#double-github-integration)
 - Scope: main goal
-- Current selected scope: GitHub release infrastructure
+- Current state: the repository has release infrastructure to preserve and maintain.
+- Target state: required directories exist and the maintenance subgoal satisfies its checks.
+- Success criteria: parent directory checks and the subgoal's S01–S04 criteria pass.
+- Constraints: preserve existing content and delegate release details to the subgoal.
 
-## 2. Path Options
+## 2. Discovery Scope
+
+- Mode: `research`
+- Sources inspected: [source goal](./double-github-integration.md#double-github-integration),
+  [maintenance goal](./github-actions-maintenance/github-actions-maintenance.md#github-actions-maintenance),
+  and [maintenance paths](./github-actions-maintenance/path-options.md#github-actions-maintenance-path-options).
+- Existing analogs checked: the repository's release-maintenance structure.
+- Known limitations of discovery: this catalog covers release infrastructure;
+  site publishing and other GitHub concerns remain outside the current plan.
+
+## 3. Path Options
 
 <a id="github-actions-release-infrastructure"></a>
 
@@ -33,39 +47,30 @@ derived-from:
 - Path type: delegated
 - Description: establish repository release infrastructure through the
   accepted GitHub Actions Maintenance subgoal.
-- Lifecycle: validated
+- Why it is plausible: the accepted subgoal owns the release contract and its checks.
+- Required resources: repository filesystem, maintenance plan, local tooling,
+  and authorized GitHub access for hosted checks.
+- Main risks: parent and subgoal completion criteria may diverge.
+- Expected cost: medium
+- Expected value: high
+- Unknowns: none affecting the current plan structure.
+- Reuse / import opportunity: reuse the local maintenance subplan.
+- Lifecycle: included-in-plan
+- Recommendation: include-in-plan
 - Plan element: [S03: Invoke GitHub Actions Maintenance](./plan.md#stage-s03)
 - Delegated subgoal: [GitHub Actions Maintenance](./github-actions-maintenance/github-actions-maintenance.md#github-actions-maintenance)
 - Delegated plan: [GitHub Actions Maintenance plan](./github-actions-maintenance/plan.md#github-actions-maintenance-plan)
 
-## 3. Computed Plan Style
+## 4. Comparison
 
-- Computed style: `multi-pass`
-- Computed from: the registered automatic realization of the delegated
-  maintenance subplan.
+| Path | Fit | Cost | Risk | Uncertainty | Expected Value | Recommendation |
+| --- | --- | --- | --- | --- | --- | --- |
+| [GitHub Actions Release Infrastructure](#github-actions-release-infrastructure) | high | medium | medium | low | high | include-in-plan |
 
-<a id="registered-realizations"></a>
+## 5. Rejected or Deferred Paths
 
-## 4. Registered Realizations
-
-<a id="github-actions-maintenance-realization"></a>
-
-### Realization: GitHub Actions Maintenance Subplan
-
-- Realization id: `github-actions-maintenance-realization`
-- Kind: workflow
-- Definition: [registered subgoal realization](./github-actions-maintenance/path-options.md#double-release-shell-workflow)
-- Supported path: [GitHub Actions Release Infrastructure](#github-actions-release-infrastructure)
-- Decision: [Shell-script workflow decision](./github-actions-maintenance/realization-decision.md#github-actions-maintenance-realization-decision)
-- Registration: registered
-- Readiness: ready
-- Alignment: aligned
-- Runs: `0` parent-plan run artifacts
-
-## 5. Run Retention
-
-- Retained parent-plan runs: [Run index](./run/index.md#double-github-integration-run-index)
-- Individual run files are not linked from this registry.
+Site publishing and other GitHub integration paths are deferred to separately
+formulated subgoals; no alternative release-infrastructure path is proposed.
 
 ## 6. Open Questions
 

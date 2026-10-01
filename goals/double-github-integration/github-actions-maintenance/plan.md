@@ -1,8 +1,9 @@
 ---
 id: github-actions-maintenance-plan
 kind: plan-artifact
+template-id: plan-template
 project-id: double
-produced-by: plan-synthesis-agent
+produced-by: machine-of-goals/plan-synthesis-agent
 interaction-language: ru
 artifact-language: en
 goal-id: github-actions-maintenance
@@ -10,12 +11,13 @@ goal-artifact: ./github-actions-maintenance.md
 path-options-artifact: ./path-options.md
 plan-artifact: ./plan.md
 goal-scope: subgoal
-plan-execution-style: multi-pass
+plan-execution-style: single-pass
 parent-goal-id: double-github-integration
 parent-plan-artifact: ../plan.md
-plan-revision: 1
+plan-revision: null
+plan-revision-artifact: null
 created-at: 2026-07-22T14:16:01Z
-updated-at: 2026-09-02T00:00:00Z
+updated-at: 2026-09-28T00:00:00Z
 derived-from:
   - ./github-actions-maintenance.md
   - ./path-options.md
@@ -29,11 +31,12 @@ derived-from:
 
 This plan defines one transition model for implementing and maintaining
 Double's GitHub Actions release workflow and its supporting scripts. It uses
-the selected shell-script/workflow-adapter path and keeps local packaging
-separate from GitHub publication.
+the shell-script/workflow-adapter path included in the plan and keeps local
+packaging separate from GitHub publication.
 
 - Source goal: [GitHub Actions Maintenance](./github-actions-maintenance.md#github-actions-maintenance)
-- Selected path: [Shell Script with Thin Workflow Adapter](./path-options.md#shell-script-workflow-adapter)
+- Source paths: [Path catalog](./path-options.md#github-actions-maintenance-path-options)
+- Included path: [Shell Script with Thin Workflow Adapter](./path-options.md#shell-script-workflow-adapter)
 - Parent plan: [Double GitHub Integration](../plan.md#double-github-integration-plan)
 
 ### Current State
@@ -63,18 +66,28 @@ restricted to GitHub Actions.
 - Final state checks: hosted workflow behavior agrees with the local contract
   for representative stable, `rc`, `dev`, no-match, and mismatch cases.
 - Evidence requirements: local test output, package and checksum inspection,
-  workflow configuration, and authorized hosted-run evidence.
+  workflow configuration, and authorized hosted-run evidence. The repository
+  owner reviews the S01 contract and local-test specification; shell tests and
+  hosted checks validate later stages.
 - Stop when validation cannot be completed: do not publish when the package,
   status filter, version check, checksum, or publication boundary diverges.
 
 ## 3. Plan Map
 
-| Stage | Kind | Inputs | Outputs | Possible Next Stages | Required Validation |
-| --- | --- | --- | --- | --- | --- |
-| [S01: Specify the Release Contract](#stage-s01) | stage | goal, path-options, workflow, version knowledge | release-script contract | [S02](#stage-s02) | contract covers local execution, CLI archive creation, tag, status, version, package, warning, and publication rules |
-| [S02: Implement and Validate Local Packaging](#stage-s02) | stage | [S01](#stage-s01) | validated local package and checksum behavior | [S03](#stage-s03) | local tests satisfy the S01 contract |
-| [S03: Adapt and Validate the GitHub Workflow](#stage-s03) | stage | [S01](#stage-s01), [S02](#stage-s02) | thin autonomous workflow adapter | [S04](#stage-s04) | workflow invokes the final script interface |
-| [S04: Validate the Hosted Release Operation](#stage-s04) | validation | [S02](#stage-s02), [S03](#stage-s03) | hosted validation evidence | none | hosted behavior agrees with the accepted contract |
+- Displayed run: none
+- Displayed plan revision: none
+- Progress synchronized at: never
+
+`⚪` is the neutral marker while no run is displayed; it does not assess
+existing repository behavior. Future progress is derived only from a run
+whose pinned revision and stage topology match this plan.
+
+| Progress | Stage | Kind | Inputs | Outputs | Possible Next Stages | Required Validation |
+| --- | --- | --- | --- | --- | --- | --- |
+| ⚪ | [S01: Specify the Release Contract](#stage-s01) | stage | goal, path-options, workflow, version knowledge | release-script contract | [S02](#stage-s02) | contract covers local execution, CLI archive creation, tag, status, version, package, warning, and publication rules |
+| ⚪ | [S02: Implement and Validate Local Packaging](#stage-s02) | stage | [S01](#stage-s01) | validated local package and checksum behavior | [S03](#stage-s03) | local tests satisfy the S01 contract |
+| ⚪ | [S03: Adapt and Validate the GitHub Workflow](#stage-s03) | stage | [S01](#stage-s01), [S02](#stage-s02) | thin autonomous workflow adapter | [S04](#stage-s04) | workflow invokes the final script interface |
+| ⚪ | [S04: Validate the Hosted Release Operation](#stage-s04) | validation | [S02](#stage-s02), [S03](#stage-s03) | hosted validation evidence | none | hosted behavior agrees with the accepted contract |
 
 ## 4. Stage Details
 
@@ -217,6 +230,11 @@ restricted to GitHub Actions.
 - Stop points: stop before changing repository settings or published assets
   without explicit confirmation.
 
+The maintained product artifacts are the [release program](../../../scripts/double-release.sh),
+[local validation script](../../../scripts/test-double-release.sh), and
+[workflow adapter](../../../.github/workflows/release.yml). S01 defines their
+contract, S02 checks local behavior, and S03–S04 check the adapter and hosted behavior.
+
 ## 5. Shared Dependencies
 
 - Internal dependencies: the goal artifact, path-options, release scripts, and
@@ -239,12 +257,15 @@ restricted to GitHub Actions.
 
 - Allowed automatic actions: local parsing, packaging, checksums, tests, and
   warnings.
-- Actions requiring confirmation: changing repository settings, creating or
-  updating a real GitHub Release, and altering published assets.
+- Actions requiring confirmation: starting each plan stage, changing workflow
+  rules or repository settings, creating or updating a real GitHub Release,
+  and altering published assets.
 - Actions not allowed: local `package` publication or use of repository secrets
-  beyond the automatic GitHub token.
+  beyond the automatic GitHub token; deleting existing workflow or script
+  content or published release assets.
 - Dry-run required before: the first real GitHub Release publication after
   workflow-adapter changes.
+- Explanation required before execution: explain each plan stage before starting it.
 
 ## 8. Revision and Alignment Conditions
 
@@ -254,20 +275,22 @@ restricted to GitHub Actions.
   testing and autonomous GitHub Actions publication.
 - Reformulate the goal when: releases no longer map one tag to one machine and
   maturity class.
-- Mark realizations `review-required` when: a registered realization diverges
-  from the goal's release contract or its validation evidence.
 
-## 9. Realization and Execution Context
+## 9. Subgoal Integration Boundaries
 
-- Current realization decision:
-  [Shell-script workflow decision](./realization-decision.md#github-actions-maintenance-realization-decision)
-- Registered realization:
-  [Double Release Shell and Workflow](./path-options.md#double-release-shell-workflow)
-- Retained execution attempts:
-  [Run index](./run/index.md#github-actions-maintenance-run-index)
-- Current plan revision: `1`; execution decisions must use an immutable VCS
-  permalink rather than this mutable current-plan link.
+No delegated child subgoals.
 
-## 10. Open Questions
+This plan receives the existing workflow and scripts directories from
+[parent S03](../plan.md#stage-s03), enters at [S01](#stage-s01), and returns
+accepted contract, local checks, and hosted evidence after [S04](#stage-s04).
+The parent resumes at S03 to validate that evidence and complete its plan.
+
+<a id="realization-registry"></a>
+
+## 10. Realization Registry
+
+Empty.
+
+## 11. Open Questions
 
 None currently.

@@ -1,16 +1,19 @@
 ---
 id: github-actions-maintenance
 kind: goal-artifact
+template-id: goal-template
 project-id: double
-produced-by: goal-formulation-agent
+produced-by: machine-of-goals/goal-formulation-agent
 owner-id: double-project
 interaction-language: en
 artifact-language: en
 goal-scope: subgoal
 parent-goal-id: double-github-integration
+parent-goal-directory: ..
+subgoal-directory: .
 derived-from:
   - source conversation on 2026-07-19
-  - ../../../../.github/workflows/release.yml
+  - ../../../.github/workflows/release.yml
   - ../double-github-integration.md
 ---
 
@@ -66,7 +69,7 @@ restricted to GitHub Actions.
 - The workflow uses GitHub Actions checkout and the automatic repository GitHub
   token to create or update releases.
 - This subgoal is an accepted subgoal of `double-github-integration`, and its
-  canonical plan has been completed and accepted.
+  release behavior is the existing maintenance baseline.
 - Double has multiple machines, including Machine of Ideas and Machine of
   Goals.
 - A machine tag, such as `machine-of-ideas` or `machine-of-goals`, identifies
@@ -253,8 +256,7 @@ None currently.
 
 ## 11. Machine of Goals Artifacts
 
-- Path and realization registry: [GitHub Actions Maintenance paths](./path-options.md#github-actions-maintenance-path-options)
-- Plan: [GitHub Actions Maintenance plan](./plan.md#github-actions-maintenance-plan)
-- Realization decision: [Shell-script workflow decision](./realization-decision.md#github-actions-maintenance-realization-decision)
-- Retained execution attempts: [Run index](./run/index.md#github-actions-maintenance-run-index)
-- Computed plan style: `multi-pass`
+- Possible achievement paths: [Path options](./path-options.md#github-actions-maintenance-path-options)
+- Plan: [Current plan](./plan.md#github-actions-maintenance-plan)
+- Plan registry: [Registry](./plan.md#realization-registry)
+- Computed plan style: `single-pass`
