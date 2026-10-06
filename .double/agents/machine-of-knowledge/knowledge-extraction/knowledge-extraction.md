@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-knowledge
 id: knowledge-extraction-agent
 kind: agent
-status: draft
+status: release-candidate
 role: knowledge-extractor-role
 workflow: machine-of-knowledge-workflow
 interaction-language: en

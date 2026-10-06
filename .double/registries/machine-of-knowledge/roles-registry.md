@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-knowledge
 id: roles-registry
 kind: registry
-status: draft
+status: release-candidate
 ---
 
 # Roles Registry

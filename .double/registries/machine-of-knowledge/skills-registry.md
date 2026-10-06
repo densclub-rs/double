@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-knowledge
 id: skills-registry
 kind: registry
-status: draft
+status: release-candidate
 ---
 
 # Skills Registry
@@ -11,7 +11,7 @@ status: draft
 ## Machine of Knowledge Skill
 
 - id: `machine-of-knowledge`
-- status: `draft`
+- status: `release-candidate`
 - definition: `.double/skills/machine-of-knowledge/SKILL.md`
 - workflow: `machine-of-knowledge-workflow`
 - workflow-definition: `.double/workflows/machine-of-knowledge/machine-of-knowledge-workflow.md`

@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-knowledge
 id: knowledge-extraction-system-prompt
 kind: prompt
-status: draft
+status: release-candidate
 produced-by: knowledge-extraction-agent
 mode: shared
 derived-from:

@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-knowledge
 id: knowledge-template
 kind: template
-status: draft
+status: release-candidate
 workflow-stage: knowledge-extraction
 interaction-language: en
 artifact-language: en

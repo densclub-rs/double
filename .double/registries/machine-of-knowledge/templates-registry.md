@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-knowledge
 id: templates-registry
 kind: registry
-status: draft
+status: release-candidate
 ---
 
 # Templates Registry
