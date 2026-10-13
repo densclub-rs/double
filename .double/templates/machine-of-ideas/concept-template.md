@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: concept-template
 kind: template
-status: release-candidate
+status: stable
 workflow-stage: concept-extraction
 interaction-language: en
 artifact-language: en

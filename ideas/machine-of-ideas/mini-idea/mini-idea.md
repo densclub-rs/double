@@ -4,7 +4,7 @@ kind: idea-artifact
 produced-by: machine-of-ideas/idea-capture-agent
 interaction-language: ru
 artifact-language: en
-status: release-candidate
+status: stable
 derived-from:
   - ideas/machine-of-ideas/machine-of-ideas.md
 ---

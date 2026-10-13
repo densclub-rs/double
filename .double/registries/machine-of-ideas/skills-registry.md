@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: skills-registry
 kind: registry
-status: release-candidate
+status: stable
 derived-from:
   - .double/drafts/double-skills.md
   - .double/workflows/machine-of-ideas/machine-of-ideas-workflow.md

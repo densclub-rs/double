@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: machine-of-ideas-workflow
 kind: workflow
-status: release-candidate
+status: stable
 interaction-language: en
 artifact-language: en
 derived-from:

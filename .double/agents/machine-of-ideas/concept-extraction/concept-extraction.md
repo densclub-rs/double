@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: concept-extraction-agent
 kind: agent
-status: release-candidate
+status: stable
 role: concept-extractor-role
 workflow: machine-of-ideas-workflow
 interaction-language: en

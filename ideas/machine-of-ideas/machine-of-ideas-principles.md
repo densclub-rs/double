@@ -1,6 +1,7 @@
 ---
 id: machine-of-ideas-principles
 kind: principle-artifact
+status: stable
 produced-by: machine-of-ideas/principle-synthesis-agent
 interaction-language: en
 artifact-language: en

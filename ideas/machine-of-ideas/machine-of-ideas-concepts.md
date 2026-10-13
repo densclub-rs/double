@@ -1,6 +1,7 @@
 ---
 id: machine-of-ideas-concepts
 kind: concept-artifact
+status: stable
 mindmap-plugin: basic
 produced-by: machine-of-ideas/concept-extraction-agent
 interaction-language: en

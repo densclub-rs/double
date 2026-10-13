@@ -1,7 +1,7 @@
 ---
 id: directory-layout
 kind: idea-artifact
-status: release-candidate
+status: stable
 produced-by: machine-of-ideas/idea-capture-agent
 interaction-language: en
 artifact-language: en
