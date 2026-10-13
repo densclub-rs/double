@@ -1,4 +1,5 @@
 ---
+status: stable
 id: machine-of-knowledge-concepts
 kind: concept-artifact
 mindmap-plugin: basic

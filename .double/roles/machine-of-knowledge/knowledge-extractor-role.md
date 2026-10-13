@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-knowledge
 id: knowledge-extractor-role
 kind: role
-status: release-candidate
+status: stable
 derived-from:
   - ideas/machine-of-knowledge/machine-of-knowledge.md
   - ideas/machine-of-knowledge/machine-of-knowledge-concepts.md

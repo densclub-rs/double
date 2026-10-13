@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-knowledge
 id: machine-of-knowledge-workflow
 kind: workflow
-status: release-candidate
+status: stable
 interaction-language: en
 artifact-language: en
 derived-from:

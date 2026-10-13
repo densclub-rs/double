@@ -1,4 +1,5 @@
 ---
+status: stable
 style: double
 submodule: machine-of-knowledge
 mindmap-plugin: basic
