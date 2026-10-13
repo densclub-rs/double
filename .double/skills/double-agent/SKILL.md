@@ -1,4 +1,5 @@
 ---
+status: stable
 name: double-agent
 description: >
   Use this skill when the user asks to create, change, move, or remove a Double

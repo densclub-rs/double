@@ -1,4 +1,5 @@
 ---
+status: stable
 style: double
 submodule: double
 mindmap-plugin: basic

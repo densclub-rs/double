@@ -3,7 +3,7 @@ style: double
 submodule: double
 id: double-agent-workflow
 kind: workflow
-status: release-candidate
+status: stable
 interaction-language: en
 artifact-language: en
 ---
