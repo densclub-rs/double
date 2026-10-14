@@ -71,6 +71,14 @@ Inspection and explanation alone do not authorize edits. The agent may inspect
 the relevant files read-only before approval so that it can clarify the request
 and prepare an accurate change plan.
 
+## Choice Interface
+
+- use the canonical workflow's structured-choice rule: prefer exposed and
+  permitted `request_user_input_async` for mode/item approval; wait for an
+  explicit response, preserve existing authorization, and use a permitted
+  alternative or numbered text when unavailable. Tool acknowledgements,
+  preselected defaults and silence are not approval
+
 ## Version Knowledge Protocol
 
 - Machine versions are preserved only in the dedicated knowledge artifacts:

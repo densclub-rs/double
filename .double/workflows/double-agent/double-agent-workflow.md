@@ -72,9 +72,32 @@ After presenting the plan, ask the user to choose one mode:
 2. approve each plan item separately;
 3. reject the plan.
 
-When an AskUserQuestion interface is available, use these three preset
-options. Otherwise ask the same numbered question in text. Treat the matching
-number or named mode as the selection.
+Present these three approval modes as the options of the permitted structured
+question tool; use their matching numbers or named modes when processing the
+user's response. In per-item mode, present the concrete item's approve/reject
+choice after describing its scope.
+
+Use `request_user_input_async` for a concrete choice or confirmation when it
+is exposed and permitted for the question. Supply concise, contextual options
+in the interaction language. A recommendation may be presented, but every
+material alternative must remain available; do not add an artificial choice
+when the user needs to describe something freely.
+
+For an asynchronous question, wait for an explicit submitted response or an
+equivalent direct user instruction before dependent edits, execution or state
+transitions. A tool acknowledgement that the question was accepted, a
+preselected option, silence or a timeout is not user approval. Independent
+read-only work may continue while awaiting the answer. Do not ask again for a
+choice or authorization the user already supplied.
+
+Check the actual runtime tool availability and its mode/purpose restrictions.
+If `request_user_input_async` is unavailable or disallowed, use another exposed
+structured-question tool only when permitted for this question; otherwise use
+a concise text question with numbered options. Never assume an interface named
+`AskUserQuestion` exists or call a planning-only tool for approval when its
+runtime contract forbids that use. The client controls the visual presentation;
+plain text does not itself create a choice card.
+
 
 ### Reject or Clarify
 

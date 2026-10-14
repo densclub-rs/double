@@ -46,6 +46,14 @@ and must use the responsible machine workflow.
    installation first.
 2. Follow the Entry Protocol and all later stages in the canonical workflow.
 
+## Choice Interface
+
+- use the canonical workflow's structured-choice rule: prefer exposed and
+  permitted `request_user_input_async` for mode/item approval; wait for an
+  explicit response, preserve existing authorization, and use a permitted
+  alternative or numbered text when unavailable. Tool acknowledgements,
+  preselected defaults and silence are not approval
+
 ## Validation Boundaries
 
 - This skill is a trigger and routing layer, not a separate workflow.

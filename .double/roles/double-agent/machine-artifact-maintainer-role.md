@@ -29,6 +29,14 @@ That workflow is the source of truth for the maintenance algorithm.
 - visible impact analysis for base template changes
 - preservation of unrelated user work
 
+## Choice Interface
+
+- use the canonical workflow's structured-choice rule: prefer exposed and
+  permitted `request_user_input_async` for mode/item approval; wait for an
+  explicit response, preserve existing authorization, and use a permitted
+  alternative or numbered text when unavailable. Tool acknowledgements,
+  preselected defaults and silence are not approval
+
 ## Version Knowledge Rules
 
 - use only the dedicated version knowledge artifact for each main module as the
