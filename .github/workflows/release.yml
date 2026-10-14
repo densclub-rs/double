@@ -4,10 +4,11 @@ on:
   push:
     tags:
       - 'machine-*'
+      - 'double-agent-*'
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Machine release tag, for example machine-of-ideas-1.2.3-rc'
+        description: 'Machine release tag, for example machine-of-ideas-1.2.3-rc or double-agent-0.0.6'
         required: true
         type: string
 

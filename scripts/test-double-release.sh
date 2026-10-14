@@ -273,6 +273,57 @@ run_release publish --tag machine-of-ideas-1.2.4 > publish.out 2> publish.err
 grep -Fq 'Publish is restricted to GitHub Actions' publish.err
 pass_test
 
+begin_test 'double-agent tagged packages select statuses, verify versions, and exclude other machines'
+write_machine_version_knowledge double-agent 0.0.6
+write_machine_file .double/agents/double-agent/stable.md stable
+write_machine_file .double/skills/double-agent/draft.md draft
+write_machine_file .double/workflows/double-agent/rc.md release-candidate
+git add .double knowledge/double-agent-version
+git commit -qm double-agent-fixture
+for suffix in '' -dev -rc; do
+  git tag "double-agent-0.0.6$suffix"
+  run_release package --tag "double-agent-0.0.6$suffix" > agent.out 2> agent.err
+  agent_archive="dist/double-double-agent-0.0.6$suffix.tar.gz"
+  case "$suffix" in
+    '') selected_path=.double/agents/double-agent/stable.md ;;
+    -dev) selected_path=.double/skills/double-agent/draft.md ;;
+    -rc) selected_path=.double/workflows/double-agent/rc.md ;;
+  esac
+  assert_contains "$agent_archive" "$selected_path"
+  for candidate in .double/agents/double-agent/stable.md .double/skills/double-agent/draft.md .double/workflows/double-agent/rc.md; do
+    if [ "$candidate" != "$selected_path" ]; then
+      ! assert_contains "$agent_archive" "$candidate"
+    fi
+  done
+  ! tar -tzf "$agent_archive" | grep -Fq '/machine-of-'
+  tar -xOf "$agent_archive" "$selected_path" | grep -Fxq 'version: 0.0.6'
+  (cd dist && sha256sum -c SHA256SUMS.txt)
+done
+git tag double-agent-0.0.7
+capture_status run_release package --tag double-agent-0.0.7 > mismatch.out 2> mismatch.err
+[ "$command_status" -eq 1 ]
+grep -Fq 'Machine version mismatch' mismatch.err
+[ ! -e dist/double-double-agent-0.0.7.tar.gz ]
+pass_test
+
+begin_test 'double-agent local package includes all statuses and preserves sources'
+write_machine_version_knowledge double-agent 0.0.8
+printf '\nLocal agent edit\n' >> .double/agents/double-agent/stable.md
+run_release package --machine double-agent > agent-local.out 2> agent-local.err
+agent_archive=dist/double-double-agent-0.0.8-local.tar.gz
+for candidate in .double/agents/double-agent/stable.md .double/skills/double-agent/draft.md .double/workflows/double-agent/rc.md; do
+  assert_contains "$agent_archive" "$candidate"
+  ! grep -q '^version:' "$candidate"
+done
+tar -xOf "$agent_archive" .double/agents/double-agent/stable.md | grep -Fxq 'Local agent edit'
+tar -xOf "$agent_archive" .double/agents/double-agent/stable.md | grep -Fxq 'version: 0.0.8'
+! tar -tzf "$agent_archive" | grep -Fq '/machine-of-'
+(cd dist && sha256sum -c SHA256SUMS.txt)
+run_release publish --tag double-agent-0.0.6 > agent-publish.out 2> agent-publish.err
+grep -Fq 'Publish is restricted to GitHub Actions' agent-publish.err
+! tar -xOf dist/double-double-agent-0.0.6.tar.gz .double/agents/double-agent/stable.md | grep -Fxq 'Local agent edit'
+pass_test
+
 begin_test 'local package includes working changes, untracked files, and all statuses'
 write_machine_version_knowledge machine-of-ideas 2.0.0
 printf '\nLocal edit\n' >> .double/agents/machine-of-ideas/stable.md
@@ -293,10 +344,10 @@ run_release package --tag machine-of-ideas-1.2.4 > tagged.out 2> tagged.err
 ! assert_contains dist/double-machine-of-ideas-1.2.4.tar.gz '.double/agents/machine-of-ideas/new file.md'
 pass_test
 
-begin_test 'all three machines can be packaged from a directory without Git'
+begin_test 'all four machines can be packaged from a directory without Git'
 mkdir 'plain workspace'
 cd 'plain workspace'
-for selected_machine in machine-of-ideas machine-of-goals machine-of-knowledge; do
+for selected_machine in machine-of-ideas machine-of-goals machine-of-knowledge double-agent; do
   write_machine_file ".double/templates/$selected_machine/example.md" draft
   write_machine_version_knowledge "$selected_machine" 3.2.1
 done
@@ -304,7 +355,7 @@ done
 mkdir bin
 printf '#!/usr/bin/env bash\nexit 99\n' > bin/git
 chmod +x bin/git
-for selected_machine in machine-of-ideas machine-of-goals machine-of-knowledge; do
+for selected_machine in machine-of-ideas machine-of-goals machine-of-knowledge double-agent; do
   PATH="$PWD/bin:$PATH" run_release package --machine "$selected_machine" > local.out 2> local.err
   assert_contains "dist/double-$selected_machine-3.2.1-local.tar.gz" ".double/templates/$selected_machine/example.md"
 done

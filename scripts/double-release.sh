@@ -35,7 +35,7 @@ usage() {
   cat <<'EOF'
   scripts/double-release.sh list-machines
   scripts/double-release.sh package --tag <machine>-<major>.<minor>.<patch>[-dev|-rc]
-  scripts/double-release.sh package --machine <machine-of-ideas|machine-of-goals|machine-of-knowledge>
+  scripts/double-release.sh package --machine <machine-of-ideas|machine-of-goals|machine-of-knowledge|double-agent>
   scripts/double-release.sh publish --tag <machine>-<major>.<minor>.<patch>[-dev|-rc]
 
 Without --tag, package reads the current directory (no Git repository required),
@@ -162,8 +162,8 @@ if [ -z "$tag" ]; then
     exit 0
   fi
   case "$machine" in
-    machine-of-ideas|machine-of-goals|machine-of-knowledge) ;;
-    *) warning 'Select --machine machine-of-ideas, machine-of-goals, or machine-of-knowledge; no package was created.'; exit 0 ;;
+    machine-of-ideas|machine-of-goals|machine-of-knowledge|double-agent) ;;
+    *) warning 'Select --machine machine-of-ideas, machine-of-goals, machine-of-knowledge, or double-agent; no package was created.'; exit 0 ;;
   esac
   required_status=''
 elif [ -n "$machine" ]; then
