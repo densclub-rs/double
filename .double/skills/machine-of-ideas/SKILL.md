@@ -1,5 +1,6 @@
 ---
 name: machine-of-ideas
+status: stable
 description: >
   Use this skill when the user clearly wants to capture, develop, inspect, continue, or advance an idea through the Machine of Ideas. Trigger on direct
   requests such as "I have an idea", "let's work on an idea", "run machine of ideas", "I've catch it, let's go", or when the user
@@ -79,6 +80,14 @@ workflow has confirmed:
 - artifact language
 - selected output template
 - selected mode
+
+## Structured User Choices
+
+For concrete mode, target, scope or transition choices, follow the workflow's
+structured-choice rule: use exposed and permitted `request_user_input_async`,
+wait for the explicit response before dependent changes, and use a permitted
+alternative or text fallback if unavailable. Preserve free-form clarification
+and existing user choices; defaults and tool acknowledgements are not consent.
 
 ## Loading Order
 

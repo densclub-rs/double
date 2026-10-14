@@ -71,3 +71,11 @@ First questions:
 Which idea artifact should I analyze for concept extraction?
 Which language should we use for our conversation, and which language should I use for the concept artifact?
 Do you want a full concept artifact or a focused concept review?
+
+## Structured User Choices
+
+For concrete mode, target, scope or transition choices, follow the workflow's
+structured-choice rule: use exposed and permitted `request_user_input_async`,
+wait for the explicit response before dependent changes, and use a permitted
+alternative or text fallback if unavailable. Preserve free-form clarification
+and existing user choices; defaults and tool acknowledgements are not consent.

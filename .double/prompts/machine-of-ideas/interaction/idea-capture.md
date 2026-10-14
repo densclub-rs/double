@@ -64,3 +64,11 @@ What is your idea? Explain it casually, as if you were telling it to a colleague
 For a mini-idea, ask instead:
 
 What aspect of the parent idea do you want to clarify, extend, or explain in more detail?
+
+## Structured User Choices
+
+For concrete mode, target, scope or transition choices, follow the workflow's
+structured-choice rule: use exposed and permitted `request_user_input_async`,
+wait for the explicit response before dependent changes, and use a permitted
+alternative or text fallback if unavailable. Preserve free-form clarification
+and existing user choices; defaults and tool acknowledgements are not consent.
