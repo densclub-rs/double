@@ -8,7 +8,7 @@ artifact-language: en
 knowledge-type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-09-18
+observed-at: 2026-10-14
 ttl: one month
 derived-from:
   - knowledge/double-main-modules/double-main-modules.md
@@ -28,23 +28,12 @@ project.
 
 ## Value
 
-`0.0.6`
+`0.0.7`
 
 ## Change Note
 
-Version `0.0.6` makes plan revision history realization-triggered:
+Version `0.0.7` fixes the Machine of Goals release package:
 
-- before the first realization, `plan.md` is the only plan artifact, both plan
-  revision frontmatter fields are null, and every clarification updates the
-  main plan without creating a snapshot
-- registering the first realization freezes revision 1 as the first immutable
-  executable baseline
-- after a realization exists, a semantic clarification of the transition model
-  increments the plan revision and creates the corresponding snapshot
-- realizations pinned to an earlier revision require alignment review after a
-  semantic plan change
-- registering another realization against unchanged plan content, updating
-  registry statistics or timestamps, and projecting run progress do not create
-  a plan revision
-- immutable plan revision snapshots retain neutral progress and are never
-  rewritten
+- the integration skill declares `status: release-candidate` in its frontmatter
+- release-candidate packages include `.double/skills/machine-of-goals/SKILL.md`
+  instead of excluding it because its status is missing

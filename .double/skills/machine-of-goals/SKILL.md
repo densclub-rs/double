@@ -1,5 +1,6 @@
 ---
 name: machine-of-goals
+status: release-candidate
 description: >
   Use this skill when the user wants to formulate, clarify, inspect, plan,
   realize, validate, import, export, split, or continue a goal through the
