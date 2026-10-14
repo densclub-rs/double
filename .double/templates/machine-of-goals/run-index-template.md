@@ -37,11 +37,13 @@ derived-from:
 This index lists active, pinned, and retained working runs. Aggregate history
 remains in the [plan realization registry](../plan.md#realization-registry).
 
-| Run | Realization Artifact | Plan Revision | Realization Revision | Started | Result |
+| Run | Realization Artifact | Historical Plan Baseline | Realization Revision | Started | Result |
 | --- | --- | --- | --- | --- | --- |
 | [<run-label>](./<realization-record-id>--<YYYYMMDDTHHMMSSZ>.md#<run-id>) | [<realization-label>](../realizations/<realization-record-id>.md#<realization-record-id>) | [Revision <N>](../realizations/plan-revision-<N>.md#<goal-id>-plan) | [Revision <R>](../realizations/<realization-record-id>.md#<realization-record-id>-revision-<R>) | <YYYY-MM-DDTHH:MM:SSZ> | <result> |
 
 Remove a row when its unpinned run file is removed by retention, and remove the
 same link from its realization artifact. Never leave a link to a removed run.
-Cumulative counts are not reconstructed from this index.
+Cumulative counts are not reconstructed from this index. Baseline links are
+historical provenance; stage-attempt contracts and applicable plan changes
+are recorded in each run. Never rebind a completed run to a later baseline.
 ```

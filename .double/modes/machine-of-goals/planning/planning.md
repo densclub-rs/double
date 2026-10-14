@@ -35,9 +35,8 @@ comprehensible transition model from the current state toward the target state.
 - mark stop points, validation points, and revision conditions
 - while no realization exists, keep both revision frontmatter fields null,
   apply every clarification directly to `plan.md`, and create no snapshot
-- after a realization exists, treat a semantic change to the transition model
-  as a new revision; do not revise for registry, statistics, or progress-only
-  changes
+- classify plan changes by their impact on frozen stage obligations; log
+  compatible future-only edits without a new revision
 - avoid treating a task list as a complete plan
 
 ## Typical Inputs
@@ -68,3 +67,15 @@ Stop before review when:
 
 Primary mode for `03-plan-synthesis`. It may be re-entered from validation
 when the plan project must be rebuilt or materially revised.
+
+## Stage Contracts and Plan Changes
+
+Follow the [revision rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-revision-history-rule) and
+[stage contract rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-contract-rule):
+
+- Log compatible future-only edits without a new revision; assess dependencies
+  and realization fit. Preserve applicable accepted results.
+- Freeze each effective stage contract in its run before action; validate
+  against captured criteria and evidence. Preserve attempts and baseline links.
+- Create a new revision before executing changed frozen obligations; identify
+  revalidation or rework. Never rebind completed runs or invent legacy contracts.

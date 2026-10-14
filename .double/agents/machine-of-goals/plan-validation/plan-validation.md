@@ -51,7 +51,7 @@ statistics in the selected plan realization row.
 - `updated-realization-artifact` when run status or retention changes it
 - `updated-run-index` when retention removes a run
 - `updated-plan-artifact` for realization statistics and when plan revision is required
-- `plan-revision-snapshot` when a revised plan will be used later
+- `plan-revision-snapshot` when frozen obligations change
 - `goal-progress-note`
 - `revision-or-continuation-decision`
 - `goal-closure-signal` when applicable
@@ -59,11 +59,16 @@ statistics in the selected plan realization row.
 ## Responsibilities
 
 - validate results against explicit criteria
+- before accepting a stage, check that applicable successful plan-action and
+  validation commands are captured in execution order with context, observed
+  result and replay/automation constraints, or that no applicable commands
+  executed. Do not require a full trace or failed-command list; for command
+  groups do not infer earlier success from the last exit code alone
 - distinguish accepted, rejected, partial, blocked, and needs-revision results
 - conduct validation in dialogue until an explicit decision is reached
 - record validation decisions, evidence, and terminal result in the current run
 - update the run's Plan Map emoji after the validation decision and mirror it
-  into current `plan.md` only when revision and topology match
+  into current `plan.md` only after frozen-contract and dependency compatibility checks
 - replace latest `running` result with the terminal result in the selected
   realization row in `plan.md` without incrementing run count again
 - enforce bounded run retention after terminal statistics update
@@ -75,10 +80,8 @@ statistics in the selected plan realization row.
   mark affected realizations `review-required`
 - do not create a revision for realization registration against unchanged plan
   content, aggregate statistics, timestamps, or progress projection
-- whenever `plan.md` is revised for a later decision or run, increment its
-  `plan-revision`, copy it to
-  `<goal-directory>/realizations/plan-revision-<N>.md`, rebase relative links,
-  and never overwrite an existing snapshot
+- create a new snapshot only when frozen obligations change; follow the
+  linked Stage Contract and Plan Revision History rules
 - decide whether the workflow should continue, branch, revise, reformulate,
   pause, close, or request export
 
@@ -93,8 +96,8 @@ statistics in the selected plan realization row.
 - must not accept results without evidence or user confirmation where required
 - must not change success criteria to fit the result
 - must not execute the next stage
-- must not allow later execution to use a revised `plan.md` until its local
-  revision snapshot exists
+- must not execute changed frozen obligations before their new local
+  revision snapshot and superseding contract exist
 - must not update an immutable plan-revision snapshot with execution progress
 - must not package reusable artifacts without `Plan Exchange`
 
@@ -110,5 +113,18 @@ statistics in the selected plan realization row.
 ## Transition Rule
 
 The step is complete when an explicit validation decision has been recorded in
-the run, aggregate statistics have been updated, and any revised `plan.md`
-intended for later use has its new local plan revision snapshot.
+the run, aggregate statistics have been updated, and changes to frozen
+obligations have their required new snapshot; future-only changes have a
+logged compatibility decision.
+
+## Stage Contracts and Plan Changes
+
+Follow the [revision rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-revision-history-rule) and
+[stage contract rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-contract-rule):
+
+- Log compatible future-only edits without a new revision; assess dependencies
+  and realization fit. Preserve applicable accepted results.
+- Freeze each effective stage contract in its run before action; validate
+  against captured criteria and evidence. Preserve attempts and baseline links.
+- Create a new revision before executing changed frozen obligations; identify
+  revalidation or rework. Never rebind completed runs or invent legacy contracts.

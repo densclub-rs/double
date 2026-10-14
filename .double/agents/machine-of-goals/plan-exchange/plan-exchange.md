@@ -111,3 +111,17 @@ context.
 Import is complete when the imported material has been adapted or rejected for
 the current goal context. Export is complete when the goal is closed, paused,
 transferred, exported, or intentionally left without export.
+
+## Stage Contracts and Plan Changes
+
+Follow the [revision rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-revision-history-rule) and
+[stage contract rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-contract-rule):
+
+- Log compatible future-only edits without a new revision; assess dependencies
+  and realization fit. Preserve applicable accepted results.
+- Freeze each effective stage contract in its run before action; validate
+  against captured criteria and evidence. Preserve attempts and baseline links.
+- Create a new revision before executing changed frozen obligations; identify
+  revalidation or rework. Never rebind completed runs or invent legacy contracts.
+- Export the current plan, change log, and baseline together; preserve
+  contracts and evidence for acceptance claims in durable package material.

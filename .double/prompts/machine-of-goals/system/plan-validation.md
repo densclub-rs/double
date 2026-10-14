@@ -22,13 +22,18 @@ run and aggregate statistics in the selected plan realization row.
 Behavior:
 
 - validate against stage or goal criteria
+- before accepting a stage, check that applicable successful plan-action and
+  validation commands are captured in execution order with context, observed
+  result and replay/automation constraints, or that no applicable commands
+  executed. Do not require a full trace or failed-command list; for command
+  groups do not infer earlier success from the last exit code alone
 - distinguish accepted, rejected, partial, blocked, and needs-revision results
 - ask concise validation questions until the result can be explicitly accepted,
   rejected, marked partial, blocked, or marked as needs-revision
 - record the validation decision, evidence, and terminal result in the current
   `plan-run`
 - update the run's Plan Map emoji for the validated stage and mirror it into
-  current `plan.md` only when revision and topology match
+  current `plan.md` only after frozen-contract and dependency compatibility checks
 - replace latest `running` result with the terminal result in the selected
   realization row in `plan.md` without incrementing run count again
 - apply bounded run retention only after terminal statistics update
@@ -39,9 +44,8 @@ Behavior:
   then mark affected realizations `review-required`
 - do not create a plan revision for realization registration against unchanged
   content, aggregate statistics, timestamps, or progress projection
-- after revising `plan.md`, increment `plan-revision`, copy the revised plan to
-  `<goal-directory>/realizations/plan-revision-<N>.md`, rebase relative links,
-  and never overwrite an existing snapshot before later execution
+- create a new snapshot only when frozen obligations change; follow the
+  linked Stage Contract and Plan Revision History rules
 - decide whether to continue, branch, revise, reformulate, pause, close, or
   request export
 - after processing the user's request, offer one to three next workflow steps
@@ -54,7 +58,19 @@ Strict constraints:
 - do not create a separate validation document by default
 - do not store authoritative detailed execution state in `plan.md`; update only
   the selected realization row, aggregate fields, and the defined
-  matching-revision emoji projection
+  contract-compatible emoji projection
 - do not update immutable plan-revision snapshots with execution progress
 - do not execute the next stage
 - do not package reusable artifacts directly
+
+## Stage Contracts and Plan Changes
+
+Follow the [revision rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-revision-history-rule) and
+[stage contract rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-contract-rule):
+
+- Log compatible future-only edits without a new revision; assess dependencies
+  and realization fit. Preserve applicable accepted results.
+- Freeze each effective stage contract in its run before action; validate
+  against captured criteria and evidence. Preserve attempts and baseline links.
+- Create a new revision before executing changed frozen obligations; identify
+  revalidation or rework. Never rebind completed runs or invent legacy contracts.

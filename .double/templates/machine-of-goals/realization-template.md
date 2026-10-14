@@ -56,7 +56,9 @@ derived-from:
 - Source goal: [<goal-title>](../<goal-id>.md#<goal-id>)
 - Realization registry record: [<realization-label>](../plan.md#<realization-record-id>)
 - Realization decision: [<decision-label>](../realization-decision.md#<goal-id>-realization-decision)
-- Selected plan revision: [Revision <N>](./plan-revision-<N>.md#<goal-id>-plan)
+- Historical plan baseline: [Revision <N>](./plan-revision-<N>.md#<goal-id>-plan)
+- Current plan and applicable changes: [Plan](../plan.md#<goal-id>-plan), [<change-entry>](../plan.md#plan-change-<change-id>) or none
+- Compatibility assessment: <affected-stage-ids-dependency-impact-and-procedure-fit>
 - Selected paths or subplans: [<path-or-subplan-label>](../path-options.md#<path-or-subplan-id>)
 - Realization definition or implementation: [<realization-label>](<definition-or-implementation-link>)
 - Current realization revision: [Revision <R>](#<realization-record-id>-revision-<R>)
@@ -91,6 +93,11 @@ contract changes. Run-link and status updates do not create a new revision.
 
 ### Validation Contract
 
+- Before action, freeze each effective stage contract in its run; validate
+  against captured criteria and evidence. Preserve historical acceptance.
+- Future-only edits require a logged applicability check, not automatic
+  invalidation. Revise the plan when frozen obligations change; revise this
+  realization only when its procedure, implementation, boundaries, or checks change.
 - Initial-state checks:
 - Intermediate checks:
 - Final-state checks:

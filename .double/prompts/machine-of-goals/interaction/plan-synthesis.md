@@ -17,8 +17,7 @@ We are going to turn selected path options into a plan project.
 Current steps: `03-plan-synthesis` and `04-plan-review-and-decision`.
 Default mode: `planning`.
 Expected outputs: `plan-artifact`; `plan-revision-snapshot` when the first
-executable baseline is frozen or an existing realized plan is semantically
-revised; `realization-decision`; and the persistent `realization-artifact`
+executable baseline is frozen or frozen stage obligations change; `realization-decision`; and the persistent `realization-artifact`
 created before execution.
 
 The plan should explain how the current state can move toward the target state.
@@ -58,7 +57,7 @@ boundaries explicit through an interactive review:
    and registry row, and only then offer transition to `05-plan-realization`.
 
 Authoritative execution state will be stored in a new `plan-run`. Current
-`plan.md` may later mirror only its matching-revision emoji projection.
+`plan.md` may later mirror only its contract-compatible emoji projection.
 Registering a manual or interactive realization does not change single-pass
 style.
 
@@ -78,3 +77,25 @@ mode, responsible agent, and expected artifact when known.
 
 Do not select or confirm a path or subplan on the user's behalf. Do not treat
 silence, a recommendation, or a request to review the plan as confirmation.
+
+## Stage Contracts and Plan Changes
+
+Follow the [revision rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-revision-history-rule) and
+[stage contract rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-contract-rule):
+
+- Log compatible future-only edits without a new revision; assess dependencies
+  and realization fit. Preserve applicable accepted results.
+- Freeze each effective stage contract in its run before action; validate
+  against captured criteria and evidence. Preserve attempts and baseline links.
+- Create a new revision before executing changed frozen obligations; identify
+  revalidation or rework. Never rebind completed runs or invent legacy contracts.
+
+## Structured User Choices
+
+For concrete mode, path/subplan, realization, next-step or validation choices,
+follow the canonical workflow's structured-choice rule. Prefer exposed and
+permitted `request_user_input_async`; show the relevant trade-offs/evidence and
+wait for an explicit response before dependent state changes. Use a permitted
+alternative or numbered text if unavailable. Preserve already supplied choices;
+preselection, silence and request acknowledgements are not consent. Keep
+open-ended clarification free-form and do not create extra approval gates.

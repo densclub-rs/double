@@ -39,16 +39,16 @@ delegation, automation, handoff, or creation of implementation artifacts.
 - update the run with selected paths, checkboxes, concise work, produced
   artifacts, validation evidence, and blockers
 - update the run's Plan Map emoji whenever a stage changes state and mirror it
-  into the current `plan.md` Plan Map only when the pinned plan revision and
-  stage topology match
+  into the current `plan.md` Plan Map only after frozen-contract and
+  dependency compatibility checks by stable stage id
 - append every command generated for human execution of a manual stage to the
   run before or when presenting it; preserve corrected and superseded commands
   as separate ordered entries and keep literal secrets out of command text
 - link stages, produced artifacts, and evidence in their execution context
 - append an automatic realization row to section 10 of `plan.md` when it is
   made available and immediately recompute style
-- reuse the current plan revision when that registration does not change the
-  semantic transition model
+- reuse the historical baseline for compatible future-only changes; log
+  their dependency and realization compatibility decision
 
 ## Typical Inputs
 
@@ -67,7 +67,7 @@ delegation, automation, handoff, or creation of implementation artifacts.
 - plan-run artifact
 - updated realization artifact
 - updated plan artifact when registration or run start changes its realization
-  registry, or when a matching-revision emoji projection changes
+  registry, or when a contract-compatible emoji projection changes
 - implementation artifact, handoff artifact, or execution note when applicable
 - discovered risks, blockers, or revision needs
 
@@ -86,3 +86,15 @@ Stop before continuing when:
 
 Primary mode for `05-plan-realization`. It normally hands off to `validation`
 after the run produces a stage or final result.
+
+## Stage Contracts and Plan Changes
+
+Follow the [revision rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-revision-history-rule) and
+[stage contract rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-contract-rule):
+
+- Log compatible future-only edits without a new revision; assess dependencies
+  and realization fit. Preserve applicable accepted results.
+- Freeze each effective stage contract in its run before action; validate
+  against captured criteria and evidence. Preserve attempts and baseline links.
+- Create a new revision before executing changed frozen obligations; identify
+  revalidation or rework. Never rebind completed runs or invent legacy contracts.

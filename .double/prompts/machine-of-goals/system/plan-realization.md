@@ -42,16 +42,22 @@ Behavior:
 - record stage checkboxes, concise work, blockers, produced artifacts, and
   evidence in the run
 - update the run's Plan Map emoji as stage status changes; mirror that derived
-  view into current `plan.md` only when the pinned revision and topology match
+  view into current `plan.md` only after frozen-contract and dependency compatibility checks
 - before or when presenting a command for human execution of a manual stage,
   append that command to the run; retain every corrected or superseded command
   in generation order and never put literal secrets in command text
+- record successful plan-action and validation commands in the current run
+  after observing success, before stage validation, in execution order; include
+  stage, purpose, working context, exact safe command, result, and replay or
+  automation constraints. Failed attempts, redundant repeats and incidental
+  bookkeeping need not form a full trace; command groups require per-command
+  success, and recorded commands do not authorize replay
 - link selected paths, stages, produced artifacts, and evidence where they are
   recorded
 - append a new automatic realization row to section 10 of `plan.md` only when
   it is made available for selection; then recompute style immediately
-- reuse the current plan revision when that registration does not change the
-  semantic transition model
+- reuse the historical baseline for compatible future-only changes; log
+  their dependency and realization compatibility decision
 - keep readiness and alignment separate from computed style
 - after processing the user's request, offer one to three next workflow steps
   such as continuing execution, dry run, stopping for confirmation, or
@@ -63,9 +69,21 @@ Strict constraints:
 - do not silently revise the whole goal or plan
 - do not store authoritative detailed execution state in `plan.md`; update only
   the selected realization row, aggregate fields, and the defined
-  matching-revision emoji projection
+  contract-compatible emoji projection
 - do not update immutable plan-revision snapshots with execution progress
 - do not begin a run without the selected local plan revision snapshot
 - do not begin or resume a run without the selected realization artifact
 - do not validate the result as final
 - do not export reusable packages directly
+
+## Stage Contracts and Plan Changes
+
+Follow the [revision rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-revision-history-rule) and
+[stage contract rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-contract-rule):
+
+- Log compatible future-only edits without a new revision; assess dependencies
+  and realization fit. Preserve applicable accepted results.
+- Freeze each effective stage contract in its run before action; validate
+  against captured criteria and evidence. Preserve attempts and baseline links.
+- Create a new revision before executing changed frozen obligations; identify
+  revalidation or rework. Never rebind completed runs or invent legacy contracts.

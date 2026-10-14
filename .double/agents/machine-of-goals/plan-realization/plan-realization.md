@@ -55,7 +55,7 @@ selected path through execution, delegation, automation, or external handoff.
 - `updated-realization-artifact`
 - `run-index`
 - `updated-plan-artifact` when a realization is registered, a run starts, or a
-  matching-revision progress projection changes
+  contract-compatible progress projection changes
 - `implementation-artifact` when applicable
 - `handoff-artifact` when applicable
 - `blocker-or-revision-note` when needed
@@ -77,12 +77,17 @@ selected path through execution, delegation, automation, or external handoff.
   the selected realization row in `plan.md` when the run is created
 - record selected paths, stage checkboxes, concise work, blockers, outputs, and
   validation evidence in the run
-- maintain emoji progress in the run's revision-scoped Plan Map; mirror that
-  derived view into the current `plan.md` only when its current revision and
-  stage topology match the run
+- maintain emoji progress in the run's stage-attempt Plan Map; project it by
+  stable stage id only after frozen-contract and dependency compatibility checks
 - append every command generated for human execution of a manual stage to the
   current run before or when presenting it; preserve generation order and
   corrected or superseded commands, and never interpolate literal secrets
+- record successful plan-action and validation commands in the current run
+  after observing success, before stage validation, in execution order; include
+  stage, purpose, working context, exact safe command, result, and replay or
+  automation constraints. Failed attempts, redundant repeats and incidental
+  bookkeeping need not form a full trace; command groups require per-command
+  success, and recorded commands do not authorize replay
 - append automatic realization rows to section 10 of `plan.md` when the user
   makes them available and recompute style immediately
 - reuse the current plan revision when an automatic realization is registered
@@ -109,7 +114,7 @@ selected path through execution, delegation, automation, or external handoff.
 - must not validate its own result as final
 - must not silently revise the goal or whole plan
 - must not store authoritative detailed execution state in `plan.md`; only the
-  realization registry and a matching-revision emoji projection may change
+  realization registry and a contract-compatible emoji projection may change
 - must not update an immutable plan-revision snapshot with execution progress
 - must not begin a run when the selected local plan revision snapshot is
   missing
@@ -133,3 +138,15 @@ selected path through execution, delegation, automation, or external handoff.
 The step is complete when the run has produced a stage or final result that can
 be validated, or when the run is blocked and needs plan or realization
 revision.
+
+## Stage Contracts and Plan Changes
+
+Follow the [revision rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-revision-history-rule) and
+[stage contract rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-contract-rule):
+
+- Log compatible future-only edits without a new revision; assess dependencies
+  and realization fit. Preserve applicable accepted results.
+- Freeze each effective stage contract in its run before action; validate
+  against captured criteria and evidence. Preserve attempts and baseline links.
+- Create a new revision before executing changed frozen obligations; identify
+  revalidation or rework. Never rebind completed runs or invent legacy contracts.

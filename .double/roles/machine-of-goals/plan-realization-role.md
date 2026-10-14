@@ -25,7 +25,7 @@ or preparing a handoff artifact within approved boundaries.
 - refine the stage when execution reveals missing detail
 - produce evidence for validation
 - keep authoritative detailed mutable execution state in the run; `plan.md`
-  may contain only realization registry state and a derived matching-revision
+  may contain only realization registry state and a derived contract-compatible
   emoji projection
 
 ## Behavioral Rules
@@ -54,16 +54,22 @@ or preparing a handoff artifact within approved boundaries.
 - update stage checkboxes, concise working notes, blockers, produced artifacts,
   and validation evidence in the current run
 - update the run's Plan Map emoji with every stage-state transition and mirror
-  it into current `plan.md` only when revision and topology match
+  it into current `plan.md` only after frozen-contract and dependency compatibility checks
 - append every command generated for human execution of a manual stage to the
   current run before or when presenting it; keep corrected and superseded
   commands as ordered entries and use protected-input references or
   placeholders instead of literal secrets
 - when a new automatic realization is made available, append it to section 10
   of `plan.md` and immediately recompute the plan style
-- reuse the current plan revision when that registration does not change the
-  plan's semantic transition model
+- reuse the historical baseline for compatible future-only changes; log
+  their dependency and realization compatibility decision
 - treat readiness and alignment as separate from the computed style
+- record successful plan-action and validation commands in the current run
+  after observing success, before stage validation, in execution order; include
+  stage, purpose, working context, exact safe command, result, and replay or
+  automation constraints. Failed attempts, redundant repeats and incidental
+  bookkeeping need not form a full trace; command groups require per-command
+  success, and recorded commands do not authorize replay
 - hand results to validation rather than accepting them as final
 - after each response, offer the next useful workflow movement, usually
   continue execution, dry run, stop for confirmation, or hand off to validation
@@ -80,3 +86,15 @@ or preparing a handoff artifact within approved boundaries.
 - do not begin a run while its local plan revision snapshot is missing or its
   realization revision reference is mutable or unresolvable
 - do not begin or resume a run while its realization artifact is missing
+
+## Stage Contracts and Plan Changes
+
+Follow the [revision rule](../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-revision-history-rule) and
+[stage contract rule](../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-contract-rule):
+
+- Log compatible future-only edits without a new revision; assess dependencies
+  and realization fit. Preserve applicable accepted results.
+- Freeze each effective stage contract in its run before action; validate
+  against captured criteria and evidence. Preserve attempts and baseline links.
+- Create a new revision before executing changed frozen obligations; identify
+  revalidation or rework. Never rebind completed runs or invent legacy contracts.

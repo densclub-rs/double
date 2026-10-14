@@ -47,7 +47,9 @@ derived-from:
 ## 1. Decision Summary
 
 - Source goal: [<goal-title>](./<goal-id>.md#<goal-id>)
-- Selected plan revision: [Revision <N>](./realizations/plan-revision-<N>.md#<goal-id>-plan)
+- Historical plan baseline: [Revision <N>](./realizations/plan-revision-<N>.md#<goal-id>-plan)
+- Current plan and applicable changes: [Plan](./plan.md#<goal-id>-plan), [<change-entry>](./plan.md#plan-change-<change-id>) or none
+- Stage contract policy: capture each effective stage contract in the run before action; validate against that captured content.
 - Additional VCS evidence: [<exact-plan-revision>](<immutable-vcs-permalink>) or none
 - Paths or subplans shown to the user:
   - [<path-or-subplan-label>](./path-options.md#<path-or-subplan-id>): <material-trade-off-summary>
@@ -104,6 +106,8 @@ derived-from:
 - Continue when:
 - Branch when:
 - Revise plan when:
+- Future-only changes: log without a new revision if frozen obligations remain unchanged; record dependency and realization compatibility.
+- Historical runs: preserve baseline links, frozen contracts, evidence, and acceptance; never rebind a completed run.
 - Reformulate goal when:
 - Stop or pause when:
 ```

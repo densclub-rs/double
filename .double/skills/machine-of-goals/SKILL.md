@@ -125,6 +125,16 @@ different selected path always creates a new realization row, even when it
 reuses the same realization mechanism. Before advancing, create the persistent
 `realizations/<realization-record-id>.md` artifact for the approved realization.
 
+## Structured User Choices
+
+For concrete mode, path/subplan, realization, next-step or validation choices,
+follow the canonical workflow's structured-choice rule. Prefer exposed and
+permitted `request_user_input_async`; show the relevant trade-offs/evidence and
+wait for an explicit response before dependent state changes. Use a permitted
+alternative or numbered text if unavailable. Preserve already supplied choices;
+preselection, silence and request acknowledgements are not consent. Keep
+open-ended clarification free-form and do not create extra approval gates.
+
 ## Active Response Rule
 
 After processing a Machine of Goals request, offer one to three concrete next
@@ -197,9 +207,9 @@ validation flow.
   realization record id.
 - Before the first realization, keep `plan-revision` and
   `plan-revision-artifact` null, refine only `plan.md`, and create no snapshot.
-  The first realization freezes revision 1. Later semantic plan clarification
-  increments the revision; another realization against unchanged plan content
-  does not.
+  The first realization freezes revision 1. Later revisions are required
+  only when frozen stage obligations change; compatible future-only edits
+  are recorded in the current plan change log.
 - Every approved manual or automatic realization has one persistent
   `<goal-directory>/realizations/<realization-record-id>.md` artifact. Create it
   after the decision and local plan snapshot and before any run.
@@ -209,12 +219,19 @@ validation flow.
 - Mutable execution state belongs in
   `<goal-directory>/run/<realization-record-id>--<YYYYMMDDTHHMMSSZ>.md`. The
   current `plan.md` may mirror only the run's derived emoji progress in its
-  Plan Map when the pinned revision and stage topology match; the run remains
+  Plan Map after frozen-contract and dependency compatibility checks; the run remains
   authoritative, and immutable plan-revision snapshots are never updated.
 - Every command generated for human execution of a manual plan stage must be
   appended to the current run before or when it is presented. Preserve
   generation order and corrected or superseded commands; use placeholders or
   protected-input references instead of literal secrets.
+- Successful plan-action and validation commands, including those executed by
+  the agent or an automatic realization, belong in the current run for reuse
+  and automation after observed success and before stage validation. Preserve
+  order, stage, purpose, working context, exact safe command, concise result,
+  and replay constraints. Failed attempts, redundant repeats and incidental
+  bookkeeping need not be logged as a full trace. Verify each retained command
+  in a group; recording a command does not authorize replay or automation.
 - Immutable copies of plan revisions used by realizations belong in
   `<goal-directory>/realizations/plan-revision-<N>.md`. Rebase relative links
   when copying `plan.md`, and never overwrite an existing revision snapshot.
@@ -234,3 +251,15 @@ validation flow.
 - Import and export of reusable multi-pass plans preserve goal context, paths,
   registered realizations, and validation contracts; bounded run logs are not
   required package history.
+
+## Stage Contracts and Plan Changes
+
+Follow the [revision rule](../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-revision-history-rule) and
+[stage contract rule](../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-contract-rule):
+
+- Log compatible future-only edits without a new revision; assess dependencies
+  and realization fit. Preserve applicable accepted results.
+- Freeze each effective stage contract in its run before action; validate
+  against captured criteria and evidence. Preserve attempts and baseline links.
+- Create a new revision before executing changed frozen obligations; identify
+  revalidation or rework. Never rebind completed runs or invent legacy contracts.

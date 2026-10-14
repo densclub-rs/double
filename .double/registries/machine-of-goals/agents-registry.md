@@ -59,6 +59,7 @@ status: release-candidate
 - optional-input: `plan-stop-points`
 - output: `plan-run`, `updated-realization-artifact`, `run-index`, `updated-plan-realization-registry-when-needed`
 - optional-output: `implementation-artifact`, `handoff-artifact`, `blocker-or-revision-note`
+- execution-contract: freeze each stage attempt's effective contract in the run before action; log and assess compatible future-only changes without a new revision
 - supported-modes: `execution`, `explain`, `dry-run`, `planning`
 - templates: `.double/templates/machine-of-goals/realization-template.md`, `.double/templates/machine-of-goals/plan-run-template.md`, `.double/templates/machine-of-goals/run-index-template.md`, `.double/templates/machine-of-goals/plan-template.md`
 - system-prompt: `.double/prompts/machine-of-goals/system/plan-realization.md`
@@ -72,7 +73,8 @@ status: release-candidate
 - stage: `06-plan-validation`
 - input: `plan-run`, `realization-artifact`, `path-options`, `plan-realization-registry`, `stage-validation-criteria`, `goal-artifact`, `plan-artifact`, `execution-evidence`
 - output: `updated-plan-run`, `updated-realization-artifact`, `updated-plan-realization-registry`, `goal-progress-note`, `revision-or-continuation-decision`
-- optional-output: `updated-plan-artifact`, `plan-revision-snapshot-after-revision`, `goal-closure-signal`
+- optional-output: `updated-plan-artifact`, `plan-revision-snapshot-when-frozen-obligations-change`, `goal-closure-signal`
+- validation-contract: validate against the attempt's captured criteria and evidence; preserve applicable prior acceptance and record any revalidation or rework
 - supported-modes: `validation`, `review`, `explain`
 - templates: `.double/templates/machine-of-goals/plan-template.md`
 - system-prompt: `.double/prompts/machine-of-goals/system/plan-validation.md`

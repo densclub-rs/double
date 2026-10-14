@@ -165,6 +165,38 @@ steps, asks for a narrow answer only, or the current state is blocked and no
 meaningful workflow movement is available. In that case, the agent should say
 what information or decision would unblock the workflow.
 
+<a id="structured-user-choice-rule"></a>
+
+## Structured User Choices
+
+Apply this rule to concrete mode/next-step choices, plan path or subplan
+selection, realization choices and validation decisions. Show the relevant
+trade-offs and evidence before requesting the choice; preserve every selectable
+path rather than silently replacing the set with the recommendation. Keep
+open-ended goal clarification free-form. This interface rule does not add
+approval gates, select a path, or weaken existing explicit confirmation rules.
+
+Use `request_user_input_async` for a concrete choice or confirmation when it
+is exposed and permitted for the question. Supply concise, contextual options
+in the interaction language. A recommendation may be presented, but every
+material alternative must remain available; do not add an artificial choice
+when the user needs to describe something freely.
+
+For an asynchronous question, wait for an explicit submitted response or an
+equivalent direct user instruction before dependent edits, execution or state
+transitions. A tool acknowledgement that the question was accepted, a
+preselected option, silence or a timeout is not user approval. Independent
+read-only work may continue while awaiting the answer. Do not ask again for a
+choice or authorization the user already supplied.
+
+Check the actual runtime tool availability and its mode/purpose restrictions.
+If `request_user_input_async` is unavailable or disallowed, use another exposed
+structured-question tool only when permitted for this question; otherwise use
+a concise text question with numbered options. Never assume an interface named
+`AskUserQuestion` exists or call a planning-only tool for approval when its
+runtime contract forbids that use. The client controls the visual presentation;
+plain text does not itself create a choice card.
+
 ## Modes
 
 The first draft assumes these cross-step modes. Draft contracts are defined in
@@ -416,13 +448,9 @@ derived progress markers so the snapshot contains the stable transition model
 rather than mutable execution presentation. Rebase relative Markdown links for
 the deeper directory while preserving the plan's semantic content.
 
-After at least one realization exists, a semantic clarification of the current
-transition model increments `plan-revision`, updates
-`plan-revision-artifact`, and creates the corresponding snapshot before the
-revised plan is used by a decision or run. A snapshot that already exists must
-never be overwritten. Registering another realization against unchanged plan
-content, aggregate registry updates, and progress projection do not create a
-new revision.
+After at least one realization exists, apply the Plan Revision History Rule
+below. Edits to unstarted work do not automatically create a revision. A
+snapshot that already exists must never be overwritten.
 
 A realization decision and every concrete run must link the exact local plan
 revision snapshot and exact local realization-artifact revision. An exact
@@ -431,6 +459,8 @@ separate implementation. A VCS permalink may be
 recorded as additional evidence, but it does not replace the local snapshot.
 Plan revisions remain historical copies of the single current `plan.md`, not
 alternative plan variants.
+
+<a id="plan-revision-history-rule"></a>
 
 ## Plan Revision History Rule
 
@@ -445,15 +475,74 @@ baseline gives the realization decision and later runs an exact local plan
 reference; it does not imply that draft clarification had created earlier
 revisions.
 
-Once a realization exists, any later semantic clarification of the intended
-transition model increments `plan-revision` and creates the corresponding new
-snapshot before that revised plan is used by another decision or run. Mark
-realizations pinned to an earlier revision `review-required`. Registration of
-another realization against the unchanged plan, aggregate-only registry
-updates, timestamps, and matching-revision progress projection do not create a
-plan revision. Do not edit or replace an existing snapshot. Every snapshot has
-no displayed run and neutral progress markers because revision history
-preserves the transition model, not execution state.
+After registration, classify each change by its effect on frozen stage
+contracts, including those in other retained runs:
+
+- Edit unstarted stages directly in `plan.md` without a new revision when no
+  frozen obligation changes. Record a dated entry in the plan change log with
+  affected stage ids, reason, dependency impact, and compatibility decision.
+- A new revision is required when a change alters frozen obligations: inputs,
+  actions, outputs, acceptance criteria, dependencies, or approved boundaries
+  of a started or completed stage, or invalidates an accepted result. Increment
+  `plan-revision`, update `plan-revision-artifact`, and create a new immutable
+  snapshot before executing changed obligations. Record which results need
+  revalidation or rework; preserve earlier acceptance as historical evidence.
+- Adding or changing future dependencies requires an explicit applicability
+  check of earlier results and realization procedure. Preserve compatible
+  results; mark only affected realizations `review-required` or `incompatible`.
+  Unstarted-stage edits alone do not invalidate accepted results or alignment.
+- Registration, aggregate statistics, timestamps, and progress alone do not
+  create a revision. Never rebind a completed run to a later plan revision.
+
+Revision fields identify the historical baseline, not an assertion that the
+current plan is byte-identical to that snapshot. Decisions and runs retain
+exact baseline and realization revision links. For future work, the current
+plan plus its change log supplies the stage contract; the run freezes that
+contract before action. A new decision records the applicable change-log entry
+as well as its baseline. Path selection and changes to authority still require
+the existing user review; omitting a snapshot does not authorize execution.
+
+Do not edit or replace an existing snapshot. Every new snapshot has no
+displayed run and neutral progress markers.
+
+<a id="stage-contract-rule"></a>
+
+## Stage Contract Rule
+
+Before starting each stage attempt, copy its effective contract from the current
+`plan.md` into an explicitly anchored block in the run. Record stage id,
+attempt id, capture time, source stage and applicable plan change-log entry,
+inputs and preconditions, actions, outputs, acceptance criteria, dependencies,
+approved boundaries, and required stop points. Rebase relative links into the
+run directory. A live plan link alone is not a frozen contract.
+
+Validate the attempt against this captured content and its evidence. Preserve
+the block once action starts; changes requiring a new plan revision create a
+new attempt or run with a new captured contract and an explicit supersession
+link. Never overwrite earlier instructions, results, or acceptance decisions.
+An active run may adopt compatible changes to unstarted stages after recording
+the dependency and realization compatibility check; update only its unstarted
+map entries, and capture each new contract before execution. Carry accepted
+results forward by linking their original contract and evidence and recording
+their applicability to the new continuation.
+
+Final goal validation also checks the current goal criteria and applicability
+of carried results; historical stage acceptance alone does not prove the
+current goal achieved. Before retention removes a run referenced for a carried
+result, pin that run or preserve its contract and evidence in a durable artifact
+and update the referencing links. Never leave a carried result without its
+original requirements and evidence.
+
+Legacy runs remain valid historical records against their pinned snapshots.
+Do not invent missing contracts or migrate completed runs. Before resuming an
+unstarted legacy stage, capture its effective contract under this rule; for a
+started legacy stage use its pinned snapshot and recorded instructions as the
+original contract and apply the revision rule to any changed obligation.
+
+For export, include the current plan and change log with the baseline. If a
+reusable package carries accepted-stage claims, preserve their contract and
+evidence in durable package material before bounded run retention removes
+the only copy. Do not infer acceptance from the current plan alone.
 
 ## Plan Run Rule
 
@@ -481,13 +570,15 @@ uses these visual markers:
 - `➖` not selected for this run
 
 The run, not `plan.md`, is the source of execution status. The current mutable
-`plan.md` may project one explicitly linked run into its Plan Map only when the
-run's pinned `plan-revision` equals the plan's current revision and the stage
-topology matches. Keep the displayed run, revision, and last synchronization
-time next to the map. Clear the projection when no run is being displayed.
+`plan.md` may project an explicitly linked run's stage status by stable stage id
+only after checking contract and dependency compatibility. Revision equality
+alone is insufficient. Leave new unstarted stages neutral and do not copy an
+incompatible status; record any required revalidation separately. Keep the
+displayed run, baseline revision, and last synchronization time next to the map.
+Clear the projection when no run is being displayed.
 Never update an immutable `realizations/plan-revision-<N>.md` snapshot with
-execution progress. When a run uses an older revision, its own Plan Map is the
-revision-scoped visual view.
+execution progress. Each run map retains its captured attempts and evidence
+even when the current plan evolves.
 
 Concise notes do not permit generated manual instructions to be omitted. Every
 command generated for a human to execute while manually performing a selected
@@ -499,6 +590,38 @@ safe-to-share text presented to the human: literal secrets are never
 interpolated, and protected values are represented by placeholders or
 references. This requirement does not create a full command trace for automatic
 execution.
+
+<a id="successful-command-reuse-rule"></a>
+
+### Successful Commands for Reuse and Automation
+
+The current run preserves successful commands that implement plan actions or
+validate their preconditions, intermediate states, or results, whether the
+human, agent, or automatic realization executed them. Record a useful command
+after its success is observed, as work proceeds and before submitting the
+stage for validation; do not rely on a later user reminder.
+
+Preserve execution order and record the stage, purpose, working directory or
+execution context, exact safe-to-share command, and concise observed result.
+State prerequisites, environment-specific values, required human confirmation,
+and other limits on replay or automation. Use placeholders or protected-input
+references for secrets. Record execution time only when known; mark later
+reconstructed entries as retrospective rather than inventing timestamps.
+
+This is a reusable selection, not a full tool or shell trace. Failed attempts,
+repeats without a new useful result, and incidental agent bookkeeping may be
+omitted from this section. Preserve relevant failures and blockers in concise
+execution notes. For a command group, confirm the success of each command kept;
+the final command's exit code does not prove all earlier commands succeeded.
+A zero exit code alone also does not prove the intended stage result or that
+replaying a command is safe. Commands recorded here do not authorize replay or
+register an automatic realization of the plan.
+
+Before accepting a stage, validation checks that applicable successful commands
+and their replay context are captured. A stage with no applicable command
+execution may explicitly record that fact; do not invent commands to fill the
+section. Generated instructions for human execution remain recorded separately
+under the preceding rule, including their generation and disposition history.
 
 Run logs are bounded working context. The default retention depth is the latest
 five terminal runs per realization record and may be configured from three to five.
@@ -754,19 +877,22 @@ external implementation artifact, or a different realization route.
   - record every command generated for human execution of a manual stage in the
     current run before or when presenting it, without overwriting earlier
     corrected or superseded commands
+  - preserve successful plan-action and validation commands in the current
+    run for reuse and automation, with execution order, context and observed
+    result; no full trace or failed-command list is required
   - refine the stage when necessary before or during work
   - create additional specifications, scripts, workflows, checklists, or
     handoff artifacts when the current stage requires them
   - append a new automatic realization row to section 10 of `plan.md` when the
     user chooses to make it available for selection
   - recompute plan style immediately when registration changes
-  - reuse the current plan revision when registration does not change the
-    semantic transition model
+  - classify changes by frozen obligations; compatible future-only edits
+    reuse the baseline and are recorded in the plan change log
   - when creating a run, increment run count and set latest run time and
     `running` result in the selected realization row in `plan.md`
-  - maintain emoji progress in the run's Plan Map and, when the pinned revision
-    and topology match the current plan, mirror it as a derived projection in
-    the current `plan.md` Plan Map
+  - freeze the effective stage contract in the run before action
+  - project progress by stable stage id only after frozen-contract and
+    dependency compatibility checks
 - produced-outputs:
   - `plan-run`
   - `updated-realization-artifact`
@@ -786,18 +912,21 @@ external implementation artifact, or a different realization route.
 - purpose:
   - validate the result of the current run stage or final run result
   - compare evidence with the stage completion criteria
+  - verify applicable successful commands and replay/automation context are
+    recorded, or an explicit no-applicable-commands note is present
   - conduct validation as a dialogue until the user confirms the stage result,
     rejects it, marks it partial, or asks for revision
   - record the validation decision and terminal result in the current run
   - update the run's Plan Map emoji after validation and mirror it in the
-    current `plan.md` only when its revision and topology still match
+    current `plan.md` only after contract and dependency compatibility checks
   - replace the selected realization row's latest `running` result with the
     terminal result in `plan.md` without incrementing run count again
   - preserve plan topology in `plan.md`; an emoji-only progress projection is
     not a topology revision, while execution feedback changes the plan only
     when it changes the intended transition model
-  - when `plan.md` is revised, increment `plan-revision` and copy the revised
-    plan to a new `realizations/plan-revision-<N>.md` before later execution
+  - log future-only edits without a revision when frozen obligations remain
+    unchanged; create a new immutable snapshot before changed frozen
+    obligations execute, and identify required revalidation or rework
   - enforce bounded run retention after terminal statistics have been updated
   - remove retired run links from the realization artifact and `run/index.md`
     without leaving broken links
@@ -810,8 +939,9 @@ external implementation artifact, or a different realization route.
     explicitly required
 - transition-condition:
   - the current run result has an explicit validation decision and aggregate
-    statistics have been updated; when `plan.md` was revised for later use, its
-    new local plan revision snapshot has also been created
+    statistics have been updated; changes to frozen obligations have their
+    required new snapshot, while future-only changes have a logged
+    compatibility decision
 - next-step:
   - `05-plan-realization`
   - `07-plan-packaging-export`

@@ -85,9 +85,9 @@ state. Detailed status and validation remain in that `plan-run`.
 - Displayed plan revision: [Revision <N>](./realizations/plan-revision-<N>.md#<goal-id>-plan) or none
 - Progress synchronized at: <YYYY-MM-DDTHH:MM:SSZ-or-never>
 
-Mirror progress here only when the displayed run executes the current
-`plan-revision` and its topology matches this map. Otherwise clear the
-projection and use the run's revision-scoped Plan Map. Never modify an
+Mirror progress by stable stage id only after checking frozen-contract and
+dependency compatibility. Revision equality alone is insufficient. Leave new
+unstarted stages neutral and clear incompatible projections. Never modify an
 immutable plan-revision snapshot to show execution progress.
 
 Legend: `⚪` not started; `🔄` in progress; `🟠` awaiting validation; `✅`
@@ -153,7 +153,9 @@ revision; `➖` not selected.
 
 ## 8. Revision and Alignment Conditions
 
+- Refine unstarted stages without a revision when frozen obligations remain unchanged; log the change and assess dependencies.
 - Revise a stage when:
+- Create a plan revision when frozen obligations change or accepted results become inapplicable; identify revalidation or rework:
 - Revise the plan when:
 - Reformulate the goal when:
 - Mark realizations `review-required` when:
@@ -197,16 +199,38 @@ directory and never overwrite an existing snapshot. Before copying, clear the
 displayed run, synchronization time, and derived progress so the snapshot has
 neutral markers and contains no mutable execution presentation.
 
-After a realization exists, a semantic clarification of the transition model
-increments the revision and creates its snapshot before later use. A new
-realization against unchanged plan content, aggregate-only registry changes,
-and progress projection do not create a revision. A VCS permalink may be
-recorded as additional evidence.
+After registration, edit unstarted work without a revision if no frozen
+obligation changes; record its dependency and realization compatibility below.
+Create a new immutable revision before executing changed frozen obligations.
+Preserve completed runs and original acceptance; never rebind their baseline.
+Revision fields identify the historical baseline, not a byte-identical copy of
+the current plan. Runs freeze effective stage contracts before action.
+Registry, statistics, and progress alone do not create revisions.
 
 After the decision is committed, create the linked
 `./realizations/<realization-record-id>.md` before any run is created.
 
-## 11. Open Questions
+<a id="plan-change-log"></a>
+
+## 11. Plan Change Log
+
+Append entries for post-baseline plan edits, including those creating a revision.
+Keep prior entries and stable stage ids. Do not overwrite a frozen run contract.
+
+<a id="plan-change-<change-id>"></a>
+
+### <Change Id> — <YYYY-MM-DDTHH:MM:SSZ>
+
+- Affected stages and change:
+- Reason:
+- Frozen obligations affected: <none-or-contract-links>
+- Dependency impact and earlier-result applicability:
+- Realization compatibility and approval scope:
+- Decision: <future-only-no-revision|new-revision-required>
+- Baseline and any new revision:
+- Revalidation or rework: <required-work-and-original-evidence-links> or none
+
+## 12. Open Questions
 
 - [ ] <question that affects planning or validation>
 ```

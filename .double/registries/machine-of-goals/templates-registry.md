@@ -36,7 +36,10 @@ outputs and their stable template identifiers.
   `realizations/plan-revision-<N>.md` snapshot
 - keep the plan template's revision fields null before the first realization;
   freeze revision 1 for the first executable baseline and revise thereafter
-  only when the semantic transition model changes
+  only when frozen stage obligations change; log compatible future-only edits
+  without a revision
+- capture each effective stage contract in the run before action; use captured
+  criteria and evidence for validation, preserving historical baseline links
 - use the workflow file as the canonical source for step order and transition
   conditions
 - use agent cards and the agents registry to determine which agent produces
