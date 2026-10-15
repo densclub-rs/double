@@ -43,6 +43,11 @@ deadline=$((SECONDS+150))
 until [ -f "$DOUBLE_STATE_DIR/installer/cron.log" ] && grep -q 'No registered installations.' "$DOUBLE_STATE_DIR/installer/cron.log"; do
   if [ "$SECONDS" -ge "$deadline" ]; then
     cat "$DOUBLE_STATE_DIR/installer/cron.log" 2>/dev/null || true
+    echo 'Current crontab:' >&2
+    crontab -l >&2 || true
+    ps -ef | grep '[c]ron' >&2 || true
+    sudo journalctl --since '-5 minutes' --no-pager 2>/dev/null | grep -i -E 'cron|pam|runner' | tail -n 60 >&2 || true
+    sudo tail -n 60 /var/log/syslog >&2 2>/dev/null || true
     echo 'Timed out waiting for actual scheduled update-all.' >&2
     exit 1
   fi

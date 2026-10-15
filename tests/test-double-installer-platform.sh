@@ -63,7 +63,7 @@ bash "$installer" list > "$fixture/list.txt"
 grep -F 'machine-of-ideas' "$fixture/list.txt" >/dev/null
 # Compare against the shell's canonical path: checks native-jq/MSYS argument handling.
 canonical="$(cd "$project" && pwd -P)"
-jq -e --arg project "$canonical" '.installations | length == 1 and .[0].project == $project' "$DOUBLE_STATE_DIR/installer/registry.json" >/dev/null
+MSYS2_ARG_CONV_EXCL="$canonical" jq -e --arg project "$canonical" '.installations | length == 1 and .[0].project == $project' "$DOUBLE_STATE_DIR/installer/registry.json" >/dev/null
 bash "$installer" update --project "$project" --machine machine-of-ideas --non-interactive
 bash "$installer" remove --project "$project" --machine machine-of-ideas --yes
 test ! -e "$project/.double/templates/machine-of-ideas/example.md"

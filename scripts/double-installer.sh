@@ -2,6 +2,29 @@
 # Double Installer: release discovery and verified downloads.
 set -euo pipefail
 
+# Native jq.exe emits CRLF by default. Keep POSIX inventory lines and --arg
+# string values intact in Git Bash while retaining conversion of input filenames.
+case "${OSTYPE:-}" in
+  msys*|cygwin*)
+    jq() {
+      local arg expect=0 exclusions="${MSYS2_ARG_CONV_EXCL:-}"
+      for arg in "$@"; do
+        if [ "$expect" -eq 2 ]; then
+          if [ -n "$arg" ]; then
+            if [ -n "$exclusions" ]; then exclusions="$exclusions;$arg"; else exclusions="$arg"; fi
+          fi
+          expect=0
+        elif [ "$expect" -eq 1 ]; then
+          expect=2
+        elif [ "$arg" = --arg ]; then
+          expect=1
+        fi
+      done
+      MSYS2_ARG_CONV_EXCL="$exclusions" command jq --binary "$@"
+    }
+    ;;
+esac
+
 usage() {
   cat <<'EOF'
 Double Installer
