@@ -10,10 +10,16 @@ if command -v cygpath >/dev/null 2>&1; then
 fi
 cd "$(dirname "$0")/.."
 python3 - <<'PY'
-import hashlib,io,json,os,pathlib,subprocess,tarfile,tempfile,shutil
+import hashlib,io,json,os,pathlib,subprocess,tarfile,tempfile,shutil,sys,shlex
 def posix_path(path):
  if os.name != 'nt': return str(path)
  return subprocess.check_output([os.environ['DOUBLE_TEST_CYGPATH'], '-u', str(path)],text=True,encoding='utf-8').strip()
+def native_python_shim(path):
+ if os.name != 'nt': return
+ payload=path.with_name(path.name+'.py')
+ payload.write_bytes(path.read_bytes())
+ launcher='#!/usr/bin/env bash\nexec '+shlex.quote(posix_path(sys.executable))+' '+shlex.quote(str(payload))+' "$@"\n'
+ path.write_text(launcher,encoding='utf-8',newline='\n')
 bash_exe=os.environ.get('DOUBLE_TEST_BASH','bash')
 sh_exe=os.environ.get('DOUBLE_TEST_SH','/bin/sh')
 def fixture_tool(tool):
@@ -31,7 +37,7 @@ if os.environ.get('HTTP_FAIL'): sys.exit(22)
 if 'api.github.com' in url:
  page=url.rsplit('page=',1)[-1]; shutil.copyfile(root/('page'+page+'.json'),target)
 else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
-''', encoding="utf-8", newline="\n");fake.chmod(0o755)
+''', encoding="utf-8", newline="\n");fake.chmod(0o755);native_python_shim(fake)
  env=dict(os.environ,PATH=str(bindir)+os.pathsep+os.environ['PATH'],FIXTURE=tmp,DOUBLE_STATE_DIR=posix_path(root/'state'))
  def run(*args,code=0,extra=None):
   r=subprocess.run([bash_exe,script,*args],env=dict(env,**(extra or {})),capture_output=True,text=True,encoding='utf-8')
@@ -179,7 +185,7 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
 
  # S05: isolated crontab adapter. Never call the user's real crontab.
  cron=bindir/'crontab';cronfile=root/'fake-crontab'
- cron.write_text("#!/usr/bin/env python3\nimport os,sys,pathlib,shutil\nroot=pathlib.Path(os.environ['FIXTURE']); table=root/'fake-crontab'\nif os.environ.get('CRON_FAIL'): print('permission denied',file=sys.stderr);sys.exit(1)\nif sys.argv[1:] == ['-l']:\n if not table.exists(): print('no crontab for fixture',file=sys.stderr);sys.exit(1)\n print(table.read_text(),end='')\nelse: shutil.copyfile(sys.argv[1],table)\n", encoding="utf-8", newline="\n");cron.chmod(0o755)
+ cron.write_text("#!/usr/bin/env python3\nimport os,sys,pathlib,shutil\nroot=pathlib.Path(os.environ['FIXTURE']); table=root/'fake-crontab'\nif os.environ.get('CRON_FAIL'): print('permission denied',file=sys.stderr);sys.exit(1)\nif sys.argv[1:] == ['-l']:\n if not table.exists(): print('no crontab for fixture',file=sys.stderr);sys.exit(1)\n print(table.read_text(),end='')\nelse: shutil.copyfile(sys.argv[1],table)\n", encoding="utf-8", newline="\n");cron.chmod(0o755);native_python_shim(cron)
  unrelated='17 9 * * * echo keep\n';cronfile.write_text(unrelated, encoding="utf-8", newline="\n")
  run('cron-add','--schedule','0 3 * * *')
  initial=cronfile.read_text();assert unrelated in initial and initial.count('# double-installer:')==1
