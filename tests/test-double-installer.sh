@@ -209,6 +209,11 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
   target=str(fake) if tool=='curl' else fixture_tool(tool)
   assert target,tool
   (nocron/tool).symlink_to(target)
+ # PE executables reached through fixture symlinks still need MSYS runtime DLLs.
+ # Keep the strict no-crontab PATH: provide DLLs, not the whole /usr/bin.
+ if os.name == 'nt':
+  for dll in pathlib.Path(bash_exe).parent.glob('*.dll'):
+   shutil.copy2(dll,nocron/dll.name)
  assert 'unavailable' in run('doctor',extra={'PATH':str(nocron)})
  run('cron-add','--schedule','0 3 * * *',code=1,extra={'PATH':str(nocron)})
  run('cron-remove',extra={'PATH':str(nocron)})
