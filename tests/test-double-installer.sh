@@ -208,12 +208,21 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
  for tool in tools:
   target=str(fake) if tool=='curl' else fixture_tool(tool)
   assert target,tool
-  (nocron/tool).symlink_to(target)
+  if os.name == 'nt' and tool == 'jq':
+   # Chocolatey shim launchers resolve companion metadata relative to argv[0].
+   # Invoke the original launcher path instead of relocating it via a symlink.
+   (nocron/tool).write_text('#!/bin/sh\nexec '+shlex.quote(posix_path(target))+' "$@"\n',encoding='utf-8',newline='\n')
+   (nocron/tool).chmod(0o755)
+  else:
+   (nocron/tool).symlink_to(target)
  # PE executables reached through fixture symlinks still need MSYS runtime DLLs.
  # Keep the strict no-crontab PATH: provide DLLs, not the whole /usr/bin.
  if os.name == 'nt':
   for dll in pathlib.Path(bash_exe).parent.glob('*.dll'):
    shutil.copy2(dll,nocron/dll.name)
+ if os.name == 'nt':
+  probe=subprocess.run([bash_exe,'-c','set -e; jq --version; cygpath -w "$1"','--',env['DOUBLE_STATE_DIR']],env=dict(env,PATH=str(nocron)),capture_output=True,text=True,encoding='utf-8')
+  assert probe.returncode==0,('native no-cron fixture startup',probe.stdout,probe.stderr)
  assert 'unavailable' in run('doctor',extra={'PATH':str(nocron)})
  run('cron-add','--schedule','0 3 * * *',code=1,extra={'PATH':str(nocron)})
  run('cron-remove',extra={'PATH':str(nocron)})
