@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # Shared platform smoke: native tools, POSIX shell fixtures, no network/real cron.
 set -euo pipefail
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/test-log.sh"
+phase_started=$SECONDS
+test_log "START platform smoke"
 repo_dir="$(cd "$(dirname "$0")/.." && pwd)"
 installer="$repo_dir/scripts/double-installer.sh"
 fixture="$(mktemp -d "${TMPDIR:-/tmp}/double-platform.XXXXXX")"
@@ -71,3 +74,5 @@ bash "$installer" uninstall-all --yes
 test -f "$project/keep.txt"
 test ! -e "$DOUBLE_STATE_DIR/installer"
 printf 'PASS: real jq, canonical paths with spaces/Unicode/apostrophe/percent, registry persistence, no-op update, remove and isolated cleanup\n'
+
+test_log "END platform smoke; elapsed=$((SECONDS-phase_started))s"

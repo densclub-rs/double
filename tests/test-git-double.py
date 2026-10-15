@@ -5,8 +5,24 @@ import subprocess
 import tempfile
 import time
 import unittest
+from datetime import datetime, timezone
 
 SCRIPT = (Path(__file__).resolve().parent.parent / 'scripts' / 'git-double')
+
+
+class TimestampedResult(unittest.TextTestResult):
+    def startTest(self, test):
+        self.started = time.monotonic()
+        stamp = datetime.now(timezone.utc).isoformat(timespec='seconds').replace('+00:00', 'Z')
+        self.stream.write(f'[{stamp}] START {test.id()}\n')
+        self.stream.flush()
+        super().startTest(test)
+
+    def stopTest(self, test):
+        stamp = datetime.now(timezone.utc).isoformat(timespec='seconds').replace('+00:00', 'Z')
+        self.stream.write(f'\n[{stamp}] END {test.id()}; elapsed={time.monotonic()-self.started:.3f}s\n')
+        self.stream.flush()
+        super().stopTest(test)
 
 
 class DraftExclusions(unittest.TestCase):
@@ -126,4 +142,4 @@ class DraftExclusions(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(testRunner=unittest.TextTestRunner(resultclass=TimestampedResult))

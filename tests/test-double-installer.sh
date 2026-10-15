@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # Isolated S02 release transport tests. No network or live state/cron changes.
 set -euo pipefail
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/test-log.sh"
+phase_started=$SECONDS
+test_log "START installer fixtures"
 export PYTHONUTF8=1 PYTHONIOENCODING=utf-8
 # Native Python must invoke this Git Bash, never Windows' WSL bash.exe.
 if command -v cygpath >/dev/null 2>&1; then
@@ -10,7 +13,8 @@ if command -v cygpath >/dev/null 2>&1; then
 fi
 cd "$(dirname "$0")/.."
 python3 - <<'PY'
-import hashlib,io,json,os,pathlib,subprocess,tarfile,tempfile,shutil,sys,shlex
+import hashlib,io,json,os,pathlib,subprocess,tarfile,tempfile,shutil,sys,shlex,time
+from datetime import datetime,timezone
 def posix_path(path):
  if os.name != 'nt': return str(path)
  return subprocess.check_output([os.environ['DOUBLE_TEST_CYGPATH'], '-u', str(path)],text=True,encoding='utf-8').strip()
@@ -39,8 +43,15 @@ if 'api.github.com' in url:
 else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
 ''', encoding="utf-8", newline="\n");fake.chmod(0o755);native_python_shim(fake)
  env=dict(os.environ,PATH=str(bindir)+os.pathsep+os.environ['PATH'],FIXTURE=tmp,DOUBLE_STATE_DIR=posix_path(root/'state'))
+ case_number=0
  def run(*args,code=0,extra=None):
-  r=subprocess.run([bash_exe,script,*args],env=dict(env,**(extra or {})),capture_output=True,text=True,encoding='utf-8')
+  global case_number
+  case_number+=1
+  stamp=lambda: datetime.now(timezone.utc).isoformat(timespec='seconds').replace('+00:00','Z')
+  started=time.monotonic()
+  print(f'[{stamp()}] START fixture {case_number}: {args[0]} expected_exit={code}',flush=True)
+  r=subprocess.run([bash_exe,script,*args],env=dict(env,**(extra or {})),capture_output=True,text=True,encoding='utf-8',timeout=180)
+  print(f'[{stamp()}] END fixture {case_number}: {args[0]} exit={r.returncode} elapsed={time.monotonic()-started:.3f}s',flush=True)
   assert r.returncode==code,(args,r.returncode,r.stdout,r.stderr)
   return r.stdout+r.stderr
  def release(version,channel='',machine='machine-of-ideas',draft=False):
@@ -250,3 +261,5 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
 
 print('PASS: channels, numeric ordering, pagination, missing releases, verified cache, duplicate cache, checksum/archive failures, HTTP/JSON errors, usage validation')
 PY
+
+test_log "END installer fixtures; elapsed=$((SECONDS-phase_started))s"

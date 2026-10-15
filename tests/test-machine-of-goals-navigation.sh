@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 set -eu
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/test-log.sh"
+phase_started=$SECONDS
+test_log "START navigation tests"
 
 script_dir="$(cd "$(dirname "$0")" && pwd)"
 validator="$script_dir/../scripts/validate-machine-of-goals-navigation.py"
@@ -126,3 +129,5 @@ if python3 "$validator" "$broken_run" >/dev/null 2>&1; then
 fi
 
 echo "Machine of Goals navigation validator tests passed"
+
+test_log "END navigation tests; elapsed=$((SECONDS-phase_started))s"

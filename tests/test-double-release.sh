@@ -3,6 +3,9 @@
 # Implementation of the github-actions-maintenance subplan.
 
 set -eu
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/test-log.sh"
+phase_started=$SECONDS
+test_log "START release tests"
 
 script_dir="$(cd "$(dirname "$0")" && pwd)"
 release_script="$script_dir/../scripts/double-release.sh"
@@ -30,6 +33,7 @@ printf '%sImplementation of subplan:%s github-actions-maintenance\n\n' "$color_b
 
 cleanup() {
   exit_status="$?"
+  test_log "END release tests; exit=$exit_status; elapsed=$((SECONDS-phase_started))s"
   trap - EXIT HUP INT TERM
   rm -rf "$fixture_dir"
   if [ "$exit_status" -eq 0 ]; then
@@ -83,6 +87,8 @@ enable_failure_trap
 
 begin_test() {
   current_test="$1"
+  case_started=$SECONDS
+  test_log "START release case: $current_test"
   test_count=$((test_count + 1))
   if [ "$test_count" -gt 1 ]; then
     printf '\n'
@@ -91,6 +97,7 @@ begin_test() {
 }
 
 pass_test() {
+  test_log "END release case: $current_test; elapsed=$((SECONDS-case_started))s"
   printf '%sPASS:%s %s\n' "$color_green" "$color_reset" "$current_test"
 }
 
