@@ -204,6 +204,7 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
  # Simulate Windows-like no-cron PATH without reaching a host crontab.
  nocron=root/'no cron tools';nocron.mkdir()
  tools='bash python3 curl jq tar awk find sort uniq wc cp mv mkdir rm rmdir mktemp dirname tr cmp basename sha256sum'.split()
+ if os.name == 'nt': tools.append('cygpath')
  for tool in tools:
   target=str(fake) if tool=='curl' else fixture_tool(tool)
   assert target,tool
