@@ -1,0 +1,147 @@
+name: Installer validation
+
+on:
+  pull_request:
+    paths: ['scripts/**', 'tests/**', '.github/workflows/**']
+  push:
+    branches: ['**']
+    paths: ['scripts/**', 'tests/**', '.github/workflows/**']
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      ref:
+        description: Exact candidate commit to validate
+        type: string
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  installer:
+    name: Installer / ${{ matrix.os }} / ${{ matrix.arch }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {os: linux, arch: x64, runner: ubuntu-24.04}
+          - {os: linux, arch: arm64, runner: ubuntu-24.04-arm}
+          - {os: macos, arch: x64, runner: macos-15-intel}
+          - {os: macos, arch: arm64, runner: macos-15}
+          - {os: windows, arch: x64, runner: windows-2025}
+          - {os: windows, arch: arm64, runner: windows-11-arm}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+          architecture: ${{ matrix.arch }}
+      - name: Record environment and verify prerequisites
+        env:
+          EXPECTED_ARCH: ${{ matrix.arch }}
+          HOST_ARCH: ${{ runner.arch }}
+          HOST_OS: ${{ runner.os }}
+        run: |
+          mkdir -p test-results
+          bash tests/installer-ci-environment.sh 2>&1 | tee test-results/environment.log
+      - name: Run shared installer checks
+        run: bash tests/run-installer-tests.sh 2>&1 | tee test-results/installer.log
+      - name: Retain evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: installer-${{ matrix.os }}-${{ matrix.arch }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: test-results/
+          if-no-files-found: error
+          retention-days: 14
+
+  regressions:
+    name: Repository regressions / ${{ matrix.runner }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, macos-15]
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Run applicable repository regressions
+        run: |
+          mkdir -p test-results
+          bash tests/test-double-release.sh 2>&1 | tee test-results/release.log
+          python3 tests/test-git-double.py 2>&1 | tee test-results/git-double.log
+          bash tests/test-machine-of-goals-navigation.sh 2>&1 | tee test-results/navigation.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: regressions-${{ matrix.runner }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: test-results/
+          if-no-files-found: error
+          retention-days: 14
+
+  integrations:
+    name: Live release and real cron / Linux
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+          persist-credentials: false
+      - name: Prepare disposable runner scheduler
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cron jq
+          sudo service cron start
+      - name: Verify published package and scheduled execution
+        env:
+          DOUBLE_DISPOSABLE_CRON: '1'
+        run: |
+          mkdir -p test-results
+          bash tests/test-double-installer-live.sh 2>&1 | tee test-results/live-release.log
+          bash tests/test-double-installer-cron.sh 2>&1 | tee test-results/real-cron.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: integrations-linux-${{ github.run_id }}-${{ github.run_attempt }}
+          path: test-results/
+          if-no-files-found: error
+          retention-days: 14
+
+  validation-gate:
+    name: Installer validation gate
+    needs: [installer, regressions, integrations]
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    steps:
+      - name: Require every validation group to pass
+        env:
+          INSTALLER_RESULT: ${{ needs.installer.result }}
+          REGRESSIONS_RESULT: ${{ needs.regressions.result }}
+          INTEGRATIONS_RESULT: ${{ needs.integrations.result }}
+        run: |
+          test "$INSTALLER_RESULT" = success
+          test "$REGRESSIONS_RESULT" = success
+          test "$INTEGRATIONS_RESULT" = success

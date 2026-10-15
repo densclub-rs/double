@@ -5,7 +5,7 @@
 set -eu
 
 script_dir="$(cd "$(dirname "$0")" && pwd)"
-release_script="$script_dir/double-release.sh"
+release_script="$script_dir/../scripts/double-release.sh"
 original_dir="$(pwd)"
 fixture_dir="$(mktemp -d "${TMPDIR:-/tmp}/double-release-test.XXXXXX")"
 current_test='initialization'
@@ -44,7 +44,7 @@ trap cleanup EXIT HUP INT TERM
 usage() {
   printf '%sUsage:%s\n' "$color_bold" "$color_reset"
   cat <<'EOF'
-  scripts/test-double-release.sh [--tag <machine>-<major>.<minor>.<patch>[-dev|-rc]]
+  tests/test-double-release.sh [--tag <machine>-<major>.<minor>.<patch>[-dev|-rc]]
 EOF
 }
 
