@@ -2,25 +2,27 @@
 # Double Installer: release discovery and verified downloads.
 set -euo pipefail
 
-# Native jq.exe emits CRLF by default. Keep POSIX inventory lines and --arg
-# string values intact in Git Bash while retaining conversion of input filenames.
+# Git Bash needs LF jq output, literal JSON string values and explicit native
+# input filenames: MSYS conversion is unreliable for paths containing quotes.
 case "${OSTYPE:-}" in
   msys*|cygwin*)
     jq() {
-      local arg expect=0 exclusions="${MSYS2_ARG_CONV_EXCL:-}"
+      local arg expect=0
+      local args=()
       for arg in "$@"; do
         if [ "$expect" -eq 2 ]; then
-          if [ -n "$arg" ]; then
-            if [ -n "$exclusions" ]; then exclusions="$exclusions;$arg"; else exclusions="$arg"; fi
-          fi
-          expect=0
+          args+=("$arg"); expect=0
         elif [ "$expect" -eq 1 ]; then
-          expect=2
+          args+=("$arg"); expect=2
         elif [ "$arg" = --arg ]; then
-          expect=1
+          args+=("$arg"); expect=1
+        elif [[ "$arg" == /* ]] && [ -e "$arg" ]; then
+          args+=("$(cygpath -w "$arg")")
+        else
+          args+=("$arg")
         fi
       done
-      MSYS2_ARG_CONV_EXCL="$exclusions" command jq --binary "$@"
+      MSYS2_ARG_CONV_EXCL='*' command jq --binary "${args[@]}"
     }
     ;;
 esac
@@ -54,7 +56,7 @@ doctor() {
   printf 'Bash: %s\n' "$BASH_VERSION"
   printf 'State root: %s\n' "${DOUBLE_STATE_DIR:-$HOME/.local/state/double}"
   for tool in curl jq tar awk find sort uniq wc cp mv mkdir rm rmdir mktemp dirname tr cmp basename; do
-    if command -v "$tool" >/dev/null 2>&1; then
+    if { [ "$tool" = jq ] && type -P jq >/dev/null 2>&1; } || { [ "$tool" != jq ] && command -v "$tool" >/dev/null 2>&1; }; then
       printf 'OK: %s\n' "$tool"
     else
       printf 'Missing required dependency: %s\n' "$tool" >&2
