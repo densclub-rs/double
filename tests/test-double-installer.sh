@@ -2,12 +2,24 @@
 # Isolated S02 release transport tests. No network or live state/cron changes.
 set -euo pipefail
 export PYTHONUTF8=1 PYTHONIOENCODING=utf-8
+# Native Python must invoke this Git Bash, never Windows' WSL bash.exe.
+if command -v cygpath >/dev/null 2>&1; then
+  export DOUBLE_TEST_BASH="$(cygpath -w "$(command -v bash)")"
+  export DOUBLE_TEST_SH="$(cygpath -w /bin/sh)"
+  export DOUBLE_TEST_CYGPATH="$(cygpath -w "$(command -v cygpath)")"
+fi
 cd "$(dirname "$0")/.."
 python3 - <<'PY'
 import hashlib,io,json,os,pathlib,subprocess,tarfile,tempfile,shutil
 def posix_path(path):
  if os.name != 'nt': return str(path)
- return subprocess.check_output(['cygpath', '-u', str(path)],text=True,encoding='utf-8').strip()
+ return subprocess.check_output([os.environ['DOUBLE_TEST_CYGPATH'], '-u', str(path)],text=True,encoding='utf-8').strip()
+bash_exe=os.environ.get('DOUBLE_TEST_BASH','bash')
+sh_exe=os.environ.get('DOUBLE_TEST_SH','/bin/sh')
+def fixture_tool(tool):
+ if os.name != 'nt': return shutil.which(tool)
+ value=subprocess.check_output([bash_exe,'-c','command -v "$1"','--',tool],text=True,encoding='utf-8').strip()
+ return subprocess.check_output([os.environ['DOUBLE_TEST_CYGPATH'],'-w',value],text=True,encoding='utf-8').strip()
 script=posix_path(pathlib.Path('scripts/double-installer.sh').resolve())
 with tempfile.TemporaryDirectory(prefix="double installer тест % ' ") as tmp:
  root=pathlib.Path(tmp).resolve(); assets=root/'assets';assets.mkdir(); bindir=root/'bin';bindir.mkdir()
@@ -22,7 +34,7 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
 ''', encoding="utf-8", newline="\n");fake.chmod(0o755)
  env=dict(os.environ,PATH=str(bindir)+os.pathsep+os.environ['PATH'],FIXTURE=tmp,DOUBLE_STATE_DIR=posix_path(root/'state'))
  def run(*args,code=0,extra=None):
-  r=subprocess.run(['bash',script,*args],env=dict(env,**(extra or {})),capture_output=True,text=True,encoding='utf-8')
+  r=subprocess.run([bash_exe,script,*args],env=dict(env,**(extra or {})),capture_output=True,text=True,encoding='utf-8')
   assert r.returncode==code,(args,r.returncode,r.stdout,r.stderr)
   return r.stdout+r.stderr
  def release(version,channel='',machine='machine-of-ideas',draft=False):
@@ -180,14 +192,14 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
  # cron removes escaping before passing literal percent characters to its shell.
  command=command.replace('\\%', '%')
  pages([stable4])
- scheduled=subprocess.run(['/bin/sh','-c',command],env={'PATH':'/usr/bin:/bin','FIXTURE':tmp},capture_output=True,text=True,encoding='utf-8')
+ scheduled=subprocess.run([sh_exe,'-c',command],env={'PATH':'/usr/bin:/bin','FIXTURE':tmp},capture_output=True,text=True,encoding='utf-8')
  assert scheduled.returncode==0,(command,scheduled.stdout,scheduled.stderr)
  run('cron-remove');assert cronfile.read_text()==unrelated
  # Simulate Windows-like no-cron PATH without reaching a host crontab.
  nocron=root/'no cron tools';nocron.mkdir()
  tools='bash python3 curl jq tar awk find sort uniq wc cp mv mkdir rm rmdir mktemp dirname tr cmp basename sha256sum'.split()
  for tool in tools:
-  target=str(fake) if tool=='curl' else shutil.which(tool)
+  target=str(fake) if tool=='curl' else fixture_tool(tool)
   assert target,tool
   (nocron/tool).symlink_to(target)
  assert 'unavailable' in run('doctor',extra={'PATH':str(nocron)})

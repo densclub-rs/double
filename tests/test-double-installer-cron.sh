@@ -35,6 +35,10 @@ printf '\n# unrelated CI sentinel\n' >> "$fixture/baseline"
 crontab "$fixture/baseline"
 bash "$installer" cron-add --schedule '* * * * *'
 bash "$installer" cron-add --schedule '* * * * *'
+# cron-add creates an empty registry. Remove only this verified test-owned
+# empty registry so scheduled no-op emits its explicit completion message.
+jq -e '.installations | length == 0' "$DOUBLE_STATE_DIR/installer/registry.json" >/dev/null
+rm "$DOUBLE_STATE_DIR/installer/registry.json"
 crontab -l > "$fixture/installed"
 test "$(grep -c '# double-installer:' "$fixture/installed")" = 1
 # Actual cron must launch the real update-all command, not a fake adapter.
