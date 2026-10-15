@@ -71,3 +71,13 @@ CI integration jobs may install dependencies on their ephemeral runner.
 Logs are uploaded on failure as well as success and retained for 14 days.
 All six installer jobs and integration/regression groups must pass for the
 exact candidate; preparing YAML is not evidence that hosted jobs have passed.
+
+
+## Test timing
+
+Shell entry points report UTC ISO 8601 start/end and phase timestamps through
+`test-log.sh`. Release cases and Python Git tests report per-case durations.
+The comprehensive installer harness logs every synthetic command's start/end,
+observed exit and elapsed time using Python clocks, without spawning date for
+each command. Each harness invocation is bounded to 180 seconds; the GitHub
+job timeout remains the final bound. Fixture commands use synthetic data only.

@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # Real cron only on an explicitly designated disposable GitHub Linux runner.
 set -euo pipefail
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/test-log.sh"
+phase_started=$SECONDS
+test_log "START real cron test"
 if [ "${GITHUB_ACTIONS:-}" != true ] || [ "${RUNNER_OS:-}" != Linux ] || [ "${DOUBLE_DISPOSABLE_CRON:-}" != 1 ]; then
   echo 'Refusing real cron test outside explicitly designated disposable GitHub Linux runner.' >&2
   exit 2
@@ -26,6 +29,7 @@ cleanup() {
     crontab -r || result=1
   fi
   rm -rf "$fixture"
+  test_log "END real cron test; exit=$result; elapsed=$((SECONDS-phase_started))s"
   exit "$result"
 }
 trap cleanup EXIT
@@ -33,6 +37,7 @@ trap cleanup EXIT
 cat "$fixture/original" > "$fixture/baseline"
 printf '\n# unrelated CI sentinel\n' >> "$fixture/baseline"
 crontab "$fixture/baseline"
+test_log 'Install scheduled command'
 bash "$installer" cron-add --schedule '* * * * *'
 bash "$installer" cron-add --schedule '* * * * *'
 # cron-add creates an empty registry. Remove only this verified test-owned
@@ -43,6 +48,7 @@ crontab -l > "$fixture/installed"
 test "$(grep -c '# double-installer:' "$fixture/installed")" = 1
 # Actual cron must launch the real update-all command, not a fake adapter.
 # Empty isolated registry proves unattended no-op invocation without network.
+test_log 'WAIT scheduled update-all completion (150s bound)'
 deadline=$((SECONDS+150))
 until [ -f "$DOUBLE_STATE_DIR/installer/cron.log" ] && grep -q 'No registered installations.' "$DOUBLE_STATE_DIR/installer/cron.log"; do
   if [ "$SECONDS" -ge "$deadline" ]; then

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/test-log.sh"
+phase_started=$SECONDS
+test_log "START environment report"
 printf 'Commit: %s\nRunner OS: %s\nRunner architecture: %s\nExpected architecture: %s\n' "$(git rev-parse HEAD)" "${HOST_OS:-local}" "${HOST_ARCH:-unknown}" "${EXPECTED_ARCH:-unknown}"
 printf 'Image: %s / %s\nKernel: %s\nBash: %s\n' "${ImageOS:-unknown}" "${ImageVersion:-unknown}" "$(uname -srm)" "$BASH_VERSION"
 case "${EXPECTED_ARCH:-}" in
@@ -23,3 +26,5 @@ tar --version | head -n 1
 if command -v file >/dev/null 2>&1; then
   for tool in bash python3 jq; do file -L "$(command -v "$tool")"; done
 fi
+
+test_log "END environment report; elapsed=$((SECONDS-phase_started))s"

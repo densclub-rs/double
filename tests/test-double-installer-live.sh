@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # Explicit rc smoke against real public release, in disposable project/state.
 set -euo pipefail
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/test-log.sh"
+phase_started=$SECONDS
+test_log "START live package smoke"
 repo="$(cd "$(dirname "$0")/.." && pwd -P)"
 fixture="$(mktemp -d "${TMPDIR:-/tmp}/double-live.XXXXXX")"
 fixture="$(cd "$fixture" && pwd -P)"
@@ -21,3 +24,5 @@ bash "$installer" uninstall-all --yes
 test -f "$fixture/project/keep"
 test ! -e "$DOUBLE_STATE_DIR/installer"
 printf 'PASS: real machine-of-ideas-0.2.3-rc download, verified checksum, installation and cleanup\n'
+
+test_log "END live package smoke; elapsed=$((SECONDS-phase_started))s"
