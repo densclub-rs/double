@@ -5,7 +5,7 @@ phase_started=$SECONDS
 test_log "START navigation tests"
 
 script_dir="$(cd "$(dirname "$0")" && pwd)"
-validator="$script_dir/../scripts/validate-machine-of-goals-navigation.py"
+validator="$script_dir/validate-machine-of-goals-navigation.py"
 fixture_dir="$(mktemp -d "${TMPDIR:-/tmp}/machine-of-goals-navigation.XXXXXX")"
 trap 'rm -rf "$fixture_dir"' EXIT HUP INT TERM
 
