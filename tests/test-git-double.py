@@ -6,7 +6,7 @@ import tempfile
 import time
 import unittest
 
-SCRIPT = Path(__file__).with_name('git-double').resolve()
+SCRIPT = (Path(__file__).resolve().parent.parent / 'scripts' / 'git-double')
 
 
 class DraftExclusions(unittest.TestCase):
