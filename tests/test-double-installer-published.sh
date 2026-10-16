@@ -14,7 +14,7 @@ trap 'rm -rf "$fixture"' EXIT
 [[ "$tag" =~ ^double-installer-[0-9]+\.[0-9]+\.[0-9]+(-(rc|dev))?$ ]]
 test "$(git -C "$root" rev-parse --verify --end-of-options "refs/tags/${tag}^{commit}")" = "$expected"
 base="https://github.com/$repo/releases/download/$tag"
-for asset in double-installer.sh SHA256SUMS.txt INSTALL.md; do
+for asset in double-installer.sh SHA256SUMS.txt; do
   curl --fail --location --retry 3 --proto '=https' --tlsv1.2 "$base/$asset" -o "$fixture/$asset"
 done
 # Require exactly the intended basename, not arbitrary checksum-file paths.
@@ -27,7 +27,7 @@ PY
 # Compare immutable blob bytes, not Windows checkout's CRLF conversion.
 git -C "$root" show "$expected:scripts/double-installer.sh" > "$fixture/expected-source.sh"
 cmp "$fixture/double-installer.sh" "$fixture/expected-source.sh"
-grep -F "Source commit: $expected" "$fixture/INSTALL.md"
+
 export DOUBLE_TEST_INSTALLER="$fixture/double-installer.sh"
 bash "$DOUBLE_TEST_INSTALLER" help
 bash "$root/tests/test-double-installer-live.sh"

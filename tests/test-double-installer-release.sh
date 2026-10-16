@@ -20,6 +20,8 @@ for tag in double-installer-0.1.0 double-installer-0.1.0-rc double-installer-0.1
   git tag "$tag"
   bash scripts/double-release.sh package --tag "$tag"
   cmp scripts/double-installer.sh "dist/$tag/double-installer.sh"
+  test ! -e "dist/$tag/INSTALL.md"
+  test "$(find "dist/$tag" -type f | wc -l | tr -d ' ')" = 2
   (cd "dist/$tag"; if command -v sha256sum >/dev/null; then sha256sum -c SHA256SUMS.txt; else shasum -a 256 -c SHA256SUMS.txt; fi)
 done
 # Uncommitted source cannot leak into an exact-tag package.
@@ -59,6 +61,8 @@ bash scripts/double-release.sh publish --tag double-installer-0.1.0-rc
 grep -Fx -- --prerelease "$FAKE_GH_LOG"
 grep -Fx -- --verify-tag "$FAKE_GH_LOG"
 grep -Fx -- --latest=false "$FAKE_GH_LOG"
+if grep -F 'INSTALL.md' "$FAKE_GH_LOG"; then exit 1; fi
+grep -F "blob/$commit/knowledge/double-installer/double-installer.md" "$FAKE_GH_LOG"
 bash scripts/double-release.sh publish --tag double-installer-0.1.0
 if grep -Fx -- --prerelease "$FAKE_GH_LOG"; then exit 1; fi
 python3 "$root/tests/test-installer-release-workflow.py" "$root"

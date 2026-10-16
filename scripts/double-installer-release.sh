@@ -22,29 +22,8 @@ chmod +x "$out/double-installer.sh"
   cd "$out"
   if command -v sha256sum >/dev/null; then sha256sum double-installer.sh; else shasum -a 256 double-installer.sh; fi
 ) > "$out/SHA256SUMS.txt"
-cat > "$out/INSTALL.md" <<EOF
-# Double Installer $tag
-
-Source commit: $commit
-
-Download double-installer.sh and SHA256SUMS.txt from this installer release.
-Select stable tags with the double-installer- prefix by numeric version;
-rc/dev releases require explicit selection. The repository-wide latest release
-may belong to another component.
-
-Requirements: Bash (3.2 or newer), curl, jq, tar, and SHA-256 tooling.
-On Windows use Git Bash from Git for Windows. Invoke from Bash:
-
-    sha256sum -c SHA256SUMS.txt
-    # On macOS without sha256sum: shasum -a 256 -c SHA256SUMS.txt
-    bash double-installer.sh help
-    bash double-installer.sh doctor
-
-Review help before adding machines to a project. Stable machine releases are
-selected by default; explicitly request rc/dev when needed. Shared state lives
-under ~/.local/state/double. Downloading this script does not install a stable
-executable entry point or create a cron task.
-EOF
+# Retire the former generated documentation asset in this owned output directory.
+rm -f "$out/INSTALL.md"
 printf 'Prepared %s from %s\n' "$out" "$commit"
 [ "$operation" = publish ] || exit 0
 # Refuse overwrites. A failed inventory request must never be treated as absence.
@@ -57,5 +36,7 @@ if printf '%s\n' "$releases" | grep -Fx -- "$tag" >/dev/null; then
 fi
 flags=(--verify-tag --latest=false)
 case "$tag" in *-rc|*-dev) flags+=(--prerelease) ;; esac
-gh release create "$tag" "$out/double-installer.sh" "$out/SHA256SUMS.txt" "$out/INSTALL.md" \
-  --title "$tag" --notes-file "$out/INSTALL.md" "${flags[@]}"
+documentation="https://github.com/$repo/blob/$commit/knowledge/double-installer/double-installer.md"
+notes=$(printf 'Source commit: %s\n\n[Installation and usage instructions](%s)\n' "$commit" "$documentation")
+gh release create "$tag" "$out/double-installer.sh" "$out/SHA256SUMS.txt" \
+  --title "$tag" --notes "$notes" "${flags[@]}"
