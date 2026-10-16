@@ -7,6 +7,15 @@ on:
     branches: ['**']
     paths: ['scripts/**', 'tests/**', '.github/workflows/**']
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing installer release to verify without republishing
+        type: string
+        required: false
+      release_commit:
+        description: Exact source commit of the existing release
+        type: string
+        required: false
   workflow_call:
     inputs:
       ref:
@@ -20,6 +29,7 @@ permissions:
 
 jobs:
   installer:
+    if: ${{ !inputs.release_tag }}
     name: Installer / ${{ matrix.os }} / ${{ matrix.arch }}
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 20
@@ -65,6 +75,7 @@ jobs:
           retention-days: 14
 
   regressions:
+    if: ${{ !inputs.release_tag }}
     name: Repository regressions / ${{ matrix.runner }}
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 15
@@ -99,6 +110,7 @@ jobs:
           retention-days: 14
 
   integrations:
+    if: ${{ !inputs.release_tag }}
     name: Live release and real cron / Linux
     runs-on: ubuntu-24.04
     timeout-minutes: 10
@@ -133,7 +145,7 @@ jobs:
   validation-gate:
     name: Installer validation gate
     needs: [installer, regressions, integrations]
-    if: always()
+    if: ${{ always() && !inputs.release_tag }}
     runs-on: ubuntu-24.04
     timeout-minutes: 2
     steps:
@@ -146,3 +158,13 @@ jobs:
           test "$INSTALLER_RESULT" = success
           test "$REGRESSIONS_RESULT" = success
           test "$INTEGRATIONS_RESULT" = success
+
+  published-release-recheck:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag != '' }}
+    permissions:
+      contents: read
+    uses: ./.github/workflows/double-installer-published-tests.yml
+    with:
+      tag: ${{ inputs.release_tag }}
+      commit: ${{ inputs.release_commit }}
+      test_ref: ${{ github.sha }}
