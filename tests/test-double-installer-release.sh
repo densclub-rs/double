@@ -21,6 +21,9 @@ for tag in double-installer-0.1.0 double-installer-0.1.0-rc double-installer-0.1
   bash scripts/double-release.sh package --tag "$tag"
   cmp scripts/double-installer.sh "dist/$tag/double-installer.sh"
   test ! -e "dist/$tag/INSTALL.md"
+  bash "dist/$tag/double-installer.sh" --help > "$fixture/help.txt"
+  grep -F 'https://github.com/densclub-rs/double/blob/' "$fixture/help.txt" >/dev/null
+  grep -F '/knowledge/double-installer/double-installer.md' "$fixture/help.txt" >/dev/null
   test "$(find "dist/$tag" -type f | wc -l | tr -d ' ')" = 2
   (cd "dist/$tag"; if command -v sha256sum >/dev/null; then sha256sum -c SHA256SUMS.txt; else shasum -a 256 -c SHA256SUMS.txt; fi)
 done
