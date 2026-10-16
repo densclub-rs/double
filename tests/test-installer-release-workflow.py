@@ -33,7 +33,9 @@ print('PASS: publication gate and tagged-commit contract checks')
 
 published = job(release, 'published-installer')
 assert 'needs: [candidate, release]' in published
-assert published.count('- {os:') == 6
-assert 'tests/test-double-installer-published.sh' in published
-assert 'EXPECTED_COMMIT: ${{ needs.candidate.outputs.commit }}' in published
+assert 'uses: ./.github/workflows/double-installer-published-tests.yml' in published
+recheck = (root / '.github/workflows/double-installer-published-tests.yml').read_text()
+assert job(recheck, 'verify').count('- {os:') == 6
+assert 'tests/test-double-installer-published.sh' in recheck
+assert 'commit: ${{ needs.candidate.outputs.commit }}' in published
 print('PASS: downloaded installer verification follows publication on all six targets')

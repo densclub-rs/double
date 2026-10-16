@@ -12,7 +12,7 @@ fixture=$(cd "$fixture" && pwd -P)
 trap 'rm -rf "$fixture"' EXIT
 # HTTPS public assets; validate an independent Git checkout identity as well.
 [[ "$tag" =~ ^double-installer-[0-9]+\.[0-9]+\.[0-9]+(-(rc|dev))?$ ]]
-test "$(git -C "$root" rev-parse HEAD)" = "$expected"
+test "$(git -C "$root" rev-parse --verify --end-of-options "refs/tags/${tag}^{commit}")" = "$expected"
 base="https://github.com/$repo/releases/download/$tag"
 for asset in double-installer.sh SHA256SUMS.txt INSTALL.md; do
   curl --fail --location --retry 3 --proto '=https' --tlsv1.2 "$base/$asset" -o "$fixture/$asset"
@@ -24,7 +24,9 @@ from pathlib import Path
 assert re.fullmatch(r'[0-9a-f]{64} [ *]double-installer\.sh\n?',Path(sys.argv[1]).read_text()), 'Invalid checksum manifest'
 PY
 (cd "$fixture"; if command -v sha256sum >/dev/null; then sha256sum -c SHA256SUMS.txt; else shasum -a 256 -c SHA256SUMS.txt; fi)
-cmp "$fixture/double-installer.sh" "$root/scripts/double-installer.sh"
+# Compare immutable blob bytes, not Windows checkout's CRLF conversion.
+git -C "$root" show "$expected:scripts/double-installer.sh" > "$fixture/expected-source.sh"
+cmp "$fixture/double-installer.sh" "$fixture/expected-source.sh"
 grep -F "Source commit: $expected" "$fixture/INSTALL.md"
 export DOUBLE_TEST_INSTALLER="$fixture/double-installer.sh"
 bash "$DOUBLE_TEST_INSTALLER" help

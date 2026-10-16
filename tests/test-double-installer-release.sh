@@ -27,6 +27,13 @@ printf '\n# uncommitted change\n' >> scripts/double-installer.sh
 bash scripts/double-release.sh package --tag double-installer-0.1.0-rc
 git show "$commit:scripts/double-installer.sh" > expected.sh
 cmp expected.sh dist/double-installer-0.1.0-rc/double-installer.sh
+# Reproduce Windows checkout conversion while retaining exact published bytes.
+git -c core.autocrlf=true checkout-index -f --prefix="$fixture/crlf/" -- scripts/double-installer.sh
+if cmp -s "$fixture/crlf/scripts/double-installer.sh" expected.sh; then
+  echo 'Expected CRLF checkout fixture' >&2; exit 1
+fi
+git show "$commit:scripts/double-installer.sh" > "$fixture/blob.sh"
+cmp "$fixture/blob.sh" dist/double-installer-0.1.0-rc/double-installer.sh
 reject() { if "$@" > "$fixture/rejected.log" 2>&1; then cat "$fixture/rejected.log"; echo 'Expected failure' >&2; exit 1; fi; }
 reject bash scripts/double-release.sh package --tag double-installer-invalid
 reject bash scripts/double-release.sh package --tag double-installer-9.9.9

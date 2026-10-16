@@ -90,59 +90,13 @@ jobs:
         run: scripts/double-release.sh publish --tag "$RELEASE_TAG"
 
   published-installer:
-    name: Published installer / ${{ matrix.os }} / ${{ matrix.arch }}
+    name: Verify downloaded installer release
     needs: [candidate, release]
     if: startsWith(inputs.tag || github.ref_name, 'double-installer-')
     permissions:
       contents: read
-    runs-on: ${{ matrix.runner }}
-    timeout-minutes: 15
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - {os: linux, arch: x64, runner: ubuntu-24.04}
-          - {os: linux, arch: arm64, runner: ubuntu-24.04-arm}
-          - {os: macos, arch: x64, runner: macos-15-intel}
-          - {os: macos, arch: arm64, runner: macos-15}
-          - {os: windows, arch: x64, runner: windows-2025}
-          - {os: windows, arch: arm64, runner: windows-11-arm}
-    defaults:
-      run:
-        shell: bash
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          ref: ${{ needs.candidate.outputs.commit }}
-          persist-credentials: false
-      - uses: actions/setup-python@v6
-        with:
-          python-version: '3.13'
-          architecture: ${{ matrix.arch }}
-      - name: Record environment
-        env:
-          EXPECTED_ARCH: ${{ matrix.arch }}
-          HOST_ARCH: ${{ runner.arch }}
-          HOST_OS: ${{ runner.os }}
-        run: |
-          mkdir -p test-results
-          bash tests/installer-ci-environment.sh 2>&1 | tee test-results/environment.log
-      - name: Prepare disposable cron
-        if: matrix.os == 'linux' && matrix.arch == 'x64'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y cron jq
-          sudo service cron start
-      - name: Test published installer
-        env:
-          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
-          EXPECTED_COMMIT: ${{ needs.candidate.outputs.commit }}
-          DOUBLE_DISPOSABLE_CRON: ${{ matrix.os == 'linux' && matrix.arch == 'x64' && '1' || '0' }}
-        run: bash tests/test-double-installer-published.sh 2>&1 | tee test-results/published.log
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: published-installer-${{ matrix.os }}-${{ matrix.arch }}-${{ github.run_id }}-${{ github.run_attempt }}
-          path: test-results/
-          if-no-files-found: error
-          retention-days: 14
+    uses: ./.github/workflows/double-installer-published-tests.yml
+    with:
+      tag: ${{ inputs.tag || github.ref_name }}
+      commit: ${{ needs.candidate.outputs.commit }}
+      test_ref: ${{ needs.candidate.outputs.commit }}
