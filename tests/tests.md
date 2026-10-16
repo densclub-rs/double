@@ -81,3 +81,27 @@ The comprehensive installer harness logs every synthetic command's start/end,
 observed exit and elapsed time using Python clocks, without spawning date for
 each command. Each harness invocation is bounded to 180 seconds; the GitHub
 job timeout remains the final bound. Fixture commands use synthetic data only.
+
+## Installer release preparation
+
+`bash tests/test-double-installer-release.sh` runs disposable Git/fake-GitHub
+checks for stable/rc/dev installer packaging, exact tagged bytes and checksums,
+invalid/missing tags, commit mismatch, publication scope, API/create errors and
+existing-release refusal. It also invokes stdlib-only
+`test-installer-release-workflow.py` for local gate/identity contract checks.
+These are local checks, not proof of hosted publication; CI05 must execute
+the actual chain and test downloaded release assets.
+
+Prepare assets with `bash scripts/double-release.sh package --tag
+double-installer-<version>[-rc|-dev]` from an existing local tag. Output lives
+in `dist/<tag>/`: double-installer.sh, SHA256SUMS.txt and INSTALL.md.
+Publication routes to scripts/double-installer-release.sh, requires the
+validated commit in GitHub Actions, and refuses existing releases rather than
+overwriting assets. No production tag is created by the local test suite.
+
+`test-double-installer-published.sh` downloads the actual installer release,
+validates its checksum manifest and source commit/byte identity, and runs the
+live machine lifecycle with that downloaded script on each release target.
+Only explicitly disposable Linux x64 also runs real cron. The live/cron entry
+points accept DOUBLE_TEST_INSTALLER to select this downloaded script; their
+default remains scripts/double-installer.sh.

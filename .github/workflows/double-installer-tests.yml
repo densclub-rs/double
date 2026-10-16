@@ -87,6 +87,7 @@ jobs:
         run: |
           mkdir -p test-results
           bash tests/test-double-release.sh 2>&1 | tee test-results/release.log
+          bash tests/test-double-installer-release.sh 2>&1 | tee test-results/installer-release.log
           python3 tests/test-git-double.py 2>&1 | tee test-results/git-double.log
           bash tests/test-machine-of-goals-navigation.sh 2>&1 | tee test-results/navigation.log
       - uses: actions/upload-artifact@v4
