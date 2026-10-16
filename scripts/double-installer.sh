@@ -47,7 +47,9 @@ Double Installer
 
 Default state root: ~/.local/state/double
 DOUBLE_STATE_DIR overrides the state root for isolated tests.
-Implemented: all listed commands. See the knowledge artifact for validation status.
+Implemented: all listed commands.
+Installation and usage instructions:
+https://github.com/densclub-rs/double/blob/066bd419c649ca0fa20bc77d11fb21a54f35af97/knowledge/double-installer/double-installer.md#downloading-the-installer-script
 EOF
 }
 
