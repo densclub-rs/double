@@ -2,6 +2,7 @@
 # Explicit rc smoke against real public release, in disposable project/state.
 set -euo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/test-log.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/github-api-auth.sh"
 phase_started=$SECONDS
 test_log "START live package smoke"
 repo="$(cd "$(dirname "$0")/.." && pwd -P)"

@@ -68,5 +68,18 @@ if grep -F 'INSTALL.md' "$FAKE_GH_LOG"; then exit 1; fi
 grep -F "blob/$commit/knowledge/double-installer/double-installer.md" "$FAKE_GH_LOG"
 bash scripts/double-release.sh publish --tag double-installer-0.1.0
 if grep -Fx -- --prerelease "$FAKE_GH_LOG"; then exit 1; fi
+# API-only auth adapter: fake token and fake curl, no external requests.
+cat > "$fixture/bin/curl" <<'CURL'
+#!/usr/bin/env bash
+printf '%s\n' "$@" > "$FAKE_CURL_LOG"
+CURL
+chmod +x "$fixture/bin/curl"
+export FAKE_CURL_LOG="$fixture/curl.log"
+env GH_TOKEN=fixture-ci-token bash -c 'source "$1"; curl "$2"' -- "$root/tests/github-api-auth.sh" https://api.github.com/repos/fixture/repo/releases
+grep -Fx 'Authorization: Bearer fixture-ci-token' "$FAKE_CURL_LOG" >/dev/null
+env GH_TOKEN=fixture-ci-token bash -c 'source "$1"; curl "$2"' -- "$root/tests/github-api-auth.sh" https://github.com/fixture/repo/releases/download/tag/asset
+if grep -F 'Authorization:' "$FAKE_CURL_LOG"; then exit 1; fi
+env GH_TOKEN= bash -c 'source "$1"; curl "$2"' -- "$root/tests/github-api-auth.sh" https://api.github.com/repos/fixture/repo/releases
+if grep -F 'Authorization:' "$FAKE_CURL_LOG"; then exit 1; fi
 python3 "$root/tests/test-installer-release-workflow.py" "$root"
 test_log 'END installer release tests; PASS'
