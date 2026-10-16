@@ -94,7 +94,7 @@ the actual chain and test downloaded release assets.
 
 Prepare assets with `bash scripts/double-release.sh package --tag
 double-installer-<version>[-rc|-dev]` from an existing local tag. Output lives
-in `dist/<tag>/`: double-installer.sh, SHA256SUMS.txt and INSTALL.md.
+in `dist/<tag>/`: double-installer.sh and SHA256SUMS.txt.
 Publication routes to scripts/double-installer-release.sh, requires the
 validated commit in GitHub Actions, and refuses existing releases rather than
 overwriting assets. No production tag is created by the local test suite.
@@ -105,3 +105,13 @@ live machine lifecycle with that downloaded script on each release target.
 Only explicitly disposable Linux x64 also runs real cron. The live/cron entry
 points accept DOUBLE_TEST_INSTALLER to select this downloaded script; their
 default remains scripts/double-installer.sh.
+
+Published-source identity uses git show of the expected tag commit, avoiding
+Windows core.autocrlf checkout conversion. Reusable
+.github/workflows/double-installer-published-tests.yml verifies all six targets.
+The main validation workflow supports optional manual release_tag and
+release_commit inputs to recheck an existing release with an updated harness,
+without republishing; this is separate evidence from its original release run.
+
+Installer releases contain only the script and checksum; release notes link
+to the installation guide in knowledge/double-installer/double-installer.md.
