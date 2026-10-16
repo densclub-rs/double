@@ -11,7 +11,7 @@ fi
 repo="$(cd "$(dirname "$0")/.." && pwd -P)"
 fixture="$(mktemp -d /tmp/double-real-cron.XXXXXX)"
 export DOUBLE_STATE_DIR="$fixture/state"
-installer="$repo/scripts/double-installer.sh"
+installer="${DOUBLE_TEST_INSTALLER:-$repo/scripts/double-installer.sh}"
 original_present=false
 if crontab -l > "$fixture/original" 2> "$fixture/read-error"; then
   original_present=true

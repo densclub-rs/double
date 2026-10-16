@@ -11,12 +11,12 @@ trap 'rm -rf "$fixture"' EXIT
 export DOUBLE_STATE_DIR="$fixture/state"
 mkdir "$fixture/project"
 printf 'unowned\n' > "$fixture/project/keep"
-installer="$repo/scripts/double-installer.sh"
+installer="${DOUBLE_TEST_INSTALLER:-$repo/scripts/double-installer.sh}"
 bash "$installer" releases --machine machine-of-ideas --channel rc
 bash "$installer" add --project "$fixture/project" --machine machine-of-ideas --version 0.2.3 --channel rc
 archive="$DOUBLE_STATE_DIR/installer/releases/machine-of-ideas-0.2.3-rc/double-machine-of-ideas-0.2.3-rc.tar.gz"
 # add verifies SHA256SUMS; independently record actual payload digest in evidence.
-sha256sum "$archive"
+if command -v sha256sum >/dev/null; then sha256sum "$archive"; else shasum -a 256 "$archive"; fi
 jq -e '.installations | length == 1 and .[0].tag == "machine-of-ideas-0.2.3-rc"' "$DOUBLE_STATE_DIR/installer/registry.json" >/dev/null
 bash "$installer" list
 bash "$installer" remove --project "$fixture/project" --machine machine-of-ideas --yes
