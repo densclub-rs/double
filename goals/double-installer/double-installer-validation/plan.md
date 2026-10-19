@@ -52,13 +52,13 @@ CI01–CI03 retain accepted evidence from baseline 1; CI04–CI06 use revision 2
 | Progress | Stage | Kind | Inputs | Outputs | Possible Next Stages | Required Validation |
 | --- | --- | --- | --- | --- | --- | --- |
 | 🟡 | [S06-LOCAL: Development-time local validation](#stage-s06-local) | validation | Current working tree; host and available VMs | Results and availability gaps per local OS/architecture | Repeat during development; S06-CI06 | Executed local checks pass; unavailable environments explicit |
-| ⚪ | [S06-RELEASE-CI: Release-time full validation](#stage-s06-release-ci) | validation group | Candidate commit; shared tests/ scenarios | Full CI evidence required before a new script version release | S06-CI01 → S06-CI06 | All required CI jobs pass for the exact candidate |
+| 🔄 | [S06-RELEASE-CI: Release-time full validation](#stage-s06-release-ci) | validation group | Candidate commit; shared tests/ scenarios | Full CI evidence required before a new script version release | S06-CI01 → S06-CI06 | All required CI jobs pass for the exact candidate |
 | ✅ | [S06-CI01: Prepare scenarios](#stage-s06-ci01) | stage | Existing tests/ and platform requirements | Portable fixtures and Windows-specific assertions | S06-CI02 | Shared local/CI entry points; syntax checks |
 | ✅ | [S06-CI02: Implement workflow](#stage-s06-ci02) | stage | S06-CI01; intended runner matrix | Workflow, triggers, release gate and evidence artifacts | S06-CI03 and S06-CI04 | Explicit six-row matrix; isolation, permissions and timeouts |
 | 🔄 | [S06-CI02R: Consolidate installer workflow](#stage-s06-ci02r) | stage | User-approved single workflow; changed S05A source | double-installer.yml tests and gated publication; independent machine package validation | CI03 fresh matrix | Local mode/gate and YAML checks; no remote execution |
-| 🟡 | [S06-CI03: Execute matrix](#stage-s06-ci03) | validation | S06-CI02; exact candidate commit | Linux/macOS/Windows × x86_64/ARM64 job evidence | S06-CI04 | All six required installer rows pass; no silent skips |
+| 🔄 | [S06-CI03: Execute matrix](#stage-s06-ci03) | validation | S06-CI02; exact candidate commit | Linux/macOS/Windows × x86_64/ARM64 job evidence | S06-CI04 | All six required installer rows pass; no silent skips |
 | ✅ | [S06-CI04: Prepare installer release](#stage-s06-ci04) | stage | CI01–CI03 evidence; approved distribution contract | Version/tag convention, packaging, checksum and gated publication tooling | S06-CI05 | Local package identity; required-test failure blocks publishing |
-| 🟡 | [S06-CI05: Execute end-to-end release](#stage-s06-ci05) | validation | CI04; exact candidate; first-publication authorization | Mandatory CI including live/cron → installer release | S06-CI06 | All required tests pass on tagged commit; publication succeeds |
+| 🔄 | [S06-CI05: Execute end-to-end release](#stage-s06-ci05) | validation | CI04; exact candidate; first-publication authorization | Mandatory CI including live/cron → installer release | S06-CI06 | All required tests pass on tagged commit; publication succeeds |
 | ⚪ | [S06-CI06: Consolidate evidence](#stage-s06-ci06) | validation | CI05; local evidence and remaining gaps | Run/release links, matrix, knowledge and final user decision | Parent final validation or rework | V06; end-to-end evidence and acceptance |
 
 ## 4. Stage Details
@@ -340,3 +340,14 @@ history and are not obligations for the next release.
 is running on commit b16a6a1eff10ff250fd5ccc5ce44b4e36f20349b,
 [workflow run](https://github.com/densclub-rs/double/actions/runs/39275470554).
 User authorizes publication only after the unified gate. Local checks passed.
+
+0.1.2-rc publication was blocked by required Linux/Windows tests. Portability
+fixes continue S06-CI03/S06-CI05 under unchanged baseline 4 as 0.1.3-rc,
+[run 39278007855](https://github.com/densclub-rs/double/actions/runs/39278007855),
+commit 6b9a4f796657d1b1c1b4f4f5bfa5a0949c1c59f3. Only the tag was pushed.
+
+2026-10-19: Windows ARM64 reached fixture 115/175 before the 20-minute job
+deadline in 0.1.3-rc; all other platform test steps passed. Its Git Bash is x64
+on an ARM64 host. Raise only that row's execution budget to 60 minutes, retaining
+all mandatory checks and source identity. Continue S06-CI05 as 0.1.4-rc; script
+bytes are unchanged from 0.1.3-rc. Gate is never bypassed for timeout.

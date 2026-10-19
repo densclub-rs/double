@@ -177,3 +177,56 @@ PATH="/opt/homebrew/bin:$PATH" bash tests/run-installer-tests.sh
 Use a fresh immutable 0.1.3-rc candidate and push only its tag. No additional
 branch-triggered duplicate run. New hosted validation is necessary because
 status input code and test dependencies changed after the failed candidate.
+
+### Corrected Candidate 0.1.3-rc
+
+Commit: 6b9a4f796657d1b1c1b4f4f5bfa5a0949c1c59f3.
+Script SHA-256: 5b5193289546d5ca86b2c943598bc9a94bf1edeef32a38d95eaa9c379913e402.
+Installer packaging fixtures passed again (/tmp/double-013-packaging.log).
+Successful commands in isolated checkout:
+
+```bash
+git commit -m "Fix Linux fixture compression and Windows JSON status for installer 0.1.3-rc"
+git tag double-installer-0.1.3-rc
+bash scripts/double-release.sh package --tag double-installer-0.1.3-rc
+shasum -a 256 scripts/double-installer.sh
+git push origin refs/tags/double-installer-0.1.3-rc
+```
+
+Only the new tag was pushed. Existing branch/tag refs were not moved.
+The isolated checkout is clean; the root index and unrelated changes are preserved.
+Do not replay commit/tag creation or infer permission to overwrite a tag.
+
+Corrected tagged run: [39278007855](https://github.com/densclub-rs/double/actions/runs/39278007855),
+commit 6b9a4f796657d1b1c1b4f4f5bfa5a0949c1c59f3, tag double-installer-0.1.3-rc.
+GitHub initially reports queued. No branch push accompanied this tag.
+
+### Existing Run Monitoring
+
+REST Actions run lookups repeatedly returned HTTP 502; release API initially
+returned 404 (not published). The [official GitHub status page](https://www.githubstatus.com/) reported no active
+incident, so no global outage is asserted. These were status reads, not CI reruns.
+GraphQL commit checks remain readable: observed success for Linux x64, macOS
+ARM64, both regression jobs and live/cron; four platform rows still in progress.
+Switch monitoring to statusCheckRollup for the same exact 6b9a4f7 commit/run.
+No tag, commit, workflow or test rerun is created by monitoring.
+
+Successful read command (repository-independent; read permission required):
+
+```bash
+gh api graphql -f query='query { repository(owner:"densclub-rs", name:"double") { object(oid:"6b9a4f796657d1b1c1b4f4f5bfa5a0949c1c59f3") { ... on Commit { oid statusCheckRollup { state contexts(first:100) { nodes { ... on CheckRun { name status conclusion detailsUrl } } } } } } } }'
+```
+
+### S06-CI05 Windows ARM64 Runtime Rework
+
+Direct job steps show five platform suites passed. Windows ARM64 shared checks
+were cancelled by the 20-minute job deadline, after ongoing progress through
+fixture 114 and into fixture 115. Log: /tmp/double-013-winarm.log. Host reports
+ARM64 Windows with x86_64 Git Bash (emulation), unlike native Python ARM64.
+Raise only Windows ARM64 job budget to 60 minutes, keeping the complete required
+fixture suite, evidence upload and publication gate. The script bytes stay
+5b5193289546d5ca86b2c943598bc9a94bf1edeef32a38d95eaa9c379913e402.
+Retain 0.1.3-rc tag unchanged; prepare 0.1.4-rc with the corrected CI budget.
+Push only the new tag. This is a new candidate validation, not a branch duplicate
+or a post-publication test stage. REST/GraphQL top-level statuses lagged actual
+step results; direct step timestamps established the real timeout.

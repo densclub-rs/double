@@ -50,7 +50,8 @@ jobs:
     needs: candidate
     name: Installer / ${{ matrix.os }} / ${{ matrix.arch }}
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 20
+    # Git Bash x64 runs under emulation on Windows ARM64; retain the full suite.
+    timeout-minutes: ${{ matrix.os == 'windows' && matrix.arch == 'arm64' && 60 || 20 }}
     strategy:
       fail-fast: false
       matrix:

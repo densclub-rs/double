@@ -61,3 +61,13 @@ Both macOS rows, regression rows and live/cron passed. Publishing was skipped.
 Fix status JSON registry input to stdin and add gzip to fixture tools. Corrected
 local suite passed (175 fixtures). Proceed as 0.1.3-rc with tag-only push,
 retaining failed 0.1.2-rc immutable tag and eliminating duplicate branch run.
+
+Corrected tagged run: [39278007855](https://github.com/densclub-rs/double/actions/runs/39278007855),
+commit 6b9a4f796657d1b1c1b4f4f5bfa5a0949c1c59f3, tag double-installer-0.1.3-rc.
+GitHub initially reports queued. No branch push accompanied this tag.
+
+0.1.3-rc Windows ARM64 was cancelled at the 20-minute shared-suite limit;
+fixtures progressed through 114 into 115. All five other platform steps passed.
+Set this row's bounded job budget to 60 minutes (Git Bash x64 emulation on
+ARM64 Windows), preserve the full suite and strict gate, and continue as
+0.1.4-rc. No product/test-fixture code change and no tag overwrite.

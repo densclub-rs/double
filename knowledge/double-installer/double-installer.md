@@ -594,3 +594,8 @@ avoiding --slurpfile filename handling for Unicode paths. The test harness's
 restricted no-cron PATH includes gzip: GNU tar invokes gzip externally, whereas
 macOS tar may handle compressed archives internally. Failed 0.1.2-rc hosted
 checks prevented publication; these fixes require a new exact candidate/tag.
+
+Windows ARM64 CI has a 60-minute bounded job budget: the hosted ARM64 runner
+currently executes x64 Git Bash through emulation. The 20-minute budget stopped
+0.1.3-rc after fixture 114/175 despite ongoing progress. Other installer rows
+retain a 20-minute bound. All six rows remain mandatory for publication.
