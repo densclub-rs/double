@@ -48,3 +48,16 @@ protects unrelated root working changes. Prepublication live smoke explicitly
 acknowledges prerelease installation using --yes. Local packaging, machine
 release fixtures, navigation fixtures and git-double tests pass; candidate
 lifecycle suite is running. Target tag: double-installer-0.1.2-rc.
+
+Hosted release run: [39275470554](https://github.com/densclub-rs/double/actions/runs/39275470554), tag double-installer-0.1.2-rc,
+commit b16a6a1eff10ff250fd5ccc5ce44b4e36f20349b. GitHub reports in_progress.
+A same-commit branch-only test run 39275470521 also started; cancellation was
+requested to avoid duplicate runner consumption. The tagged run remains required.
+Publication is pending the tagged run's complete required validation gate.
+
+Run 39275470554 failed closed: Linux lacked gzip in the restricted fixture
+PATH; native Windows jq --slurpfile could not open the Unicode registry path.
+Both macOS rows, regression rows and live/cron passed. Publishing was skipped.
+Fix status JSON registry input to stdin and add gzip to fixture tools. Corrected
+local suite passed (175 fixtures). Proceed as 0.1.3-rc with tag-only push,
+retaining failed 0.1.2-rc immutable tag and eliminating duplicate branch run.

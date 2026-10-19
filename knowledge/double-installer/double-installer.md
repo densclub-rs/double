@@ -586,3 +586,11 @@ After successful interactive adoption, update or wrapper replacement, offer to
 delete the corresponding backup; No/EOF retains it. backups-clean remains the
 explicit later cleanup command. A failed agent operation restores only its own
 skill directory; successful other agents and payload remain committed.
+
+## Release Validation Portability Fixes — 2026-10-19
+
+status --json supplies registry JSON to native Windows jq through Bash stdin,
+avoiding --slurpfile filename handling for Unicode paths. The test harness's
+restricted no-cron PATH includes gzip: GNU tar invokes gzip externally, whereas
+macOS tar may handle compressed archives internally. Failed 0.1.2-rc hosted
+checks prevented publication; these fixes require a new exact candidate/tag.
