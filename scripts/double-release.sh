@@ -4,6 +4,13 @@
 
 set -u
 
+# Installer releases have an independent asset/version contract.
+if [ "${2:-}" = --tag ]; then
+  case "${3:-}" in
+    double-installer-*) exec bash "$(cd "$(dirname "$0")" && pwd)/double-installer-release.sh" "$@" ;;
+  esac
+fi
+
 if [ -n "${FORCE_COLOR:-}" ] || { [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; }; then
   color_blue="$(printf '\033[34m')"
   color_green="$(printf '\033[32m')"
