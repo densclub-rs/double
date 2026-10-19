@@ -1,0 +1,218 @@
+name: Double Installer
+
+on:
+  pull_request:
+    paths: ['scripts/**', 'tests/**', '.github/workflows/**']
+  push:
+    branches: ['**']
+    tags: ['double-installer-*']
+    paths: ['scripts/**', 'tests/**', '.github/workflows/**']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing installer tag to test and publish (empty means tests only)
+        type: string
+        required: false
+      ref:
+        description: Optional validation-only commit/ref; cannot combine with release tags
+        type: string
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: double-installer-${{ inputs.tag || (github.ref_type == 'tag' && github.ref_name) || inputs.ref || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  candidate:
+    name: Resolve mode and exact candidate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    outputs:
+      mode: ${{ steps.resolve.outputs.mode }}
+      tag: ${{ steps.resolve.outputs.tag }}
+      commit: ${{ steps.resolve.outputs.commit }}
+      test_ref: ${{ steps.resolve.outputs.test_ref }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - id: resolve
+        env:
+          INPUT_TAG: ${{ inputs.tag }}
+          INPUT_REF: ${{ inputs.ref }}
+        run: bash scripts/double-installer-release.sh resolve
+
+  installer:
+    needs: candidate
+    name: Installer / ${{ matrix.os }} / ${{ matrix.arch }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {os: linux, arch: x64, runner: ubuntu-24.04}
+          - {os: linux, arch: arm64, runner: ubuntu-24.04-arm}
+          - {os: macos, arch: x64, runner: macos-15-intel}
+          - {os: macos, arch: arm64, runner: macos-15}
+          - {os: windows, arch: x64, runner: windows-2025}
+          - {os: windows, arch: arm64, runner: windows-11-arm}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.candidate.outputs.commit }}
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+          architecture: ${{ matrix.arch }}
+      - name: Record environment and verify prerequisites
+        env:
+          EXPECTED_ARCH: ${{ matrix.arch }}
+          HOST_ARCH: ${{ runner.arch }}
+          HOST_OS: ${{ runner.os }}
+        run: |
+          mkdir -p test-results
+          bash tests/installer-ci-environment.sh 2>&1 | tee test-results/environment.log
+      - name: Run shared installer checks
+        run: bash tests/run-installer-tests.sh 2>&1 | tee test-results/installer.log
+      - name: Retain evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: installer-${{ matrix.os }}-${{ matrix.arch }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: test-results/
+          if-no-files-found: error
+          retention-days: 14
+
+  regressions:
+    needs: candidate
+    name: Repository regressions / ${{ matrix.runner }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, macos-15]
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.candidate.outputs.commit }}
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Run applicable repository regressions
+        run: |
+          mkdir -p test-results
+          bash tests/test-double-release.sh 2>&1 | tee test-results/release.log
+          bash tests/test-double-installer-release.sh 2>&1 | tee test-results/installer-release.log
+          python3 tests/test-git-double.py 2>&1 | tee test-results/git-double.log
+          bash tests/test-machine-of-goals-navigation.sh 2>&1 | tee test-results/navigation.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: regressions-${{ matrix.runner }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: test-results/
+          if-no-files-found: error
+          retention-days: 14
+
+  integrations:
+    needs: candidate
+    name: Live release and real cron / Linux
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.candidate.outputs.commit }}
+          persist-credentials: false
+      - name: Prepare disposable runner scheduler
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cron jq
+          sudo service cron start
+      - name: Verify published package and scheduled execution
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DOUBLE_DISPOSABLE_CRON: '1'
+        run: |
+          mkdir -p test-results
+          bash tests/test-double-installer-live.sh 2>&1 | tee test-results/live-release.log
+          bash tests/test-double-installer-cron.sh 2>&1 | tee test-results/real-cron.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: integrations-linux-${{ github.run_id }}-${{ github.run_attempt }}
+          path: test-results/
+          if-no-files-found: error
+          retention-days: 14
+
+  validation-gate:
+    name: Installer validation gate
+    needs: [candidate, installer, regressions, integrations]
+    if: ${{ always() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    steps:
+      - name: Require every validation group to pass
+        env:
+          INSTALLER_RESULT: ${{ needs.installer.result }}
+          REGRESSIONS_RESULT: ${{ needs.regressions.result }}
+          INTEGRATIONS_RESULT: ${{ needs.integrations.result }}
+        run: |
+          test "$INSTALLER_RESULT" = success
+          test "$REGRESSIONS_RESULT" = success
+          test "$INTEGRATIONS_RESULT" = success
+
+  publish:
+    name: Publish tested installer
+    needs: [candidate, validation-gate]
+    if: needs.candidate.outputs.mode == 'publish'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          ref: ${{ needs.candidate.outputs.commit }}
+          persist-credentials: false
+
+      - name: Verify validated tag identity
+        env:
+          RELEASE_TAG: ${{ needs.candidate.outputs.tag }}
+          EXPECTED_COMMIT: ${{ needs.candidate.outputs.commit }}
+        run: |
+          actual=$(git rev-parse --verify --end-of-options "refs/tags/${RELEASE_TAG}^{commit}")
+          test "$actual" = "$EXPECTED_COMMIT"
+          test "$(git rev-parse HEAD)" = "$EXPECTED_COMMIT"
+
+      - name: Test release possibility
+        env:
+          RELEASE_TAG: ${{ needs.candidate.outputs.tag }}
+        run: |
+          bash tests/test-double-installer-release.sh
+          bash scripts/double-release.sh package --tag "$RELEASE_TAG"
+
+      - name: Publish release
+        env:
+          RELEASE_TAG: ${{ needs.candidate.outputs.tag }}
+          GH_TOKEN: ${{ github.token }}
+          VALIDATED_COMMIT: ${{ needs.candidate.outputs.commit }}
+        run: scripts/double-release.sh publish --tag "$RELEASE_TAG"
