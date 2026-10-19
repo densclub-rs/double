@@ -46,7 +46,7 @@ reviewed realization, first immutable baseline and a new subgoal run.
 
 ## 3. Plan Map
 
-Displayed run: [Workflow consolidation](./run/interactive-ci--20261016T162619Z.md#double-installer-validation-run-interactive-ci--20261016T162619Z).
+Displayed run: [Tests then publication](./run/interactive-ci--20261017T173000Z.md).
 CI01–CI03 retain accepted evidence from baseline 1; CI04–CI06 use revision 2 after realization alignment. Original S06-prefixed task IDs are retained for continuity.
 
 | Progress | Stage | Kind | Inputs | Outputs | Possible Next Stages | Required Validation |
@@ -335,3 +335,8 @@ partial and pinned. Register realization 3 and start CI02R local refactor only.
 now owns tests → strict gate → publication only. CI05 ends with successful
 publication of the tested commit; historical downloaded-release results remain
 history and are not obligations for the next release.
+
+2026-10-19: S06-CI05 — Execute end-to-end release for double-installer-0.1.2-rc
+is running on commit b16a6a1eff10ff250fd5ccc5ce44b4e36f20349b,
+[workflow run](https://github.com/densclub-rs/double/actions/runs/39275470554).
+User authorizes publication only after the unified gate. Local checks passed.

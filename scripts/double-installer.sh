@@ -1611,8 +1611,9 @@ case "$command_name" in
     done
     if [ "$status_json" = true ]; then
       if [ -f "$registry" ]; then
-        jq -Mn --argjson archives "[$archive_json]" --slurpfile registry "$registry" \
-          '{archives:$archives,installations:$registry[0].installations}'
+        # Bash opens Unicode paths; native Windows jq --slurpfile does not.
+        jq -M --argjson archives "[$archive_json]" \
+          '{archives:$archives,installations:.installations}' < "$registry"
       else
         jq -Mn --argjson archives "[$archive_json]" '{archives:$archives,installations:[]}'
       fi

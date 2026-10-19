@@ -108,11 +108,12 @@ downloaded and verified against the tested candidate within delegated S06.
 | ✅ | [S04: Updates and backups](#stage-s04) | stage | S03 | Single/bulk updates and backup cleanup | S05 | V04 |
 | ✅ | [S05: Cron and full cleanup](#stage-s05) | stage | S04 | Optional scheduling and full uninstall | S05R | V05 |
 | ✅ | [S05R: Restore Podman Linux environment](#stage-s05r) | subplan | [Repair subgoal](./podman-krunkit-fix/podman-krunkit-fix.md#podman-krunkit-fix) | Startable VM and startup evidence | S05A | V05R |
-| 🔄 | [S05A: Bulk download, installation consent and agent integration](#stage-s05a) | stage | Approved CLI extension; existing lifecycle | install alias, priority bulk download, discovered agent integrations and registry/cleanup | S06 revalidation | V05A; isolated lifecycle/security tests |
-| 🟡 | [S06: Platform validation and documentation](#stage-s06) | subplan | S01–S05 plus accepted S05R | [Accepted validation evidence](./double-installer-validation/plan.md#double-installer-validation-plan) | Final validation or affected-stage rework | V06; accepted subgoal handoff |
+| ✅ | [S05A: Bulk download, installation consent and agent integration](#stage-s05a) | stage | Approved CLI extension; existing lifecycle | install alias, priority bulk download, discovered agent integrations and registry/cleanup | S06 revalidation | V05A; isolated lifecycle/security tests |
+| 🔄 | [S06: Platform validation and documentation](#stage-s06) | subplan | S01–S05 plus accepted S05R | [Accepted validation evidence](./double-installer-validation/plan.md#double-installer-validation-plan) | Final validation or affected-stage rework | V06; accepted subgoal handoff |
 
 S06 delegates its detailed stages to the validation subgoal.
-`🟡` reflects retained local evidence, not acceptance of the new CI requirements.
+S06 is running for the newly authorized 0.1.2-rc candidate; older evidence alone
+does not accept the new source.
 CI01–CI03 retain accepted evidence. New CI04 prepares installer publication;
 CI05 executes the complete release chain; CI06 consolidates final evidence.
 Separate S07 is superseded by these delegated stages; no release is published.

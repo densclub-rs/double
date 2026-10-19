@@ -119,3 +119,61 @@ Python 3.13. Logs: /tmp/double-012-local.log, /tmp/double-012-machine-release.lo
 /tmp/double-012-nav.log, /tmp/double-012-git.log. Installer release tooling also
 passed from the root checkout: bash tests/test-double-installer-release.sh
 (/tmp/double-012-release-local.log). No real host cron/agent changes.
+
+### Candidate Identity
+
+Commit: b16a6a1eff10ff250fd5ccc5ce44b4e36f20349b.
+Tag: double-installer-0.1.2-rc. Clean isolated checkout after commit.
+Script SHA-256: 5bc45a72de4653a59440b122d79fb3f4fae62ea7116d44dade76c097787bc3bd.
+Local exact-tag package contains script + SHA256SUMS; byte comparison passed.
+
+Successful commands in isolated checkout:
+
+```bash
+git commit -m "Release Double installer 0.1.2-rc with consent and directory backups"
+git tag double-installer-0.1.2-rc
+bash scripts/double-release.sh package --tag double-installer-0.1.2-rc
+cmp scripts/double-installer.sh dist/double-installer-0.1.2-rc/double-installer.sh
+shasum -a 256 scripts/double-installer.sh
+```
+
+Do not replay commit/tag creation: the immutable candidate already exists.
+Branch and tag were pushed successfully; hosted publication is pending.
+
+Successful command in isolated checkout:
+
+```bash
+git push --atomic origin HEAD:refs/heads/codex/double-installer-0.1.2-rc refs/tags/double-installer-0.1.2-rc
+```
+
+Both new refs were accepted. Do not replay as permission to replace refs.
+User release authorization accepts the S05A local implementation for the S06
+release validation handoff; goal completion is not inferred from that decision.
+
+Hosted release run: [39275470554](https://github.com/densclub-rs/double/actions/runs/39275470554), tag double-installer-0.1.2-rc,
+commit b16a6a1eff10ff250fd5ccc5ce44b4e36f20349b. GitHub reports in_progress.
+A same-commit branch-only test run 39275470521 also started; cancellation was
+requested to avoid duplicate runner consumption. The tagged run remains required.
+Publication is pending the tagged run's complete required validation gate.
+
+### S06-CI05 Required Rework
+
+Tagged run 39275470554 failed closed: macOS x64/ARM64, both repository
+regressions and live/cron passed; Linux fixture PATH lacked gzip, Windows
+status --json failed native jq --slurpfile on the Unicode fixture registry path.
+Publish was skipped. Duplicate branch run had already completed when cancellation
+was attempted; no further branch push is needed. Fix only the test gzip inventory
+and status JSON registry input (Bash stdin redirection avoids native jq Unicode
+filename handling). Retain failed 0.1.2-rc tag unchanged; next candidate 0.1.3-rc
+will push only its tag, eliminating the duplicated branch-triggered validation.
+
+Corrected local shared suite passed again: 175 fixtures and platform smoke,
+67 seconds, /tmp/double-013-local.log. Successful command at repository root:
+
+```bash
+PATH="/opt/homebrew/bin:$PATH" bash tests/run-installer-tests.sh
+```
+
+Use a fresh immutable 0.1.3-rc candidate and push only its tag. No additional
+branch-triggered duplicate run. New hosted validation is necessary because
+status input code and test dependencies changed after the failed candidate.
