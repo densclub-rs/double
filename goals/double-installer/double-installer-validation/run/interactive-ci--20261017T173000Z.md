@@ -12,8 +12,8 @@ realization-id: interactive-ci-procedure
 realization-artifact: ../realizations/interactive-ci.md
 realization-revision: 4
 started-at: 2026-10-17T17:30:00Z
-finished-at: null
-result: running
+finished-at: 2026-10-20T09:49:50Z
+result: partial
 ---
 # Run: Tests Then Publication
 
@@ -71,3 +71,5 @@ fixtures progressed through 114 into 115. All five other platform steps passed.
 Set this row's bounded job budget to 60 minutes (Git Bash x64 emulation on
 ARM64 Windows), preserve the full suite and strict gate, and continue as
 0.1.4-rc. No product/test-fixture code change and no tag overwrite.
+
+Continue under user-authorized quick release policy, baseline/realization 5.

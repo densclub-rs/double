@@ -14,8 +14,8 @@ goal-scope: subgoal
 parent-goal-id: double-installer
 parent-plan-artifact: ../plan.md
 plan-execution-style: single-pass
-plan-revision: 4
-plan-revision-artifact: ./realizations/plan-revision-4.md
+plan-revision: 5
+plan-revision-artifact: ./realizations/plan-revision-5.md
 created-at: 2026-10-15
 updated-at: 2026-10-17
 ---
@@ -46,7 +46,7 @@ reviewed realization, first immutable baseline and a new subgoal run.
 
 ## 3. Plan Map
 
-Displayed run: [Tests then publication](./run/interactive-ci--20261017T173000Z.md).
+Displayed run: [Quick release validation](./run/interactive-ci--20261020T094950Z.md#double-installer-validation-run-interactive-ci-20261020T094950Z).
 CI01–CI03 retain accepted evidence from baseline 1; CI04–CI06 use revision 2 after realization alignment. Original S06-prefixed task IDs are retained for continuity.
 
 | Progress | Stage | Kind | Inputs | Outputs | Possible Next Stages | Required Validation |
@@ -242,7 +242,7 @@ User approved combined local/CI path and interactive implementation on
 
 | Record | Realization | Path | Plan revision | Realization revision | Readiness | Alignment | Runs | Last result |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| <a id="interactive-ci"></a>interactive-ci | [Interactive CI](./realizations/interactive-ci.md#interactive-ci) | [Shared tests/CI](./path-options.md#path-shared-tests-ci) | [4](./realizations/plan-revision-4.md#double-installer-validation-plan) | [4](./realizations/interactive-ci.md#interactive-ci-revision-4) | ready | aligned | 4 | running |
+| <a id="interactive-ci"></a>interactive-ci | [Interactive CI](./realizations/interactive-ci.md#interactive-ci) | [Shared tests/CI](./path-options.md#path-shared-tests-ci) | [5](./realizations/plan-revision-5.md#double-installer-validation-plan) | [5](./realizations/interactive-ci.md#interactive-ci-revision-5) | ready | aligned | 5 | running |
 
 [Decision](./realization-decision.md#double-installer-validation-realization-decision),
 [run index](./run/index.md#double-installer-validation-run-index).
@@ -351,3 +351,16 @@ deadline in 0.1.3-rc; all other platform test steps passed. Its Git Bash is x64
 on an ARM64 host. Raise only that row's execution budget to 60 minutes, retaining
 all mandatory checks and source identity. Continue S06-CI05 as 0.1.4-rc; script
 bytes are unchanged from 0.1.3-rc. Gate is never bypassed for timeout.
+
+## Temporary Quick Release Validation — 2026-10-20
+
+User explicitly authorizes temporarily excluding long tests and publishing the
+installer with quick checks. Required: syntax and platform lifecycle smoke on
+all six OS/architecture rows, fast repository regressions, live package and real
+cron checks, then the strict gate and two-asset publication. CI invokes
+run-installer-tests.sh --quick and bounds installer jobs at ten minutes.
+The 175-case comprehensive fixture suite is preserved for explicit/manual runs;
+it is not required for this temporary release policy. This reduced coverage must
+not be reported as full regression coverage. User plans to refactor slow tests.
+No branch duplicate, tag overwrite, manual gate bypass or post-publication tests.
+Baseline 5 / realization 5 capture the changed acceptance contract before action.

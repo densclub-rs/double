@@ -1,5 +1,27 @@
 # Double tests
 
+## Vitest migration pilot
+
+Use Node.js >=22.12.0 and Python 3/Git for the `git-double` integration tests:
+
+```bash
+npm ci
+npm test
+npm run test:watch
+npm run typecheck
+```
+
+`git-double/git-double.test.ts` covers the same eight scenarios as
+`test-git-double.py`: lifecycle/force-add, user rules/conflicts, literal paths
+and stale entries, read-only/idempotent behavior, frontmatter, malformed blocks,
+watch and missing scope. The Python suite remains for comparison and existing
+CI until the migration is accepted. The product implementation is unchanged.
+
+`commons/` contains shared test utilities. Each test uses a disposable Git
+repository. `npm test` excludes real network/cron integrations; `npm run test:live`
+selects only `installer/live.test.ts` and `installer/cron.test.ts`. Those suites
+are not migrated yet, so that command currently reports no test files.
+
 Test scenarios and test-only fixtures/helpers belong in the root `tests/`
 directory. Deliverable and maintenance scripts belong in `scripts/`.
 Tests exercise the actual scripts in `scripts/`; they do not duplicate them.
@@ -163,3 +185,16 @@ non-terminal prerelease refusal, explicit add --yes, separate terminal adoption
 consent, obsolete manual categories, full nested-directory backups and complete
 manual directory rollback after a replacement failure. Existing wrapper backups
 are asserted at old/skills/<machine>/SKILL.md, within the full skill directory.
+
+## Temporary Quick Release Validation — 2026-10-20
+
+User explicitly authorizes temporarily excluding long tests and publishing the
+installer with quick checks. Required: syntax and platform lifecycle smoke on
+all six OS/architecture rows, fast repository regressions, live package and real
+cron checks, then the strict gate and two-asset publication. CI invokes
+run-installer-tests.sh --quick and bounds installer jobs at ten minutes.
+The 175-case comprehensive fixture suite is preserved for explicit/manual runs;
+it is not required for this temporary release policy. This reduced coverage must
+not be reported as full regression coverage. User plans to refactor slow tests.
+No branch duplicate, tag overwrite, manual gate bypass or post-publication tests.
+Baseline 5 / realization 5 capture the changed acceptance contract before action.
