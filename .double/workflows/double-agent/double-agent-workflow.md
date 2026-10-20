@@ -77,8 +77,19 @@ question tool; use their matching numbers or named modes when processing the
 user's response. In per-item mode, present the concrete item's approve/reject
 choice after describing its scope.
 
-Use `request_user_input_async` for a concrete choice or confirmation when it
-is exposed and permitted for the question. Supply concise, contextual options
+For approval or rejection of one concrete plan item or an already described
+whole-plan action, present exactly two suggested answers in the interaction
+language: Yes / No (Да / Нет in Russian). Put the proposed action in the
+question title so each answer is unambiguous. Keep the three approval-mode
+options above for choosing the execution mode; do not replace that mode
+selection with a binary confirmation. A Yes approves the described action;
+a No does not authorize it. Preserve an explicit choice already supplied and
+do not add another confirmation solely to display the interface.
+
+Structured choice is mandatory for approval-mode and per-item decisions when
+a permitted structured-question tool is available. You must use
+`request_user_input_async` when it is exposed and permitted for the question.
+Supply concise, contextual options
 in the interaction language. A recommendation may be presented, but every
 material alternative must remain available; do not add an artificial choice
 when the user needs to describe something freely.
@@ -90,10 +101,21 @@ preselected option, silence or a timeout is not user approval. Independent
 read-only work may continue while awaiting the answer. Do not ask again for a
 choice or authorization the user already supplied.
 
+While a required asynchronous choice is pending, do not send a final message
+or end the turn merely to say that the question was sent or that you are
+waiting. Use permitted interruptible waits, each no longer than 60 seconds,
+and continue waiting for an explicit response. A timeout does not cancel the
+question, authorize dependent work, or justify repeating it. Independent
+read-only work may continue. If the user reports a missing or disappearing
+question, investigate without claiming that tool acceptance proves visibility.
+This is an agent waiting rule, not a guarantee about the client UI lifetime.
+
 Check the actual runtime tool availability and its mode/purpose restrictions.
 If `request_user_input_async` is unavailable or disallowed, use another exposed
-structured-question tool only when permitted for this question; otherwise use
-a concise text question with numbered options. Never assume an interface named
+structured-question tool, including `request_user_input`, only when permitted
+for this question and current mode. Use a concise text question with numbered
+options only when no permitted structured-question tool is available. Never
+choose text merely for convenience. Never assume an interface named
 `AskUserQuestion` exists or call a planning-only tool for approval when its
 runtime contract forbids that use. The client controls the visual presentation;
 plain text does not itself create a choice card.
@@ -107,13 +129,18 @@ mode again.
 
 ### Approve the Entire Plan
 
+Before applying the first item, verify that each required choice used the
+mandatory structured interface or a permitted fallback and that explicit user
+approval was received. Preserve approval already supplied by the user.
+
 Apply every plan item without further per-item confirmation. Validate every
 completed item immediately. Stop and report a blocker if an item cannot be
 safely completed; never silently skip it.
 
 ### Approve Each Plan Item
 
-Before every unexecuted plan item, show its artifact and intended edit, then
+Before every unexecuted plan item, check compliance with the mandatory choice
+interface and explicit-response requirement. Show its artifact and intended edit, then
 ask the user to approve or reject it. Apply and validate only an approved
 item. If it is rejected or changed by clarification, do not edit it; reformulate
 the item when applicable and ask again.

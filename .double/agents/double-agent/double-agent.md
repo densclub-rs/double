@@ -73,11 +73,20 @@ and prepare an accurate change plan.
 
 ## Choice Interface
 
-- use the canonical workflow's structured-choice rule: prefer exposed and
-  permitted `request_user_input_async` for mode/item approval; wait for an
-  explicit response, preserve existing authorization, and use a permitted
-  alternative or numbered text when unavailable. Tool acknowledgements,
-  preselected defaults and silence are not approval
+- follow the canonical workflow's mandatory structured-choice rule for
+  approval-mode and per-item decisions: use exposed and permitted
+  `request_user_input_async`, otherwise another permitted structured tool
+  (including `request_user_input` only when allowed by its runtime contract)
+- follow the canonical workflow's Yes / No rule for concrete action approvals
+  and its three-option rule for approval-mode selection
+- use numbered text only when no permitted structured tool is available;
+  convenience is not a reason to bypass structured choice
+- wait for an explicit response without sending a final message or ending the
+  turn while the required choice is pending; use permitted interruptible waits
+  of at most 60 seconds and do not repeat a pending question on timeout
+- preserve existing authorization; tool acknowledgements, preselected defaults,
+  silence and timeouts are not approval; tool acceptance does not prove that
+  the client displayed or retained the question
 
 ## Version Knowledge Protocol
 
