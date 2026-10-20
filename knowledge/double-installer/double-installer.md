@@ -599,3 +599,16 @@ Windows ARM64 CI has a 60-minute bounded job budget: the hosted ARM64 runner
 currently executes x64 Git Bash through emulation. The 20-minute budget stopped
 0.1.3-rc after fixture 114/175 despite ongoing progress. Other installer rows
 retain a 20-minute bound. All six rows remain mandatory for publication.
+
+## Temporary Quick Release Validation — 2026-10-20
+
+User explicitly authorizes temporarily excluding long tests and publishing the
+installer with quick checks. Required: syntax and platform lifecycle smoke on
+all six OS/architecture rows, fast repository regressions, live package and real
+cron checks, then the strict gate and two-asset publication. CI invokes
+run-installer-tests.sh --quick and bounds installer jobs at ten minutes.
+The 175-case comprehensive fixture suite is preserved for explicit/manual runs;
+it is not required for this temporary release policy. This reduced coverage must
+not be reported as full regression coverage. User plans to refactor slow tests.
+No branch duplicate, tag overwrite, manual gate bypass or post-publication tests.
+Baseline 5 / realization 5 capture the changed acceptance contract before action.

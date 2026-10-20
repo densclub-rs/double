@@ -7,12 +7,12 @@ project-id: double
 goal-id: double-installer-validation
 interaction-language: ru
 artifact-language: en
-plan-revision: 3
-plan-revision-artifact: ./plan-revision-3.md
+plan-revision: 5
+plan-revision-artifact: ./plan-revision-5.md
 realization-record-id: interactive-ci
 realization-id: interactive-ci-procedure
 realization-kind: manual
-realization-revision: 4
+realization-revision: 5
 implementation-revision: null
 realization-mode: interactive
 selected-paths:
@@ -83,3 +83,22 @@ User explicitly removed post-publication checks on 2026-10-17. Baseline 4
 retains full prepublication tests and the strict gate; publication ends the
 automated chain. No new release authorized.
 [Run](../run/interactive-ci--20261017T173000Z.md).
+
+<a id="interactive-ci-revision-5"></a>
+## Revision 5 — Temporary Quick Release
+
+
+## Temporary Quick Release Validation — 2026-10-20
+
+User explicitly authorizes temporarily excluding long tests and publishing the
+installer with quick checks. Required: syntax and platform lifecycle smoke on
+all six OS/architecture rows, fast repository regressions, live package and real
+cron checks, then the strict gate and two-asset publication. CI invokes
+run-installer-tests.sh --quick and bounds installer jobs at ten minutes.
+The 175-case comprehensive fixture suite is preserved for explicit/manual runs;
+it is not required for this temporary release policy. This reduced coverage must
+not be reported as full regression coverage. User plans to refactor slow tests.
+No branch duplicate, tag overwrite, manual gate bypass or post-publication tests.
+Baseline 5 / realization 5 capture the changed acceptance contract before action.
+
+[Run](../run/interactive-ci--20261020T094950Z.md#double-installer-validation-run-interactive-ci-20261020T094950Z).

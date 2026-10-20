@@ -80,6 +80,8 @@ bash "$installer" remove --project "$project_cached" --machine machine-of-ideas 
 cmp "$fixture/payload/.double/templates/machine-of-ideas/example.md" "$project/.double/templates/machine-of-ideas/example.md"
 bash "$installer" status > "$fixture/status.txt"
 grep -F 'machine-of-ideas' "$fixture/status.txt" >/dev/null
+bash "$installer" status --json > "$fixture/status.json"
+jq -e '(.archives|length)==1 and (.installations|length)==1' "$fixture/status.json" >/dev/null
 # Compare against the shell's canonical path: checks native-jq/MSYS argument handling.
 canonical="$(cd "$project" && pwd -P)"
 MSYS2_ARG_CONV_EXCL="$canonical" jq -e --arg project "$canonical" '.installations | length == 1 and .[0].project == $project' "$DOUBLE_STATE_DIR/installer/registry.json" >/dev/null
