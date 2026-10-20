@@ -4,6 +4,11 @@
 
 set -u
 
+# An exit status of zero can mean a warning/no-match, not a publication.
+if [ -n "${GITHUB_OUTPUT:-}" ]; then
+  printf 'published=false\n' >> "$GITHUB_OUTPUT"
+fi
+
 if [ -n "${FORCE_COLOR:-}" ] || { [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; }; then
   color_blue="$(printf '\033[34m')"
   color_green="$(printf '\033[32m')"
@@ -288,14 +293,43 @@ if [ "$release_class" = 'dev' ] || [ "$release_class" = 'rc' ]; then
   release_flags='--prerelease'
 fi
 
+notes_file="${RELEASE_NOTES_FILE:-}"
+if [ -n "$notes_file" ] && [ ! -f "$notes_file" ]; then
+  warning 'Release notes file is unavailable; publishing without generated notes.'
+  notes_file=''
+fi
+
 if gh release view "$tag" >/dev/null 2>&1; then
   info "Uploading assets to existing GitHub Release: $tag"
   if ! gh release upload "$tag" "$archive_path" "$output_dir/SHA256SUMS.txt" --clobber; then
     warning "GitHub Release upload failed for $tag."
+    exit 0
+  fi
+  if [ -n "$notes_file" ] && ! gh release edit "$tag" --notes-file "$notes_file"; then
+    warning "Release assets published but generated notes could not be updated for $tag."
   fi
 else
   info "Creating GitHub Release: $tag"
-  if ! gh release create "$tag" "$archive_path" "$output_dir/SHA256SUMS.txt" --title "double-$tag" $release_flags; then
+  if [ -n "$notes_file" ]; then
+    if ! gh release create "$tag" "$archive_path" "$output_dir/SHA256SUMS.txt" --title "double-$tag" $release_flags --notes-file "$notes_file"; then
+      warning "GitHub Release creation failed for $tag."
+      exit 0
+    fi
+  elif ! gh release create "$tag" "$archive_path" "$output_dir/SHA256SUMS.txt" --title "double-$tag" $release_flags; then
     warning "GitHub Release creation failed for $tag."
+    exit 0
   fi
+fi
+
+# Verify release metadata after successful creation/upload before announcing.
+release_url="$(gh release view "$tag" --json url,isDraft --jq 'select(.isDraft == false) | .url' 2>/dev/null)" || {
+  warning 'Publication completed but release URL could not be verified; announcement skipped.'
+  exit 0
+}
+case "$release_url" in
+  https://*) ;;
+  *) warning 'Release URL is unavailable; announcement skipped.'; exit 0 ;;
+esac
+if [ -n "${GITHUB_OUTPUT:-}" ]; then
+  printf 'published=true\nrelease_url=%s\n' "$release_url" >> "$GITHUB_OUTPUT"
 fi
