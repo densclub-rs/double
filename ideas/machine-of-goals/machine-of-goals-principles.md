@@ -505,7 +505,8 @@ Subgoals make it possible to work with goals that cannot be achieved through one
 - Repeatable subgoals such as determining the operating system or creating the goal working catalog may become reusable fragments.
 - A subgoal should preserve its purpose, inputs, outputs, and connection to the parent goal.
 - The subgoal subplan should be available as a separate artifact inside its catalog.
-- The principle does not require a full Machine of Goals pass for every subgoal.
+- A subgoal has the same goal contract as an autonomous goal; any goal may serve either or both roles through explicit relationships.
+- Workflow depth and plan detail depend on the goal's needs, not on whether it is used as a subgoal.
 
 #### Boundaries
 

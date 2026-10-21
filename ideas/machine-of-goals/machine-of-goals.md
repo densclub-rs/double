@@ -54,6 +54,8 @@ Then the machine searches for paths of realization. One goal may have several st
 
 After that, the system helps compose a plan for achieving the goal. The plan should be not merely a list of tasks, but a connected model: steps, dependencies, resources, completion criteria, risks, checks, and review points. The plan moves the subject from the initial state to the target state. Alternative achievement paths are represented as selectable options or subplans inside this model; plans may include sequential, parallel, cyclic, and alternative sections.
 
+A subgoal is a goal used within another goal's plan, not a separate goal type. Any goal may serve as a subgoal, and any subgoal may be pursued as an autonomous goal. The same goal may play both roles at once. These roles are determined by explicit relationships and plan integration boundaries, not by a `goal-scope` field. Workflow depth and plan detail depend on the goal's needs, not on its role.
+
 A plan may have several entry and exit points. In this case, subgoals, intermediate results, and partial states of achievement appear. Each stage of the plan has a cost: time, attention, money, computational resources, social effort, risk, or another price of execution. By estimating the cost of stages and of the whole plan, plans can be compared by efficiency.
 
 Next, Machine of Goals can turn the plan into an algorithm. This is especially important if the goal is connected with repeatable activity, a software project, a research process, knowledge management, or automation.

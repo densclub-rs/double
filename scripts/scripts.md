@@ -59,6 +59,24 @@ python3 scripts/double-release/double-release.py package --tag machine-of-ideas-
 Use either `--machine` or `--tag`. `publish` requires a tag and publishes only
 inside GitHub Actions.
 
+### Release changelog
+
+Annotated tag messages appear first as the release introduction; lightweight tags
+add no introduction. Long annotations are shortened in Telegram to fit its limit.
+
+Release notes and Telegram announcements describe commits touching the selected
+machine. Entries use PR titles when available, otherwise commit subjects, with
+Conventional Commit prefixes removed and the original language preserved.
+Merge commits without a PR title expand into the relevant merged commit
+subjects. Changed file paths filter the range but are not listed in the message.
+Descriptions of commits touching several areas retain their full context.
+The quality of the descriptions depends on the PR and commit titles.
+
+The baseline is the latest reachable earlier stable or RC version of the same
+machine. A stable release includes only changes since its own RC when available;
+an RC includes changes since the preceding RC or stable. Development tags are
+excluded. An initial release uses the available history.
+
 ### Release tests
 
 Python 3.11+, pytest and the explicit test-only dependencies are used locally
