@@ -9,10 +9,11 @@ knowledge-type: static
 type: static
 value-type: text
 access: free-of-charge
-observed-at: 2026-10-01
+observed-at: 2026-10-21
 ttl: one year
 derived-from:
   - user decision in conversation on 2026-10-01
+  - user decision in conversation on 2026-10-21
 ---
 
 <a id="double-project"></a>
@@ -28,6 +29,10 @@ The agreed basic rules of the Double project.
 1. The source tree for the [Double software project](../../ideas/double-software-project/double-software-project.md#double-software-project) belongs in `src/` at the root of the current Double repository.
 2. Knowledge artifacts of the Double project must be written and preserved in English, with `artifact-language: en`.
 
+3. The machine release subsystem keeps its Python scripts in `scripts/double-release/` and its pytest suite, configuration and test dependencies in `tests/double-release/`.
+
 ## Sources
 
 The user confirmed these project rules in the conversation on 2026-10-01 and requested that they be preserved through Machine of Knowledge in the `double-project` artifact.
+
+On 2026-10-21 the user requested the `double-release` subsystem directories under `scripts/` and the existing `tests/` catalog.
