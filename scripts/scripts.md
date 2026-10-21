@@ -7,21 +7,21 @@ Helpers, scripts and utilities to maintain Double project.
 Support for:
 * GitHub Actions
 
-### `double-release.sh`
+### `double-release.py`
 
 #### List machines
 
 List the machine identifiers discovered in the current workspace:
 
 ```sh
-scripts/double-release.sh list-machines
+python3 scripts/double-release.py list-machines
 ```
 
 The command reads directories matching `.double/<category>/<machine>` in the
 current working directory and prints their names, sorted and deduplicated.
 New machines appear automatically; no fixed list or Git repository is required.
 An empty catalog produces no machine names; a missing `.double/` produces a warning.
-Local packaging currently supports the three `machine-of-*` identifiers below.
+Local packaging supports the three `machine-of-*` identifiers and `double-agent`.
 
 #### Package the current workspace
 
@@ -29,9 +29,9 @@ Run the packager from the workspace containing `.double/` and `knowledge/`.
 The script path may be absolute when packaging another workspace.
 
 ```sh
-scripts/double-release.sh package --machine machine-of-ideas
-scripts/double-release.sh package --machine machine-of-goals
-scripts/double-release.sh package --machine machine-of-knowledge
+python3 scripts/double-release.py package --machine machine-of-ideas
+python3 scripts/double-release.py package --machine machine-of-goals
+python3 scripts/double-release.py package --machine machine-of-knowledge
 ```
 
 Without a tag, the source is the current working directory, including modified
@@ -50,19 +50,19 @@ the checksum file describes the latest package.
 Tagged packaging continues to read the tagged Git tree and filter by status:
 
 ```sh
-scripts/double-release.sh package --tag machine-of-ideas-0.2.3-rc
+python3 scripts/double-release.py package --tag machine-of-ideas-0.2.3-rc
 ```
 
 Use either `--machine` or `--tag`. `publish` requires a tag and publishes only
 inside GitHub Actions.
 
-### `test-double-release.sh`
+### Release tests
 
-Run the release script tests:
-
-```sh
-scripts/test-double-release.sh
-```
+Python 3.11+, pytest and the explicit test-only dependencies are used locally
+and in GitHub Actions. See [release test commands](../tests/github-actions/release/README.md).
+The retired machine Shell release entry points are removed. The workflow can
+validate an existing tag with `validation_only=true`, retaining test/package
+artifacts without publishing a release or sending a Telegram message.
 
 ## Git Helpers
 

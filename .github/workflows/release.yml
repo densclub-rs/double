@@ -8,34 +8,163 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Machine release tag, for example machine-of-ideas-1.2.3-rc or double-agent-0.0.6'
+        description: 'Machine release tag, for example machine-of-goals-0.0.11-rc'
         required: true
         type: string
+      validation_only:
+        description: 'Run tests and package the tag without publishing or sending notifications'
+        required: false
+        type: boolean
+        default: false
 
 concurrency:
   group: release-${{ inputs.tag || github.ref_name || github.run_id }}
   cancel-in-progress: false
 
 jobs:
+  candidate:
+    name: Resolve exact release candidate
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    outputs:
+      commit: ${{ steps.resolve.outputs.commit }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - id: resolve
+        env:
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          case "$RELEASE_TAG" in
+            machine-*|double-agent-*) ;;
+            *) echo 'Use double-installer.yml for installer releases' >&2; exit 1 ;;
+          esac
+          commit=$(git rev-parse --verify --end-of-options "refs/tags/${RELEASE_TAG}^{commit}")
+          printf 'commit=%s\n' "$commit" >> "$GITHUB_OUTPUT"
+
   release:
-    name: Package and publish machine release
+    name: Validate package and publish machine release
+    needs: candidate
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: read
+    outputs:
+      published: ${{ steps.publish.outputs.published }}
+      eligible: ${{ steps.notes.outputs.eligible }}
+      message: ${{ steps.notes.outputs.message }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
+          ref: ${{ needs.candidate.outputs.commit }}
+          persist-credentials: false
+
+      - name: Checkout workflow tooling
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.workflow_sha }}
+          path: .release-tools
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install release test dependencies
+        run: python3 -m pip install -r .release-tools/tests/github-actions/release/requirements.txt
+
+      - name: Verify validated tag identity
+        env:
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+          EXPECTED_COMMIT: ${{ needs.candidate.outputs.commit }}
+        run: |
+          actual=$(git rev-parse --verify --end-of-options "refs/tags/${RELEASE_TAG}^{commit}")
+          test "$actual" = "$EXPECTED_COMMIT"
+          test "$(git rev-parse HEAD)" = "$EXPECTED_COMMIT"
 
       - name: Test release possibility
         env:
           RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
-        run: scripts/test-double-release.sh --tag "$RELEASE_TAG"
+        run: python3 -m pytest -c .release-tools/tests/github-actions/release/pytest.ini .release-tools/tests/github-actions/release --release-tag "$RELEASE_TAG" --junitxml=test-results/release.xml
 
-      - name: Publish release
+      - name: Retain validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: machine-release-validation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test-results/release.xml
+            dist/*.tar.gz
+            dist/SHA256SUMS.txt
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Prepare scoped release notes
+        if: ${{ inputs.validation_only != true }}
+        id: notes
+        continue-on-error: true
         env:
           RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
           GH_TOKEN: ${{ github.token }}
-        run: scripts/double-release.sh publish --tag "$RELEASE_TAG"
+        run: python3 .release-tools/scripts/double-release-notes.py --tag "$RELEASE_TAG" --repository "$GITHUB_REPOSITORY"
+
+      - name: Publish release
+        if: ${{ inputs.validation_only != true }}
+        id: publish
+        env:
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+          GH_TOKEN: ${{ github.token }}
+          VALIDATED_COMMIT: ${{ needs.candidate.outputs.commit }}
+          RELEASE_NOTES_FILE: dist/release-notes.md
+        run: python3 .release-tools/scripts/double-release.py publish --tag "$RELEASE_TAG"
+
+  telegram:
+    name: Announce release in Telegram
+    needs: release
+    if: ${{ needs.release.result == 'success' && needs.release.outputs.published == 'true' && needs.release.outputs.eligible == 'true' && needs.release.outputs.message != '' }}
+    runs-on: ubuntu-latest
+    permissions: {}
+    timeout-minutes: 3
+    continue-on-error: true
+    steps:
+      - name: Check Telegram configuration
+        id: config
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TO: ${{ secrets.TELEGRAM_TO }}
+          TELEGRAM_THREAD_ID: ${{ vars.TELEGRAM_THREAD_ID }}
+        shell: python
+        run: |
+          import os
+          from pathlib import Path
+          if (os.environ.get('TELEGRAM_TOKEN') and
+              os.environ.get('TELEGRAM_TO') == '-1002983024983' and
+              os.environ.get('TELEGRAM_THREAD_ID') == '8'):
+              with Path(os.environ['GITHUB_OUTPUT']).open('a') as output:
+                  output.write('ready=true\n')
+          else:
+              print('::warning::Telegram inputs are missing or destination/topic format is invalid; announcement skipped.')
+
+      - name: Send release announcement
+        id: send
+        if: steps.config.outputs.ready == 'true'
+        continue-on-error: true
+        uses: appleboy/telegram-action@390cf7345777cd821dba28c72f436a78bce19cc5
+        with:
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          to: ${{ secrets.TELEGRAM_TO }}
+          message_thread_id: ${{ vars.TELEGRAM_THREAD_ID }}
+          message: ${{ needs.release.outputs.message }}
+          format: html
+          disable_web_page_preview: true
+
+      - name: Report delivery error
+        if: ${{ steps.send.outcome == 'failure' }}
+        run: echo '::warning::Telegram delivery failed; GitHub release remains published. Check the topic before rerunning; a rerun may duplicate an announcement.'
