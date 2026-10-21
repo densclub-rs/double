@@ -8,7 +8,7 @@ import sys
 import pytest
 import yaml
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def workflow():
@@ -26,10 +26,10 @@ def test_workflow_is_gated_and_uses_current_tooling():
     assert tooling['with']['ref'] == '${{ github.workflow_sha }}'
     gate=next(s for s in steps if s.get('name') == 'Test release possibility')
     assert 'python3 -m pytest' in gate['run']
-    assert '.release-tools/tests/github-actions/release' in gate['run']
+    assert '.release-tools/tests/double-release' in gate['run']
     assert '--release-tag "$RELEASE_TAG"' in gate['run']
     publish=next(s for s in steps if s.get('id') == 'publish')
-    assert 'python3 .release-tools/scripts/double-release.py publish --tag "$RELEASE_TAG"' == publish['run']
+    assert 'python3 .release-tools/scripts/double-release/double-release.py publish --tag "$RELEASE_TAG"' == publish['run']
     assert publish['if'] == '${{ inputs.validation_only != true }}'
     assert not publish.get('continue-on-error', False)
     assert not gate.get('continue-on-error', False)
