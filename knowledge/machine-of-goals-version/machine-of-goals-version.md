@@ -11,6 +11,7 @@ value-type: text
 observed-at: 2026-10-21
 ttl: one month
 derived-from:
+  - user-approved goal and subgoal interchangeability release on 2026-10-21
   - knowledge/double-main-modules/double-main-modules.md
   - ideas/machine-of-goals/machine-of-goals.md
   - .double/workflows/machine-of-goals/machine-of-goals-workflow.md
@@ -31,9 +32,20 @@ project.
 
 ## Value
 
-`0.0.11`
+`0.0.12`
 
 ## Change Note
+
+Version `0.0.12` aligns the Machine of Goals project documents with the
+existing workflow contract for interchangeable goals and subgoals. A subgoal
+is a goal used within another goal's plan, not a separate goal type. Any goal
+may serve as a subgoal, and any subgoal may be pursued autonomously; the same
+goal may play both roles at once. Explicit relationships and plan integration
+boundaries determine the role, without a `goal-scope` field. Workflow depth
+and plan detail depend on the goal's needs rather than its role.
+The operating files already contain this contract in version `0.0.11`;
+this release brings the idea, concepts, principles and version record into
+agreement without changing the operating contract.
 
 Version `0.0.11` requires an interactive handoff after every completed workflow
 step or plan stage: summarize the result and link artifacts, derive eligible
