@@ -59,10 +59,10 @@ def with_export_version(text, version):
 
 
 def usage():
-    print('Usage: python3 scripts/double-release.py list-machines\n'
-          '       python3 scripts/double-release.py package --tag <machine>-X.Y.Z[-dev|-rc]\n'
-          '       python3 scripts/double-release.py package --machine <machine>\n'
-          '       python3 scripts/double-release.py publish --tag <machine>-X.Y.Z[-dev|-rc]')
+    print('Usage: python3 scripts/double-release/double-release.py list-machines\n'
+          '       python3 scripts/double-release/double-release.py package --tag <machine>-X.Y.Z[-dev|-rc]\n'
+          '       python3 scripts/double-release/double-release.py package --machine <machine>\n'
+          '       python3 scripts/double-release/double-release.py publish --tag <machine>-X.Y.Z[-dev|-rc]')
 
 
 def package(tag, machine):

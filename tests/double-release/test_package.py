@@ -10,8 +10,8 @@ import tarfile
 import pytest
 from release_common import MACHINES
 
-ROOT = Path(__file__).resolve().parents[3]
-CLI = ROOT / 'scripts/double-release.py'
+ROOT = Path(__file__).resolve().parents[2]
+CLI = ROOT / 'scripts/double-release/double-release.py'
 spec = importlib.util.spec_from_file_location('release', CLI)
 release = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(release)
