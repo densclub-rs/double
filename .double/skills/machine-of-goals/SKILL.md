@@ -24,6 +24,35 @@ The skill does not replace the workflow. The canonical process is defined in:
 
 - `.double/workflows/machine-of-goals/machine-of-goals-workflow.md`
 
+## Strict Workflow and Artifact Compliance
+
+Follow the canonical Machine of Goals workflow exactly: its current step,
+responsible agent, permitted mode, transition conditions, approval boundaries,
+and artifact contracts. This skill is an entry point, not permission to extend
+or replace that workflow with an agent-invented process.
+
+Before creating a process artifact, identify the workflow provision and
+applicable template that authorize its kind, location, and purpose. Create
+only the artifacts prescribed for the current step and authorized scope. Do
+not invent additional process artifact types, frontmatter kinds, indexes,
+registries, evidence catalogs, or companion documents for convenience. If the
+workflow provides no artifact for a piece of process information, record it in
+the appropriate existing artifact section instead of creating a new document.
+In particular, link screenshots and other validation evidence directly from
+the relevant plan-run stage or validation section; do not introduce a separate
+evidence index unless the canonical workflow explicitly provides for one.
+
+Distinguish process artifacts from the actual deliverables of an approved
+user plan. Requested screenshots, source files, packages, and other product
+outputs may be created when required by that plan; their existence does not
+authorize new workflow machinery or undocumented artifact contracts.
+
+If the requested behavior needs a new process artifact or a workflow change,
+explain the contract gap and route the operating change through `double-agent`
+before introducing it. Do not silently create it, present a personal convention
+as a machine requirement, or mutate an immutable artifact to accommodate it.
+Preserve explicit user authorization without adding unrelated approval gates.
+
 ## Activation Rule
 
 Activate this skill when the user clearly wants to work with Machine of Goals,
@@ -134,6 +163,16 @@ wait for an explicit response before dependent state changes. Use a permitted
 alternative or numbered text if unavailable. Preserve already supplied choices;
 preselection, silence and request acknowledgements are not consent. Keep
 open-ended clarification free-form and do not create extra approval gates.
+
+While a required asynchronous question is pending, do not send a final message
+or end the turn merely to acknowledge the question or say that you are waiting.
+Use permitted interruptible waits, each no longer than 60 seconds, and continue
+waiting for an explicit submitted response or equivalent direct user instruction.
+A timeout does not cancel the question, authorize dependent work, or justify
+repeating it. Independent read-only work may continue. If the user reports a
+missing or disappearing question, investigate without treating tool acceptance
+as proof of visibility. This is an agent waiting rule, not a guarantee about
+the client UI lifetime.
 
 ## Active Response Rule
 
@@ -263,3 +302,20 @@ Follow the [revision rule](../../workflows/machine-of-goals/machine-of-goals-wor
   against captured criteria and evidence. Preserve attempts and baseline links.
 - Create a new revision before executing changed frozen obligations; identify
   revalidation or rework. Never rebind completed runs or invent legacy contracts.
+
+## Completion Handoff
+
+Follow the canonical [step completion and continuation rule](../../workflows/machine-of-goals/machine-of-goals-workflow.md#step-completion-handoff-rule)
+after every completed workflow step or plan stage. State the completed step,
+result and artifact links; name the eligible next workflow step, mode, agent,
+expected artifact and transition readiness; then ask whether to perform the
+concrete next action (Yes / No in the interaction language) and wait for an
+explicit response using the permitted structured-choice interface. A summary
+or a list of possible next steps alone is insufficient.
+
+Preserve explicit authorization already covering the next action; do not ask
+again or bypass mandatory selections, validation decisions or stop points.
+A No stops continuation without rejecting the completed result. If blocked,
+name the blocker and offer clarification or repair. At the workflow end, state
+completion instead of inventing a next step. After plan-stage execution, offer
+`06-plan-validation` before any further plan-stage execution.

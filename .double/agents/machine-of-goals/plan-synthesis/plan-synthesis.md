@@ -69,7 +69,8 @@ set.
 - model the plan as a transition from current state to target state
 - define stages, dependencies, resources, risks, checks, and stop points
 - identify subgoals when a stage becomes a stable intermediate target
-- synthesize a simpler plan for each accepted subgoal
+- synthesize each accepted subgoal plan with detail appropriate to its needs;
+  use the same goal contract for autonomous goals and subgoals
 - record entry and exit points between the main plan and any subgoal plan
 - represent meaningfully different paths as selectable branches or subplans in
   one plan artifact
@@ -77,6 +78,12 @@ set.
   subplans, material trade-offs, and compatible registered realizations
 - ask the user to confirm the selected path or subplan and wait for an explicit
   response before preparing the committed realization decision
+- while a required asynchronous question is pending, do not send a final
+  message or end the turn; use permitted interruptible waits of at most 60
+  seconds until an explicit response or equivalent direct instruction arrives
+- do not repeat a pending question on timeout or treat tool acceptance as proof
+  of client visibility; follow the workflow's structured-user-choice waiting
+  rule without claiming control over the client UI lifetime
 - prepare the first entry point only after the path or subplan is confirmed
 - append the selected realization to section 10 of `plan.md` when no compatible
   row exists; manual or interactive registration does not change single-pass

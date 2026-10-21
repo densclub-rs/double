@@ -124,9 +124,9 @@ inference before advancing.
 
 Machine of Goals agents must behave actively after processing a user request.
 Every response that produces, updates, inspects, or explains workflow material
-should end by offering the next useful movement through the workflow.
+must end by offering the next useful movement through the workflow.
 
-The agent should propose one to three concrete next steps, grounded in the
+The agent must propose one to three concrete next steps, grounded in the
 current artifact state and transition conditions. Each proposal should name the
 workflow step, mode, responsible agent, and expected artifact when those are
 known.
@@ -165,6 +165,54 @@ steps, asks for a narrow answer only, or the current state is blocked and no
 meaningful workflow movement is available. In that case, the agent should say
 what information or decision would unblock the workflow.
 
+<a id="step-completion-handoff-rule"></a>
+
+## Step Completion and Continuation
+
+After completing a workflow step or a plan stage, the responsible agent must
+provide a user-facing handoff in the interaction language. An artifact update,
+a tool result, or a completion summary alone does not satisfy this contract.
+
+The handoff must:
+
+1. Name the completed workflow step (and plan stage when applicable), summarize
+   its result, and link the produced or updated artifacts.
+2. Read the current step's `next-step` and `transition-condition` in this
+   workflow. Name the eligible next step, mode, responsible agent, expected
+   artifact, and why the transition is available. If several routes are
+   eligible, show their material differences and recommend one without choosing
+   on the user's behalf. Do not present unavailable routes as ready.
+3. State the concrete next action and ask whether to continue with it. For a
+   single proposed action, use exactly Yes / No in the interaction language
+   (Да / Нет in Russian), following the structured-choice rule below. When a
+   route must first be selected, obtain that choice before asking for any
+   continuation approval not already supplied by the selection.
+4. Wait for explicit consent before dependent work. A No means stop here,
+   preserving the completed result; it does not reject that result or close
+   the goal. Silence, preselection and timeouts do not authorize continuation.
+
+Explicit authorization already covering the named next action or sequence
+remains valid: state the next action and that it is covered, then proceed
+without asking again. General activation of the machine or permission to
+complete the current step does not authorize later steps. Never bypass an
+existing mandatory selection, validation decision, or stop point.
+
+Distinguish workflow steps from plan stages. A result produced in
+`05-plan-realization` goes to `06-plan-validation` before another plan stage;
+execution success alone does not establish validation. After validation, offer
+only the applicable routes listed in step 06 and respect dependencies and the
+user's validation decision.
+
+If transition conditions are unmet, say that the step is not ready to advance,
+name the blocker, and offer the concrete clarification or repair action rather
+than claiming completion. At `07-plan-packaging-export` with next-step `<end>`,
+state that the workflow has ended; do not invent another required step or ask
+to continue to `<end>`. Export remains optional.
+
+The narrow-answer exceptions in Active Workflow Guidance apply to inspection
+or explanation requests, not to the handoff after an actually completed step
+or plan stage.
+
 <a id="structured-user-choice-rule"></a>
 
 ## Structured User Choices
@@ -188,6 +236,16 @@ transitions. A tool acknowledgement that the question was accepted, a
 preselected option, silence or a timeout is not user approval. Independent
 read-only work may continue while awaiting the answer. Do not ask again for a
 choice or authorization the user already supplied.
+
+While a required asynchronous question is pending, do not send a final message
+or end the turn merely to acknowledge the question or say that you are waiting.
+Use permitted interruptible waits, each no longer than 60 seconds, and continue
+waiting for an explicit submitted response or equivalent direct user instruction.
+A timeout does not cancel the question, authorize dependent work, or justify
+repeating it. Independent read-only work may continue. If the user reports a
+missing or disappearing question, investigate without treating tool acceptance
+as proof of visibility. This is an agent waiting rule, not a guarantee about
+the client UI lifetime.
 
 Check the actual runtime tool availability and its mode/purpose restrictions.
 If `request_user_input_async` is unavailable or disallowed, use another exposed
@@ -687,7 +745,9 @@ clarify the goal directly from the user's description.
 A goal may be split into subgoals when an intermediate target needs its own
 clear context, path analysis, or plan.
 
-A subgoal uses a simpler Machine of Goals flow:
+A subgoal is a goal used within another goal's plan, not a separate goal type. Any goal may serve as a subgoal, and any subgoal may be pursued as an autonomous goal. The same goal may play both roles at once. These roles are determined by explicit relationships and plan integration boundaries, not by a `goal-scope` field. Workflow depth and plan detail depend on the goal's needs, not on its role.
+
+When connecting a goal as a subgoal, the integration sequence is:
 
 ```text
 formulate subgoal
@@ -712,7 +772,6 @@ is the name of the subgoal directory.
 
 The subgoal artifact records:
 
-- `goal-scope: subgoal`
 - `parent-goal-id`
 - `parent-goal-directory`
 - `subgoal-directory`
@@ -784,8 +843,8 @@ external implementation artifact, or a different realization route.
 - purpose:
   - discover possible ways to reach the formulated goal
   - extend or revise the path catalog when new possibilities appear over time
-  - discover and analyze possible ways to reach a formulated subgoal when the
-    current artifact has `goal-scope: subgoal`
+  - discover and analyze paths for the same goal contract whether the goal is
+    autonomous, used as a subgoal, or both
   - include direct, minimal, exploratory, long-term, delegated, automated,
     tool-based, external, or reusable-plan paths
   - compare paths at a preliminary level by fit, risk, cost, and expected value
@@ -807,8 +866,8 @@ external implementation artifact, or a different realization route.
 - purpose:
   - turn one or more paths into selectable branches or subplans of one plan
   - model the plan as a transition from current state to target state
-  - synthesize a simpler subgoal plan when the current goal artifact is a
-    subgoal
+  - choose plan detail according to the goal's complexity and uncertainty,
+    including when the goal is used as a subgoal
   - include stages, dependencies, resources, risks, checks, stop points,
     subgoals, and known uncertainties
   - when a main plan delegates a stage to a subgoal plan, record the entry and

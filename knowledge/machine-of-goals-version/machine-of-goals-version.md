@@ -8,12 +8,13 @@ artifact-language: en
 knowledge-type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-10-14
+observed-at: 2026-10-21
 ttl: one month
 derived-from:
   - knowledge/double-main-modules/double-main-modules.md
   - ideas/machine-of-goals/machine-of-goals.md
   - .double/workflows/machine-of-goals/machine-of-goals-workflow.md
+  - user-approved step completion and continuation contract on 2026-10-21
   - user-provided project versioning decision
   - user-approved structured-choice interface update on 2026-10-14
   - user approval of successful-command contract and version 0.0.9 on 2026-10-14
@@ -30,9 +31,19 @@ project.
 
 ## Value
 
-`0.0.10`
+`0.0.11`
 
 ## Change Note
+
+Version `0.0.11` requires an interactive handoff after every completed workflow
+step or plan stage: summarize the result and link artifacts, derive eligible
+next steps from the workflow and transition conditions, recommend a concrete
+action, and request explicit continuation consent in the interaction language.
+A No stops continuation while preserving the result. Existing explicit
+sequence authorization remains valid without repeated approval; mandatory
+selection, validation and stop points remain binding. Plan-stage execution
+hands off to validation before further execution. Blocked and terminal states
+must be explained without inventing available transitions.
 
 Version `0.0.10` updates the structured-choice interface for mode, path/subplan, realization and validation choices:
 

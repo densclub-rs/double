@@ -27,7 +27,6 @@ goal-id: <goal-id>
 goal-artifact: <path-to-goal-artifact>
 path-options-artifact: <goal-directory>/path-options.md
 plan-artifact: <goal-directory>/plan.md
-goal-scope: <main-goal|subgoal>
 plan-execution-style: <single-pass|multi-pass|not-yet-computed>
 parent-goal-id: <parent-goal-id-or-null>
 parent-plan-artifact: <parent-plan-artifact-or-null>

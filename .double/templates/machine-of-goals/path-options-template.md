@@ -25,7 +25,6 @@ interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
 goal-id: <goal-id>
 goal-artifact: <path-to-goal-artifact>
-goal-scope: <main-goal|subgoal>
 parent-goal-id: <parent-goal-id-or-null>
 derived-from:
   - <goal-artifact-id-or-path>
@@ -38,7 +37,6 @@ derived-from:
 ## 1. Source Goal
 
 - Goal: [<goal-title>](./<goal-id>.md#<goal-id>)
-- Scope: <main-goal|subgoal>
 - Parent goal: <parent-goal-id-or-null>
 - Current state: <summary>
 - Target state: <summary>
