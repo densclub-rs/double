@@ -7,14 +7,17 @@ Helpers, scripts and utilities to maintain Double project.
 Support for:
 * GitHub Actions
 
-### `double-release.py`
+### `double-release/`
+
+Tooling lives in `scripts/double-release/`; its pytest suite and dependencies
+live in `tests/double-release/`.
 
 #### List machines
 
 List the machine identifiers discovered in the current workspace:
 
 ```sh
-python3 scripts/double-release.py list-machines
+python3 scripts/double-release/double-release.py list-machines
 ```
 
 The command reads directories matching `.double/<category>/<machine>` in the
@@ -29,9 +32,9 @@ Run the packager from the workspace containing `.double/` and `knowledge/`.
 The script path may be absolute when packaging another workspace.
 
 ```sh
-python3 scripts/double-release.py package --machine machine-of-ideas
-python3 scripts/double-release.py package --machine machine-of-goals
-python3 scripts/double-release.py package --machine machine-of-knowledge
+python3 scripts/double-release/double-release.py package --machine machine-of-ideas
+python3 scripts/double-release/double-release.py package --machine machine-of-goals
+python3 scripts/double-release/double-release.py package --machine machine-of-knowledge
 ```
 
 Without a tag, the source is the current working directory, including modified
@@ -50,7 +53,7 @@ the checksum file describes the latest package.
 Tagged packaging continues to read the tagged Git tree and filter by status:
 
 ```sh
-python3 scripts/double-release.py package --tag machine-of-ideas-0.2.3-rc
+python3 scripts/double-release/double-release.py package --tag machine-of-ideas-0.2.3-rc
 ```
 
 Use either `--machine` or `--tag`. `publish` requires a tag and publishes only
@@ -59,7 +62,7 @@ inside GitHub Actions.
 ### Release tests
 
 Python 3.11+, pytest and the explicit test-only dependencies are used locally
-and in GitHub Actions. See [release test commands](../tests/github-actions/release/README.md).
+and in GitHub Actions. See [release test commands](../tests/double-release/README.md).
 The retired machine Shell release entry points are removed. The workflow can
 validate an existing tag with `validation_only=true`, retaining test/package
 artifacts without publishing a release or sending a Telegram message.

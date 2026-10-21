@@ -78,7 +78,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install release test dependencies
-        run: python3 -m pip install -r .release-tools/tests/github-actions/release/requirements.txt
+        run: python3 -m pip install -r .release-tools/tests/double-release/requirements.txt
 
       - name: Verify validated tag identity
         env:
@@ -92,7 +92,7 @@ jobs:
       - name: Test release possibility
         env:
           RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
-        run: python3 -m pytest -c .release-tools/tests/github-actions/release/pytest.ini .release-tools/tests/github-actions/release --release-tag "$RELEASE_TAG" --junitxml=test-results/release.xml
+        run: python3 -m pytest -c .release-tools/tests/double-release/pytest.ini .release-tools/tests/double-release --release-tag "$RELEASE_TAG" --junitxml=test-results/release.xml
 
       - name: Retain validation evidence
         if: always()
@@ -113,7 +113,7 @@ jobs:
         env:
           RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
           GH_TOKEN: ${{ github.token }}
-        run: python3 .release-tools/scripts/double-release-notes.py --tag "$RELEASE_TAG" --repository "$GITHUB_REPOSITORY"
+        run: python3 .release-tools/scripts/double-release/double-release-notes.py --tag "$RELEASE_TAG" --repository "$GITHUB_REPOSITORY"
 
       - name: Publish release
         if: ${{ inputs.validation_only != true }}
@@ -123,7 +123,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           VALIDATED_COMMIT: ${{ needs.candidate.outputs.commit }}
           RELEASE_NOTES_FILE: dist/release-notes.md
-        run: python3 .release-tools/scripts/double-release.py publish --tag "$RELEASE_TAG"
+        run: python3 .release-tools/scripts/double-release/double-release.py publish --tag "$RELEASE_TAG"
 
   telegram:
     name: Announce release in Telegram

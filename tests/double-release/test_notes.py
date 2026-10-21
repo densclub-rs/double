@@ -5,8 +5,8 @@ from pathlib import Path
 from unittest.mock import patch
 import pytest
 
-ROOT = Path(__file__).resolve().parents[3]
-spec = importlib.util.spec_from_file_location('notes', ROOT / 'scripts/double-release-notes.py')
+ROOT = Path(__file__).resolve().parents[2]
+spec = importlib.util.spec_from_file_location('notes', ROOT / 'scripts/double-release/double-release-notes.py')
 notes = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(notes)
 MACHINE = 'machine-of-goals'
