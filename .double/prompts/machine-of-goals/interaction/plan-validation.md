@@ -86,3 +86,20 @@ wait for an explicit response before dependent state changes. Use a permitted
 alternative or numbered text if unavailable. Preserve already supplied choices;
 preselection, silence and request acknowledgements are not consent. Keep
 open-ended clarification free-form and do not create extra approval gates.
+
+## Completion Handoff
+
+Follow the canonical [step completion and continuation rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#step-completion-handoff-rule)
+after every completed workflow step or plan stage. State the completed step,
+result and artifact links; name the eligible next workflow step, mode, agent,
+expected artifact and transition readiness; then ask whether to perform the
+concrete next action (Yes / No in the interaction language) and wait for an
+explicit response using the permitted structured-choice interface. A summary
+or a list of possible next steps alone is insufficient.
+
+Preserve explicit authorization already covering the next action; do not ask
+again or bypass mandatory selections, validation decisions or stop points.
+A No stops continuation without rejecting the completed result. If blocked,
+name the blocker and offer clarification or repair. At the workflow end, state
+completion instead of inventing a next step. After plan-stage execution, offer
+`06-plan-validation` before any further plan-stage execution.

@@ -74,3 +74,20 @@ Follow the [revision rule](../../../workflows/machine-of-goals/machine-of-goals-
   against captured criteria and evidence. Preserve attempts and baseline links.
 - Create a new revision before executing changed frozen obligations; identify
   revalidation or rework. Never rebind completed runs or invent legacy contracts.
+
+## Completion Handoff
+
+Follow the canonical [step completion and continuation rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#step-completion-handoff-rule)
+after every completed workflow step or plan stage. State the completed step,
+result and artifact links; name the eligible next workflow step, mode, agent,
+expected artifact and transition readiness; then ask whether to perform the
+concrete next action (Yes / No in the interaction language) and wait for an
+explicit response using the permitted structured-choice interface. A summary
+or a list of possible next steps alone is insufficient.
+
+Preserve explicit authorization already covering the next action; do not ask
+again or bypass mandatory selections, validation decisions or stop points.
+A No stops continuation without rejecting the completed result. If blocked,
+name the blocker and offer clarification or repair. At the workflow end, state
+completion instead of inventing a next step. After plan-stage execution, offer
+`06-plan-validation` before any further plan-stage execution.

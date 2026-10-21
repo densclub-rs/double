@@ -24,8 +24,7 @@ produced-by: machine-of-goals/goal-formulation-agent
 owner-id: double-project
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
-goal-scope: <main-goal|subgoal>
-# Subgoal-only field: parent-goal-id: <parent-goal-id>
+# Optional relationship field: parent-goal-id: <parent-goal-id>
 derived-from:
   - <source-conversation-or-artifact>
 ---
@@ -41,7 +40,7 @@ goal directory.
 
 A short description of the goal as a desired verifiable state.
 
-For a subgoal only: Parent goal: [<parent-goal-title>](../<parent-goal-id>.md#<parent-goal-id>)
+When linked to a parent goal: Parent goal: [<parent-goal-title>](../<parent-goal-id>.md#<parent-goal-id>)
 
 ## 2. Subject of the Goal
 
