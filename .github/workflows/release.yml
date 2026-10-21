@@ -11,6 +11,11 @@ on:
         description: 'Machine release tag, for example machine-of-goals-0.0.11-rc'
         required: true
         type: string
+      validation_only:
+        description: 'Run tests and package the tag without publishing or sending notifications'
+        required: false
+        type: boolean
+        default: false
 
 concurrency:
   group: release-${{ inputs.tag || github.ref_name || github.run_id }}
@@ -67,8 +72,13 @@ jobs:
           path: .release-tools
           persist-credentials: false
 
-      - name: Validate notification tooling
-        run: python3 .release-tools/tests/test-double-release-notes.py
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install release test dependencies
+        run: python3 -m pip install -r .release-tools/tests/github-actions/release/requirements.txt
 
       - name: Verify validated tag identity
         env:
@@ -82,9 +92,22 @@ jobs:
       - name: Test release possibility
         env:
           RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
-        run: bash .release-tools/tests/test-double-release.sh --tag "$RELEASE_TAG"
+        run: python3 -m pytest -c .release-tools/tests/github-actions/release/pytest.ini .release-tools/tests/github-actions/release --release-tag "$RELEASE_TAG" --junitxml=test-results/release.xml
+
+      - name: Retain validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: machine-release-validation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            test-results/release.xml
+            dist/*.tar.gz
+            dist/SHA256SUMS.txt
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Prepare scoped release notes
+        if: ${{ inputs.validation_only != true }}
         id: notes
         continue-on-error: true
         env:
@@ -93,13 +116,14 @@ jobs:
         run: python3 .release-tools/scripts/double-release-notes.py --tag "$RELEASE_TAG" --repository "$GITHUB_REPOSITORY"
 
       - name: Publish release
+        if: ${{ inputs.validation_only != true }}
         id: publish
         env:
           RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
           GH_TOKEN: ${{ github.token }}
           VALIDATED_COMMIT: ${{ needs.candidate.outputs.commit }}
           RELEASE_NOTES_FILE: dist/release-notes.md
-        run: bash .release-tools/scripts/double-release.sh publish --tag "$RELEASE_TAG"
+        run: python3 .release-tools/scripts/double-release.py publish --tag "$RELEASE_TAG"
 
   telegram:
     name: Announce release in Telegram
@@ -116,12 +140,17 @@ jobs:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TO: ${{ secrets.TELEGRAM_TO }}
           TELEGRAM_THREAD_ID: ${{ vars.TELEGRAM_THREAD_ID }}
+        shell: python
         run: |
-          if [[ -n "$TELEGRAM_TOKEN" && "$TELEGRAM_TO" == -1002983024983 && "$TELEGRAM_THREAD_ID" == 8 ]]; then
-            echo 'ready=true' >> "$GITHUB_OUTPUT"
-          else
-            echo '::warning::Telegram inputs are missing or destination/topic format is invalid; announcement skipped.'
-          fi
+          import os
+          from pathlib import Path
+          if (os.environ.get('TELEGRAM_TOKEN') and
+              os.environ.get('TELEGRAM_TO') == '-1002983024983' and
+              os.environ.get('TELEGRAM_THREAD_ID') == '8'):
+              with Path(os.environ['GITHUB_OUTPUT']).open('a') as output:
+                  output.write('ready=true\n')
+          else:
+              print('::warning::Telegram inputs are missing or destination/topic format is invalid; announcement skipped.')
 
       - name: Send release announcement
         id: send

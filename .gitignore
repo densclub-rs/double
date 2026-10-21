@@ -17,3 +17,9 @@ Untitled*.md
 dist/
 scripts/test-machine-of-goals-navigation.sh
 scripts/validate-machine-of-goals-navigation.py
+
+# Python release tooling/tests
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv-release/

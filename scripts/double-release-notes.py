@@ -9,22 +9,11 @@ import re
 import subprocess
 import sys
 
-TAG = re.compile(r'^(machine-of-ideas|machine-of-goals|machine-of-knowledge|double-agent)-(\d+)\.(\d+)\.(\d+)(?:-(rc|dev))?$')
+from release_common import owned, parse
 
 
 def git(*args):
     return subprocess.check_output(['git', *args], text=True).strip()
-
-
-def parse(tag):
-    match = TAG.fullmatch(tag)
-    if not match:
-        raise ValueError('Unsupported machine release tag')
-    return match[1], tuple(map(int, match.group(2, 3, 4))), match[5] or 'stable'
-
-
-def owned(path, machine):
-    return path.startswith('.double/') and f'/{machine}/' in path and path.endswith('.md')
 
 
 def baseline(tag):
