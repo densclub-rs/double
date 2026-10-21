@@ -420,6 +420,8 @@ after plans or realizations change.
 
 Intermediate verifiable states inside a larger transition toward the goal, which may have their own inputs, outputs, completion criteria, and nested artifacts. A subgoal is better represented as a separate catalog that stores its own subplan.
 
+A subgoal is a goal used within another goal's plan, not a separate goal type. Any goal may serve as a subgoal, and any subgoal may be pursued as an autonomous goal. The same goal may play both roles at once. These roles are determined by explicit relationships and plan integration boundaries, not by a `goal-scope` field. Workflow depth and plan detail depend on the goal's needs, not on its role.
+
 #### Source in Idea
 
 - Explicit in `Raw Description`, `Key Elements`, `Assumptions`, and storage layout notes.

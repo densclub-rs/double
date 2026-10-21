@@ -45,8 +45,18 @@ class TestNotes:
         assert notes.baseline(rc) == f'{MACHINE}-1.0.0'
         self.commit('fix: refine', {FILE: 'third'})
         stable = self.tag()
-        assert notes.baseline(stable) == f'{MACHINE}-1.0.0'
+        assert notes.baseline(stable) == rc
         assert notes.baseline(stable) == notes.baseline(stable)
+
+    def test_rc_to_rc_range(self):
+        self.commit('feat: already announced', {FILE: 'second'})
+        previous = self.tag(suffix='-rc')
+        self.commit('fix: new correction', {FILE: 'third'})
+        current = self.tag(version='1.1.1', suffix='-rc')
+        assert notes.baseline(current) == previous
+        groups = notes.entries(current, previous, 'o/r')
+        assert list(groups) == ['Fixed']
+        assert groups['Fixed'][0][0] == 'new correction'
 
     def test_only_owned_working_files_and_mixed_scope(self):
         self.commit('fix: unrelated secret feature', {'knowledge/version.md': 'v2'})
@@ -56,8 +66,8 @@ class TestNotes:
         tag = self.tag()
         groups = notes.entries(tag, notes.baseline(tag), 'owner/repo')
         all_titles = ' '.join((title for items in groups.values() for title, _ in items))
-        assert 'Updated machine working files:' in all_titles
-        assert 'foreign feature' not in all_titles
+        assert 'foreign feature plus own flow' in all_titles
+        assert FILE not in all_titles
         assert 'unrelated' not in all_titles
         assert 'another machine' not in all_titles
         assert 'knowledge/' not in all_titles
@@ -80,12 +90,13 @@ class TestNotes:
         tag = self.tag()
         groups = notes.entries(tag, notes.baseline(tag), 'o/r')
         assert sum(map(len, groups.values())) == 1
+        assert groups['Added'][0][0] == 'branch flow'
 
-    def test_non_english_title_falls_back_to_english(self):
+    def test_non_english_description_is_preserved(self):
         self.commit('Исправлены ошибки', {FILE: 'second'})
         tag = self.tag()
         groups = notes.entries(tag, notes.baseline(tag), 'owner/repo')
-        assert groups['Changed'][0][0].startswith('Updated machine working files:')
+        assert groups['Changed'][0][0] == 'Исправлены ошибки'
 
     def test_html_escaping_length_and_footer(self):
         groups = {'Fixed': [('<unsafe>&' + 'a' * 300, 'https://example.invalid/x') for _ in range(100)]}
@@ -106,7 +117,7 @@ class TestNotes:
             groups = notes.entries(tag, notes.baseline(tag), 'owner/repo')
         assert sum(map(len, groups.values())) == 1
         item = next(iter(groups.values()))[0]
-        assert 'unrelated' not in item[0]
+        assert item[0] == 'unrelated PR headline'
         assert item[1].endswith('/pull/12')
 
     def test_categories_and_empty_sections(self):
@@ -123,6 +134,25 @@ class TestNotes:
             notes.main()
         assert 'eligible<<' in Path(output).read_text()
         assert '\nfalse\n' in Path(output).read_text()
+
+    def test_tag_annotation_heads_message(self):
+        self.commit('fix: flow', {FILE: 'second'})
+        tag = f'{MACHINE}-1.1.0'
+        annotation = 'Новый релиз <goals> & планы\n\nОписание изменений.'
+        notes.git('tag', '-a', tag, '-m', annotation)
+        assert notes.tag_annotation(tag) == annotation
+        md, message = notes.render(tag, None, {}, 'o/r', annotation=notes.tag_annotation(tag))
+        assert md.startswith(annotation)
+        assert message.startswith('<b>Новый релиз &lt;goals&gt; &amp; планы')
+        assert notes.tag_annotation(f'{MACHINE}-1.0.0') == ''
+
+    def test_long_annotation_fits_telegram_budget(self):
+        annotation = '<🚀>' * 5000
+        md, message = notes.render(f'{MACHINE}-1.1.0', None, {}, 'o/r', annotation=annotation)
+        assert annotation in md
+        assert len(message.encode('utf-16-le')) // 2 < 4096
+        assert '…</b>' in message
+        assert 'Full changelog' in message
 
     def test_action_transport_preserves_safe_html_and_blocks_templates(self):
         import html

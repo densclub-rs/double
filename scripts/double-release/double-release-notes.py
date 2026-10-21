@@ -32,9 +32,9 @@ def baseline(tag):
             continue
         if ok == 'stable' and ov < version:
             stable.append((ov, other))
-        if kind == 'rc' and ok == 'rc' and ov == version:
+        if ok == 'rc' and (ov < version or (kind == 'stable' and ov == version)):
             rc.append((ov, other))
-    candidates = rc or stable
+    candidates = stable + rc
     return max(candidates)[1] if candidates else None
 
 
@@ -69,10 +69,6 @@ def pr_is_scoped(repo, number, machine):
     return False
 
 
-def english_title(title):
-    return bool(title) and all(not c.isalpha() or 'a' <= c.lower() <= 'z' for c in title)
-
-
 def category(title):
     if 'BREAKING CHANGE' in title or re.match(r'^\w+(?:\([^)]*\))?!:', title):
         return 'Breaking Changes'
@@ -104,24 +100,42 @@ def entries(tag, base, repo):
                 continue
             prs_seen.add(number)
             title = pr.get('title', '')
-            scoped = pr_is_scoped(repo, number, machine)
             link = f'https://github.com/{repo}/pull/{number}'
         else:
-            title, scoped = subject, all(owned(p, machine) for p in files)
+            title = subject
             link = f'https://github.com/{repo}/commit/{sha}'
-        # Mixed-scope/non-English titles cannot reliably describe scoped changes.
-        # Use English path-based wording rather than claim automatic translation.
-        if not scoped or not english_title(title):
-            title = 'Updated machine working files: ' + ', '.join(selected[:3])
-            if len(selected) > 3:
-                title += f' (+{len(selected) - 3} more)'
-        else:
-            title = re.sub(r'^\w+(?:\([^)]*\))?!?:\s*', '', title).strip()
-        groups.setdefault(category(pr.get('title', subject) if pr else subject), []).append((title[:400], link))
+        # Commit/PR descriptions are the source of truth, in their original
+        # language. File paths decide inclusion only; they are never prose.
+        titles = [title]
+        if not pr and subject.startswith('Merge '):
+            titles = []
+            if len(parents) > 2:
+                for child in git('rev-list', '--reverse', sha, '--not', parents[1]).splitlines():
+                    if child == sha:
+                        continue
+                    paths = git('diff-tree', '--root', '--no-commit-id', '--name-only', '-r', child).splitlines()
+                    if any(owned(path, machine) for path in paths):
+                        titles.append(git('show', '-s', '--format=%s', child))
+            if not titles:
+                titles = [subject]
+        for description in titles:
+            heading = category(description)
+            description = re.sub(r'^\w+(?:\([^)]*\))?!?:\s*', '', description).strip()
+            if description:
+                groups.setdefault(heading, []).append((description[:400], link))
     return groups
 
 
-def render(tag, base, groups, repo, run_url=''):
+def tag_annotation(tag):
+    ref = f'refs/tags/{tag}'
+    if git('cat-file', '-t', ref) != 'tag':
+        return ''
+    message = git('for-each-ref', '--format=%(contents)', ref)
+    # Signatures authenticate the tag; they are not release prose.
+    return re.split(r'(?m)^-----BEGIN (?:PGP SIGNATURE|SSH SIGNATURE)-----', message)[0].strip()
+
+
+def render(tag, base, groups, repo, run_url='', annotation=''):
     machine, version, kind = parse(tag)
     release_url = f'https://github.com/{repo}/releases/tag/{tag}'
     full_url = (f'https://github.com/{repo}/compare/{base}...{tag}' if base
@@ -130,6 +144,16 @@ def render(tag, base, groups, repo, run_url=''):
     header = f'{machine} {".".join(map(str, version))} — {kind}'
     md = [f'# {header}', '', label, '']
     body = [f'<b>{html.escape(header)}</b>', html.escape(label)]
+    if annotation:
+        md = [annotation, ''] + md
+        # Reserve room for release metadata, changes and links even for long
+        # annotations; Markdown retains the complete annotation.
+        preview = annotation
+        while len(html.escape(preview).encode('utf-16-le')) // 2 > 1200:
+            preview = preview[:-1]
+        if preview != annotation:
+            preview += '…'
+        body.insert(0, f'<b>{html.escape(preview)}</b>')
     footer = (f'<a href="{html.escape(release_url, quote=True)}">Release</a> · '
               f'<a href="{html.escape(full_url, quote=True)}">Full changelog</a>')
     if run_url:
@@ -189,7 +213,8 @@ def main():
     groups = entries(args.tag, base, args.repository)
     run_url = os.environ.get('GITHUB_SERVER_URL', 'https://github.com') + '/' + args.repository + '/actions/runs/' + os.environ.get('GITHUB_RUN_ID', '')
     notes, message = render(args.tag, base, groups, args.repository,
-                            run_url if os.environ.get('GITHUB_RUN_ID') else '')
+                            run_url if os.environ.get('GITHUB_RUN_ID') else '',
+                            annotation=tag_annotation(args.tag))
     directory = Path(args.directory)
     directory.mkdir(parents=True, exist_ok=True)
     (directory / 'release-notes.md').write_text(notes)
