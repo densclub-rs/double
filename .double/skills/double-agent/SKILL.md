@@ -2,22 +2,22 @@
 status: stable
 name: double-agent
 description: >
-  Use this skill when the user asks to create, change, move, or remove a Double
-  operating artifact under .double/, including a workflow, agent, role, mode,
-  prompt, template, registry, skill, or machine catalog index for Machine of
-  Ideas, Machine of Goals, or Machine of Knowledge. Route the request through
-  Double Agent's read-only inspection, user-selected confirmation mode,
-  sequential application, and validation protocol. Do not use it for ordinary
-  user artifacts under ideas/, goals/, or knowledge/.
+  Maintain Double operating artifacts under .double/ or prepare and publish a
+  release of Machine of Ideas, Machine of Goals, Machine of Knowledge, or
+  Double Agent. Use for machine release requests, channel/status readiness,
+  release tags, and Telegram preview approval before GitHub publication.
+  Follow the canonical Double Agent workflow for inspection, planning,
+  confirmation, sequential changes, and validation. Do not use for ordinary
+  user artifact editing under ideas/, goals/, or knowledge/, or installer releases.
 metadata:
-  short-description: Safely maintain Double operating artifacts under .double/
+  short-description: Maintain Double contracts and prepare approved machine releases
 ---
 
 # Double Agent
 
 Use this skill as the dedicated entry point for controlled maintenance of
-Double operating artifacts. It routes process changes to the Double Agent; it
-does not replace a machine workflow or create user artifacts itself.
+Double operating artifacts and machine releases. It routes these requests to
+the Double Agent; project artifact edits use their responsible machine workflow.
 
 The canonical operating contract is:
 
@@ -35,6 +35,12 @@ Machine of Goals, or Machine of Knowledge. This includes:
   machine operating surface
 - creation or maintenance of an integration entry point under `.double/skills/`
 
+Also activate for a request to release a named Double machine, including
+`double-agent`, even when the request does not explicitly mention `.double/`.
+For example: "выпусти новый релиз машины идей" or "release Machine of Goals RC".
+Use the canonical workflow's Machine Release Protocol, including its final
+message approval gate. Installer releases have a separate workflow.
+
 Do not activate solely because the user discusses an idea, goal, or knowledge
 item. Such project artifacts belong under `ideas/`, `goals/`, or `knowledge/`
 and must use the responsible machine workflow.
@@ -45,6 +51,39 @@ and must use the responsible machine workflow.
    available. If it is unavailable, do not modify a `.double/` file; require
    installation first.
 2. Follow the Entry Protocol and all later stages in the canonical workflow.
+
+## Machine Release Routing
+
+- Recommend `release-candidate` (`rc`). Remind users that `dev` releases are
+  discouraged; preserve an explicitly chosen channel after that reminder.
+- Check the complete owned `.double/` inventory against the requested channel,
+  and machine-owned project documents for `release-candidate` or `stable`.
+  Packager exclusions do not prove readiness. Plan status fixes separately.
+- Read the dedicated machine version knowledge and previous machine tags;
+  prepare and validate only the approved local commit and annotated tag.
+- Before any push, show the full tag annotation and Telegram output from the
+  real notes generator. Declare the future Actions run-link placeholder and
+  stop on any other unresolved local/CI rendering difference. Dev has no
+  Telegram announcement under the current workflow.
+- Write the annotated-tag message and the complete Telegram announcement in
+  English, independently of the conversation language. The current generator
+  preserves commit/PR titles, so inspect those inputs too; an English
+  annotation alone does not make the full announcement English. Follow the
+  canonical workflow's release-language rule when an input is not English.
+- Obtain explicit approval of the concrete message and identified publication
+  before pushing. Plan approval is not message approval. Changed content
+  requires a fresh preview and approval.
+- Let GitHub Actions publish and notify; verify release and Telegram outcomes
+  separately. Follow the canonical protocol for details and failure handling.
+
+## Repository Tools
+
+For repository and GitHub operations in the Double project, use only the
+`git` and `gh` command-line utilities. Do not use GitKraken, GitHub MCP tools,
+or other repository connectors or browser interfaces for these operations.
+The existing release scripts may orchestrate `git` and `gh`; local artifact
+editing, packaging, and validation retain their normal tools. This rule applies
+to inspection as well as commits, tags, push, releases, and Actions monitoring.
 
 ## Choice Interface
 

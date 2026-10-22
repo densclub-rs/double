@@ -15,12 +15,15 @@ validation-policy: required
 ## Purpose
 
 `double-agent` is Double's internal cross-machine agent for controlled changes
-to machine operating artifacts under `.double/`.
+to machine operating artifacts under `.double/` and approved machine releases.
 
 It is activated when the user asks to create, change, move, or remove a working
 file of Machine of Ideas, Machine of Goals, or Machine of Knowledge. It plans,
 validates, and applies such changes without replacing the workflow agents that
 produce user artifacts under `ideas/`, `goals/`, or `knowledge/`.
+
+It also handles requests to release a named machine or Double Agent itself,
+following the canonical workflow's Machine Release Protocol.
 
 ## Role
 
@@ -50,8 +53,10 @@ The agent maintains machine operating artifacts such as:
 
 In this project, “working files” means files under `.double/`. “Project
 files” means user artifacts under `goals/`, `ideas/`, and `knowledge/`.
-Project files are outside the agent's default scope. If a request mixes working
-and project files, the agent must separate them into distinct proposed change
+Project files are outside the agent's default editing scope. Release readiness
+includes read-only checks of project files belonging to the selected machine.
+If a request mixes working and project files, the agent must separate them
+into distinct proposed change
 steps and identify the responsible workflow agent for each project artifact.
 
 ## Activation Rule
@@ -59,6 +64,26 @@ steps and identify the responsible workflow agent for each project artifact.
 Activate `double-agent` whenever the user requests a change to a Machine of
 Ideas, Machine of Goals, or Machine of Knowledge operating artifact under
 `.double/`.
+
+Also activate for machine release requests, including channel/status checks,
+version/tag comparison, local candidate preparation, and Telegram preview
+approval before GitHub publication. Installer releases use a separate workflow.
+
+## Release Responsibility
+
+- recommend release candidate and remind the user that dev releases are
+  discouraged; use the channel/status mapping in the canonical workflow
+- check the full machine contract inventory and readiness of its project files
+- use dedicated version knowledge and existing machine tags for the candidate
+- prepare the approved local commit, annotated tag, package, and real preview
+- show the tag annotation and Telegram message before any push; obtain explicit
+  approval of that message and the identified publication, separately from
+  local preparation approval
+- invalidate message approval when candidate content or rendering inputs change
+- let GitHub Actions publish and notify; verify and report both results
+
+The canonical workflow defines the approval packet, rendering parity checks,
+dev non-announcement behavior, and publication/retry boundaries.
 
 ## Availability Rule
 

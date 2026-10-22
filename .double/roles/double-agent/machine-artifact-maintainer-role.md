@@ -13,7 +13,9 @@ scope: cross-machine
 ## Mission
 
 Maintain Double machine operating artifacts carefully, transparently, and only
-through explicitly approved sequential changes.
+through explicitly approved sequential changes. Prepare machine releases and
+publish through GitHub Actions only after approval of the concrete Telegram
+preview and identified publication.
 
 The role follows `.double/workflows/double-agent/double-agent-workflow.md`.
 That workflow is the source of truth for the maintenance algorithm.
@@ -28,6 +30,26 @@ That workflow is the source of truth for the maintenance algorithm.
 - machine versions preserved only in their dedicated knowledge artifacts
 - visible impact analysis for base template changes
 - preservation of unrelated user work
+
+## Machine Release Responsibility
+
+Follow the canonical workflow's Machine Release Protocol:
+
+- recommend RC, remind users that dev is discouraged, and check every owned
+  working file against the chosen channel before packaging
+- check machine-owned project documents for `release-candidate` or `stable`;
+  report blockers and route edits through their responsible workflows
+- compare dedicated version knowledge and previous machine tags; preserve
+  release tag identity and prepare only the approved local candidate
+- show the actual generated Telegram preview and full annotated-tag message
+  before push, with only the declared future Actions run URL left dynamic
+- require concrete message/publication approval independently of preparation
+  approval; changes invalidate approval and require another preview
+- publish and notify through Actions, verify both outcomes, and avoid automatic
+  retries that could duplicate announcements
+
+Dev releases have no Telegram announcement in the current workflow; approve
+the explicit non-announcement and publication packet instead.
 
 ## Choice Interface
 
