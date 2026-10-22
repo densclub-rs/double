@@ -9,13 +9,13 @@ knowledge-type: static
 type: static
 value-type: text
 access: free-of-charge
-observed-at: 2026-10-20
+observed-at: 2026-10-22
 ttl: two years
 derived-from:
   - ../../scripts/double-installer.sh
-  - ../../tests/test-double-installer.sh
-  - ../../goals/double-installer/plan.md
-  - ../../goals/double-installer/run/interactive-rest--20261013T153107Z.md
+  - ../../tests/github-actions/test-double-installer.sh
+  - https://github.com/densclub-rs/double/blob/double-installer-0.1.5-rc/goals/double-installer/plan.md
+  - https://github.com/densclub-rs/double/blob/double-installer-0.1.5-rc/goals/double-installer/run/interactive-rest--20261013T153107Z.md
   - user classification decision in conversation on 2026-10-13
 ---
 
@@ -205,7 +205,7 @@ the entire installer-owned state subtree, including backups and logs. Shared
 root removal happens only when empty. Failure during project removal preserves
 the registry and remaining state for retry; scheduling may already be removed.
 
-[Double System Installer](../../goals/double-system-installer/double-system-installer.md#double-system-installer)
+Double System Installer (the separate bootstrap component)
 owns executable placement/bootstrap. Machine cleanup does not delete an
 arbitrary script invocation path or third-party tools. Cleanup of an installed
 entry point requires that component's explicit ownership interface.
@@ -302,9 +302,9 @@ Windows checks; portability is not inferred from macOS tests.
 ## Sources
 
 - Prerequisites: [jq installation](https://jqlang.org/download/) and [Git for Windows](https://gitforwindows.org/).
-- [Implementation](../../scripts/double-installer.sh) and [fixture checks](../../tests/test-double-installer.sh).
-- [Current plan](../../goals/double-installer/plan.md#double-installer-plan) and
-  [run evidence](../../goals/double-installer/run/interactive-rest--20261013T153107Z.md#double-installer-run-interactive-rest-20261013T153107Z).
+- [Implementation](../../scripts/double-installer.sh) and [fixture checks](../../tests/github-actions/test-double-installer.sh).
+- [Archived plan](https://github.com/densclub-rs/double/blob/double-installer-0.1.5-rc/goals/double-installer/plan.md#double-installer-plan) and
+  [run evidence](https://github.com/densclub-rs/double/blob/double-installer-0.1.5-rc/goals/double-installer/run/interactive-rest--20261013T153107Z.md#double-installer-run-interactive-rest-20261013T153107Z).
 - User accepted S01 through S05, and requested knowledge publication in this conversation.
 - The user confirmed a validity period of two years on 2026-10-13.
 
@@ -316,7 +316,7 @@ The full isolated fixture suite passed in double-applehv using actual Linux
 jq 1.8.1 and GNU tar 1.35. Current checkout scripts were copied to a guest
 /tmp test directory. Syntax checks and all transport, registry/lifecycle,
 update/backup/rollback, fake-cron and cleanup checks passed (exit 0).
-[Exact invocation and results](../../goals/double-installer/run/interactive-rest--20261014T161825Z.md#double-installer-run-interactive-rest-20261014T161825Z).
+[Exact invocation and results](https://github.com/densclub-rs/double/blob/double-installer-0.1.5-rc/goals/double-installer/run/interactive-rest--20261014T161825Z.md#double-installer-run-interactive-rest-20261014T161825Z).
 This supersedes the historical Linux-runtime-unavailable limitation above;
 Windows/Git Bash, actual scheduling and live GitHub smoke on Linux remain
 unverified. It does not extend the macOS-version-specific VM setup claim.
@@ -639,3 +639,32 @@ Installer release notes and the Telegram announcement are generated from the
 English annotated installer tag. Telegram is attempted only after successful
 publication of an eligible stable or RC release, using the configured release
 notification destination. Delivery failure does not undo the GitHub release.
+
+
+### Working tree and main reconciliation (2026-10-22)
+
+The installer candidate commit `90b7a0f` was initially reachable through the
+annotated `double-installer-0.1.6-rc` tag while the main checkout retained its
+16 installer files as untracked copies. The audit verified that all 16 copies
+were byte-identical before preserving the candidate commit in `main` with a
+fast-forward merge. Unrelated idea, project-convention and machine-release
+tooling changes remain outside the installer merge.
+
+[The first candidate run](https://github.com/densclub-rs/double/actions/runs/39776665383)
+passed both Linux and macOS architectures, repository regressions, and the
+live/cron integration. Both Windows jobs failed because the Python output
+fixture resolved the Windows WSL `bash.exe` instead of Git Bash. The validation
+gate correctly skipped release publication and Telegram delivery. The existing
+`0.1.6-rc` tag is retained unchanged; it does not represent a published release.
+
+The quick-suite entry point now passes the exact running Bash executable to
+Python, using a native path on Git Bash. The fixture uses binary jq output
+to avoid Windows CRLF contaminating registry values. Terminal color tests
+require a POSIX PTY; the remaining output checks run on Windows too. Shared
+state-directory knowledge, the original Podman validation observation and
+their knowledge-catalog links are included alongside the installer docs.
+
+Historical goal/run references now point to their verified immutable
+`double-installer-0.1.5-rc` snapshot because those process files are absent from
+the current main tree. This preserves source evidence without recreating old
+plans or claiming that a historical run is current.

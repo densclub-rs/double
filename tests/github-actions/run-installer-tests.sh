@@ -19,7 +19,11 @@ jq --version
 test_log "START syntax checks"
 bash -n scripts/double-installer.sh tests/github-actions/test-double-installer.sh tests/github-actions/test-double-installer-platform.sh
 test_log "START grouped output checks"
-python3 tests/github-actions/test-update-all-output.py
+test_bash="$BASH"
+case "$(uname -s)" in
+  MINGW*|MSYS*|CYGWIN*) test_bash=$(cygpath -m "$BASH") ;;
+esac
+DOUBLE_TEST_BASH="$test_bash" python3 tests/github-actions/test-update-all-output.py
 test_log "START platform checks"
 bash tests/github-actions/test-double-installer-platform.sh
 if [ "$quick" = true ];then

@@ -28,6 +28,7 @@ class UpdateAllOutput(unittest.TestCase):
 command_name=update-all
 action_colors=false
 if [ -t 1 ] && [ "${TERM:-}" != dumb ] && [ -z "${NO_COLOR+x}" ];then action_colors=true;fi
+jq() { command jq -b "$@"; }
 registry="$1";work_dir="$2";channel=rc;non_interactive=true;script_path=unused
 bash() {
   [ "$DOUBLE_INSTALLER_NESTED_UPDATE" = 1 ] || return 9
@@ -43,7 +44,10 @@ update_all
             env['CHECK_INPUT'] = str(int(prompt))
             if no_color:
                 env['NO_COLOR'] = ''
-            args = ['bash', '-c', harness, 'test', str(registry), directory]
+            bash_path = env.get('DOUBLE_TEST_BASH', 'bash')
+            if os.name == 'nt' and bash_path == 'bash':
+                raise RuntimeError('Use run-installer-tests.sh to select Git Bash explicitly on Windows')
+            args = [bash_path, '-c', harness, 'test', registry.as_posix(), Path(directory).as_posix()]
             if terminal:
                 master, slave = pty.openpty()
                 process = subprocess.Popen(args, stdout=slave, stderr=slave, env=env)

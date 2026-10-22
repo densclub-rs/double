@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Double Installer: release discovery and verified downloads.
-# Goal: https://github.com/densclub-rs/double/blob/main/goals/double-installer/double-installer.md
+# Goal (archived): https://github.com/densclub-rs/double/blob/double-installer-0.1.5-rc/goals/double-installer/double-installer.md
 set -euo pipefail
 
 # Git Bash needs LF jq output, literal JSON string values and explicit native
