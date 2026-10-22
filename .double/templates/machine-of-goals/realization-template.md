@@ -4,7 +4,7 @@ submodule: machine-of-goals
 id: realization-template
 kind: template
 status: release-candidate
-workflow-stage: plan-review-and-decision
+workflow-stage: plan-realization
 interaction-language: en
 artifact-language: en
 derived-from:
@@ -16,11 +16,11 @@ derived-from:
 
 ## Scope
 
-This shape records one manual or interactive execution of a plan model.
+This shape records one manual or interactive execution of an immutable plan frozen from an approved model.
 It is the walkthrough itself, not a registration wrapper around another run.
 No separate decision, run, run index, evidence manifest, or validation document
-is required for this shape. Other execution modes keep their existing shape
-below. The [Model and Realization Execution Rule](../../workflows/machine-of-goals/machine-of-goals-workflow.md#model-and-realization-execution-rule)
+is required for this shape. Other execution modes use the retained registration/run shape below,
+subject to the same authorized-start boundary. The [Model and Realization Execution Rule](../../workflows/machine-of-goals/machine-of-goals-workflow.md#model-and-realization-execution-rule)
 selects this shape for manual and interactive execution; other-mode automation
 is outside this synchronization.
 
@@ -30,21 +30,25 @@ is outside this synchronization.
   starts. Record the actual start with its offset and timezone; retain the
   creation name throughout the realization and never overwrite an existing
   realization directory.
-- Identify the source model by file, branch, version, and a SHA-256 digest of
-  that file at the start. A mutable file path or version alone is insufficient
-  to detect an unrecorded edit. Obtain the digest from the file; never invent it.
-- Check model identity/content before acting on a stage and before accepting
-  its output. A changed model closes this realization as `model-changed` and
-  requires a successor before further planned action. Preserve actions already
-  taken and validate their recorded facts against the captured conditions.
+- At the authorized start of step 05, first freeze `plan-v1.md` using
+  `plan-template`; then create this document. Never create either during steps
+  03 or 04, including after model approval with a deferred start.
+- Link the local frozen plan, its version and computed SHA-256 digest. Keep
+  source model file/revision and approved source digest separately. Recheck
+  approval before freezing and compute both hashes from actual bytes.
+- Check frozen plan integrity before action and output acceptance. Check for
+  changed source content before further planned action; a model edit invalidates
+  approval, closes this realization as `model-changed` and requires renewed
+  review and an authorized successor. Validate already observed results against
+  the unchanged frozen plan and captured conditions; never rewrite old facts.
 - `current-stage` identifies the stage being worked on or awaiting validation.
-  The map links its model anchor and stage record directly. Keep the body and
+  The map links its frozen plan anchor and stage record directly. Keep the body and
   frontmatter synchronized; do not project this progress into the model.
 - A stage can start only after its input conditions are accepted. It is
   completed only after its output conditions are accepted. Merely taking an
   action, attaching a file, or stating an expected outcome is not acceptance.
 - The realization is completed only when its applicable exit conditions and
-  the model's goal success criteria are accepted. Summarize that result and
+  the frozen plan's goal success criteria are accepted. Summarize that result and
   its confirmation basis here; no separate final-validation artifact is needed.
 - For both input and output checks, offer suitable documentary evidence first.
   If it cannot be provided, accept an explicit user statement when it addresses
@@ -72,9 +76,12 @@ interaction-language: <interaction-language>
 artifact-language: <artifact-language>
 goal-id: <goal-id>
 branch: <branch-name>
-plan-version: <MAJOR.MINOR.PATCH>
-plan-artifact: ../../plan-<branch>-v<major>.md
-plan-content-hash: sha256:<actual-model-file-digest>
+plan-version: 1
+plan-artifact: ./plan-v1.md
+plan-content-hash: sha256:<actual-frozen-plan-file-digest>
+plan-model-artifact: ../../plan-model-<branch>.md
+model-revision: <approved-model-revision>
+approved-model-content-hash: sha256:<actual-approved-source-file-digest>
 started-at: <actual-ISO8601-time-with-offset>
 timezone: <IANA-timezone>
 status: <in-progress|completed|blocked|cancelled|model-changed>
@@ -88,15 +95,16 @@ successor: <next-realization-path-or-null>
 # Realization: <Goal Title> / <Branch>
 
 Goal: [<goal-title>](../../<goal-id>.md#<goal-id>)
-Model: [<branch> / <version>](../../plan-<branch>-v<major>.md#<plan-id>)
+Plan: [Version 1](./plan-v1.md#<plan-id>)
+Source model: [<branch>](../../plan-model-<branch>.md#<model-id>)
 Current stage: [<stage-id>: <stage-name>](./<stage-id-lowercase>-<stage-slug>.md#<stage-record-id>)
 
 ## Stage Map
 
 | Stage | State | Record | Result |
 | --- | --- | --- | --- |
-| [S01: Prepare Documents](../../plan-<branch>-v<major>.md#stage-s01) | <state> | [Walkthrough](./s01-prepare-documents.md#<s01-record-id>) | <result-and-confirmation-basis> |
-| [S02: Submit Application](../../plan-<branch>-v<major>.md#stage-s02) | <state> | <record-link-when-created> | <result-and-confirmation-basis> |
+| [S01: Prepare Documents](./plan-v1.md#stage-s01) | <state> | [Walkthrough](./s01-prepare-documents.md#<s01-record-id>) | <result-and-confirmation-basis> |
+| [S02: Submit Application](./plan-v1.md#stage-s02) | <state> | <record-link-when-created> | <result-and-confirmation-basis> |
 
 ## Result
 
@@ -116,7 +124,8 @@ identified as inherited rather than being presented as new observations.
 
 ## Existing Shape for Other Execution Modes
 
-The following pre-existing shape is retained unchanged for other modes.
+The following registration/run shape is retained for other modes, subject to
+the universal step-05 start boundary.
 Its run, registration, implementation, and automation contracts are outside
 this manual/interactive revision. It is not an additional wrapper required
 by the realization shape above.
@@ -127,7 +136,7 @@ id: <realization-record-id>
 kind: realization-artifact
 template-id: realization-template
 project-id: <stable-project-id>
-produced-by: machine-of-goals/plan-synthesis-agent
+produced-by: machine-of-goals/plan-realization-agent
 artifact-path: ./realizations/<realization-record-id>.md
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
@@ -202,9 +211,9 @@ contract changes. Run-link and status updates do not create a new revision.
 
 - Before action, freeze each effective stage contract in its run; validate
   against captured criteria and evidence. Preserve historical acceptance.
-- Future-only edits require a logged applicability check, not automatic
-  invalidation. Revise the plan when frozen obligations change; revise this
-  realization only when its procedure, implementation, boundaries, or checks change.
+- Model edits require renewed review and a new frozen baseline before changed
+  execution. Log applicability checks and preserve original acceptance. Revise
+  this realization when its procedure, implementation, boundaries or checks change.
 - Initial-state checks:
 - Intermediate checks:
 - Final-state checks:

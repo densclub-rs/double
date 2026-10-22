@@ -21,16 +21,17 @@ structured-choice, stop-point, and continuation rules remain binding.
 
 ### Inputs and Outputs
 
-- Inputs: goal/model criteria, the selected realization and stage record,
+- Inputs: goal and frozen-plan criteria, the selected realization and stage record,
   captured conditions, actual results, and supplied evidence or statements.
 - Outputs: updated `stage-realization` and `realization-artifact`. Final
   acceptance is summarized in the main Result, not a separate document.
 
 ### Execution Rules
 
-- Recheck source model identity/content before output acceptance. A changed
-  model ends the realization; preserve facts against captured criteria and
-  route to revision/review and an authorized successor.
+- Verify frozen plan integrity and validate observed outputs against that
+  unchanged plan and captured conditions. A changed source model blocks further
+  planned action and requires renewed review/authorized successor; it never
+  rewrites the earlier plan or prevents checking already observed results.
 - Compare actual outputs with the captured conditions. Offer relevant
   documentary evidence and inspect its applicability. When documents cannot
   be supplied, preserve the explicit user statement as the acceptance basis;
@@ -63,9 +64,8 @@ We are going to validate the current stage or goal result.
 Current step: `06-plan-validation`.
 Default mode: `validation`.
 Expected outputs: `updated-plan-run`, `updated-run-index` when retention removes
-a run, and `updated-plan-artifact` for realization statistics or an explicit
-plan revision. Changes to frozen obligations also produce a new
-`plan-revision-snapshot`; compatible future-only edits produce change-log entries.
+a run, and `updated-plan-model` bookkeeping for realization statistics.
+Proposed model edits return to review; validation creates no new plan snapshot.
 
 Compare current run evidence with criteria and mark the result as:
 
@@ -96,12 +96,10 @@ without incrementing run count again, then apply the configured retention
 limit. Revise the plan topology only when the intended transition model must
 change.
 
-Future-only edits go into the current plan and its dated change log without a
-new revision when no frozen obligation changes. Check dependency impact and
-realization compatibility; preserve applicable accepted results. Create a new
-immutable plan revision before executing a change to a started or completed
-stage's frozen obligations, and record required revalidation or rework. Keep
-historical baseline links and completed runs unchanged.
+Proposed model edits go to synthesis/review with dependency and applicability
+checks. Every transition edit requires renewed approval and a new frozen
+baseline only at authorized execution start. Preserve historical acceptance,
+baseline links and completed runs; record required revalidation/rework.
 
 Confirm that the realization artifact and exact plan, realization revision, and
 evidence links resolve. Update terminal run status in the realization artifact.
@@ -116,12 +114,12 @@ mode, responsible agent, and expected artifact when known.
 Follow the [revision rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-revision-history-rule) and
 [stage contract rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-contract-rule):
 
-- Log compatible future-only edits without a new revision; assess dependencies
-  and realization fit. Preserve applicable accepted results.
+- Log model edits and assess dependencies/applicability. Every transition edit
+  needs renewed review before changed execution; preserve historical acceptance.
 - Freeze each effective stage contract in its run before action; validate
   against captured criteria and evidence. Preserve attempts and baseline links.
-- Create a new revision before executing changed frozen obligations; identify
-  revalidation or rework. Never rebind completed runs or invent legacy contracts.
+- Create a new frozen plan only at an authorized changed-execution start after
+  review; identify revalidation/rework. Never rebind runs or invent old contracts.
 
 ## Structured User Choices
 

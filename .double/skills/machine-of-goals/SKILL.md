@@ -141,18 +141,27 @@ Synthesis is not yet available, and offer to resolve the questions one by one.
 Offer transition to `03-plan-synthesis` only when at least one plausible path
 exists and no `Open Questions` remain.
 
-During `04-plan-review-and-decision`, show the user the selectable paths or
-subplans, their material trade-offs, and the compatible registered
-realizations. Ask the user to confirm the selected path or subplan explicitly.
-A recommendation is allowed, but neither the skill nor the responsible agent
-may make the selection on the user's behalf. Do not commit the realization
-decision or advance to `05-plan-realization` until the user confirms the
-selection, the selected realization row has been added to section 10 of
-`plan.md`, and the first executable baseline or current applicable revision
-snapshot exists without overwriting earlier history. A
-different selected path always creates a new realization row, even when it
-reuses the same realization mechanism. Before advancing, create the persistent
-`realizations/<realization-record-id>.md` artifact for the approved realization.
+The generated artifact keeps the user-facing name `Plan` and heading
+`# Plan: <Goal Title> / <Branch>` in planning and realization. `plan-model`
+is a technical role, not a replacement display name. Preserve the distinct
+metadata, templates and storage contracts below.
+
+During `03-plan-synthesis`, produce only `plan-model` from
+`plan-model-template`. Manual/interactive models are `plan-model-<branch>.md`;
+other modes retain the editable `plan.md` shape. During step 04, present exact
+model content, choices, trade-offs, entry and boundaries; obtain explicit
+approval and preserve the approved content digest/decision in the conversation.
+Every model edit invalidates approval for future execution. If start is deferred,
+leave only the model. Never create an execution plan, snapshot, realization,
+registration row, committed decision file, run or index during steps 03 or 04.
+
+Only at the authorized start of step 05, recheck exact approval/content and
+freeze `realizations/<start>/plan-v1.md` from `plan-template`, then create
+`realization.md`. Stages and the realization link this immutable local plan.
+Other-mode registration, snapshot and decision creation likewise wait for this
+start; their existing automation/run mechanism and legacy names remain supported.
+Do not require executor files to finish review. See the canonical
+[all-mode boundary](../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-model-execution-boundary).
 
 ## Structured User Choices
 
@@ -230,78 +239,49 @@ validation flow.
   sections where artifact relationships are explained; frontmatter references
   do not replace those links, and a universal navigation block is not required.
 - Every artifact created from a Machine of Goals template records that
-  template's stable top-level `id` in frontmatter `template-id`; revisions and
-  plan revision snapshots preserve it.
+  template's stable top-level `id` in frontmatter `template-id`; a frozen
+  execution plan uses `plan-template` rather than the source model template.
 - External goals, plans, subplans, paths, and realizations may remain direct
   references when no copy or adaptation is requested; direct reference does
   not require Plan Exchange.
-- Each goal has one plan artifact at `<goal-directory>/plan.md`; alternative
-  achievement paths are selectable branches or subplans inside it.
-- `path-options.md` remains the living catalog of possible achievement paths.
-  Paths may be added, deprecated, or selected later without replacing retained
-  realization history.
-- Section 10 of `plan.md` is the realization registry and owns realization
-  records, computed style input, readiness, alignment, and aggregate run
-  statistics. A different selected path always creates a new row with a unique
-  realization record id.
-- Before the first realization, keep `plan-revision` and
-  `plan-revision-artifact` null, refine only `plan.md`, and create no snapshot.
-  The first realization freezes revision 1. Later revisions are required
-  only when frozen stage obligations change; compatible future-only edits
-  are recorded in the current plan change log.
-- Every approved manual or automatic realization has one persistent
-  `<goal-directory>/realizations/<realization-record-id>.md` artifact. Create it
-  after the decision and local plan snapshot and before any run.
-- Registering an automatic realization for the plan or a subplan changes the
-  computed style from `single-pass` to `multi-pass`; file creation and first
-  successful validation are not transition points.
-- Mutable execution state belongs in
-  `<goal-directory>/run/<realization-record-id>--<YYYYMMDDTHHMMSSZ>.md`. The
-  current `plan.md` may mirror only the run's derived emoji progress in its
-  Plan Map after frozen-contract and dependency compatibility checks; the run remains
-  authoritative, and immutable plan-revision snapshots are never updated.
-- Every command generated for human execution of a manual plan stage must be
-  appended to the current run before or when it is presented. Preserve
-  generation order and corrected or superseded commands; use placeholders or
-  protected-input references instead of literal secrets.
-- Successful plan-action and validation commands, including those executed by
-  the agent or an automatic realization, belong in the current run for reuse
-  and automation after observed success and before stage validation. Preserve
-  order, stage, purpose, working context, exact safe command, concise result,
-  and replay constraints. Failed attempts, redundant repeats and incidental
-  bookkeeping need not be logged as a full trace. Verify each retained command
-  in a group; recording a command does not authorize replay or automation.
-- Immutable copies of plan revisions used by realizations belong in
-  `<goal-directory>/realizations/plan-revision-<N>.md`. Rebase relative links
-  when copying `plan.md`, and never overwrite an existing revision snapshot.
-- `<goal-directory>/run/index.md` links active, pinned, and retained run files;
-  each realization artifact links its own retained runs, while the plan
-  realization registry links the artifact and index but not individual run
-  files.
-- A realization decision and every run must link the exact local
-  `realizations/plan-revision-<N>.md` snapshot and the exact realization
-  revision; `current` is allowed only before the execution commit point.
-- A realization decision is not committed until the selectable paths or
-  subplans have been shown to the user and the user has explicitly confirmed
-  the selected path or subplan.
-- Retain a configured three to five terminal run logs per realization record while
-  preserving aggregate statistics in the corresponding `plan.md` realization
-  row.
-- Import and export of reusable multi-pass plans preserve goal context, paths,
-  registered realizations, and validation contracts; bounded run logs are not
-  required package history.
-
-## Stage Contracts and Plan Changes
-
-Follow the [revision rule](../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-revision-history-rule) and
-[stage contract rule](../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-contract-rule):
-
-- Log compatible future-only edits without a new revision; assess dependencies
-  and realization fit. Preserve applicable accepted results.
-- Freeze each effective stage contract in its run before action; validate
-  against captured criteria and evidence. Preserve attempts and baseline links.
-- Create a new revision before executing changed frozen obligations; identify
-  revalidation or rework. Never rebind completed runs or invent legacy contracts.
+- Models use `plan-model-template`; frozen execution plans use `plan-template`.
+  A newly created frozen plan records `plan-template` and producer
+  `machine-of-goals/plan-realization-agent`. The source model keeps its own
+  model identity, template and synthesis producer unchanged.
+- Manual/interactive models may have independent named branches and contain no
+  progress or registry. `path-options.md` links the editable models and does
+  not become an execution/evidence index. Link only files that already exist.
+- At authorized start, freeze complete approved content and rebase links
+  without altering conditions/actions. Record the actual approved source hash
+  and frozen-plan hash separately in the realization, with actual time/timezone.
+- Frozen plans remain immutable. Mutable current-stage, actions, progress,
+  evidence and acceptance belong to the realization and three-part stage records.
+  Capture stage contracts from that plan; verify input before action and output
+  before completion. Offer documentary evidence with an identified explicit
+  user-statement fallback. Resume awaiting outputs at validation, not by replay.
+- A source edit ends the active manual/interactive realization before new action
+  and requires renewed review plus an authorized successor. Verify already
+  observed outputs against their original plan; preserve all earlier plans and
+  facts. Inherited results retain origin and need an applicability check.
+- Other-mode models retain their `plan.md` registry and computed style, local
+  immutable `realizations/plan-revision-<N>.md` baselines, persistent realization
+  records and decisions. Registration/statistics/progress are bookkeeping;
+  they do not revise approved transition content. Changed transition content,
+  even for an unstarted stage, requires renewed review and a new frozen baseline
+  at authorized execution start. Never silently adopt edits into an active run.
+- Other-mode runs retain captured contracts, safe generated-command history,
+  successful action/validation commands with context/results/replay constraints,
+  and exact baseline/realization links. Recorded commands do not authorize replay.
+- Other-mode registration of an automatic realization computes `multi-pass`;
+  file creation and first validation are separate. Keep aggregate statistics in
+  its legacy registry, retained run links in realization artifacts and run index,
+  and bounded three-to-five terminal-run retention after statistics update.
+  Never apply this cleanup to documented manual/interactive walkthroughs.
+- Import/export retains context, model/plan distinction, paths, automation
+  definitions and validation contracts. Imported editable material remains a
+  model; import never authorizes execution or a new local execution baseline.
+  Historical provider plans may remain historical package evidence. Existing
+  user-artifact conversion/migration requires separately authorized scope.
 
 ## Completion Handoff
 

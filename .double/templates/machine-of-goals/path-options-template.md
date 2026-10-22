@@ -67,7 +67,7 @@ derived-from:
 - Unknowns:
 - Reuse / import opportunity:
 - Lifecycle: <discovered|included-in-plan|implemented|exercised|validated|deprecated>
-- Plan element: [<plan-element-label>](./plan-<branch>-v<major>.md#<plan-anchor-or-subplan-id>) or none
+- Plan element: [<plan-element-label>](./plan-model-<branch>.md#<model-anchor-or-subplan-id>) or none
 - Recommendation: <candidate|include-in-plan|keep-as-alternative|reject|needs-research>
 
 ## 4. Comparison
@@ -93,5 +93,8 @@ actual branch model and relevant stage or subplan where the path relationship
 is described; include more than one link only when the path genuinely spans
 models. Before synthesis, use `none` rather than a link to an uncreated file.
 Do not turn this path catalog into another realization or evidence index.
-The generalized model-link placeholder does not change execution-mode choice
-or any automatic action contract.
+This link names an editable model, not a fixed execution plan. Its approval
+alone creates no plan/realization files. At execution, the realization links
+its own immutable plan. Do not create executor files during path discovery,
+synthesis or deferred review. Other-mode models retain the filename `plan.md`;
+apply the same boundary without changing their automation mechanism.

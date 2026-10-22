@@ -11,7 +11,8 @@ status: release-candidate
 
 - [Goal Template](./goal-template.md)
 - [Path Options Template](./path-options-template.md)
-- [Plan Template](./plan-template.md)
+- [Plan Template (Planning)](./plan-model-template.md)
+- [Plan Template (Realization)](./plan-template.md)
 - [Realization Decision Template](./realization-decision-template.md)
 - [Realization Artifact Template](./realization-template.md)
 - [Stage Realization Template](./stage-realization-template.md)
@@ -28,17 +29,18 @@ frontmatter `template-id`.
 
 ## Model and Realization Contract Scope
 
-The first shapes in the Plan and Realization templates, together with the
-Stage Realization template, define concise manual/interactive documents:
-one branch/version model, one timestamped realization with its current stage
-and map, and three-part stage records with input/output checks and evidence.
-Documentary evidence is requested first; an explicit user statement is an
-identified fallback when documents cannot be provided.
+`plan-model-template` defines editable branch models. `plan-template` freezes
+approved content only at the authorized start of step 05. The Realization and
+Stage Realization templates record progress, actions and input/output checks
+against that immutable local plan. Documentary evidence is requested first;
+explicit user statements remain an identified fallback when unavailable.
 
-Generated documents use Markdown frontmatter and readable names without a
-mode prefix. They do not require separate decision, registration, run-index,
-evidence, or validation artifacts. Existing other-mode shapes remain in the
-relevant templates. Manual and interactive routing is defined by the
-[Model and Realization Execution Rule](../../workflows/machine-of-goals/machine-of-goals-workflow.md#model-and-realization-execution-rule).
-Collapsing, skills, automatic actions, and migration of existing goal artifacts
-are outside this route synchronization.
+After step 03 and deferred step 04, only the model exists. A manual/interactive
+start creates `realizations/<start>/plan-v1.md` and `realization.md` before the
+first action. Generated files have no mode prefix. No separate decision,
+registration, run index, evidence or validation artifact is required on this
+route. Other-mode shapes retain their automation/run mechanisms and legacy
+filenames subject to the same start boundary. See the
+[execution rule](../../workflows/machine-of-goals/machine-of-goals-workflow.md#model-and-realization-execution-rule)
+and [all-mode boundary](../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-model-execution-boundary).
+Existing goal migration is a separate authorized operation.

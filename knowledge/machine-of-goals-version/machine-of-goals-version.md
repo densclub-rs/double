@@ -2,7 +2,7 @@
 id: machine-of-goals-version
 kind: knowledge-artifact
 status: release-candidate
-produced-by: knowledge-extraction-agent
+produced-by: machine-of-knowledge/knowledge-extraction-agent
 interaction-language: ru
 artifact-language: en
 knowledge-type: static
@@ -11,6 +11,11 @@ value-type: text
 observed-at: 2026-10-28
 ttl: one month
 derived-from:
+  - user clarification preserving the Plan artifact display name on 2026-10-22
+  - user-approved plan-model and frozen execution plan separation on 2026-10-22
+  - .double/templates/machine-of-goals/plan-model-template.md
+  - .double/skills/machine-of-goals/SKILL.md
+  - tests/machine-of-goals/test_plan_contract.py
   - user-requested synchronization of model and realization workflow on 2026-10-22
   - .double/registries/machine-of-goals/agents-registry.md
   - user-approved lightweight model and realization artifact contracts on 2026-10-22
@@ -42,6 +47,57 @@ project.
 `0.0.15`
 
 ## Change Note
+
+Generated planning and frozen execution documents retain the user-facing name
+`Plan` and heading `# Plan: <Goal Title> / <Branch>`. `plan-model` remains a
+technical role in metadata and template contracts, not a replacement display
+name. This naming clarification is part of the unreleased `0.0.15` change.
+
+Version `0.0.15` separates the editable `plan-model` from the immutable execution
+`plan-artifact`. Step 03 creates only a model from `plan-model-template`;
+manual/interactive files are `plan-model-<branch>.md` with a review revision,
+not an execution plan version. Step 04 approves exact content, selected
+path/entry and execution boundaries. Approval and permission to start are
+separate: a deferred start leaves only the model. Approval/digest/selection
+remain in the recoverable conversation until start, with renewed review
+required if they cannot be recovered.
+
+Only at the authorized start of step 05, after checking current content against
+the approved source digest, the executor freezes `plan-v1.md` from
+`plan-template` in the timestamped realization directory, then creates
+`realization.md`, before the first planned action. The frozen plan preserves
+complete approved transition content and scope, with provenance and rebased
+links. Its file digest is distinct from the approved source digest. The
+realization and stage records link this local immutable plan and own progress,
+actual actions, evidence and acceptance. The source model and plan do not own
+manual/interactive execution progress.
+
+Every model edit invalidates its approval for future execution. Changed
+manual/interactive execution requires renewed review and an authorized linked
+successor with its own frozen plan. Old plans remain unchanged; already
+observed outputs can be validated against their original plan and captured
+conditions. Inherited facts retain their original plan/execution context and
+require an applicability check. Resume uses the existing frozen plan and
+realization rather than replaying actions or creating another start.
+
+Workflow, templates, catalogs, registries, synthesis/realization/validation
+agents, roles, prompts, exchange guidance and the canonical entry-point skill
+are aligned with this boundary. Other-mode registration/run mechanisms and
+legacy filenames remain supported: editable `plan.md` uses the model template,
+and immutable `realizations/plan-revision-<N>.md` baselines use the execution
+plan template. Their snapshot, decision and realization materialization also
+waits for authorized step-05 start. Transition edits, including unstarted work,
+require renewed review and a new frozen baseline before changed execution;
+bookkeeping alone does not change the approved transition. Runs capture stage
+contracts from their pinned plan rather than the current editable model.
+
+Structural regression checks cover workflow output boundaries, distinct
+artifact/template kinds and producers, exact approval/integrity rules, local
+frozen-plan stage links, navigation and obsolete instruction detection. A
+walkthrough matrix specifies actual file inventories after synthesis, deferred
+review, execution start, source edits and resume; these checks do not claim an
+implemented execution engine. Existing user goals and plans are not migrated,
+and no machine release or publication is performed by this contract update.
 
 Version `0.0.14` connects the lightweight model, realization, and stage
 contracts to the manual and interactive route in the Machine of Goals

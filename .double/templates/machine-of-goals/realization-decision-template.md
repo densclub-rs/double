@@ -4,7 +4,7 @@ submodule: machine-of-goals
 id: realization-decision-template
 kind: template
 status: release-candidate
-workflow-stage: plan-review-and-decision
+workflow-stage: plan-realization
 interaction-language: en
 artifact-language: en
 derived-from:
@@ -13,17 +13,27 @@ derived-from:
 
 # Template: Realization Decision
 
+For other execution modes only. Review keeps exact content approval, selection
+and boundaries in the conversation. Materialize this decision only at the
+authorized start of step 05, after verifying approval and freezing the plan,
+before any action/run. Never require this file to finish step 04. Record the
+approved model digest and recoverable explicit approval; any model edit requires
+renewed review before changed execution. Manual/interactive selection is recorded
+in the frozen plan and realization without a separate decision file.
+
 ```md
 ---
 id: <goal-id>-realization-decision
 kind: realization-decision
 template-id: realization-decision-template
 project-id: <stable-project-id>
-produced-by: machine-of-goals/plan-synthesis-agent
+produced-by: machine-of-goals/plan-realization-agent
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
 goal-id: <goal-id>
 plan-id: <plan-id>
+plan-model-artifact: <goal-directory>/plan.md
+approved-model-content-hash: sha256:<actual-approved-source-file-digest>
 plan-revision: <positive-integer>
 plan-revision-artifact: <goal-directory>/realizations/plan-revision-<N>.md
 path-options-id: <path-options-id>
@@ -106,7 +116,7 @@ derived-from:
 - Continue when:
 - Branch when:
 - Revise plan when:
-- Future-only changes: log without a new revision if frozen obligations remain unchanged; record dependency and realization compatibility.
+- Model changes: record dependency/applicability impact and obtain renewed review; freeze a new baseline only at authorized execution start before changed actions.
 - Historical runs: preserve baseline links, frozen contracts, evidence, and acceptance; never rebind a completed run.
 - Reformulate goal when:
 - Stop or pause when:

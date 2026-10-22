@@ -21,22 +21,25 @@ structured-choice, stop-point, and continuation rules remain binding.
 
 ### Inputs and Outputs
 
-- Inputs: selected model file/branch/version, authorized entry or existing
+- Inputs: approved model file/branch/revision/digest, authorized start or existing
   realization/current stage, and the relevant conditions and stop points.
-- Outputs: `realization-artifact`, `stage-realization`, and directly linked
+- Outputs: immutable `plan-artifact`, `realization-artifact`, `stage-realization`, and directly linked
   evidence or actual deliverables required by the approved stage.
 
 ### Execution Rules
 
-- At actual authorized start, create the timestamped `realization.md` from
-  the first `realization-template` shape. Record actual time/timezone and the
-  computed model digest. Resume the selected existing realization otherwise.
-- Show current stage and its model anchor, required inputs, planned action,
+- Only at authorized step-05 start, recheck exact model approval/digest, selected
+  path/entry and boundaries. Freeze `plan-v1.md` using `plan-template` in the
+  timestamped directory before creating `realization.md`. Record actual start,
+  timezone, source digest and frozen-plan digest separately. Approval with a
+  deferred start creates neither file. Resume the existing realization otherwise.
+- Show current stage and its local frozen plan anchor, required inputs, planned action,
   expected outputs, and checks. Keep progress/current-stage only in the main
   realization map and use `stage-realization-template` for stage detail.
-- Capture source conditions/action before acting. Compare model identity and
-  content digest before action; a change ends this realization and requires
-  authorized review/continuation into a successor.
+- Capture conditions/actions from the frozen plan before acting and verify its
+  integrity. A source model edit invalidates approval for future actions, ends
+  this realization as `model-changed` and requires renewed review/authorized
+  successor. Never edit the earlier frozen plan or its factual history.
 - Offer appropriate documentary confirmation of inputs. Inspect what it
   establishes; when unavailable, an explicit condition-specific user statement
   can support acceptance, labeled as such. Silence and unrelated files
@@ -52,6 +55,14 @@ structured-choice, stop-point, and continuation rules remain binding.
 
 ## Retained Instructions for Other Execution Modes
 
+At the authorized start of step 05, recheck approved model content and scope,
+freeze the local plan revision using `plan-template`, then register the selected
+realization and materialize its decision/artifact before any run or action.
+Those files are outputs of start, not prerequisites for finishing review.
+Use `plan-model-template` for editable models; unchanged-content registration
+may reuse an exact existing baseline. Changed content always requires renewed
+review and a new frozen baseline before action. Frozen plans remain immutable.
+
 The remainder is retained for other modes. Its legacy execution-data rules
 (run, registry, snapshot, statistics, or progress projection) do not apply to
 the manual/interactive route above. Common operating-change routing and user
@@ -62,8 +73,9 @@ We are going to realize the selected plan stage.
 
 Current step: `05-plan-realization`.
 Default mode: `execution`.
-Expected outputs: `plan-run`, `run-index`, and `updated-plan-artifact` when
-registration or run-start statistics change.
+Expected outputs at authorized start: immutable `plan-artifact`, decision and
+realization; then `plan-run`, `run-index` and `updated-plan-model` bookkeeping
+when registration or run-start statistics change.
 
 Before action, state:
 
@@ -121,12 +133,12 @@ mode, responsible agent, and expected artifact when known.
 Follow the [revision rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-revision-history-rule) and
 [stage contract rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-contract-rule):
 
-- Log compatible future-only edits without a new revision; assess dependencies
-  and realization fit. Preserve applicable accepted results.
+- Log model edits and assess dependencies/applicability. Every transition edit
+  needs renewed review before changed execution; preserve historical acceptance.
 - Freeze each effective stage contract in its run before action; validate
   against captured criteria and evidence. Preserve attempts and baseline links.
-- Create a new revision before executing changed frozen obligations; identify
-  revalidation or rework. Never rebind completed runs or invent legacy contracts.
+- Create a new frozen plan only at an authorized changed-execution start after
+  review; identify revalidation/rework. Never rebind runs or invent old contracts.
 
 ## Completion Handoff
 

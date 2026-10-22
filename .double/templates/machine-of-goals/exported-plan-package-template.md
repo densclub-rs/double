@@ -14,6 +14,11 @@ derived-from:
 
 # Template: Exported Plan Package
 
+Keep editable models and historical execution plans distinct. Omit optional
+execution links when no realization has started. Import reusable content as a
+local model; no new local execution plan is created until authorized step 05.
+The legacy registration/run package fields below apply only to other modes.
+
 ```md
 ---
 id: <goal-id>-exported-plan-package
@@ -54,10 +59,11 @@ derived-from:
 - Success criteria:
 - Constraints:
 - Resources:
-- Original plan: [<plan-title>](<plan-artifact-link>)
+- Source model: [<model-title>](<plan-model-artifact-link>)
+- Historical frozen plan: [<plan-title>](<plan-artifact-link>) when one exists
 - Selected paths and subplans: [<path-or-subplan-label>](<path-or-subplan-link>)
 - Computed style: <multi-pass>
-- Plan realization registry: [<realization-registry-label>](<plan-artifact-link>#realization-registry)
+- Plan realization registry: [<realization-registry-label>](<plan-model-artifact-link>#realization-registry)
 - Realization alignment statuses:
 - Aggregate realization statistics:
 - Supporting validation evidence:
@@ -68,7 +74,7 @@ derived-from:
 - Reusable subgoals: [<subgoal-title>](<subgoal-artifact-link>)
 - Reusable checks:
 - Reusable scripts / workflows / specs: [<artifact-label>](<artifact-link>)
-- Reusable registered realizations: [<realization-label>](<plan-artifact-link>#<realization-record-id>)
+- Reusable registered realizations: [<realization-label>](<plan-model-artifact-link>#<realization-record-id>)
 - Persistent realization artifacts: [<realization-label>](<realization-artifact-link>)
 - Required adaptations:
 
@@ -88,7 +94,7 @@ Portable sequence or package outline:
 
 - What has been validated:
 - What has not been validated:
-- Validation decision source: <plan-artifact-stage-validation-blocks>
+- Validation decision source: <realization-stage-record-or-run-validation-blocks>
 - Supporting evidence links:
 - Known failure modes:
 
@@ -107,7 +113,8 @@ Portable sequence or package outline:
 
 ## 9. Plan Export Notes
 
-- Exported plan artifact: `plan.md`
+- Exported editable model: `plan-model-<branch>.md` (legacy other-mode `plan.md`)
+- Exported frozen plans: <existing-plan-paths-and-source-identities-only>
 - Exported path-options artifact: `path-options.md`
 - Exported realization registry: section 10 of `plan.md`
 - Exported registered realization records:

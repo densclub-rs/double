@@ -116,36 +116,39 @@ Describe the state that should exist after successful realization.
 
 Possible paths: [Path options](./path-options.md#<goal-id>-path-options)
 
-| Branch | Version | Model |
+| Branch | Review revision | Plan |
 | --- | --- | --- |
-| <branch> | <MAJOR.MINOR.PATCH> | [<model-title>](./plan-<branch>-v<major>.md#<plan-id>) |
+| <branch> | <positive-integer> | [<model-title>](./plan-model-<branch>.md#<model-id>) |
 
-| Started | Model | Realization |
+| Started | Frozen plan | Realization |
 | --- | --- | --- |
-| <actual-start-with-timezone> | <branch> / <version> | [<realization-label>](./realizations/<YYYY-MM-DDTHH-mm-ss>/realization.md#<realization-id>) |
+| <actual-start-with-timezone> | [Plan v1](./realizations/<YYYY-MM-DDTHH-mm-ss>/plan-v1.md#<plan-id>) | [<realization-label>](./realizations/<YYYY-MM-DDTHH-mm-ss>/realization.md#<realization-id>) |
 
 ```
 
 ## Artifact Navigation Scope
 
 For manual and interactive execution, section 11 above links real branch
-models and timestamped realizations directly. Add only existing useful rows;
+models and timestamped realizations with their frozen plans directly. Add only existing useful rows;
 omit a table until its artifacts exist. The realization owns current stage,
 progress, and checks, so this goal navigation does not duplicate that state.
 No separate registration, decision artifact, run index, or computed automation
 style is required for the manual/interactive shape. Parallel branches may
-coexist; retained major versions in one branch describe evolution.
+coexist; model revisions describe review changes without becoming execution
+plan versions. After step 03 and deferred step 04, show only existing models.
+Add a frozen-plan/realization row only after the authorized start of step 05.
 
 ## Existing Navigation for Other Execution Modes
 
-The pre-existing section below is retained unchanged for other modes. It is
+The legacy navigation below applies to other modes. Add execution links only
+after authorized start; before then omit uncreated files and registry links. It is
 not an additional navigation block required in a manual/interactive goal.
 
 ```md
 ## 11. Machine of Goals Artifacts
 
 - Possible realization paths: [Path options](./path-options.md#<goal-id>-path-options)
-- Plan: [Current plan](./plan.md#<goal-id>-plan)
+- Model: [Current model](./plan.md#<goal-id>-plan)
 - Plan realization registry: [Realizations](./plan.md#realization-registry)
 - Current plan revision used by realization: [Plan revision <N>](./realizations/plan-revision-<N>.md#<goal-id>-plan) or not yet created
 - Realization decision: [Current decision](./realization-decision.md#<goal-id>-realization-decision)

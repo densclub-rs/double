@@ -17,7 +17,7 @@ printf 'Runtime: %s\nBash: %s\n' "$(uname -srm)" "$BASH_VERSION"
 python3 --version
 jq --version
 test_log "START syntax checks"
-bash -n scripts/double-installer.sh tests/github-actions/test-double-installer.sh tests/github-actions/test-double-installer-platform.sh
+bash -n scripts/double-installer.sh tests/github-actions/test-double-installer.sh tests/github-actions/test-double-installer-platform.sh tests/github-actions/test-double-installer-dev.sh
 test_log "START grouped output checks"
 test_bash="$BASH"
 case "$(uname -s)" in
@@ -26,6 +26,8 @@ esac
 DOUBLE_TEST_BASH="$test_bash" python3 tests/github-actions/test-update-all-output.py
 test_log "START platform checks"
 bash tests/github-actions/test-double-installer-platform.sh
+test_log "START local development checks"
+bash tests/github-actions/test-double-installer-dev.sh
 if [ "$quick" = true ];then
   test_log "Comprehensive fixtures omitted by temporary release policy; run without --quick for full coverage"
 else

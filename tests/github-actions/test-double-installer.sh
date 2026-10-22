@@ -94,19 +94,36 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
   digest=hashlib.sha256((assets/name).read_bytes()).hexdigest()
   (assets/'SHA256SUMS.txt').write_text(f'{digest}  {name}\n', encoding="utf-8", newline="\n")
  # Informational requests must not invoke network/state-changing command bodies.
- commands=('help','explain','doctor','releases','download','install','add','remove','status','update','update-all','backups-clean','cron-add','cron-remove','uninstall-all')
+ commands=('help','explain','doctor','releases','download','install','add','dev','remove','status','update','update-all','backups-clean','cron-add','cron-remove','uninstall-all')
  guide=run('explain',extra={'HTTP_FAIL':'1'})
  assert 'Double Installer — detailed guide' in guide
  for command in commands:
   assert '\n'+command+'\n' in guide
   help_text=run(command,'--help',extra={'HTTP_FAIL':'1'})
-  assert help_text.startswith(command+'\n') and 'Usage:' in help_text
+  assert help_text.startswith('Usage: double-installer.sh '+command)
   assert run(command,'--explain',extra={'HTTP_FAIL':'1'})==help_text
   assert '\nDouble Installer' not in help_text
  assert not (root/'state').exists()
  run('unknown','--help',code=2)
  run('explain','unexpected',code=2)
- assert run('uninstall-all','--yes','--help').startswith('uninstall-all\n')
+ assert run('uninstall-all','--yes','--help').startswith('Usage: double-installer.sh uninstall-all')
+ # Every alias resolves before release filtering; full identifiers stay canonical.
+ aliases={
+  'machine-of-goals':('mog','MOG','m-o-g','M-O-G'),
+  'machine-of-ideas':('moi','MOI','m-o-i','M-O-I'),
+  'machine-of-knowledge':('mok','MOK','m-o-k','M-O-K'),
+  'double-agent':('da','DA','d-a','D-A'),
+ }
+ pages([release('1.0.0',machine=m) for m in aliases])
+ for canonical,names in aliases.items():
+  expected=run('releases','--machine',canonical)
+  for alias in names:
+   assert run('releases','--machine',alias)==expected
+  assert canonical in guide
+ for command in ('releases','download','install','add','dev','remove','update','backups-clean'):
+  assert 'Machine aliases:' in run(command,'--help')
+ assert 'Machine aliases:' in run('help')
+ run('releases','--machine','machine-of-goals\n',code=2)
  stable=release('1.10.0');older=release('1.9.0');rc=release('2.0.0','rc')
  pages([older,rc,stable,release('9.0.0',draft=True)])
  out=run('releases');assert '1.10.0' in out and '2.0.0' not in out and '9.0.0' not in out
@@ -373,7 +390,7 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
   (assets/'SHA256SUMS.txt').write_text('\n'.join(sums)+'\n',encoding='utf-8',newline='\n')
  stable=release('10.2.0');older=release('10.1.0');rc=release('20.0.0','rc')
  goals=release('2.0.0','rc','machine-of-goals');goalsdev=release('9.0.0','dev','machine-of-goals')
- know=release('1.0.0','dev','machine-of-knowledge')
+ know=release('1.0.0','rc','machine-of-knowledge')
  installer=release('0.1.1','rc','double-installer');installer['assets'][0]['name']='double-installer.sh'
  fixtures([stable,older,rc,goals,goalsdev,know,installer])
  run('install')
@@ -384,7 +401,8 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
   assert release_item['assets'][0]['name'] in status
  assert 'CHANNEL' in status and 'ARCHIVE' in status
  assert any('machine-of-goals' in line and 'rc' in line for line in status.splitlines())
- assert any('machine-of-knowledge' in line and 'dev' in line for line in status.splitlines())
+ assert any('machine-of-knowledge' in line and 'rc' in line for line in status.splitlines())
+ assert goalsdev['assets'][0]['name'] not in status
  assert 'double-installer.sh' not in status
 
  cached_archive=root/'state/installer/releases'/stable['tag_name']/stable['assets'][0]['name']
@@ -623,10 +641,11 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
  run('uninstall-all','--yes')
  fixtures([onlydev])
  devproject=root/'dev fallback';devproject.mkdir()
- run('add','--project',posix_path(devproject),'--machine','machine-of-goals','--yes')
- assert json.loads(registry.read_text())['installations'][0]['channel']=='dev'
+ run('add','--project',posix_path(devproject),'--machine','machine-of-goals','--yes',code=1)
+ assert json.loads(registry.read_text())['installations']==[]
+ assert not (devproject/'.double').exists()
  run('uninstall-all','--yes')
- print('PASS: prerelease consent, rc-before-dev fallback, manual adoption consent, whole-directory backup and rollback')
+ print('PASS: prerelease consent, published dev exclusion, manual adoption consent, whole-directory backup and rollback')
  print('PASS: install alias, priority bulk downloads, verified cache, global agent discovery, registry, backup, updates, explicit targeting and clean removal')
 
 print('PASS: channels, numeric ordering, pagination, missing releases, verified cache, duplicate cache, checksum/archive failures, HTTP/JSON errors, usage validation')

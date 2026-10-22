@@ -49,17 +49,26 @@ Strict constraints:
 - do not export a context-specific plan as universal
 - do not replace core planning, realization, or validation
 
+## Model and Frozen Plan Exchange
+
+Keep editable `plan-model` material distinct from historical immutable execution
+plans in imports/exports. Adapt reusable material into a local model; importing
+or approving it does not create a new local execution plan or realization.
+Only an authorized step-05 start freezes newly approved local content. Retained
+provider plans/evidence keep their source identity and do not authorize replay.
+Omit execution artifacts and links when no realization has started.
+
 ## Stage Contracts and Plan Changes
 
 Follow the [revision rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-revision-history-rule) and
 [stage contract rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-contract-rule):
 
-- Log compatible future-only edits without a new revision; assess dependencies
-  and realization fit. Preserve applicable accepted results.
+- Log model edits and assess dependencies/applicability. Every transition edit
+  needs renewed review before changed execution; preserve historical acceptance.
 - Freeze each effective stage contract in its run before action; validate
   against captured criteria and evidence. Preserve attempts and baseline links.
-- Create a new revision before executing changed frozen obligations; identify
-  revalidation or rework. Never rebind completed runs or invent legacy contracts.
+- Create a new frozen plan only at an authorized changed-execution start after
+  review; identify revalidation/rework. Never rebind runs or invent old contracts.
 - Export the current plan, change log, and baseline together; preserve
   contracts and evidence for acceptance claims in durable package material.
 

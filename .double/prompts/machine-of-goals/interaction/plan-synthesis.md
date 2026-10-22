@@ -12,157 +12,102 @@ derived-from:
 
 # Interaction Prompt: Plan Synthesis
 
-## Manual and Interactive Route
+## Purpose and Routing
 
-Use the canonical [Model and Realization Execution Rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#model-and-realization-execution-rule)
-for this route. It selects the lightweight model/realization/stage templates
-and governs steps 03–06 as applicable. Existing authorization, language,
-structured-choice, stop-point, and continuation rules remain binding.
+Own steps `03-plan-synthesis` and `04-plan-review-and-decision`. Synthesize an
+editable transition model, then obtain the user's review decision. Follow the
+canonical [model execution rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#model-and-realization-execution-rule)
+and [all-mode execution boundary](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-model-execution-boundary).
+Planning/review never owns execution-plan or realization creation.
 
-### Inputs and Outputs
+## Inputs and Outputs
 
-- Inputs: goal, path options, requested branch/version context, and existing
-  models or active realization when revising work.
-- Outputs: a branch/version `plan-artifact` using the first `plan-template`
-  shape and explicit review selection. The selection is recorded in the
-  realization at its actual start; no separate decision or registry is required.
+- Inputs: goal, path options, constraints/resources, success criteria, known
+  uncertainty, relevant subgoals and existing model/realization context.
+- Step 03 output: `plan-model` from `plan-model-template`; for manual/interactive
+  work use `plan-model-<branch>.md`, with branch and `model-revision`. Other modes
+  retain the editable `plan.md` shape from that model template.
+- Step 04 output: `approved-model-selection` in the recoverable conversation:
+  exact model content/digest, selected path/subplan, entry point and boundaries.
+  Model approval can finish review while execution remains deferred.
+- These steps produce no `plan-artifact`, revision snapshot, realization,
+  registration row, committed decision file, run or run index.
 
-### Execution Rules
+## Planning Rules
 
-- Model required input, action, expected output, and check for each stage.
-  Give it a stable ID/anchor and short English name/slug. Exit checks cover
-  the goal's success criteria; the model contains no execution progress.
-- Distinguish independently maintained named branches from evolution within
-  a branch. Keep compatible updates in its model file and preserve the prior
-  model for a major change. Do not choose the user's branch or path for them.
-- Explain available branches/versions, entry stages, differences, and control
-  boundaries at step 04. Wait for explicit selection/start permission unless
-  that exact choice and action are already authorized.
-- A model change ends an active realization and requires a successor under
-  the workflow rule. Do not silently edit its source and continue old work.
-- Complete step 03 with review as the eligible next step. Complete step 04
-  with authorized start at step 05, which creates the timestamped realization.
-  Do not fabricate a start or execute a stage during planning/review.
+- Name the generated artifact `Plan`, with heading
+  `# Plan: <Goal Title> / <Branch>`. `plan-model` is its technical planning
+  role, not its user-facing name. Keep the lifecycle distinction in metadata.
+- Model a verifiable transition from initial to target state, with goal success
+  criteria. A task list alone is insufficient. Explain uncertainty explicitly.
+- Define stable stage IDs/anchors, short English names/slugs, required inputs,
+  intended actions, outputs, dependencies, resources, risks, checks and stop points.
+  Include detail proportionate to the goal, whether autonomous or a subgoal.
+- Distinguish independent named approaches from selectable paths/subplans within
+  a model. Execution mechanisms alone are not different achievement paths.
+- Discover/formulate delegated subgoals through their own goal/path/model flow.
+  Record parent/subgoal entry, input, output, exit and continuation boundaries.
+- Use contextual Markdown links for paths, stages, subgoals and referenced
+  artifacts. A direct cross-project reference need not be imported; retain
+  source identity and scope. Do not add a universal navigation block.
+- Manual/interactive models contain no progress, acceptance, registry or run
+  statistics. Other-mode bookkeeping remains separately scoped to its legacy
+  model shape; none of it authorizes executor creation during steps 03–04.
 
-## Retained Instructions for Other Execution Modes
+## Exact Content Review
 
-The remainder is retained for other modes. Its legacy execution-data rules
-(run, registry, snapshot, statistics, or progress projection) do not apply to
-the manual/interactive route above. Common operating-change routing and user
-control boundaries still apply in either route. No collapsing or automatic
-behavior is redesigned by this synchronization.
+1. Present the actual model content, available branches, selectable paths or
+   subplans, material trade-offs, eligible entry points and proposed controls.
+   Other modes may compare existing compatible realizations without creating
+   or registering a new one.
+2. Recommend without selecting on the user's behalf. Obtain explicit approval
+   of the exact content, selection and boundaries. Compute the source SHA-256
+   digest from actual file bytes before registration changes bookkeeping.
+   Never invent approval or a hash; follow the workflow's separate transition
+   comparison for later other-mode bookkeeping updates.
+3. Retain the decision/digest in the conversation so the executor can recheck
+   it at start. If unavailable later, obtain renewed review. Every model edit
+   invalidates previous approval for future execution, even if compatible.
+4. Distinguish content approval from permission to start. If start is deferred,
+   leave only the model. Existing exact sequence consent remains valid within
+   its approved scope; silence, defaults and recommendations are not consent.
+5. At authorized step-05 start, `plan-realization-agent` rechecks approval and
+   freezes the plan using `plan-template` before creating the realization.
+   Manual/interactive files are `realizations/<start>/plan-v1.md` and
+   `realization.md`. Other-mode baseline/decision/registration also wait for
+   this start. Do not require those files to complete review or offer transition.
 
-We are going to turn selected path options into a plan project.
+## Model Changes and History
 
-Current steps: `03-plan-synthesis` and `04-plan-review-and-decision`.
-Default mode: `planning`.
-Expected outputs: `plan-artifact`; `plan-revision-snapshot` when the first
-executable baseline is frozen or frozen stage obligations change; `realization-decision`; and the persistent `realization-artifact`
-created before execution.
+Edit only the model during planning; increment its review revision and assess
+changed dependencies and earlier-result applicability. Return changed content
+to review before execution. An active manual/interactive realization ends as
+`model-changed` before further action; an authorized successor freezes its own
+plan. Other-mode changed execution needs a newly reviewed/frozen baseline and
+new run. Never edit an earlier frozen plan, rebind a historical run or relabel
+old facts. Already observed outputs remain verifiable against their original
+plan and captured conditions.
 
-The plan should explain how the current state can move toward the target state.
+## Control and Completion
 
-Include:
+- Follow the canonical structured-choice and continuation rules. Wait for an
+  explicit submitted response to a required choice using interruptible waits
+  of at most 60 seconds; do not end the turn or repeat the question on timeout.
+- Step 03 completes when the model is understandable enough to review. Step 04
+  completes with exact content approval and selection/boundaries; it does not
+  require execution start or executor files. Offer authorized start only when
+  eligible, preserving any existing exact consent.
+- Do not execute a stage, package a plan directly, silently migrate user
+  artifacts, or create an execution directory during planning/review.
+- Route operating changes under `.double/` to installed `double-agent`;
+  user artifacts belong to their goal context. Preserve unrelated changes.
+- Link the completed result, name the eligible next workflow step/mode/agent
+  and artifact, and request continuation only when not already authorized.
+  Explain blocked/deferred outcomes without inventing a start.
 
-- stages and dependencies
-- checks and stop points
-- risks and uncertainties
-- resources and constraints
-- subgoals when needed
-- for each subgoal: its directory inside the main goal directory, its path
-  analysis, and its subgoal plan
-- entry and exit points between the main plan and every subgoal plan
-- selectable path branches and their stable `path-options.md` ids
-- first entry point
-- compatible registered realization when one exists
-- automation boundaries
-- validation strategy
+## Required Contracts
 
-Before realization starts, make the selected paths, realization, and control
-boundaries explicit through an interactive review:
-
-1. Show the user the selectable paths or subplans, their material trade-offs,
-   and compatible registered realizations.
-2. Distinguish any recommendation from the user's decision.
-3. Ask the user to confirm the selected path or subplan explicitly and wait for
-   the response.
-4. Only after confirmation, select a compatible realization row or append a
-   new row to section 10 of `plan.md`. A different selected path or subplan
-   always creates a new row, even when the same mechanism is reused.
-5. If this is the first realization, set revision 1 and copy the updated
-   `plan.md` to `<goal-directory>/realizations/plan-revision-1.md`. Rebase
-   relative links and clear displayed-run metadata and derived progress. If a
-   later realization uses unchanged plan content, reuse the current snapshot.
-6. Create `realizations/<realization-record-id>.md`, link it from the decision
-   and registry row, and only then offer transition to `05-plan-realization`.
-
-Authoritative execution state will be stored in a new `plan-run`. Current
-`plan.md` may later mirror only its contract-compatible emoji projection.
-Registering a manual or interactive realization does not change single-pass
-style.
-
-Before any realization exists, keep both revision fields null and apply all
-plan clarification directly to `plan.md` without creating snapshots.
-
-Put Markdown links in plan-map cells, stage details, decision fields, and
-subgoal boundaries where their relationships are useful. Do not add a repeated
-navigation block. The realization decision must pin resolvable exact plan and
-realization revisions.
-
-A VCS permalink may supplement the local plan revision snapshot, but must not
-replace it.
-
-After responding, offer the next useful workflow movement. Name the next step,
-mode, responsible agent, and expected artifact when known.
-
-Do not select or confirm a path or subplan on the user's behalf. Do not treat
-silence, a recommendation, or a request to review the plan as confirmation.
-
-## Stage Contracts and Plan Changes
-
-Follow the [revision rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-revision-history-rule) and
-[stage contract rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-contract-rule):
-
-- Log compatible future-only edits without a new revision; assess dependencies
-  and realization fit. Preserve applicable accepted results.
-- Freeze each effective stage contract in its run before action; validate
-  against captured criteria and evidence. Preserve attempts and baseline links.
-- Create a new revision before executing changed frozen obligations; identify
-  revalidation or rework. Never rebind completed runs or invent legacy contracts.
-
-## Structured User Choices
-
-For concrete mode, path/subplan, realization, next-step or validation choices,
-follow the canonical workflow's structured-choice rule. Prefer exposed and
-permitted `request_user_input_async`; show the relevant trade-offs/evidence and
-wait for an explicit response before dependent state changes. Use a permitted
-alternative or numbered text if unavailable. Preserve already supplied choices;
-preselection, silence and request acknowledgements are not consent. Keep
-open-ended clarification free-form and do not create extra approval gates.
-
-While a required asynchronous question is pending, do not send a final message
-or end the turn merely to acknowledge the question or say that you are waiting.
-Use permitted interruptible waits, each no longer than 60 seconds, and continue
-waiting for an explicit submitted response or equivalent direct user instruction.
-A timeout does not cancel the question, authorize dependent work, or justify
-repeating it. Independent read-only work may continue. If the user reports a
-missing or disappearing question, investigate without treating tool acceptance
-as proof of visibility. This is an agent waiting rule, not a guarantee about
-the client UI lifetime.
-
-## Completion Handoff
-
-Follow the canonical [step completion and continuation rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#step-completion-handoff-rule)
-after every completed workflow step or plan stage. State the completed step,
-result and artifact links; name the eligible next workflow step, mode, agent,
-expected artifact and transition readiness; then ask whether to perform the
-concrete next action (Yes / No in the interaction language) and wait for an
-explicit response using the permitted structured-choice interface. A summary
-or a list of possible next steps alone is insufficient.
-
-Preserve explicit authorization already covering the next action; do not ask
-again or bypass mandatory selections, validation decisions or stop points.
-A No stops continuation without rejecting the completed result. If blocked,
-name the blocker and offer clarification or repair. At the workflow end, state
-completion instead of inventing a next step. After plan-stage execution, offer
-`06-plan-validation` before any further plan-stage execution.
+- Model template: `.double/templates/machine-of-goals/plan-model-template.md`
+- Executor-only plan template: `.double/templates/machine-of-goals/plan-template.md`
+- Workflow: `.double/workflows/machine-of-goals/machine-of-goals-workflow.md`
+- Modes: `.double/registries/machine-of-goals/modes-registry.md`

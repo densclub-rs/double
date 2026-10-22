@@ -46,10 +46,12 @@ apply only to other execution modes.
 
 | Agent | Input | Output | Templates |
 | --- | --- | --- | --- |
-| `plan-synthesis-agent` | Goal, paths, branch/version models, explicit review choice | `plan-artifact`; selection context recorded at execution start | `plan-template` (first shape) |
-| `plan-realization-agent` | Selected model and entry/current stage, accepted inputs, approved boundaries | `realization-artifact`, `stage-realization`, directly linked evidence | `realization-template` (first shape), `stage-realization-template` |
+| `plan-synthesis-agent` | Goal, paths, branch models, exact content approval | `plan-model`; approved selection in conversation | `plan-model-template` |
+| `plan-realization-agent` | Approved model/digest and authorized start, or existing frozen plan/current stage | immutable `plan-artifact`, `realization-artifact`, `stage-realization`, evidence | `plan-template`, `realization-template` (first shape), `stage-realization-template` |
 | `plan-validation-agent` | Captured conditions, actual outputs, evidence/statements, goal criteria | Updated `stage-realization` and `realization-artifact` | `stage-realization-template`, `realization-template` (first shape) |
 
+Steps 03–04 never produce executor files, even after model approval. Only the
+authorized start of step 05 materializes the frozen plan and realization.
 The main realization map owns current-stage/progress. Input checks precede
 action; output checks precede completion. Documentary evidence is offered with
 an explicit user-statement fallback. A changed model ends the realization and
@@ -64,9 +66,9 @@ is required. Common consent, language, and routing boundaries remain binding.
 - stage: `03-plan-synthesis`, `04-plan-review-and-decision`
 - input: `goal-artifact`, `path-options`, `selected-path-or-candidate-paths`, `constraints-and-resources`, `success-criteria`
 - optional-input: `known-risks-and-uncertainties`, `subgoal-artifact`, `explicit-user-path-confirmation-during-review`
-- output: `plan-artifact`, `plan-revision-snapshot-when-first-baseline-is-frozen`, `selectable-path-and-subplan-map`, `interactive-path-review`, `user-confirmed-path-selection`, `realization-record`, `realization-decision-after-confirmation`, `realization-artifact-after-confirmation`, `updated-plan-realization-registry`, `automation-boundaries`, `validation-strategy`, `subplan-interface`
+- output: `plan-model`, `approved-model-selection-in-conversation`, `selectable-path-and-subplan-map`, `automation-boundaries`, `validation-strategy`, `subplan-interface`
 - supported-modes: `planning`, `review`, `explain`, `dry-run`
-- templates: `.double/templates/machine-of-goals/plan-template.md`, `.double/templates/machine-of-goals/realization-decision-template.md`, `.double/templates/machine-of-goals/realization-template.md`
+- templates: `.double/templates/machine-of-goals/plan-model-template.md`
 - system-prompt: `.double/prompts/machine-of-goals/system/plan-synthesis.md`
 - interaction-prompt: `.double/prompts/machine-of-goals/interaction/plan-synthesis.md`
 - definition: `.double/agents/machine-of-goals/plan-synthesis/plan-synthesis.md`
@@ -76,11 +78,11 @@ is required. Common consent, language, and routing boundaries remain binding.
 - id: `plan-realization-agent`
 - role: `plan-realization-role`
 - stage: `05-plan-realization`
-- input: `plan-artifact`, `plan-realization-registry`, `plan-revision-snapshot`, `path-options`, `realization-decision`, `selected-realization-record`, `realization-artifact`, `selected-plan-stage`, `automation-boundaries`, `stage-validation-criteria`, `working-context`
+- input: `plan-model`, `approved-model-selection`, `authorized-start`, `path-options`, `selected-plan-stage`, `working-context`; existing frozen plan/realization/run when resuming
 - optional-input: `plan-stop-points`
-- output: `plan-run`, `updated-realization-artifact`, `run-index`, `updated-plan-realization-registry-when-needed`
+- output: immutable `plan-artifact`, `realization-artifact`, `realization-decision-at-start`, `plan-run`, `run-index`, `updated-plan-realization-registry-when-needed`
 - optional-output: `implementation-artifact`, `handoff-artifact`, `blocker-or-revision-note`
-- execution-contract: freeze each stage attempt's effective contract in the run before action; log and assess compatible future-only changes without a new revision
+- execution-contract: recheck exact approval at authorized start, freeze plan before action, capture stage contracts from the pinned plan; changed content returns to review
 - supported-modes: `execution`, `explain`, `dry-run`, `planning`
 - templates: `.double/templates/machine-of-goals/realization-template.md`, `.double/templates/machine-of-goals/plan-run-template.md`, `.double/templates/machine-of-goals/run-index-template.md`, `.double/templates/machine-of-goals/plan-template.md`
 - system-prompt: `.double/prompts/machine-of-goals/system/plan-realization.md`
@@ -94,7 +96,7 @@ is required. Common consent, language, and routing boundaries remain binding.
 - stage: `06-plan-validation`
 - input: `plan-run`, `realization-artifact`, `path-options`, `plan-realization-registry`, `stage-validation-criteria`, `goal-artifact`, `plan-artifact`, `execution-evidence`
 - output: `updated-plan-run`, `updated-realization-artifact`, `updated-plan-realization-registry`, `goal-progress-note`, `revision-or-continuation-decision`
-- optional-output: `updated-plan-artifact`, `plan-revision-snapshot-when-frozen-obligations-change`, `goal-closure-signal`
+- optional-output: `updated-plan-model-bookkeeping`, `model-review-request`, `goal-closure-signal`; no new execution snapshot during validation
 - validation-contract: validate against the attempt's captured criteria and evidence; preserve applicable prior acceptance and record any revalidation or rework
 - supported-modes: `validation`, `review`, `explain`
 - templates: `.double/templates/machine-of-goals/plan-template.md`

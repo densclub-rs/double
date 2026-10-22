@@ -14,7 +14,13 @@ derived-from:
 
 # Template: Plan Run
 
-```md
+Other execution modes only. Create/resume a run in step 05 after exact model
+approval, authorized start, and creation of its immutable plan and realization.
+Planning/review creates no runs. Capture all stage contracts from the pinned
+plan, including unstarted stages. Changed model content requires renewed review
+and a new frozen baseline/run before changed actions; preserve earlier runs.
+
+````md
 ---
 id: <goal-id>-run-<realization-record-id>-<YYYYMMDDTHHMMSSZ>
 kind: plan-run
@@ -55,7 +61,8 @@ derived-from:
 - Source goal: [<goal-title>](../<goal-id>.md#<goal-id>)
 - Realization decision: [<decision-label>](../realization-decision.md#<goal-id>-realization-decision)
 - Historical plan baseline: [Revision <N>](../realizations/plan-revision-<N>.md#<goal-id>-plan)
-- Current stage source: [Current plan](../plan.md#<goal-id>-plan)
+- Stage source: [Frozen plan](../realizations/plan-revision-<N>.md#<goal-id>-plan)
+- Editable source model: [Model](../plan.md#<goal-id>-plan)
 - Applicable plan changes: [<change-entry>](../plan.md#plan-change-<change-id>) or none
 - Additional plan VCS evidence: [<exact-plan-revision>](<immutable-vcs-permalink>) or none
 - Realization record: [<realization-label>](../plan.md#<realization-record-id>)
@@ -79,12 +86,12 @@ derived-from:
 
 Instantiate only the stages and path branches selected for this run.
 
-This map follows captured stage attempts. Unstarted entries may adopt current
-plan changes after a recorded dependency and realization compatibility check.
-Started entries link their frozen contract below; unstarted entries link the
-current plan. Keep the exact baseline in Run Context as provenance, not as the
-sole source of requirements. Project compatible statuses into `plan.md` by
-stable stage id; never modify an immutable plan snapshot.
+This map follows contracts captured from the pinned immutable plan. All
+unstarted entries link that plan; started entries link their captured attempt.
+Never adopt current model edits into this run. Changed content requires review
+and a new baseline/run; preserve original facts and applicability assessments.
+The legacy mutable model may project compatible statuses by stable stage ID;
+never modify a frozen plan for progress.
 
 Legend: `⚪` not started; `🔄` in progress; `🟠` awaiting validation; `✅`
 accepted; `🟡` partial; `⛔` blocked; `❌` failed or rejected; `🛠️` needs
@@ -92,7 +99,7 @@ revision; `➖` not selected.
 
 | Progress | Stage | Status | Validation | Started | Finished | Result |
 | --- | --- | --- | --- | --- | --- | --- |
-| ⚪ | [<stage-id>](../plan.md#stage-<stage-id>) | <not-started|in-progress|done|partial|blocked|failed|needs-revision|not-selected> | <not-validated|accepted|partial|blocked|rejected|needs-revision|not-applicable> | <time-or-null> | <time-or-null> | <summary> |
+| ⚪ | [<stage-id>](../realizations/plan-revision-<N>.md#stage-<stage-id>) | <not-started|in-progress|done|partial|blocked|failed|needs-revision|not-selected> | <not-validated|accepted|partial|blocked|rejected|needs-revision|not-applicable> | <time-or-null> | <time-or-null> | <summary> |
 
 ### Frozen Stage Contracts
 
@@ -105,7 +112,7 @@ link alone is insufficient. Rebase copied links for this directory.
 #### <Stage Id> / Attempt <Attempt Id>
 
 - Captured at: <YYYY-MM-DDTHH:MM:SSZ>
-- Source stage: [<stage-label>](../plan.md#stage-<stage-id>)
+- Source stage: [<stage-label>](../realizations/plan-revision-<N>.md#stage-<stage-id>)
 - Historical baseline: [Revision <N>](../realizations/plan-revision-<N>.md#<goal-id>-plan)
 - Applicable change entry: [<change-entry>](../plan.md#plan-change-<change-id>) or none
 - Inputs and preconditions: <captured-content>
@@ -217,4 +224,4 @@ commands or timestamps. Success does not establish safe replay or authorize it.
 - Recommended next step:
 - Statistics updated in [Plan realization registry](../plan.md#realization-registry): <yes|no>
 - Next decision, revision, or run: [<artifact-label>](<artifact-link>) or none
-```
+````

@@ -30,16 +30,17 @@ structured-choice, stop-point, and continuation rules remain binding.
 
 ### Inputs and Outputs
 
-- Inputs: goal/model criteria, the selected realization and stage record,
+- Inputs: goal and frozen-plan criteria, the selected realization and stage record,
   captured conditions, actual results, and supplied evidence or statements.
 - Outputs: updated `stage-realization` and `realization-artifact`. Final
   acceptance is summarized in the main Result, not a separate document.
 
 ### Execution Rules
 
-- Recheck source model identity/content before output acceptance. A changed
-  model ends the realization; preserve facts against captured criteria and
-  route to revision/review and an authorized successor.
+- Verify frozen plan integrity and validate observed outputs against that
+  unchanged plan and captured conditions. A changed source model blocks further
+  planned action and requires renewed review/authorized successor; it never
+  rewrites the earlier plan or prevents checking already observed results.
 - Compare actual outputs with the captured conditions. Offer relevant
   documentary evidence and inspect its applicability. When documents cannot
   be supplied, preserve the explicit user statement as the acceptance basis;
@@ -96,8 +97,8 @@ statistics in the selected plan realization row.
 - `updated-plan-run`
 - `updated-realization-artifact` when run status or retention changes it
 - `updated-run-index` when retention removes a run
-- `updated-plan-artifact` for realization statistics and when plan revision is required
-- `plan-revision-snapshot` when frozen obligations change
+- `updated-plan-model` bookkeeping for realization statistics; model edits return to review
+- `model-review-request` when transition content must change; no snapshot here
 - `goal-progress-note`
 - `revision-or-continuation-decision`
 - `goal-closure-signal` when applicable
@@ -126,8 +127,8 @@ statistics in the selected plan realization row.
   mark affected realizations `review-required`
 - do not create a revision for realization registration against unchanged plan
   content, aggregate statistics, timestamps, or progress projection
-- create a new snapshot only when frozen obligations change; follow the
-  linked Stage Contract and Plan Revision History rules
+- route model changes to review; only the authorized step-05 start creates a
+  new frozen baseline before changed execution, including unstarted stages
 - decide whether the workflow should continue, branch, revise, reformulate,
   pause, close, or request export
 
@@ -159,18 +160,17 @@ statistics in the selected plan realization row.
 ## Transition Rule
 
 The step is complete when an explicit validation decision has been recorded in
-the run, aggregate statistics have been updated, and changes to frozen
-obligations have their required new snapshot; future-only changes have a
-logged compatibility decision.
+the run and aggregate statistics have been updated. Route proposed model edits
+to review without creating a new snapshot during validation.
 
 ## Stage Contracts and Plan Changes
 
 Follow the [revision rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-revision-history-rule) and
 [stage contract rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-contract-rule):
 
-- Log compatible future-only edits without a new revision; assess dependencies
-  and realization fit. Preserve applicable accepted results.
+- Log model edits and assess dependencies/applicability. Every transition edit
+  needs renewed review before changed execution; preserve historical acceptance.
 - Freeze each effective stage contract in its run before action; validate
   against captured criteria and evidence. Preserve attempts and baseline links.
-- Create a new revision before executing changed frozen obligations; identify
-  revalidation or rework. Never rebind completed runs or invent legacy contracts.
+- Create a new frozen plan only at an authorized changed-execution start after
+  review; identify revalidation/rework. Never rebind runs or invent old contracts.

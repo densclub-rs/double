@@ -19,6 +19,7 @@ outputs and their stable template identifiers.
 | --- | --- | --- |
 | `goal-artifact` | `goal-template` | `.double/templates/machine-of-goals/goal-template.md` |
 | `path-options` | `path-options-template` | `.double/templates/machine-of-goals/path-options-template.md` |
+| `plan-model` | `plan-model-template` | `.double/templates/machine-of-goals/plan-model-template.md` |
 | `plan-artifact` | `plan-template` | `.double/templates/machine-of-goals/plan-template.md` |
 | `realization-decision` | `realization-decision-template` | `.double/templates/machine-of-goals/realization-decision-template.md` |
 | `realization-artifact` | `realization-template` | `.double/templates/machine-of-goals/realization-template.md` |
@@ -38,50 +39,45 @@ outputs and their stable template identifiers.
 
 ## Model and Realization Shape
 
-For manual and interactive execution, use the model and realization shapes
-at the beginning of `plan-template` and `realization-template`, and use
-`stage-realization-template` for stage documents. Their generated artifact
-names do not include an execution-mode prefix.
-
-- Model: `plan-<branch>-v<major>.md`, with `branch` and `plan-version` in
-  Markdown frontmatter, stable stage anchors, and short English stage names.
-  Independent branches may coexist; compatible updates stay in one file,
-  while a major model change preserves the earlier model in another file.
-- Realization: `realizations/<YYYY-MM-DDTHH-mm-ss>/realization.md`, with
-  actual start, timezone, model identity/content digest, current stage, and
-  a compact progress map. Selection context is included here when needed.
-- Stage: `<stage-id-lowercase>-<stage-slug>.md` in that same directory, with
-  three main parts: input state, actions, and output state. Capture effective
-  conditions and intended action before execution and retain factual results.
-- Request suitable documentary evidence for input and output checks. If it
-  cannot be provided, an explicit user statement can support acceptance;
-  preserve that basis without claiming independent documentary verification.
-  Silence and unrelated evidence do not establish acceptance.
-- Keep progress only in the realization. Accept input conditions before stage
-  action and output conditions before completion. Model changes end the
-  realization and require a linked successor; inherit results only after an
-  applicability check and retain their original factual context.
-- Do not require a separate realization decision, registration wrapper, run,
-  run index, evidence manifest, or validation document for this shape.
-- Keep generated documents concise; omit unused optional fields and sections.
-
-The [Model and Realization Execution Rule](../../workflows/machine-of-goals/machine-of-goals-workflow.md#model-and-realization-execution-rule)
-routes manual and interactive steps 03–06 to these shapes. Existing other-mode
-shapes and rules below remain separately scoped; they must not be added as
-mandatory layers to this route. No skill, collapsing, or automatic-action
-behavior is changed here.
+- Both editable and frozen documents keep the user-facing name `Plan` and
+  heading `# Plan: <Goal Title> / <Branch>`. Technical kinds and template IDs
+  distinguish their roles without changing the artifact name to `Plan Model`.
+- Step 03: create `plan-model-<branch>.md` from `plan-model-template`, with
+  `kind: plan-model`, branch and `model-revision`; no execution plan version.
+- Step 04: approve exact model content/digest, path/entry and boundaries in the
+  conversation. A deferred start leaves only the model; any model edit requires
+  renewed review before execution.
+- Authorized step-05 start: freeze `realizations/<start>/plan-v1.md` from
+  `plan-template` with `kind: plan-artifact`, `plan-version: 1` and approved
+  source provenance. Rebase links without changing approved transition content.
+- Create `realization.md` in that directory after the plan, recording its exact
+  digest and the approved source digest separately. Stage records link the local
+  frozen plan; progress, evidence and actual results stay in these records.
+- Request documentary evidence first; explicit user statements are an identified
+  fallback. Verify input before action and output before completion. The model
+  and frozen plan contain no manual/interactive execution progress.
+- A source edit stops further planned action, requires renewed review and an
+  authorized successor. Preserve the old plan and facts; validate already
+  observed outputs against that unchanged plan. Inherited results retain origin
+  and require an applicability check.
+- No separate decision, registration wrapper, run, index, evidence manifest or
+  validation document is required on the manual/interactive route. Omit unused
+  optional fields/sections and never link nonexistent execution files.
 
 ## Existing Rules for Other Execution Modes
 
-- preserve `template-id` when revising an artifact or copying `plan.md` into a
-  `realizations/plan-revision-<N>.md` snapshot
-- keep the plan template's revision fields null before the first realization;
-  freeze revision 1 for the first executable baseline and revise thereafter
-  only when frozen stage obligations change; log compatible future-only edits
-  without a revision
-- capture each effective stage contract in the run before action; use captured
-  criteria and evidence for validation, preserving historical baseline links
-- use the workflow file as the canonical source for step order and transition
-  conditions
-- use agent cards and the agents registry to determine which agent produces
-  each artifact
+Other-mode models use the legacy `plan.md` shape in `plan-model-template`;
+immutable `realizations/plan-revision-<N>.md` snapshots use `plan-template`.
+Their existing registration/run/statistics mechanisms remain supported, but
+materialization happens only at the authorized start of step 05. Step 04
+records approval/selection without creating snapshots, decisions or realizations.
+
+A snapshot changes `template-id` from `plan-model-template` to `plan-template`:
+it is a new execution artifact, not an editable model revision. Strip mutable
+bookkeeping, preserve approved transition content and rebase links. Every
+transition edit requires renewed review and a new frozen baseline before changed
+execution; registry/statistics updates alone do not. Capture stage contracts
+from the pinned plan and preserve old baselines, attempts and acceptance.
+
+Use the [workflow](../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-model-execution-boundary)
+as the source of step order and boundaries, and the agents registry for producers.

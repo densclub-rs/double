@@ -7,11 +7,14 @@ Windows text streams cannot add carriage returns. POSIX terminal color tests use
 on Windows; ordering, failure isolation, input and plain-output checks still run.
 
 ```sh
-# Default release CI: isolated lifecycle smoke and grouped-output checks.
+# Default release CI: isolated lifecycle, local development and grouped-output checks.
 bash tests/github-actions/run-installer-tests.sh --quick
 
 # Comprehensive fixtures: explicit manual invocation while long tests are paused in CI.
 bash tests/github-actions/run-installer-tests.sh
+
+# Local development: offline copy, recovery and published-release replacement.
+bash tests/github-actions/test-double-installer-dev.sh
 
 # Offline packaging, exact-tag source, publication guards and announcement checks.
 bash tests/github-actions/test-double-installer-release.sh
