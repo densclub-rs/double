@@ -2,7 +2,8 @@
 
 Run from the repository root using Bash. On Windows use Git Bash, not WSL.
 The shared entry point pins its Bash executable for Python subprocesses and
-normalizes jq output to LF. POSIX terminal color tests use a PTY and are skipped
+normalizes jq output to LF. Python fixtures send input as LF bytes so native
+Windows text streams cannot add carriage returns. POSIX terminal color tests use a PTY and are skipped
 on Windows; ordering, failure isolation, input and plain-output checks still run.
 
 ```sh
