@@ -14,6 +14,115 @@ derived-from:
 
 # Template: Plan
 
+## Scope
+
+The model shape below is the artifact contract for manual and interactive
+execution. It contains expected transitions only. Execution progress, actual
+observations, and acceptance belong to a realization and its stage records.
+The [Model and Realization Execution Rule](../../workflows/machine-of-goals/machine-of-goals-workflow.md#model-and-realization-execution-rule)
+selects this shape for manual and interactive model preparation/execution.
+The existing shape for other execution modes is retained separately below.
+
+## Model Contract
+
+- A goal may have independently evolving named branches. Different `branch`
+  values are parallel plans; versions within one branch describe evolution.
+- Store a model as `plan-<branch>-v<major>.md`. MINOR and PATCH update that
+  file; MAJOR preserves the earlier model and creates another file. Select
+  the current version within a branch, not across unrelated branches.
+- Use MAJOR.MINOR.PATCH according to model compatibility, not edit size. An
+  added prerequisite may invalidate earlier results.
+- Stage IDs such as `S01` are stable. Their anchors are `stage-s01`, etc.
+  Short English names supply slugs such as `prepare-documents`. IDs determine
+  stage identity; slugs provide readable realization filenames.
+- Every input and output condition has a stage-local ID, such as `I01` or
+  `O01`, and states what would establish it. Prefer relevant documentary
+  evidence; explicit user statements are an allowed fallback when documents
+  cannot be provided. Preserve the distinction in the realization.
+- The applicable exit-stage output conditions cover the goal's target state
+  and success criteria, so completing selected actions alone is not confused
+  with achieving the goal.
+- Do not create execution checkboxes, progress markers, a realization registry,
+  a run index, or a computed automation style in this model.
+- Add detail only where the goal requires it. Remove unused optional fields
+  and sections from generated documents. Metadata stays in Markdown
+  frontmatter; no separate metadata file is required.
+
+## Model Shape
+
+````md
+---
+id: <goal-id>-plan-<branch>-v<major>
+kind: plan-artifact
+template-id: plan-template
+project-id: <stable-project-id>
+produced-by: machine-of-goals/plan-synthesis-agent
+interaction-language: <interaction-language>
+artifact-language: <artifact-language>
+goal-id: <goal-id>
+branch: <branch-name>
+plan-version: <MAJOR.MINOR.PATCH>
+derived-from:
+  - <goal-artifact-path>
+---
+
+<a id="<goal-id>-plan-<branch>-v<major>"></a>
+
+# Plan: <Goal Title> / <Branch>
+
+Goal: [<goal-title>](./<goal-id>.md#<goal-id>)
+
+## Model
+
+- Initial state: <expected-starting-state>
+- Target state: <desired-result>
+- Success criteria: <what-establishes-goal-achievement>
+
+## Stages
+
+| Stage | Input | Output | Next |
+| --- | --- | --- | --- |
+| [S01: Prepare Documents](#stage-s01) | <required-state> | <expected-state> | [S02](#stage-s02) |
+| [S02: Submit Application](#stage-s02) | <required-state> | <expected-state> | <stage-link-or-end> |
+
+<a id="stage-<stage-id-lowercase>"></a>
+
+## <Stage ID>: <Short English Name>
+
+Stage slug: `<short-english-kebab-case-name>`
+
+### Input Conditions
+
+- I01: <condition-and-how-it-can-be-established>
+
+### Actions
+
+<the-intended-action-and-any-relevant-dependencies-or-stop-points>
+
+### Output Conditions
+
+- O01: <condition-and-how-it-can-be-established>
+````
+
+Repeat the stage block for the actual stages, using matching IDs, anchors,
+and English slugs. The first two map rows above are examples, not mandatory
+stages. Optional path choices and subgoal references belong where their
+relationships are explained; they do not require another index.
+
+A change to this model ends an active manual or interactive realization and
+starts a linked successor against the new model. Retain applicable previous
+stage facts without relabeling the version under which actions occurred.
+Document the effective conditions and intended action in the stage record
+before action so later compatible updates cannot rewrite execution facts.
+
+## Existing Shape for Other Execution Modes
+
+The following pre-existing shape is retained unchanged for other modes.
+Its registration, run, automation, and revision rules are not part of this
+manual/interactive contract revision. It does not add extra artifacts to the
+model shape above. The workflow's mode-specific routing selects the
+applicable shape.
+
 ```md
 ---
 id: <goal-id>-plan

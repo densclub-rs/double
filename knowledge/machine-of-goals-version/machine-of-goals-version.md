@@ -8,9 +8,16 @@ artifact-language: en
 knowledge-type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-10-21
+observed-at: 2026-10-22
 ttl: one month
 derived-from:
+  - user-requested synchronization of model and realization workflow on 2026-10-22
+  - .double/registries/machine-of-goals/agents-registry.md
+  - user-approved lightweight model and realization artifact contracts on 2026-10-22
+  - .double/templates/machine-of-goals/plan-template.md
+  - .double/templates/machine-of-goals/realization-template.md
+  - .double/templates/machine-of-goals/stage-realization-template.md
+  - .double/registries/machine-of-goals/templates-registry.md
   - user-approved goal and subgoal interchangeability release on 2026-10-21
   - knowledge/double-main-modules/double-main-modules.md
   - ideas/machine-of-goals/machine-of-goals.md
@@ -32,9 +39,58 @@ project.
 
 ## Value
 
-`0.0.12`
+`0.0.14`
 
 ## Change Note
+
+Version `0.0.14` connects the lightweight model, realization, and stage
+contracts to the manual and interactive route in the Machine of Goals
+workflow. Steps 03–06 now prepare branch/version models, obtain explicit
+selection, start or resume timestamped realizations, verify inputs before
+action, and verify outputs before completion. Documentary evidence is offered
+with an explicitly identified user-statement fallback. The realization owns
+current-stage and progress; the model remains free of execution state.
+
+Model identity/content checks stop old-model action after an edit and route
+work to review and an authorized successor. Inherited results retain their
+original facts and require an applicability check. Resume distinguishes
+pending input from outputs awaiting verification so an action is not blindly
+repeated. Accepted final goals may close without mandatory packaging/export.
+
+The synthesis, realization, and validation agent cards, roles, prompts, and
+registry now select this route, and template-scope notes point to the active
+workflow rule. Earlier run/registry/snapshot instructions are explicitly
+scoped to other execution modes; they do not require extra manual artifacts.
+Other-mode instruction bodies and packaging behavior are retained, with no
+redesign of collapsing, skills, automatic actions, cleanup, or existing goal
+artifact migration. Machine entry-point skill files are unchanged; the
+canonical workflow explicitly governs the manual route when older helper
+instructions describe the legacy artifact shape.
+
+Version `0.0.13` defines lightweight artifact shapes for manual and interactive
+plan execution. Named plan branches evolve independently through model
+versions; the model contains expected transitions rather than execution
+progress. Its stages have stable anchors and short English names.
+
+A timestamped realization document records its model file, branch, version,
+content digest, current stage, and progress map. A stage document contains
+only three main parts: input state, actions, and output state. It captures
+the effective conditions and intended action before acting, verifies input
+before action and output before completion, and links evidence directly.
+Documentary confirmation is requested first. An explicit user statement is
+an accepted fallback when documents cannot be provided, with its basis kept
+visible rather than presented as independently verified documentary evidence.
+Model changes close the realization and require a linked successor, carrying
+forward only results that remain applicable.
+
+These shapes do not require a separate decision artifact, registration
+wrapper, run, run index, evidence manifest, or validation document. Their
+generated filenames do not include an execution-mode prefix. The registry,
+catalog, and goal/path navigation expose the new shapes. Existing shapes for
+other execution modes remain available unchanged where retained. This is a
+contract-only revision: workflow order and routing have not been migrated;
+collapsing, skills, automatic-action behavior, and existing goal artifacts
+are outside this change.
 
 Version `0.0.12` aligns the Machine of Goals project documents with the
 existing workflow contract for interchangeable goals and subgoals. A subgoal
@@ -82,7 +138,9 @@ The successful-command contract introduced in version `0.0.9` remains supported:
   successful commands provide evidence for future automation, not permission
   to replay them or an automatic realization registration
 
-The existing plan revision and execution contracts remain supported:
+The existing plan revision and execution contracts remain supported by the
+retained shapes for other execution modes and the unchanged workflow; they
+do not add mandatory layers to the new manual/interactive artifact shapes:
 
 - compatible edits to unstarted stages are recorded in the current plan change
   log without creating a new plan revision

@@ -12,6 +12,46 @@ derived-from:
 
 # Interaction Prompt: Plan Synthesis
 
+## Manual and Interactive Route
+
+Use the canonical [Model and Realization Execution Rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#model-and-realization-execution-rule)
+for this route. It selects the lightweight model/realization/stage templates
+and governs steps 03–06 as applicable. Existing authorization, language,
+structured-choice, stop-point, and continuation rules remain binding.
+
+### Inputs and Outputs
+
+- Inputs: goal, path options, requested branch/version context, and existing
+  models or active realization when revising work.
+- Outputs: a branch/version `plan-artifact` using the first `plan-template`
+  shape and explicit review selection. The selection is recorded in the
+  realization at its actual start; no separate decision or registry is required.
+
+### Execution Rules
+
+- Model required input, action, expected output, and check for each stage.
+  Give it a stable ID/anchor and short English name/slug. Exit checks cover
+  the goal's success criteria; the model contains no execution progress.
+- Distinguish independently maintained named branches from evolution within
+  a branch. Keep compatible updates in its model file and preserve the prior
+  model for a major change. Do not choose the user's branch or path for them.
+- Explain available branches/versions, entry stages, differences, and control
+  boundaries at step 04. Wait for explicit selection/start permission unless
+  that exact choice and action are already authorized.
+- A model change ends an active realization and requires a successor under
+  the workflow rule. Do not silently edit its source and continue old work.
+- Complete step 03 with review as the eligible next step. Complete step 04
+  with authorized start at step 05, which creates the timestamped realization.
+  Do not fabricate a start or execute a stage during planning/review.
+
+## Retained Instructions for Other Execution Modes
+
+The remainder is retained for other modes. Its legacy execution-data rules
+(run, registry, snapshot, statistics, or progress projection) do not apply to
+the manual/interactive route above. Common operating-change routing and user
+control boundaries still apply in either route. No collapsing or automatic
+behavior is redesigned by this synchronization.
+
 We are going to turn selected path options into a plan project.
 
 Current steps: `03-plan-synthesis` and `04-plan-review-and-decision`.

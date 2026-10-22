@@ -1,8 +1,8 @@
 ---
 id: single-pass-and-multi-pass-plans
 kind: mini-idea-artifact
-status: draft
-produced-by: idea-capture-agent
+status: release-candidate
+produced-by: machine-of-ideas/idea-capture-agent
 interaction-language: Russian
 artifact-language: English
 parent-idea:
@@ -18,115 +18,70 @@ derived-from:
 
 <a id="single-pass-and-multi-pass-plans"></a>
 
-# Mini-Idea: Single-Pass and Multi-Pass Plans
+# Mini-Idea: One-Time and Repeated Plan Execution
 
 ## 1. Summary
 
-Within Machine of Goals, it may be useful to distinguish between single-pass and multi-pass styles for working with plans. The style is computed from the registered realizations of the plan or its subplans. A plan without a registered automatic realization remains single-pass. When an automatic realization is registered, the plan becomes multi-pass and selects a workflow for repeated execution, bounded working run logs, import into another project, and revision of the plan from later execution experience.
+A plan model can guide one execution or be reused for further executions. Reuse does not depend on registering an automatic implementation: interactive execution can also produce a repeatable, documented example.
 
 ## 2. Main Idea Context
 
-- Main idea: [`machine-of-goals`](../machine-of-goals.md#machine-of-goals)
-- Related independent idea: [`styles`](../../styles/styles.md)
-- This mini-idea clarifies the lifecycle of a plan and the relationship between the plan, its concrete realizations, and its collapsed executable form.
-- It remains part of Machine of Goals because it concerns repeatable goal achievement, preserving execution experience, and evolving a plan based on that experience.
+- Main idea: [Machine of Goals](../machine-of-goals.md#machine-of-goals).
+- Related idea: [Styles](../../styles/styles.md).
+- This clarification concerns the distinction between a reusable model and the facts of its execution within Machine of Goals.
 
 ## 3. Motivation
 
-Two different flows have emerged while working on plan realization. In one case, a plan is used to guide a specific project and is not expected to be executed again after completion. In the other case, the value comes precisely from repeated execution: the results of a previous pass become source material for changing the plan, the next realization, and the executable mechanism. These flows can be represented as styles that select different workflows without requiring a detailed plan-usage specification in the plan itself.
-
-Distinguishing these flows may help avoid conflating the history of a one-time realization with a repeatable process that evolves from one run to the next.
+A person needs to understand the current stage, verify its conditions, and retain useful experience without navigating redundant registries and logs. Another person should be able to use the same model and compare their execution with a documented example.
 
 ## 4. Raw Description
 
-### Single-Pass Style
+### Model and Parallel Branches
 
-The plan has no automatic realization, so Machine of Goals computes the single-pass style and selects a workflow for one realization of a specific project. The plan may be refined as work progresses, but after the project is complete, the same plan is not executed again as a new pass under that workflow.
+The model describes the expected transition toward the goal. Independent approaches may coexist as named branches. Versions describe evolution within one branch; another version and another branch are distinct choices. Progress belongs to a concrete realization, not to the model.
 
-### Multi-Pass Style
+### One-Time and Repeated Execution
 
-An automatic realization of the plan or one of its subplans is registered, so Machine of Goals computes the multi-pass style and selects a workflow that supports repeated execution. Registration is the style transition point: creating an implementation file alone does not change the style, and the machine does not wait for the first successful validation. A registered realization may still have a readiness or alignment status that shows that it has not yet been validated. Later executions may reveal changes needed in the plan, a subplan, or the automatic realization.
+A user may execute the model once or repeat it in another context. Each realization records its start time, selected branch and model version, current stage, and stage map. Stage records present input state, actions, and output state, together with the evidence supporting verification. Documentary evidence is offered first; an explicit user statement can provide the recorded basis when documents are unavailable.
 
-A particularly important case is when plan execution is gradually collapsed into a script. The user runs the script, discovers and corrects errors, refines the executable form, and, when necessary, modifies the plan itself based on the experience of an actual run. The next pass is then executed with these changes incorporated.
+The same documented execution supports both verification and readable walkthroughs. Publication requires preparing copies with personal data removed. Sharing may include only the goal and model or also selected execution experience.
 
-### Plan, Paths, Realizations, and Runs
+### Evolution and Retained Experience
 
-The plan defines a verifiable transition from the initial state to the final state. Alternative achievement paths such as deployment to Kubernetes or to a virtual machine are represented as selectable subplans or options inside that plan rather than as separate plans.
+A model change ends the current realization. A linked successor uses the changed model and may inherit unchanged stages after checking their dependencies, input conditions, and applicability. Inherited records keep their origin. Cleanup is a separate requested action and preserves the useful context of retained realizations.
 
-Shell scripts, Python programs, manual procedures, workflows, and similar forms are realizations of the plan or of particular subplans. An automatic realization must validate the initial state, required intermediate results, and the final state defined by the plan.
+### Optional Collapse
 
-Available realizations and their aggregate execution statistics are recorded in the realization registry in `plan.md`. The statistics show which realizations exist, how many times each realization has been run, when it was last run, and the result of the latest run. The registry does not link to individual run files.
-
-After the user approves a path and chooses a manual or automatic realization, the machine creates `realizations/<realization-record-id>.md` before the first run. This persistent realization artifact records the approved execution context and links every active, pinned, or retained run for that realization record.
-
-Creating a run increments the realization run count, records the start time as
-the latest run time, and sets the latest result to `running`. Terminal
-validation replaces that result without incrementing the count again.
-
-Each concrete execution creates a working run artifact under `run/`. Its filename identifies the realization and the UTC start time:
-
-```text
-run/<realization-record-id>--<YYYYMMDDTHHMMSSZ>.md
-```
-
-Run artifacts are short-lived working logs that record the selected paths, checked stages, concise execution notes, and result. When the machine generates commands for a human to execute while manually performing a stage, the run records every such command in generation order, including corrected or superseded commands. The retained depth is bounded, normally to the latest three to five runs per realization. Their links are maintained in the persistent realization artifact and the shared run index. Aggregate statistics in `plan.md` survive removal of old run files.
+On request, an executed model and its walkthrough may be collapsed into a skill for an AI agent, an automated action, or a combination of both. This capability does not determine whether interactive execution may be repeated. The result retains its relationship to the goal, branch, model version, and documentation.
 
 ## 5. Key Points
 
-- Single-pass and multi-pass are computed styles for working with plans rather than immutable plan types.
-- Registration of an automatic realization for the plan or a subplan changes the computed style from single-pass to multi-pass; file creation and first successful validation are not style transition points.
-- The computed style determines which workflow Machine of Goals uses for the plan.
-- A general computed style designation is sufficient at the plan level; the detailed behavior belongs to the selected workflow.
-- The plan defines the transition and its state validation contract; selectable achievement alternatives are subplans or path options within it.
-- Shell scripts, Python programs, manual procedures, and workflows are realizations of the plan or its subplans.
-- Every approved manual or automatic realization has a persistent artifact before its first run, and that artifact links its retained runs.
-- Each execution creates a bounded working run log rather than a permanent realization-history artifact.
-- Every command generated for manual execution of a stage is recorded in that
-  run before or when it is presented to the human.
-- `plan.md` retains aggregate realization statistics without links to individual run files.
-- Before the first realization, all plan clarification happens in `plan.md`
-  without revision snapshots. The first realization freezes revision 1; later
-  semantic plan clarification creates the next revision.
-- Registry statistics, progress projection, and another realization against
-  unchanged plan content do not create a plan revision.
-- Both the plan and its realization may evolve between runs.
-- A script may be a collapsed executable form of the plan that is refined through actual runs.
-- Errors and observations discovered while running the script may lead to changes not only in the script but also in the source plan.
-- Multi-pass operation enables importing the plan into another project and changing the plan from experience gathered during later executions.
+- Reusability belongs to the model and retained experience; automation is optional.
+- Branches distinguish independent approaches; versions distinguish evolution.
+- Concrete progress and evidence belong to realizations and their stages.
+- Input conditions are checked before action; output conditions are checked before completion.
+- Minimal records should serve verification and readable documentation together.
+- Changes create successors without rewriting previous execution facts.
 
 ## 6. Main Idea Impact
 
-- Possible concept impact: computed plan style; style-based workflow selection; plan and subplan realization; working run; aggregate realization statistics; bounded run retention; collapsed executable form.
-- Possible principle impact: deriving style from automatic realizations; validating states in automatic realizations; retaining bounded working history; feedback from execution to the plan.
-- Possible parent idea impact: sections about plan realizations, execution state, path options, import, repeated execution, and collapsing a plan into a script or another executable mechanism.
+- Concept impact: plan model, branch, branch-local version, realization, stage evidence, succession, shared experience, and optional collapse.
+- Principle impact: separate models from progress, verify transitions, preserve provenance, and prepare safe publication copies.
+- Parent impact: the current model and documented-execution sections in the defining idea, concepts, and principles.
 - Semantic mismatch with the main idea: none.
-- Mismatch signals: high semantic closeness; the questions clarify the model within Machine of Goals.
+- The earlier automatic-registration-based single-pass/multi-pass distinction is superseded for this idea by the model and realization distinction. This clarification does not migrate retained other-mode operating contracts.
 
 ## 7. Open Questions
 
-- [x] Is being single-pass or multi-pass a property of the plan itself, a selected way of using it, or a computed style?
-- [x] How should changes to the plan between passes be distinguished from changes only to its concrete executable realization? A plan revision is created only for a semantic clarification of `plan.md` after a realization exists; realization-only, registry, statistics, and progress changes do not revise the plan.
-- [x] Should each run record the exact revisions of the plan and realization under which it was executed? Yes; the run must retain resolvable references to both revisions.
-- [x] What execution details need to be preserved so that the next pass can use the experience of the previous one?
-- [ ] At what point should a modified script lead to a corresponding change in the source plan?
-- [ ] Which additional capabilities or workflow changes should follow from the computed multi-pass style?
+No unresolved questions block the documented interactive-execution model. Detailed contracts for collapse and publication remain outside this clarification.
 
 ## 8. Boundaries / Non-Goals
 
-- The mini-idea requires exact plan and realization revision references in each
-  run, while the storage or VCS mechanism for immutable revisions remains an
-  operating-contract choice.
-- The mini-idea does not require every plan to become multi-pass or to be collapsed into a script.
-- The mini-idea does not define a detailed configuration schema for plan usage; the computed style points to the applicable workflow.
-- It does not design a mechanism for execution, run comparison, automatic plan modification, or run-retention cleanup.
-- Concrete operating behavior under `.double/` is handled in a separate Double Agent change after parent concept and principle integration.
+This clarification does not prescribe a collapse workflow, executable implementation, publishing platform, or automatic cleanup. It does not require separate registration, run-index, or evidence-manifest artifacts for interactive execution.
 
 ## 9. Parent Integration
 
-- Parent concept integration: `[completed]`
-- Parent principle integration: `[completed]`
-- Parent sections changed:
-  - `machine-of-goals.md`: `Raw Description`, `Key Elements`, `Assumptions`, `Notes`, and development-artifact indexes
-  - `machine-of-goals-concepts.md`: realization paths, realization registry, computed style, working runs, execution, exchange, and artifact context
-  - `machine-of-goals-principles.md`: automatic-realization registration, bounded working logs, persistent statistics, tensions, and future operating inputs
-- User notification required before parent rewrite: `[completed-by-request]`
+- Parent concept integration: `[completed]`.
+- Parent principle integration: `[completed]`.
+- Parent artifacts: [idea](../machine-of-goals.md#machine-of-goals), [concepts](../machine-of-goals-concepts.md), and [principles](../machine-of-goals-principles.md).
+- The existing artifact path and ID remain stable for incoming references.

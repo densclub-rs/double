@@ -36,6 +36,27 @@ status: release-candidate
 - interaction-prompt: `.double/prompts/machine-of-goals/interaction/path-discovery.md`
 - definition: `.double/agents/machine-of-goals/path-discovery/path-discovery.md`
 
+## Manual and Interactive Execution Routing
+
+The [Model and Realization Execution Rule](../../workflows/machine-of-goals/machine-of-goals-workflow.md#model-and-realization-execution-rule)
+is active for manual/interactive model preparation, review, execution, and
+validation. For the three agents below, this table supplies their input/output
+contracts in that route; the old run/registry fields in their retained entries
+apply only to other execution modes.
+
+| Agent | Input | Output | Templates |
+| --- | --- | --- | --- |
+| `plan-synthesis-agent` | Goal, paths, branch/version models, explicit review choice | `plan-artifact`; selection context recorded at execution start | `plan-template` (first shape) |
+| `plan-realization-agent` | Selected model and entry/current stage, accepted inputs, approved boundaries | `realization-artifact`, `stage-realization`, directly linked evidence | `realization-template` (first shape), `stage-realization-template` |
+| `plan-validation-agent` | Captured conditions, actual outputs, evidence/statements, goal criteria | Updated `stage-realization` and `realization-artifact` | `stage-realization-template`, `realization-template` (first shape) |
+
+The main realization map owns current-stage/progress. Input checks precede
+action; output checks precede completion. Documentary evidence is offered with
+an explicit user-statement fallback. A changed model ends the realization and
+requires an authorized successor with applicability-checked inherited facts.
+No separate decision, registration wrapper, run, index, or validation artifact
+is required. Common consent, language, and routing boundaries remain binding.
+
 ## Plan Synthesis Agent
 
 - id: `plan-synthesis-agent`
