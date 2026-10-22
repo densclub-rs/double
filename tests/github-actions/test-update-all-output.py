@@ -63,8 +63,9 @@ update_all
                     chunks.append(chunk)
                 os.close(master)
                 return process.wait(), b''.join(chunks).decode()
-            result = subprocess.run(args, env=env, capture_output=True, text=True, input="yes\nyes\nyes\n")
-            return result.returncode, result.stdout + result.stderr
+            # Native Windows text streams translate LF to CRLF before Bash reads it.
+            result = subprocess.run(args, env=env, capture_output=True, input=b"yes\nyes\nyes\n")
+            return result.returncode, (result.stdout + result.stderr).decode('utf-8', errors='replace')
 
     def test_grouping_and_plain_output(self):
         code, output = self.run_update()
