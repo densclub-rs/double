@@ -120,6 +120,17 @@ If the user starts from an existing goal, plan, imported plan, or subgoal, the
 agent should infer the current step from the artifact state and explain that
 inference before advancing.
 
+For the timestamped manual/interactive realization shape, inspect its model
+identity, `status`, `current-stage`, map, and corresponding three-part stage
+record. Resume observed actions awaiting verification at step 06 rather than
+repeating them. Unaccepted inputs stay at input clarification in step 05;
+`model-changed` routes to model review/revision, not further old-model action.
+A completed realization with accepted goal criteria can remain closed without
+export. Do not infer the new shape from `template-id` alone: legacy artifacts
+may have the same template ID but lack the required branch/version/digest and
+stage-record structure. Explain any conversion gap and obtain its separate
+authorization before writing or executing a converted artifact set.
+
 ## Active Workflow Guidance
 
 Machine of Goals agents must behave actively after processing a user request.
@@ -151,14 +162,14 @@ before proceeding to the next question. The agent may offer transition to
 questions remain, unless the goal is marked blocked, infeasible, or requiring
 reformulation.
 
-During `04-plan-review-and-decision`, the agent must conduct an interactive
-review. It must show the user the selectable achievement paths or subplans,
-their material trade-offs, and compatible registered realizations before
-asking the user to confirm the selected path or subplan. The agent may
-recommend an option, but must not select or confirm it on the user's behalf.
-It must wait for explicit user confirmation before committing the realization
-decision, registering a new realization, or advancing to
-`05-plan-realization`.
+During `04-plan-review-and-decision`, conduct an interactive review and show
+model branches/versions, available paths or subplans, entry points, and their
+material trade-offs. For manual/interactive execution, follow the Model and
+Realization Execution Rule: selection context belongs in the realization at
+its authorized start and no registry or separate decision is required. For
+other modes, retain their existing registered-realization review. Recommend
+without selecting on the user's behalf, and wait for explicit selection before
+advancing unless that exact selection has already been supplied.
 
 The agent may skip the proposal only when the user explicitly asks for no next
 steps, asks for a narrow answer only, or the current state is blocked and no
@@ -202,6 +213,10 @@ Distinguish workflow steps from plan stages. A result produced in
 execution success alone does not establish validation. After validation, offer
 only the applicable routes listed in step 06 and respect dependencies and the
 user's validation decision.
+
+In the manual/interactive route, an accepted final goal at step 06 may end
+here when the user closes or pauses the work. Explain that outcome without
+forcing step 07, inventing an export, or requesting continuation to `<end>`.
 
 If transition conditions are unmet, say that the step is not ready to advance,
 name the blocker, and offer the concrete clarification or repair action rather
@@ -271,6 +286,121 @@ The first draft assumes these cross-step modes. Draft contracts are defined in
 - `import`: adapt an existing goal, plan, or reusable analog into this context
 - `export`: package a goal, plan, runbook, specification, workflow, or checklist
 
+<a id="model-and-realization-execution-rule"></a>
+
+## Model and Realization Execution Rule
+
+This is the active route for manual and interactive execution, including
+preparation of their models. It uses the first shapes in `plan-template` and
+`realization-template`, and `stage-realization-template`. Where older mode
+instructions in an entry point, agent, role, prompt, or registry require a run,
+registration, snapshot for every execution, or progress in the model, this
+specific route governs manual/interactive work. The separately scoped rules
+for other modes do not add those layers here. If the intended mode is unclear,
+clarify it before choosing incompatible artifact shapes. Existing artifacts
+are not silently converted or reinterpreted.
+
+### Model and Selection
+
+- A goal may have independent named branches. Use `branch` and
+  `plan-version` in Markdown frontmatter and a model file named
+  `plan-<branch>-v<major>.md`. Compatible MINOR/PATCH updates stay in that file;
+  MAJOR preserves the earlier model and creates another file. The current
+  version is selected within its branch. A small new prerequisite may still
+  be incompatible; execution form alone is not a model change.
+- Stages have stable IDs such as `S01`, anchors such as `stage-s01`, and short
+  English names/slugs. Their contracts state required inputs, intended
+  actions, expected outputs, and checks. Exit conditions cover goal success.
+  The model never stores execution progress, checkboxes, or a realization
+  registry.
+- At step 04, show available branches/versions, paths, entry points, and their
+  material differences. Obtain explicit selection and execution boundaries;
+  do not choose on the user's behalf. Record a brief selection context in the
+  realization when it starts, not in a mandatory separate decision artifact.
+  Existing sequence authorization remains valid within its named scope.
+
+### Start and Resume
+
+- At the authorized start of step 05, create
+  `realizations/<YYYY-MM-DDTHH-mm-ss>/realization.md` from
+  `realization-template`. Record the actual start with offset/timezone, goal,
+  branch, model version/file, and an actually computed SHA-256 content digest.
+  Do not fabricate time or a digest, rename an existing start, or overwrite a
+  realization directory. For resume, identify the existing realization rather
+  than creating another merely because the conversation resumed.
+- The main document owns `current-stage`, overall state, and a compact map.
+  Link each map entry to its model anchor and, once created, directly to its
+  stage record. Pending stages need no empty record or broken placeholder link.
+- The stage record is `<stage-id-lowercase>-<english-slug>.md` in the same
+  directory, with exactly three main parts: Input State, Actions, Output State.
+  Before action, capture effective conditions, intended action, and source
+  identity. Store evidence directly in these parts, with attachments only
+  where needed. No separate run, run index, registration wrapper, evidence
+  manifest, or validation document is required.
+
+### Input, Action, and Output
+
+1. Orient the user: show the current model stage, required input conditions,
+   intended action, expected output conditions, and how they will be checked.
+   State relevant dependencies and existing stop points.
+2. Compare the source file's branch/version/content digest with the recorded
+   model before acting. Verify every required input against the captured
+   conditions. Offer relevant documentary evidence: screenshot, photograph,
+   document, or observed command output. Record what was requested and supplied.
+3. Inspect what the evidence establishes. If documentary evidence cannot be
+   supplied, an explicit user statement addressing the condition can support
+   acceptance. Preserve its words and known attribution, clearly labeled as a
+   user statement. Do not present it as independent documentary verification.
+   Silence, a vague acknowledgment, an unrelated attachment, and an expected
+   result are not confirmation. One request can cover related conditions;
+   respect an explicit answer that documents are unavailable.
+4. Act only after inputs are accepted and within approved boundaries. Record
+   actual actions, outcomes, and meaningful deviations in Actions. Preserve
+   generated command instructions and corrections in order with safe working
+   context; record observed results honestly and do not infer all commands
+   succeeded from the last exit code. Do not introduce collapsing or register
+   an automatic realization as a side effect of this route.
+5. Hand off from step 05 to step 06 after action, with the stage awaiting
+   verification. Recheck model identity/content and compare actual outputs
+   with captured output conditions. Offer documentary evidence here too; use
+   the same explicit-statement fallback when unavailable. Keep a failed or
+   unconfirmed condition visible; do not mark the stage completed.
+6. Record each decision and its basis in Output State; update the main map only
+   after acceptance. A completed marker backed by a user statement remains
+   distinguishable from documentary confirmation. Keep current-stage focused
+   on unresolved work and never mirror progress into the model.
+7. After accepted output, derive eligible next stages from dependencies, show
+   the recommendation, and apply the existing continuation/handoff rule. At an
+   exit, verify the goal's target/success criteria and carried-result
+   applicability. A realization completes only after those conditions are
+   accepted, with a concise result and confirmation basis in the main document.
+   Goal closure need not create an export or another validation artifact.
+
+### Model Change and Succession
+
+Any changed source model ends the current realization as `model-changed`, even
+when a compatible update stays in the same model file. Stop further planned
+action, explain the change, and route to model revision/review as appropriate.
+Record facts already produced against their captured conditions. Begin a
+linked successor only after the changed model and continuation are authorized;
+preserve sequence consent only where it still covers that continuation.
+
+Copy useful unchanged stage records and evidence into the successor, retaining
+their source version and original execution/statement context. Recheck inputs,
+dependencies, and current applicability before retaining completed status;
+unchanged stage text alone is insufficient. Include necessary inherited
+materials so readers need not follow predecessor chains. Never relabel an old
+execution as a new one. Existing legacy runs keep their historical meaning;
+conversion of an old artifact set requires its own authorized scope.
+
+### Boundaries
+
+This route does not apply bounded working-log retention to documented
+walkthroughs, does not delete earlier versions automatically, and does not
+migrate existing goals. Branch cleanup, export design, collapsing into skills,
+and automatic actions are outside this synchronization. Existing supported
+other-mode behavior remains separately scoped below.
+
 ## Agents
 
 The first draft uses five core agents plus one optional exchange agent. Draft
@@ -283,10 +413,10 @@ Core agents:
 - `path-discovery-agent`: discovers and compares possible realization paths
 - `plan-synthesis-agent`: creates the plan project and supports the review
   decision checkpoint
-- `plan-realization-agent`: creates or resumes a run and realizes selected plan
-  paths within approved boundaries
-- `plan-validation-agent`: validates run or goal results and updates the run
-  and the plan's realization registry
+- `plan-realization-agent`: creates or resumes the selected realization and
+  acts within verified input conditions and approved boundaries
+- `plan-validation-agent`: checks stage or goal results and records the
+  decision and evidence in the applicable execution shape
 
 Optional agent:
 
@@ -303,6 +433,7 @@ Draft artifact templates are defined in
 - `plan-artifact` -> `.double/templates/machine-of-goals/plan-template.md`
 - `realization-decision` -> `.double/templates/machine-of-goals/realization-decision-template.md`
 - `realization-artifact` -> `.double/templates/machine-of-goals/realization-template.md`
+- `stage-realization` -> `.double/templates/machine-of-goals/stage-realization-template.md`
 - `plan-run` -> `.double/templates/machine-of-goals/plan-run-template.md`
 - `run-index` -> `.double/templates/machine-of-goals/run-index-template.md`
 - `exported-plan-package` -> `.double/templates/machine-of-goals/exported-plan-package-template.md`
@@ -320,6 +451,11 @@ Artifact revisions preserve their original `template-id`. In particular, a
 template; an unchanged direct reference keeps its source metadata.
 
 ## Plan and Path Rule
+
+**Other execution modes only.** Manual and interactive execution follows the
+[Model and Realization Execution Rule](#model-and-realization-execution-rule),
+including branch models, timestamped walkthroughs, and direct stage records.
+The retained rule below does not add legacy layers to that route.
 
 Each goal has one plan artifact at `<goal-directory>/plan.md`. The plan is the
 stable model of transition from the initial state through required intermediate
@@ -339,6 +475,11 @@ alignment, and aggregate run statistics. The stable transition topology in the
 other plan sections remains separate from this evolving registry.
 
 ## Plan Realization Registration Rule
+
+**Other execution modes only.** Manual and interactive execution follows the
+[Model and Realization Execution Rule](#model-and-realization-execution-rule),
+including branch models, timestamped walkthroughs, and direct stage records.
+The retained rule below does not add legacy layers to that route.
 
 A realization is a manual or automatic projection of the complete plan or of
 specific paths or subplans. A shell script, Python program, workflow, agentic
@@ -375,6 +516,11 @@ realization row is added to section 10 of `plan.md`.
 
 ## Plan Realization Artifact Rule
 
+**Other execution modes only.** Manual and interactive execution follows the
+[Model and Realization Execution Rule](#model-and-realization-execution-rule),
+including branch models, timestamped walkthroughs, and direct stage records.
+The retained rule below does not add legacy layers to that route.
+
 Every user-approved manual or automatic realization must have one persistent
 semantic artifact at:
 
@@ -410,6 +556,11 @@ for the revision it executes.
 
 ## Computed Plan Style Rule
 
+**Other execution modes only.** Manual and interactive execution follows the
+[Model and Realization Execution Rule](#model-and-realization-execution-rule),
+including branch models, timestamped walkthroughs, and direct stage records.
+The retained rule below does not add legacy layers to that route.
+
 Plan working style is computed from active realization registrations:
 
 - no registered automatic realization -> `single-pass`
@@ -437,7 +588,13 @@ do not replace human-facing Markdown links in the artifact body. Standard
 Markdown links are required; wiki-style links and absolute local filesystem
 paths are not portable artifact navigation.
 
-The required contextual relationships are:
+For manual/interactive execution, the goal links its actual branch models
+and relevant realizations; the main realization links the source goal/model
+and directly opens stage records; stage records link their model anchor and
+evidence. Recorded branch/version and captured conditions preserve context.
+No registry, decision, run, or index link is required for that route.
+
+For other execution modes, the retained contextual relationships are:
 
 - a goal's related-goal and Machine of Goals artifact sections link to the
   related goal, plan, path-options catalog, realization registry, decision, and
@@ -492,6 +649,10 @@ route to its origin without requiring the provider project to maintain a
 consumer backlink. Use Plan Exchange only when material is copied, adapted, or
 packaged.
 
+The remainder of this section's snapshot/baseline instructions applies only
+to other execution modes. Manual/interactive model identity and historical
+facts follow the Model and Realization Execution Rule.
+
 Planning before the first realization explicitly follows `revision: current`.
 During this draft phase, keep both `plan-revision` and
 `plan-revision-artifact` null, apply every clarification directly to `plan.md`,
@@ -521,6 +682,11 @@ alternative plan variants.
 <a id="plan-revision-history-rule"></a>
 
 ## Plan Revision History Rule
+
+**Other execution modes only.** Manual and interactive execution follows the
+[Model and Realization Execution Rule](#model-and-realization-execution-rule),
+including branch models, timestamped walkthroughs, and direct stage records.
+The retained rule below does not add legacy layers to that route.
 
 `plan.md` is always the current editable transition model. Before it has any
 registered realization, it is an unrealized draft: `plan-revision` and
@@ -567,6 +733,11 @@ displayed run and neutral progress markers.
 
 ## Stage Contract Rule
 
+**Other execution modes only.** Manual and interactive execution follows the
+[Model and Realization Execution Rule](#model-and-realization-execution-rule),
+including branch models, timestamped walkthroughs, and direct stage records.
+The retained rule below does not add legacy layers to that route.
+
 Before starting each stage attempt, copy its effective contract from the current
 `plan.md` into an explicitly anchored block in the run. Record stage id,
 attempt id, capture time, source stage and applicable plan change-log entry,
@@ -603,6 +774,11 @@ evidence in durable package material before bounded run retention removes
 the only copy. Do not infer acceptance from the current plan alone.
 
 ## Plan Run Rule
+
+**Other execution modes only.** Manual and interactive execution follows the
+[Model and Realization Execution Rule](#model-and-realization-execution-rule),
+including branch models, timestamped walkthroughs, and direct stage records.
+The retained rule below does not add legacy layers to that route.
 
 Mutable execution state is stored outside `plan.md`. Every concrete execution
 is created from an existing realization artifact and creates one `plan-run`
@@ -791,6 +967,28 @@ between its purpose, inputs, outputs, success criteria, and validation evidence.
 
 ## Main Realization Loop
 
+For manual and interactive execution:
+
+```text
+select branch/version and entry stage
+-> create or resume the timestamped realization
+-> show current stage and capture its conditions
+-> check model identity and verify input conditions
+-> perform the authorized action and record facts
+-> hand off to output validation
+-> check model identity and verify output conditions
+-> update the realization map and explain the result
+-> continue within consent, revise through a successor, pause, or close
+```
+
+Both input and output verification request documentary evidence with an
+explicit user-statement fallback. Output validation precedes the next plan
+stage. Use the existing continuation handoff, preserving already supplied
+sequence authorization. The authoritative details are in the
+[Model and Realization Execution Rule](#model-and-realization-execution-rule).
+
+### Existing Loop for Other Execution Modes
+
 `Plan Realization` and `Plan Validation` form the primary working loop of the
 machine:
 
@@ -863,6 +1061,20 @@ external implementation artifact, or a different realization route.
 
 - step-id: `03-plan-synthesis`
 - default-mode: `planning`
+
+#### Manual and Interactive Execution
+
+- purpose: synthesize an understandable branch/version model with stable stage
+  IDs, English slugs, dependencies, and explicit input/output checks; independent
+  approaches may be separate named branches.
+- produced-outputs: `plan-artifact` from the first `plan-template` shape.
+- transition-condition: a model is understandable enough to present its
+  branches/versions, entry stages, and control boundaries for explicit choice.
+- next-step: `04-plan-review-and-decision`.
+- do not put execution progress, a registry, or run statistics in the model.
+
+#### Existing Other-Mode Rules
+
 - purpose:
   - turn one or more paths into selectable branches or subplans of one plan
   - model the plan as a transition from current state to target state
@@ -888,6 +1100,20 @@ external implementation artifact, or a different realization route.
 
 - step-id: `04-plan-review-and-decision`
 - default-mode: `review`
+
+#### Manual and Interactive Execution
+
+- purpose: show model branches/versions, paths and entry points, explain
+  differences, and obtain explicit selection and execution boundaries.
+- produced-outputs: selection context for the realization, recorded there at
+  its actual start; no mandatory separate decision or registration artifact.
+- transition-condition: the selected model/entry and permission to start are
+  explicit; clarification is complete enough to attempt input verification.
+- next-step: `05-plan-realization`.
+- do not fabricate a start timestamp or create a completed stage at review.
+
+#### Existing Other-Mode Rules
+
 - purpose:
   - act as the commit point before movement through the plan
   - conduct an interactive review with the user
@@ -926,6 +1152,24 @@ external implementation artifact, or a different realization route.
 
 - step-id: `05-plan-realization`
 - default-mode: `execution`
+
+#### Manual and Interactive Execution
+
+- purpose: start/resume the timestamped realization, orient to its current
+  model stage, capture the stage contract, verify input conditions, act within
+  authority, and record actual actions and outputs in the three-part stage file.
+- produced-outputs: `realization-artifact`, `stage-realization`, and evidence
+  linked directly where relevant. Update the existing main map on resume.
+- transition-condition: action has an observed result ready for output
+  verification; missing inputs block action, and model changes end this
+  realization before continuing against a changed model.
+- next-step: `06-plan-validation` for observed output; clarification or
+  `03-plan-synthesis`/`04-plan-review-and-decision` when a model change requires it.
+- preserve safe commands and corrections in Actions, and apply the evidence
+  request/statement fallback to inputs. No run, registry, or index is produced.
+
+#### Existing Other-Mode Rules
+
 - purpose:
   - require the selected persistent realization artifact before execution
   - create or resume a working `plan-run` from the selected realization
@@ -968,6 +1212,28 @@ external implementation artifact, or a different realization route.
 
 - step-id: `06-plan-validation`
 - default-mode: `validation`
+
+#### Manual and Interactive Execution
+
+- purpose: recheck model identity, validate captured output conditions using
+  documentary evidence or explicit user statements, record decisions and basis
+  in the stage file, and update only the realization map/current stage.
+- produced-outputs: updated `stage-realization` and `realization-artifact`;
+  the main Result records final goal acceptance and its confirmation basis.
+- transition-condition: a recorded decision exists for the applicable
+  conditions. Unconfirmed outputs remain awaiting verification or blocked;
+  completion requires accepted exit conditions and goal success criteria.
+- next-step:
+  - `05-plan-realization` for an eligible next stage within continuation consent
+  - `04-plan-review-and-decision` for another model/branch or changed boundaries
+  - `03-plan-synthesis` for a changed model, ending the old realization first
+  - `01-goal-formulation` when the goal must be reformulated
+  - `<end>` when the goal is validated and the user closes or pauses here
+- a successor inherits only applicable results and keeps their original facts.
+  Do not force retention cleanup or export as a condition of validation.
+
+#### Existing Other-Mode Rules
+
 - purpose:
   - validate the result of the current run stage or final run result
   - compare evidence with the stage completion criteria
@@ -1008,6 +1274,12 @@ external implementation artifact, or a different realization route.
   - `03-plan-synthesis` when the plan project must be rebuilt
 
 ### 07. Plan Packaging / Export
+
+This synchronization does not redesign export or collapsing. The retained
+packaging rules below describe existing supported modes. Manual/interactive
+goal closure after accepted final validation does not require this step or
+any legacy registry/run artifacts. Do not invent a new export flow from the
+manual realization route.
 
 - step-id: `07-plan-packaging-export`
 - default-mode: `export`

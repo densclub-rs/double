@@ -67,7 +67,7 @@ derived-from:
 - Unknowns:
 - Reuse / import opportunity:
 - Lifecycle: <discovered|included-in-plan|implemented|exercised|validated|deprecated>
-- Plan element: [<plan-element-label>](./plan.md#<plan-anchor-or-subplan-id>) or none
+- Plan element: [<plan-element-label>](./plan-<branch>-v<major>.md#<plan-anchor-or-subplan-id>) or none
 - Recommendation: <candidate|include-in-plan|keep-as-alternative|reject|needs-research>
 
 ## 4. Comparison
@@ -84,3 +84,14 @@ derived-from:
 
 - [ ] <question that blocks or improves plan synthesis>
 ```
+
+## Model Link Contract
+
+For manual and interactive execution, a discovered path can be represented
+inside a model or become an independently maintained plan branch. Link the
+actual branch model and relevant stage or subplan where the path relationship
+is described; include more than one link only when the path genuinely spans
+models. Before synthesis, use `none` rather than a link to an uncreated file.
+Do not turn this path catalog into another realization or evidence index.
+The generalized model-link placeholder does not change execution-mode choice
+or any automatic action contract.

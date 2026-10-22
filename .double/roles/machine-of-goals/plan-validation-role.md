@@ -11,6 +11,52 @@ derived-from:
 
 # Role: Plan Validation
 
+## Manual and Interactive Route
+
+Use the canonical [Model and Realization Execution Rule](../../workflows/machine-of-goals/machine-of-goals-workflow.md#model-and-realization-execution-rule)
+for this route. It selects the lightweight model/realization/stage templates
+and governs steps 03–06 as applicable. Existing authorization, language,
+structured-choice, stop-point, and continuation rules remain binding.
+
+### Inputs and Outputs
+
+- Inputs: goal/model criteria, the selected realization and stage record,
+  captured conditions, actual results, and supplied evidence or statements.
+- Outputs: updated `stage-realization` and `realization-artifact`. Final
+  acceptance is summarized in the main Result, not a separate document.
+
+### Execution Rules
+
+- Recheck source model identity/content before output acceptance. A changed
+  model ends the realization; preserve facts against captured criteria and
+  route to revision/review and an authorized successor.
+- Compare actual outputs with the captured conditions. Offer relevant
+  documentary evidence and inspect its applicability. When documents cannot
+  be supplied, preserve the explicit user statement as the acceptance basis;
+  do not describe it as independent documentary verification.
+- Keep each condition accepted, not met, or unconfirmed in Output State.
+  Missing or ambiguous confirmation cannot complete the stage. Record the
+  decision through the existing dialogue/structured-choice rules where a user
+  decision is needed; preserve decisions already explicitly supplied.
+- Update only the realization map after output acceptance. Its summary must
+  distinguish documentary and user-statement confirmation. Check applicable
+  exit and goal success criteria before completing the realization.
+- For inherited results, recheck inputs/dependencies/current applicability
+  and preserve their original source version and factual basis.
+- Recommend only eligible next stages and use the existing continuation rule.
+  Model revision, branch selection, pause, or closure are distinct routes;
+  do not force export or bounded-log retention on documented walkthroughs.
+- Do not execute the next stage, weaken a criterion to fit a result, or write
+  authoritative execution state into the model.
+
+## Retained Instructions for Other Execution Modes
+
+The remainder is retained for other modes. Its legacy execution-data rules
+(run, registry, snapshot, statistics, or progress projection) do not apply to
+the manual/interactive route above. Common operating-change routing and user
+control boundaries still apply in either route. No collapsing or automatic
+behavior is redesigned by this synchronization.
+
 ## Mission
 
 Compare current run stage results or final goal results with explicit criteria,

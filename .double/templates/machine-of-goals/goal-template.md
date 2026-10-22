@@ -114,6 +114,36 @@ Describe the state that should exist after successful realization.
 
 ## 11. Machine of Goals Artifacts
 
+Possible paths: [Path options](./path-options.md#<goal-id>-path-options)
+
+| Branch | Version | Model |
+| --- | --- | --- |
+| <branch> | <MAJOR.MINOR.PATCH> | [<model-title>](./plan-<branch>-v<major>.md#<plan-id>) |
+
+| Started | Model | Realization |
+| --- | --- | --- |
+| <actual-start-with-timezone> | <branch> / <version> | [<realization-label>](./realizations/<YYYY-MM-DDTHH-mm-ss>/realization.md#<realization-id>) |
+
+```
+
+## Artifact Navigation Scope
+
+For manual and interactive execution, section 11 above links real branch
+models and timestamped realizations directly. Add only existing useful rows;
+omit a table until its artifacts exist. The realization owns current stage,
+progress, and checks, so this goal navigation does not duplicate that state.
+No separate registration, decision artifact, run index, or computed automation
+style is required for the manual/interactive shape. Parallel branches may
+coexist; retained major versions in one branch describe evolution.
+
+## Existing Navigation for Other Execution Modes
+
+The pre-existing section below is retained unchanged for other modes. It is
+not an additional navigation block required in a manual/interactive goal.
+
+```md
+## 11. Machine of Goals Artifacts
+
 - Possible realization paths: [Path options](./path-options.md#<goal-id>-path-options)
 - Plan: [Current plan](./plan.md#<goal-id>-plan)
 - Plan realization registry: [Realizations](./plan.md#realization-registry)

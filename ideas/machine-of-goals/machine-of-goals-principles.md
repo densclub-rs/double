@@ -1,8 +1,10 @@
 ---
 id: machine-of-goals-principles
 kind: principle-artifact
+status: release-candidate
+mindmap-plugin: basic
 produced-by: machine-of-ideas/principle-synthesis-agent
-interaction-language: English
+interaction-language: Russian
 artifact-language: English
 publication-path: ideas/machine-of-goals/machine-of-goals-principles.md
 derived-from:
@@ -16,9 +18,9 @@ Idea: [Machine of Goals](./machine-of-goals.md#machine-of-goals)
 
 ## 1. Principle Synthesis Summary
 
-Machine of Goals is built around a normative transition from intention to verifiable action. A goal should first become a verifiable target state, then be connected with the initial state through an understandable plan graph, and only after that move toward algorithmization, automation, or a collapsed executable form.
+Machine of Goals connects a verifiable goal with an understandable model, user-selected execution, and retained evidence. Its principles distinguish independent plan branches from evolution within a branch, and expected model states from the facts of a concrete realization. A model change creates a successor execution with applicable inherited results rather than rewriting history.
 
-The main tension of the idea is that the machine should strive toward automatic execution of plans, but it should not turn into an opaque automaton. Therefore, automation is acceptable only while preserving understandability, explanation, dry run, user choice of execution boundaries, the connection between plan and goal, and the working context of realization.
+Manual walkthroughs already provide documentation and can be reused independently of automation. Optional collapsing, preparation of sharing copies, comparison of later experience, and requested branch cleanup preserve that value while keeping control, personal data, and factual context understandable.
 
 ## 2. Working Definition of Principle
 
@@ -75,173 +77,76 @@ If a goal is not represented as a verifiable state, the machine cannot honestly 
 
 #### Statement
 
-A plan should be an understandable graph of transition from the initial state to the target state; it may be incomplete or imprecise, but it must preserve a meaningful connection between these states.
+A plan should connect initial and target states through understandable stages, actions, dependencies, expected outputs, and checks. Concrete progress belongs to the realization rather than to this model.
 
 #### Derived From
 
-- Source concept(s): [Plan as Transition Model](./machine-of-goals-concepts.md#concept-plan-as-transition-model), [Initial State and Target State](./machine-of-goals-concepts.md#concept-initial-state-and-target-state), [Subgoal and Partial Achievement](./machine-of-goals-concepts.md#concept-subgoal-and-partial-achievement)
-- Source relationship, boundary, or tension: the plan is the bridge between goal and executable action, but is not equal to an algorithm
+- Source concept(s): [Plan as Transition Model](./machine-of-goals-concepts.md#concept-plan-as-transition-model), [Initial State and Target State](./machine-of-goals-concepts.md#concept-initial-state-and-target-state), [Documented Plan Realization](./machine-of-goals-concepts.md#concept-documented-plan-realization)
+- Source relationship, boundary, or tension: the model must be useful before execution without confusing expected states with observed progress
 - Source idea support: `Raw Description`, `Assumptions`, `Examples / Scenarios`
 - Explicit or inferred: explicit
 
 #### Rationale
 
-The understandability of the plan is the minimal contract for moving to realization. Without an understandable connection between the initial and target states, it is impossible to explain further movement, choose the next stage, verify achievement, or safely change the plan during execution.
+An understandable transition is the minimum basis for choosing the next action and checking its result. Keeping actual progress outside the model lets several people use the same model without mixing their executions.
 
 #### Implications Without Implementation
 
-- Future plan artifacts should preserve the initial state, target state, stages, subgoals, and possible transitions.
-- The plan may be clarified during execution if controlled movement toward the goal is preserved.
-- Before the first realization, every clarification updates only `plan.md` and
-  does not create a revision snapshot.
-- The first registered realization freezes revision 1 as the first executable
-  baseline. A later semantic clarification creates the next revision and marks
-  affected realizations for alignment review.
-- Registry, statistics, and presentation-only progress changes do not create a
-  plan revision when the transition model is unchanged.
-- The graph nature of the plan should be considered when choosing a path, reviewing stages, and introducing new subgoals.
-- The principle does not prescribe a concrete graph format.
+- Preserve the relation between each stage and the goal it advances.
+- Describe stage input, action, expected output, and check; use stable anchors and readable names.
+- Clarify incomplete models through explicit changes and realization succession.
 
 #### Boundaries
 
-- The plan does not have to be complete before realization begins.
-- The plan is not a simple list of tasks.
-- Plan understandability does not mean that all details have already been algorithmized.
+- The plan need not be complete before controlled execution can begin.
+- Understandability does not require full automation or a particular graph notation.
 
 #### Anti-Patterns
 
-- Treating a plan as ready only because there is a list of actions.
-- Starting realization without understanding how the actions are connected to the target state.
-- Forbidding changes to the plan when new stages, paths, or subgoals appear.
-- Creating plan-revision snapshots while the plan is still an unrealized draft.
-- Creating a new plan revision only because another realization is registered
-  against unchanged plan content.
+- Treating a task list as sufficient without explaining transitions.
+- Putting in-progress or completed markers into the plan model.
 
 #### Questions
 
 - None.
 
-<a id="principle-goal-and-plan-must-not-be-separated"></a>
+<a id="principle-distinguish-branches-from-versions"></a>
 
-### principle-goal-and-plan-must-not-be-separated: Goal and Plan Must Not Be Separated
+### principle-distinguish-branches-from-versions: Distinguish Branches from Versions
 
 #### Statement
 
-A plan should remain connected to the goal for which it was built; reuse is possible as transfer or adaptation of the bundle of goal, initial state, success criteria, and plan, not as use of the plan outside its context.
+Use branch identity to distinguish independently maintained plans for one goal, and versions to describe evolution within each branch. Judge version changes by model compatibility.
 
 #### Derived From
 
-- Source concept(s): [Plan Exchange](./machine-of-goals-concepts.md#concept-plan-exchange), [Goal Artifact Context](./machine-of-goals-concepts.md#concept-goal-artifact-context), [Plan as Transition Model](./machine-of-goals-concepts.md#concept-plan-as-transition-model)
-- Source relationship, boundary, or tension: plan exchange creates value, but the plan is not an independent universal mechanism
-- Source idea support: `Raw Description`, `Signals of Value`, `Notes`
+- Source concept(s): [Plan Branch](./machine-of-goals-concepts.md#concept-plan-branch), [Plan Model Version](./machine-of-goals-concepts.md#concept-plan-model-version), [Plan as Transition Model](./machine-of-goals-concepts.md#concept-plan-as-transition-model)
+- Source relationship, boundary, or tension: parallel alternatives and historical evolution can coexist but mean different things
+- Source idea support: `Summary`, `Raw Description`, `Assumptions`, branch evolution example
 - Explicit or inferred: explicit
 
 #### Rationale
 
-Machine of Goals strives toward reuse of successful ways of achievement, but the plan itself is inseparable from the goal. If a plan is transferred without the goal statement, initial conditions, and verification criteria, the foundation for safe execution and result evaluation is lost.
+A file numbered Plan 2 does not explain whether it replaces an earlier model or offers another approach. Named branches with independent version histories make that relationship explicit and give current-version selection a clear scope.
 
 #### Implications Without Implementation
 
-- Plan exchange should preserve the connection to the goal context.
-- Transfer of a similar subgoal is acceptable only together with its purpose, inputs, outputs, and connection to the parent goal.
-- Stage success metrics do not make stages universal outside the goal.
-- The principle does not define a marketplace or social model of exchange.
+- Keep branch identity stable through the evolution of its model.
+- Treat compatible MINOR and PATCH changes within the model file; preserve a separate model for a MAJOR change.
+- Evaluate new prerequisites and dependencies for compatibility rather than classifying by edit size.
+- Select a current version within the chosen branch.
 
 #### Boundaries
 
-- The principle does not forbid reusing similar subgoals.
-- The principle does not require copying the entire original goal without adaptation.
-- The principle does not claim that different goals cannot have similar plan fragments.
+- A route or subplan inside a model need not become another branch.
+- Changing the execution mechanism alone need not change the model.
+- Version metadata does not reconstruct every overwritten intermediate text.
 
 #### Anti-Patterns
 
-- Publishing a "bare plan" without a goal and success criteria.
-- Copying plan stages into a new goal without checking the initial state and constraints.
-- Treating a counter of successful realizations as proof of a stage's universal applicability.
-
-#### Questions
-
-- None.
-
-<a id="principle-automation-under-user-control"></a>
-
-### principle-automation-under-user-control: Automation Under User Control
-
-#### Statement
-
-Machine of Goals should strive toward automatic plan execution, but should ask the user each time which items to execute automatically and where control boundaries should remain.
-
-#### Derived From
-
-- Source concept(s): [Interactive and Automatic Execution](./machine-of-goals-concepts.md#concept-interactive-and-automatic-execution), [Plan Explanation and Control](./machine-of-goals-concepts.md#concept-plan-explanation-and-control), [Executable Collapsed Plan](./machine-of-goals-concepts.md#concept-executable-collapsed-plan)
-- Source relationship, boundary, or tension: automation is valuable, but should not cancel control, explanation, and the possibility of stopping
-- Source idea support: `Raw Description`, `Assumptions`, `Signals of Value`
-- Explicit or inferred: explicit
-
-#### Rationale
-
-The value of Machine of Goals is that a plan can reach an executable mechanism. But goals often differ by risk, domain, and need for human decision-making. Therefore, automation should be a direction of movement, not the unconditional destiny of every goal or every stage.
-
-#### Implications Without Implementation
-
-- The user should choose the execution mode: up to a specified stage, by a list of stages, or fully controlled.
-- Fully controlled execution remains acceptable even when the plan is technically automatable.
-- Automatic execution should preserve stop points and the possibility of review.
-- The principle does not define a UI or confirmation protocol.
-
-#### Boundaries
-
-- The principle does not forbid full automation.
-- The principle does not require manual confirmation of every safe step.
-- The principle does not turn automation into an end in itself.
-
-#### Anti-Patterns
-
-- Automatically executing stages without user-selected boundaries.
-- Treating interactive execution as a sign of a bad plan.
-- Hiding from the user which parts of the plan will be executed automatically.
-
-#### Questions
-
-- None.
-
-<a id="principle-explanation-before-execution"></a>
-
-### principle-explanation-before-execution: Explanation Before Execution
-
-#### Statement
-
-Before automatic or agentic execution, the plan should be explained through the selected stage, the reason for selection, the state of completed stages, and the further path through the plan graph; the user should be able to request `dry run`.
-
-#### Derived From
-
-- Source concept(s): [Plan Explanation and Control](./machine-of-goals-concepts.md#concept-plan-explanation-and-control), [Plan as Transition Model](./machine-of-goals-concepts.md#concept-plan-as-transition-model), [Interactive and Automatic Execution](./machine-of-goals-concepts.md#concept-interactive-and-automatic-execution)
-- Source relationship, boundary, or tension: execution should be controllable, stoppable, and explainable, especially under automation
-- Source idea support: `Raw Description`, `Examples / Scenarios`, `Signals of Value`
-- Explicit or inferred: explicit
-
-#### Rationale
-
-Explanation keeps Machine of Goals away from blind automation. If the agent cannot explain which stage it is executing, why it was selected, and how the state of completed stages affects the next path, the user cannot control plan execution.
-
-#### Implications Without Implementation
-
-- `Dry run` should serve to check understandability and expected behavior before real actions.
-- Explanation of the next step should take execution history into account.
-- The choice of path through the plan graph should be justified by the state of already completed stages.
-- The principle does not require complete documentation of the whole system before every step.
-
-#### Boundaries
-
-- `Dry run` is not real execution.
-- Explanation should not turn every step into endless approval.
-- The principle does not claim that all internal execution details should be disclosed with the same level of detail.
-
-#### Anti-Patterns
-
-- Launching agentic execution without explaining the selected stage.
-- Ignoring the state of already completed stages when choosing the next path.
-- Using `dry run` as an appearance of control if the agent still performs real actions.
+- Inferring parallelism from the number of retained major-version files.
+- Selecting the highest version across unrelated branches.
+- Treating an added mandatory prerequisite as compatible solely because the edit is small.
 
 #### Questions
 
@@ -253,187 +158,279 @@ Explanation keeps Machine of Goals away from blind automation. If the agent cann
 
 #### Statement
 
-Machine of Goals should distinguish the plan as the project of achieving the goal from the algorithm as the realization of this project in the working catalog.
+Keep the model of intended achievement distinct from the way it is embodied in guided or executable action, while preserving the connection between them.
 
 #### Derived From
 
-- Source concept(s): [Plan Algorithmization](./machine-of-goals-concepts.md#concept-plan-algorithmization), [Goal Artifact Context](./machine-of-goals-concepts.md#concept-goal-artifact-context), [Executable Collapsed Plan](./machine-of-goals-concepts.md#concept-executable-collapsed-plan)
-- Source relationship, boundary, or tension: a plan may be sufficiently explainable, but becomes an algorithm only as a realized form
+- Source concept(s): [Plan as Transition Model](./machine-of-goals-concepts.md#concept-plan-as-transition-model), [Plan Algorithmization](./machine-of-goals-concepts.md#concept-plan-algorithmization), [Collapsed Plan Realization](./machine-of-goals-concepts.md#concept-collapsed-plan-realization)
+- Source relationship, boundary, or tension: a reusable way of acting embodies the model but is not the model itself
+- Source idea support: `Summary`, `Raw Description`, `Assumptions`
+- Explicit or inferred: explicit
+
+#### Rationale
+
+The distinction permits the same model to guide a person, an AI agent, or an executable module. Its checks and context remain interpretable even when part of the action is packaged for reuse.
+
+#### Implications Without Implementation
+
+- Keep reusable skills and executable modules linked to their goal, source model, and available documentation.
+- Make coverage, prerequisites, and control boundaries understandable.
+- Preserve the covered initial, required intermediate, and final state checks in automatic action.
+
+#### Boundaries
+
+- A skill need not be an executable program.
+- A manual walkthrough remains a valuable realization without collapsing.
+- This principle does not authorize arbitrary software generation.
+
+#### Anti-Patterns
+
+- Publishing a skill or script without its goal and model context.
+- Treating a change of execution form as necessarily a new plan model.
+
+#### Questions
+
+- None.
+
+<a id="principle-record-realization-at-start"></a>
+
+### principle-record-realization-at-start: Record a Realization at Its Start
+
+#### Statement
+
+The beginning of concrete execution should create one readable realization context that identifies the model and owns its stage map and records.
+
+#### Derived From
+
+- Source concept(s): [Documented Plan Realization](./machine-of-goals-concepts.md#concept-documented-plan-realization), [Stage Execution Record](./machine-of-goals-concepts.md#concept-stage-execution-record), [Contextual Artifact Navigation](./machine-of-goals-concepts.md#concept-contextual-artifact-navigation)
+- Source relationship, boundary, or tension: execution needs a durable factual beginning without extra registration and index layers
 - Source idea support: `Raw Description`, `Assumptions`, `Notes`
 - Explicit or inferred: explicit
 
 #### Rationale
 
-The distinction between plan and algorithm prevents thinking about goal achievement from being mixed with executable realization. The plan defines the structure of the transition, while the algorithm appears where this structure is embodied in a working environment: a Git repository, site generation catalog, workflow, or another form of execution.
+A main realization document makes it clear when execution began, what model it follows, and where current work stands. Stage documents keep the detail readable without turning the main document into a long transcript.
 
 #### Implications Without Implementation
 
-- The goal and the plan should indicate the realization working catalog.
-- The realization working catalog should differ from the goal catalog if it contains the executable or publishable form of the algorithm.
-- Algorithmization should preserve the connection to the plan, checks, stops, and parameters.
-- The principle does not prescribe that realization is always code.
+- Record start time, timezone, model file, branch, and starting version in Markdown frontmatter.
+- Use the creation timestamp to identify the realization directory and retain it during updates.
+- Keep the stage map in the realization and open stage documents directly from it.
 
 #### Boundaries
 
-- A plan does not become an algorithm only because it is detailed.
-- Algorithmization does not mean arbitrary code generation.
-- Not all goals should fully transition into an algorithm.
+- Creating the document does not establish successful execution.
+- No separate registration artifact, standalone YAML metadata file, or run index is required solely to record a manual start.
 
 #### Anti-Patterns
 
-- Storing executable realization without a connection to the goal and plan.
-- Calling a plan an algorithm before a working realization appears.
-- Mixing the goal catalog and the realization working catalog so that the semantic context is lost.
+- Starting work with no retained model identity or execution context.
+- Changing the directory timestamp whenever progress is updated.
+- Scattering stage evidence across unrelated files without context.
 
 #### Questions
 
 - None.
 
-<a id="principle-automatic-realization-registration-makes-plan-multi-pass"></a>
+<a id="principle-preserve-documented-execution"></a>
 
-### principle-automatic-realization-registration-makes-plan-multi-pass: Automatic Realization Registration Makes a Plan Multi-Pass
+### principle-preserve-documented-execution: Preserve Execution as Evidence and Documentation
 
 #### Statement
 
-Machine of Goals should compute a plan as multi-pass when an automatic realization of the plan or one of its subplans is registered.
+Record actual execution so that the same materials both substantiate results and explain how they were obtained.
 
 #### Derived From
 
-- Source concept(s): [Computed Plan Style](./machine-of-goals-concepts.md#concept-computed-plan-style), [Plan Realization Registry](./machine-of-goals-concepts.md#concept-plan-realization-registry), [Executable Collapsed Plan](./machine-of-goals-concepts.md#concept-executable-collapsed-plan)
-- Source relationship, boundary, or tension: repeatable automation changes the plan lifecycle before its first successful run
-- Source idea support: integrated mini-idea [`single-pass-and-multi-pass-plans`](./single-pass-and-multi-pass-plans/single-pass-and-multi-pass-plans.md)
+- Source concept(s): [Stage Execution Record](./machine-of-goals-concepts.md#concept-stage-execution-record), [Documented Plan Realization](./machine-of-goals-concepts.md#concept-documented-plan-realization), [Success Criteria](./machine-of-goals-concepts.md#concept-success-criteria)
+- Source relationship, boundary, or tension: factual proof and readable documentation should be preserved together
+- Source idea support: `Summary`, `Raw Description`, `Assumptions`, manual walkthrough example
 - Explicit or inferred: explicit
 
 #### Rationale
 
-Registration makes an automatic realization available for selection and therefore creates the need for repeated execution, refinement, import, and plan feedback. Waiting for successful validation would keep the plan in the wrong workflow precisely while the realization is being tested and improved.
+A stage account with input, actions, output, and supporting evidence lets another person inspect the result and follow the experience. Treating the account as disposable operational logging would discard the very material needed for verification and reuse.
 
 #### Implications Without Implementation
 
-- Creating an implementation file does not by itself change plan style.
-- Registration changes the style immediately from single-pass to multi-pass.
-- A registered realization may remain unvalidated or require alignment review.
-- Multi-pass workflow supports later changes to the plan or realization based on execution experience.
-- Multi-pass plans may be imported into another project together with their goal, paths, realizations, and validation contracts.
+- Keep each stage account focused on actual input state, performed actions, and observed output state.
+- Place checks, deviations, commands, and evidence where they explain those three parts.
+- Preserve corrected or superseded generated commands in order and distinguish reports, observations, and checks.
+- Retain useful walkthroughs and evidence according to their verification and documentary value.
 
 #### Boundaries
 
-- Computed style does not certify realization readiness or correctness.
-- Manual and interactive realization alone do not make the plan multi-pass under this rule.
-- Registration does not authorize automatic execution outside user-approved boundaries.
+- An expected output or completed marker alone is not evidence.
+- Automatic modules may emit ordinary logs without narrating every action.
+- Readable records need not reproduce an entire conversation or expose protected inputs.
 
 #### Anti-Patterns
 
-- Computing multi-pass from the mere presence of a script file.
-- Waiting for the first successful run before enabling the multi-pass workflow.
-- Treating `multi-pass` as a readiness or alignment status.
-
-#### Questions
-
-- How should style be recomputed when the final active automatic realization is unregistered or retired?
-
-<a id="principle-approved-realization-has-artifact-before-runs"></a>
-
-### principle-approved-realization-has-artifact-before-runs: Approved Realization Has an Artifact Before Runs
-
-#### Statement
-
-Machine of Goals should create a persistent realization artifact for every user-approved manual or automatic realization before creating any run from it.
-
-#### Derived From
-
-- Source concept(s): [Plan Realization Artifact](./machine-of-goals-concepts.md#concept-plan-realization-artifact), [Working Plan Run](./machine-of-goals-concepts.md#concept-working-plan-run), [Contextual Artifact Navigation](./machine-of-goals-concepts.md#concept-contextual-artifact-navigation)
-- Source relationship, boundary, or tension: a decision selects how to proceed, while repeated or manual execution needs a stable parent context from which concrete attempts are discoverable
-- Source idea support: user-provided artifact-lifecycle requirement
-- Explicit or inferred: explicit
-
-#### Rationale
-
-Without a realization artifact, the approved choice exists only as a registry row and decision while its concrete attempts are scattered under `run/`. A persistent artifact makes the chosen realization understandable before execution and provides one durable place for its contract and retained run links.
-
-#### Implications Without Implementation
-
-- Approval of a path and realization materializes `realizations/<realization-record-id>.md` before the first run.
-- Manual, interactive, partial-automation, automatic, and external-handoff realizations follow the same artifact rule.
-- Every run links back to its realization artifact, and the artifact links every active, pinned, or retained run.
-- Removing a run through retention also removes its link from the realization artifact without deleting aggregate statistics.
-
-#### Boundaries
-
-- The realization artifact does not replace the realization decision, implementation source, plan registry, or run log.
-- Artifact creation does not authorize execution or prove readiness.
-- The run list is retention-bounded; the realization artifact itself is persistent while its registry record is retained.
-
-#### Anti-Patterns
-
-- Creating a run directly from a decision or registry row without a realization artifact.
-- Treating an implementation file as the realization artifact merely because it exists.
-- Linking runs only from a shared goal-wide index with no realization-specific parent context.
+- Deleting documentary walkthroughs by a default short working-log retention limit.
+- Rewriting failed actions out of the record after correcting them.
+- Publishing a claimed outcome with no connection to its supporting material.
 
 #### Questions
 
 - None.
 
-<a id="principle-working-logs-are-bounded-statistics-persist"></a>
+<a id="principle-model-changes-start-successor-realizations"></a>
 
-### principle-working-logs-are-bounded-statistics-persist: Working Logs Are Bounded, Statistics Persist
+### principle-model-changes-start-successor-realizations: Model Changes Start Successor Realizations
 
 #### Statement
 
-Machine of Goals should retain only a bounded recent set of working run logs while preserving aggregate realization statistics in `plan.md` and contextual retained-run links in each realization artifact.
+End the current realization when its model changes and continue in a linked successor, inheriting stage records and completed results only where they remain applicable.
 
 #### Derived From
 
-- Source concept(s): [Working Plan Run](./machine-of-goals-concepts.md#concept-working-plan-run), [Plan Realization Registry](./machine-of-goals-concepts.md#concept-plan-realization-registry), [Plan Cost and Efficiency](./machine-of-goals-concepts.md#concept-plan-cost-and-efficiency)
-- Source relationship, boundary, or tension: current execution needs an understandable working log without creating permanent unbounded operational history
-- Source idea support: integrated mini-idea [`single-pass-and-multi-pass-plans`](./single-pass-and-multi-pass-plans/single-pass-and-multi-pass-plans.md)
+- Source concept(s): [Realization Succession and Inheritance](./machine-of-goals-concepts.md#concept-realization-succession-and-inheritance), [Plan Model Version](./machine-of-goals-concepts.md#concept-plan-model-version), [Stage Execution Record](./machine-of-goals-concepts.md#concept-stage-execution-record)
+- Source relationship, boundary, or tension: model improvement must preserve both factual continuity and the validity of carried-forward results
+- Source idea support: `Raw Description`, `Assumptions`, branch evolution example
 - Explicit or inferred: explicit
 
 #### Rationale
 
-Recent run logs explain how the plan is being realized here and now. Long-term comparison needs only compact statistics showing which realizations exist, how often they have run, when they last ran, and how the latest run ended.
+One realization should not silently change what model its actions are judged against. A successor preserves useful work while making the model boundary explicit. Applicability depends on inputs and dependencies as well as unchanged stage text.
 
 #### Implications Without Implementation
 
-- Each execution creates `run/<realization-record-id>--<YYYYMMDDTHHMMSSZ>.md` from an existing realization artifact.
-- Run creation increments run count, records latest run time, and sets latest
-  result to `running`; terminal validation replaces the result without a second
-  increment.
-- The normal retained depth is the latest three to five runs per realization.
-- `plan.md` stores aggregate run count, latest run time, and latest result
-  without links to individual run files. Its Plan Map may additionally mirror
-  emoji progress from one explicitly linked run when revision and topology
-  match.
-- `realizations/<realization-record-id>.md` links every active, pinned, or retained run for that realization.
-- Every command generated for a human to execute while manually performing a
-  plan stage is appended to the current run in generation order before or when
-  it is presented. A corrected or replacement command is a new entry rather
-  than an overwrite of the earlier command.
-- Removing old working logs does not reset aggregate statistics or remove product artifacts and external evidence.
+- Record the closure reason and predecessor-successor relationship in the main documents.
+- Identify the updated model in the successor even when it is a compatible update in the same file.
+- Carry unchanged stage records and evidence forward; retain completed status after checking dependencies and current conditions.
+- Include inherited materials in a readable retained walkthrough.
 
 #### Boundaries
 
-- Aggregate statistics do not replace the validation record of an active run.
-- The retention rule applies to working logs, not automatically to outputs created by execution.
-- The manual-command requirement preserves generated instructions, not literal
-  secrets and not a complete trace of commands executed inside an automatic
-  realization.
-- The principle does not require individual run links in the aggregate plan registry.
-- The run remains the authoritative execution record; the Plan Map projection
-  is presentation-only and immutable revision snapshots never receive it.
+- Inherited facts are not newly performed actions.
+- Unchanged wording does not prove unchanged applicability.
+- Realization succession does not imply a new full model snapshot for every refinement.
 
 #### Anti-Patterns
 
-- Keeping an unbounded file per execution as permanent plan history.
-- Computing cumulative run count only from files that remain under `run/`.
-- Storing mutable run checkboxes or authoritative execution details directly in
-  `plan.md` instead of the run.
-- Mirroring progress from a different plan revision or changing an immutable
-  revision snapshot to show later execution state.
-- Giving the user a command for manual stage execution without first recording
-  the same safe-to-share command in the current run.
-- Replacing a failed generated command in place and thereby losing what the
-  user was previously instructed to run.
+- Changing the model identity of an existing realization in place.
+- Marking an inherited stage complete after its required inputs changed without rechecking.
+- Requiring readers to traverse every predecessor to understand a retained example.
+
+#### Questions
+
+- None.
+
+<a id="principle-repeatability-independent-of-automation"></a>
+
+### principle-repeatability-independent-of-automation: Repeatability Is Independent of Automation
+
+#### Statement
+
+Treat repeatability and degree of automation as separate concerns; manual walkthroughs can support repeated use, and automated actions can be one-time.
+
+#### Derived From
+
+- Source concept(s): [Interactive and Automatic Execution](./machine-of-goals-concepts.md#concept-interactive-and-automatic-execution), [Documented Plan Realization](./machine-of-goals-concepts.md#concept-documented-plan-realization), [Plan Exchange](./machine-of-goals-concepts.md#concept-plan-exchange)
+- Source relationship, boundary, or tension: reuse depends on understandable models and experience, not on registering an automatic mechanism
+- Source idea support: `Raw Description`, `Assumptions`, `Signals of Value`
+- Explicit or inferred: explicit
+
+#### Rationale
+
+A reference manual walkthrough can help many people achieve a goal. Requiring automation before supporting repetition or exchange would exclude the social and interactive experience at the center of the idea.
+
+#### Implications Without Implementation
+
+- Allow later users to begin their own walkthroughs from a shared reference.
+- Evaluate a reusable skill, program, and manual example according to their actual role.
+- Keep user-selected execution form distinct from model identity and version.
+
+#### Boundaries
+
+- Repeatability does not establish universal applicability.
+- This principle does not require every execution to be repeated or collapsed.
+
+#### Anti-Patterns
+
+- Requiring an automatic realization before allowing reuse or export.
+- Assuming that a script necessarily represents repeated use.
+
+#### Questions
+
+- None.
+
+<a id="principle-automation-under-user-control"></a>
+
+### principle-automation-under-user-control: Automation Under User Control
+
+#### Statement
+
+Offer interactive execution and optional collapsing according to user intent, and keep automated action within the boundaries selected by the user.
+
+#### Derived From
+
+- Source concept(s): [Interactive and Automatic Execution](./machine-of-goals-concepts.md#concept-interactive-and-automatic-execution), [Collapsed Plan Realization](./machine-of-goals-concepts.md#concept-collapsed-plan-realization), [Plan Explanation and Control](./machine-of-goals-concepts.md#concept-plan-explanation-and-control)
+- Source relationship, boundary, or tension: automation is useful while manual and social action remain first-class ways of achieving goals
+- Source idea support: `Summary`, `Raw Description`, `Assumptions`
+- Explicit or inferred: explicit
+
+#### Rationale
+
+The same model may support guided action, a skill, an executable module, or a mixture. User control determines the form and scope of execution; creating a reusable form does not require using it for every walkthrough.
+
+#### Implications Without Implementation
+
+- Keep the built-in manual flow available without requiring collapsing.
+- Collapse the model on request into a form suitable for its environment.
+- Preserve stop points, review, and clear coverage of automated actions.
+
+#### Boundaries
+
+- The principle does not require repeated confirmation for every action within already selected boundaries.
+- Full automation is possible where the goal and environment support it.
+
+#### Anti-Patterns
+
+- Collapsing or executing automatically as an unavoidable next stage.
+- Treating manual guidance as an inferior or invalid plan form.
+- Hiding which actions the program or agent will perform.
+
+#### Questions
+
+- None.
+
+<a id="principle-explanation-before-execution"></a>
+
+### principle-explanation-before-execution: Explanation Before Execution
+
+#### Statement
+
+Explain the selected stage through its input, proposed action, expected output, and check, using the state of already performed stages to justify the next transition.
+
+#### Derived From
+
+- Source concept(s): [Plan Explanation and Control](./machine-of-goals-concepts.md#concept-plan-explanation-and-control), [Plan as Transition Model](./machine-of-goals-concepts.md#concept-plan-as-transition-model), [Stage Execution Record](./machine-of-goals-concepts.md#concept-stage-execution-record)
+- Source relationship, boundary, or tension: controlled action depends on understanding the transition and separating expectation from observation
+- Source idea support: `Raw Description`, `Assumptions`, manual walkthrough example
+- Explicit or inferred: explicit
+
+#### Rationale
+
+The explanation tells a person what they are about to do and what evidence to bring back. It also makes mixed and automatic action interpretable. Actual results then guide the following transition.
+
+#### Implications Without Implementation
+
+- Use the realization state when explaining the next stage.
+- Keep expected output distinct from the output subsequently observed.
+- Allow a dry run to explain an action without performing it.
+
+#### Boundaries
+
+- Explanation is not an endless approval loop.
+- A dry run does not count as completed execution.
+- The entire system need not be documented anew before each stage.
+
+#### Anti-Patterns
+
+- Ignoring failed prerequisites when choosing the next action.
+- Presenting an anticipated result as a verified one.
+- Performing real actions during an explanatory dry run.
 
 #### Questions
 
@@ -445,37 +442,239 @@ Recent run logs explain how the plan is being realized here and now. Long-term c
 
 #### Statement
 
-A collapsed plan should receive its primary format according to the goal type, achievement environment, verification method, and expected form of result usage.
+Choose a requested collapsed realization according to the goal, achievement environment, verification method, and intended use.
 
 #### Derived From
 
-- Source concept(s): [Executable Collapsed Plan](./machine-of-goals-concepts.md#concept-executable-collapsed-plan), [Goal as Verifiable Target State](./machine-of-goals-concepts.md#concept-goal-as-verifiable-target-state), [Goal Artifact Context](./machine-of-goals-concepts.md#concept-goal-artifact-context)
-- Source relationship, boundary, or tension: Double should not have a single universal collapsed-plan format
-- Source idea support: `Raw Description`, `Assumptions`, `Signals of Value`
+- Source concept(s): [Collapsed Plan Realization](./machine-of-goals-concepts.md#concept-collapsed-plan-realization), [Interactive and Automatic Execution](./machine-of-goals-concepts.md#concept-interactive-and-automatic-execution), [Goal Artifact Context](./machine-of-goals-concepts.md#concept-goal-artifact-context)
+- Source relationship, boundary, or tension: a reusable agent guide and an executable module support different kinds of action
+- Source idea support: `Summary`, `Raw Description`, `Assumptions`
 - Explicit or inferred: explicit
 
 #### Rationale
 
-Goals differ by execution environment. For a computational environment, the natural format may be a script; for design, SDD; for social goals, Markdown with export capability to a website or another readable format. A universal format would distort the specificity of the goal and verification.
+A skill can guide a person through computer and social stages; an executable module can perform actions available in its environment. A mixed realization can combine them without forcing every stage into one format.
 
 #### Implications Without Implementation
 
-- Future stages should choose the collapsed-plan format by domain.
-- SDD may be a primary format for design goals without becoming an internal concept of Machine of Goals.
-- Markdown, scripts, workflows, specs, and site-exportable artifacts should be treated as possible forms, not as one mandatory form.
-- The principle does not define the full list of supported formats.
+- Preserve the model connection, relevant checks, and documentation links in each form.
+- Make clear which parts remain human actions.
+- Keep publication of a walkthrough distinct from creating a reusable realization.
 
 #### Boundaries
 
-- The principle does not forbid having a default format for a concrete workflow.
-- The principle does not claim that every plan should be collapsed.
-- The principle does not turn the format into a criterion of goal achievement.
+- Not every goal requires collapsing.
+- No single skill or program format fits every environment.
+- Compatibility with an external design methodology does not make that methodology mandatory.
 
 #### Anti-Patterns
 
-- Requiring one collapsed-plan format for all types of goals.
-- Choosing the format for the convenience of the machine rather than by the achievement environment and result verification.
-- Treating SDD as a universal format for any goal.
+- Requiring a shell script for a social procedure.
+- Calling any exported document an executable module.
+- Choosing a format while losing checks or human decision boundaries.
+
+#### Questions
+
+- None.
+
+<a id="principle-goal-and-plan-must-not-be-separated"></a>
+
+### principle-goal-and-plan-must-not-be-separated: Goal and Plan Must Not Be Separated
+
+#### Statement
+
+Keep a reusable or shared plan connected to its goal, initial conditions, success criteria, and the context of any accompanying execution examples.
+
+#### Derived From
+
+- Source concept(s): [Plan Exchange](./machine-of-goals-concepts.md#concept-plan-exchange), [Goal Artifact Context](./machine-of-goals-concepts.md#concept-goal-artifact-context), [Shared Execution Experience](./machine-of-goals-concepts.md#concept-shared-execution-experience)
+- Source relationship, boundary, or tension: experience can be transferred but its applicability depends on the original purpose and conditions
+- Source idea support: `Summary`, `Raw Description`, `Assumptions`, sharing example
+- Explicit or inferred: explicit
+
+#### Rationale
+
+A recipient needs both the model of achievement and the circumstances that make the reference understandable. The connection prevents a successful example from being mistaken for a universal procedure.
+
+#### Implications Without Implementation
+
+- Share selected branch models and examples with their goal and verification context.
+- Keep reference and recipient walkthroughs distinguishable.
+- Check applicability when adapting a plan or subgoal to a new context.
+
+#### Boundaries
+
+- The original goal need not be copied without adaptation.
+- A prepared package may select useful materials rather than include all private history.
+
+#### Anti-Patterns
+
+- Publishing a bare sequence without the goal or result criteria.
+- Treating reference success as sufficient proof that another person can follow it unchanged.
+
+#### Questions
+
+- None.
+
+<a id="principle-prepare-sharing-copies-before-publication"></a>
+
+### principle-prepare-sharing-copies-before-publication: Prepare Sharing Copies Before Publication
+
+#### Statement
+
+Prepare selected materials for their audience through personal-data identification, cleanup of sharing copies, and review while keeping private originals separate.
+
+#### Derived From
+
+- Source concept(s): [Publication Preparation](./machine-of-goals-concepts.md#concept-publication-preparation), [Stage Execution Record](./machine-of-goals-concepts.md#concept-stage-execution-record), [Plan Exchange](./machine-of-goals-concepts.md#concept-plan-exchange)
+- Source relationship, boundary, or tension: the same evidence supports verification and documentation but may contain personal data
+- Source idea support: `Summary`, `Raw Description`, `Assumptions`, manual sharing example
+- Explicit or inferred: explicit
+
+#### Rationale
+
+A walkthrough already explains execution. Sharing it requires deliberate preparation across the goal, model, records, and attachments so that useful explanation survives without exposing private source material.
+
+#### Implications Without Implementation
+
+- Select the material appropriate for the intended publication or exchange.
+- Review personal data in text, images, attached documents, filenames, metadata, and links.
+- Preserve stage-to-result relationships in cleaned copies and make verification limits clear.
+- Review the resulting package, including links that could reveal private originals.
+
+#### Boundaries
+
+- Cleanup tools, publishing platforms, and export formats are not prescribed here.
+- An anonymized illustration is not automatically equivalent to the original evidence.
+
+#### Anti-Patterns
+
+- Publishing raw attachments because the surrounding prose is clean.
+- Editing away private originals instead of preparing separate sharing copies.
+- Leaving a public link that exposes the original private document.
+
+#### Questions
+
+- None.
+
+<a id="principle-use-divergence-to-refine-shared-models"></a>
+
+### principle-use-divergence-to-refine-shared-models: Use Divergence to Refine Shared Models
+
+#### Statement
+
+Treat differences between reference and later walkthroughs as concrete evidence for group discussion about model correctness, applicability, and environment.
+
+#### Derived From
+
+- Source concept(s): [Shared Execution Experience](./machine-of-goals-concepts.md#concept-shared-execution-experience), [Stage Execution Record](./machine-of-goals-concepts.md#concept-stage-execution-record), [Plan as Transition Model](./machine-of-goals-concepts.md#concept-plan-as-transition-model)
+- Source relationship, boundary, or tension: a reusable example carries experience while another execution may encounter different conditions
+- Source idea support: `Raw Description`, `Signals of Value`, sharing example
+- Explicit or inferred: explicit
+
+#### Rationale
+
+A stage-specific difference makes the issue understandable to the author or group. Comparing conditions, actions, and results can improve the model without erasing the experience that revealed the difference.
+
+#### Implications Without Implementation
+
+- Locate the difference by stage and preserve its actual conditions, action, expected result, and observed result.
+- Use the available evidence to discuss possible causes.
+- Refine the model or clarify its limits while preserving the facts of each walkthrough.
+
+#### Boundaries
+
+- A difference does not automatically establish fault in the person or plan.
+- No particular issue tracker or reporting service is required.
+
+#### Anti-Patterns
+
+- Reporting only that the plan does not work, with no execution context.
+- Rewriting the reference example to hide a later conflict.
+- Applying every local workaround to the shared model without considering conditions.
+
+#### Questions
+
+- None.
+
+<a id="principle-clean-branches-on-request"></a>
+
+### principle-clean-branches-on-request: Clean Branches on Request
+
+#### Statement
+
+Reduce branch history only on explicit request, retaining a selected model and the realizations, evidence, inherited material, and historical context needed for a self-contained useful set.
+
+#### Derived From
+
+- Source concept(s): [Branch Cleanup](./machine-of-goals-concepts.md#concept-branch-cleanup), [Plan Branch](./machine-of-goals-concepts.md#concept-plan-branch), [Realization Succession and Inheritance](./machine-of-goals-concepts.md#concept-realization-succession-and-inheritance)
+- Source relationship, boundary, or tension: manageable working material and readable documentation must coexist with factual integrity
+- Source idea support: `Summary`, `Raw Description`, `Assumptions`, branch cleanup example
+- Explicit or inferred: explicit
+
+#### Rationale
+
+Keeping every version indefinitely can obscure the usable plan. Selection allows obsolete artifacts to be removed while retaining valuable examples and enough context to interpret them honestly.
+
+#### Implications Without Implementation
+
+- Select the retained version within the requested branch.
+- Include useful inherited records before removing their unneeded predecessors.
+- Keep necessary original model context for a retained historical realization.
+- Leave independent branches and coherent retained references intact.
+
+#### Boundaries
+
+- A version increase is not itself a cleanup request.
+- Latest model and most useful execution example need not be the same selection.
+- A historical execution does not become an execution of the new version by relabeling.
+
+#### Anti-Patterns
+
+- Deleting history automatically when a version number increases.
+- Removing a source still needed to understand a retained walkthrough.
+- Keeping a predecessor link after deleting its target without resolving the retained context.
+
+#### Questions
+
+- None.
+
+<a id="principle-navigation-follows-context"></a>
+
+### principle-navigation-follows-context: Navigation Follows Context
+
+#### Statement
+
+Place useful Markdown links where relationships are explained and keep the realization map a direct route to its stages, without multiplying indexes or repeating global menus.
+
+#### Derived From
+
+- Source concept(s): [Contextual Artifact Navigation](./machine-of-goals-concepts.md#concept-contextual-artifact-navigation), [Goal Artifact Context](./machine-of-goals-concepts.md#concept-goal-artifact-context), [Documented Plan Realization](./machine-of-goals-concepts.md#concept-documented-plan-realization)
+- Source relationship, boundary, or tension: structured provenance and human readability serve different but connected needs
+- Source idea support: `Raw Description`, `Assumptions`, `Notes`
+- Explicit or inferred: explicit
+
+#### Rationale
+
+Frontmatter identifies sources for processing, while links in the relevant context let a reader inspect the model, stage, or evidence. The same arrangement supports a documentation overview and stage pages.
+
+#### Implications Without Implementation
+
+- Keep branch, version, and model identity understandable beside execution records.
+- Use direct stage links and contextual evidence links.
+- Keep inherited documentation readable without requiring a chain of predecessor lookups.
+- Distinguish direct cross-project reference from import and export.
+
+#### Boundaries
+
+- Every document need not link to every other document.
+- A global registry or a standalone metadata file is not required for local navigation.
+
+#### Anti-Patterns
+
+- Repeating a universal menu in every stage file.
+- Providing only frontmatter paths where a person needs a navigable link.
+- Linking an old realization only to a mutable current model with no execution context.
 
 #### Questions
 
@@ -519,58 +718,6 @@ Subgoals make it possible to work with goals that cannot be achieved through one
 - Mixing all subgoals into one large plan without visible structure.
 - Reusing a subgoal without its inputs, outputs, and parent purpose.
 - Creating a separate catalog for any small step that is not a stable subgoal.
-
-#### Questions
-
-- None.
-
-<a id="principle-navigation-follows-context"></a>
-
-### principle-navigation-follows-context: Navigation Follows Context
-
-#### Statement
-
-Machine of Goals should place each human-facing Markdown link where the
-relationship it represents is explained, while preserving an understandable
-route to the source goal and pinning exact revisions at execution time.
-
-#### Derived From
-
-- Source concept(s): [Contextual Artifact Navigation](./machine-of-goals-concepts.md#concept-contextual-artifact-navigation), [Goal Artifact Context](./machine-of-goals-concepts.md#concept-goal-artifact-context), [Working Plan Run](./machine-of-goals-concepts.md#concept-working-plan-run)
-- Source relationship, boundary, or tension: navigation must remain useful in complex and cross-project goal graphs without becoming repetitive document chrome
-- Source idea support: `Raw Description`, `Assumptions`, `Notes`
-- Explicit or inferred: explicit
-
-#### Rationale
-
-A repeated global menu does not tell the reader why two artifacts are related.
-Contextual links make the relationship visible where a goal, path, subplan,
-realization, decision, revision, run, or evidence artifact is being interpreted.
-Pinned execution links prevent mutable current files from rewriting the meaning
-of an earlier decision or run.
-
-#### Implications Without Implementation
-
-- Artifact templates should place links inside their existing source, plan,
-  decision, execution, and evidence sections.
-- Frontmatter references remain machine-readable and do not replace links in
-  prose or tables.
-- Direct cross-project reference is distinct from import and export.
-- Provider-side consumer indexes may be computed later and are not required for
-  direct reuse.
-
-#### Boundaries
-
-- Not every artifact must link to every neighboring artifact.
-- The principle does not require a universal navigation block.
-- A link to `current` is not sufficient evidence of the revision used by a run.
-
-#### Anti-Patterns
-
-- Repeating the same navigation menu in every artifact.
-- Listing paths in backticks when a reader needs to follow them.
-- Linking a run only to a mutable `plan.md` without its executed revision.
-- Treating a cross-project link as an implicit import.
 
 #### Questions
 
@@ -620,36 +767,37 @@ Plan comparison requires measurable grounds. Basic metrics - the number of succe
 
 ## 4. Trade-offs and Tensions
 
-- `Automation` vs `user control`: the machine should strive toward automatic execution, but each launch requires automation boundaries selected by the user.
-- `Plan understandability` vs `plan incompleteness`: a plan may start incomplete if it preserves an understandable transition, but too weak an understanding blocks controlled realization.
-- `Reuse` vs `inseparability from goal`: useful plans and subgoals should be reused, but only together with purpose, inputs, outputs, and success criteria.
-- `Unified artifact order` vs `domain-dependent formats`: the goal catalog should be the structural anchor, but collapsed forms depend on the type of goal.
-- `Execution metrics` vs `domain-specific costs`: shared metrics are needed for comparison, but they should not displace the specific costs of a concrete goal.
-- `Bounded working history` vs `persistent learning`: detailed recent runs expire, while aggregate realization statistics and plan feedback remain.
-- `Contextual links` vs `global discovery`: local relationships stay readable,
-  while a future computed workspace index may be needed to discover all
-  consumers of a shared artifact.
+- `Model improvement` vs `execution continuity`: changing the model ends one realization, while applicable stage results carry into a successor.
+- `Compatible updates` vs `exact historical text`: MINOR and PATCH updates avoid another model file, but a version label alone cannot reconstruct overwritten text; stage records preserve actual execution context.
+- `Parallel alternatives` vs `simple selection`: independent branches may coexist, so current-version selection is branch-local.
+- `Inheritance` vs `changed conditions`: carrying evidence forward avoids repeated work, but changed inputs may require another check.
+- `Readable documentation` vs `factual detail`: stage records retain actions and proof while the main document stays a compact map.
+- `Private evidence` vs `shareable examples`: cleaned copies preserve explanation while making any loss of verifiability clear.
+- `Manageable history` vs `valuable experience`: requested cleanup removes unneeded artifacts without destroying retained examples or their context.
+- `Reuse` vs `applicability`: the goal, conditions, checks, and divergence evidence remain meaningful when another person follows the model.
+- `Automation` vs `human action`: skills, programs, and manual guidance can coexist; user intent and the environment determine their roles.
+- `Common execution metrics` vs `domain-specific cost`: measurable experience supports comparison without reducing efficiency to automation, money, or time alone.
 
 ## 5. Candidate Inputs for Future Stages
 
-- Design the Machine of Goals workflow around the transition `Goal Capture -> Path Discovery -> Plan Synthesis -> Plan Automation`.
-- Define the goal artifact contract: target state, initial state, success criteria, constraints, realization working catalog.
-- Define the plan artifact contract: `plan.md`, transition graph, selectable paths and subplans, checks, stop points, and validation states.
-- Define `path-options.md` as the living catalog of achievement paths and `plan.md` section 10 as the realization registry, computed-style input, and aggregate execution statistics source.
-- Create a persistent realization artifact for every approved manual or automatic realization before its first run.
-- Define the bounded `run/` working-log contract and retention policy.
-- Define the subgoal artifact contract: separate catalog, subplan, inputs, outputs, completion criteria, and connection to the parent goal.
-- Define a dry run protocol for agentic execution without real actions.
-- Define the policy for choosing execution mode: up to a stage, by a list of stages, fully controlled.
-- Define the mapping from goal types to collapsed-plan formats: scripts, SDD, Markdown export, workflow, agent runbook.
-- Define rules for linking the goal catalog and the realization working catalog.
-- Define contextual Markdown link requirements, direct cross-project
-  references, revision pinning, and run-index maintenance.
+- A flow from goal and path discovery through the model, execution choice, concrete execution, and result validation.
+- Branch-local identity and model compatibility criteria, with major-version files and Markdown frontmatter.
+- A realization start and model-change boundary, plus applicability checks for inherited results.
+- A compact stage map and three-part stage documents with directly associated evidence.
+- On-request collapsing into AI-agent skills, executable modules, and mixed forms that preserve model checks and links.
+- Preparation of selected sharing copies through personal-data cleanup and package review.
+- Export of a goal with selected branch models and reference walkthroughs, and comparison with later executions.
+- Explicit branch cleanup that retains self-contained documentary context.
+- Contextual navigation and subgoal reuse without additional mandatory index layers.
 
 ## 6. Rejected or Deferred Candidate Principles
 
-- `All goals should be fully automatable`: rejected, because the source explicitly preserves manual, interactive, and partially automatic execution.
-- `Double should have one unified collapsed-plan format`: rejected, because the format depends on the goal type and achievement environment.
-- `A plan can be reused as an independent universal mechanism`: rejected, because the plan is inseparable from the goal and target context.
-- `A subgoal always requires a full separate Machine of Goals workflow`: deferred/rejected, because a subgoal should have a catalog and subplan, but not necessarily a full separate pass.
-- `Plan cost can be expressed by one universal metric`: rejected, because there are basic execution metrics, but domain-specific criteria are clarified during work with plans.
+- `Every goal should be fully automated`: rejected; manual, social, and mixed execution are first-class forms.
+- `Repeatability requires registered automation`: rejected; a manual reference can support repeated use.
+- `Every model edit requires a separate snapshot`: rejected; compatible updates can stay in one file while realization records preserve execution facts.
+- `Adding a stage is always compatible`: rejected; a prerequisite may invalidate earlier obligations or results.
+- `A successful reference guarantees the next result`: rejected; conditions and environments can differ.
+- `Every old artifact must be retained forever`: rejected; explicit cleanup can remove unneeded history.
+- `A newer version automatically makes all earlier examples obsolete`: rejected; retained examples are selected for their actual value and context.
+- `Every goal uses one universal collapsed format`: rejected; agent guidance and executable action differ by environment and purpose.
+- `One cleanup tool or publishing platform is mandatory`: deferred; the idea specifies preparation and review without choosing their implementation.
