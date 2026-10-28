@@ -5,7 +5,7 @@ description: >
   Use this skill when the user wants to formulate, clarify, inspect, plan,
   realize, validate, import, export, split, or continue a goal through the
   Machine of Goals. Trigger on goal artifacts, subgoals, path discovery, plan
-  synthesis, registered realizations, computed plan style, working plan runs,
+  synthesis, documented realizations, stage evidence, optional skills/actions,
   validation, plan exchange, reusable plans, or collapsed plans. Trigger and
   route to `double-agent` when the user asks to change Machine of Goals
   operating artifacts under `.double/`. Do not trigger on casual mentions of
@@ -39,7 +39,7 @@ registries, evidence catalogs, or companion documents for convenience. If the
 workflow provides no artifact for a piece of process information, record it in
 the appropriate existing artifact section instead of creating a new document.
 In particular, link screenshots and other validation evidence directly from
-the relevant plan-run stage or validation section; do not introduce a separate
+the relevant realization stage or Result section; do not introduce a separate
 evidence index unless the canonical workflow explicitly provides for one.
 
 Distinguish process artifacts from the actual deliverables of an approved
@@ -65,9 +65,9 @@ including:
 - synthesizing or revising a plan
 - choosing a realization decision
 - realizing plan stages
-- working with registered plan realizations, computed plan style, current plan
-  runs, or aggregate realization statistics
-- validating current run results or overall goal achievement
+- working with documented realizations, stage evidence or existing collapsed
+  skills and automated actions
+- validating realization stage results or overall goal achievement
 - importing an existing plan, analog, runbook, workflow, or reusable fragment
 - exporting a plan package, checklist, runbook, workflow,
   specification, or collapsed plan
@@ -97,7 +97,7 @@ workflow agent.
 
 Example:
 
-> I can treat this as a Machine of Goals run and inspect the current goal state.
+> I can treat this as a Machine of Goals workflow and inspect the current goal state.
 > Shall I start from the workflow entry protocol?
 
 ## Entry Protocol
@@ -147,19 +147,38 @@ is a technical role, not a replacement display name. Preserve the distinct
 metadata, templates and storage contracts below.
 
 During `03-plan-synthesis`, produce only `plan-model` from
-`plan-model-template`. Manual/interactive models are `plan-model-<branch>.md`;
-other modes retain the editable `plan.md` shape. During step 04, present exact
-model content, choices, trade-offs, entry and boundaries; obtain explicit
-approval and preserve the approved content digest/decision in the conversation.
+`plan-model-template`, stored as `<goal-directory>/plan.md` by default.
+Generate one short human-readable word as `id`, unique within the goal directory,
+for every new plan and always write it in frontmatter. The word must be derived
+from the plan's context: jointly express its subject, core meaning and goal in
+a single word, distinguishing it from other variants. Use lowercase English
+letters only; on collision choose another word combining all three concepts.
+The plan has only `id`; its root anchor equals that value. Revisions and frozen
+copies retain it, with exact paths, revisions/versions and digests identifying
+copies. `plan-id` in a referencing artifact points to this plan `id`; it is not
+an additional identity field on the plan. Independent parallel variants use
+`plan-<id>.md`; author variants use `plan<owner_id>.md` with the actual author's
+`owner-id`, without a hyphen after `plan`. Discovery may identify variants before
+synthesis; no earlier default plan or major divergence is required. Record each
+actual plan in the goal table, preserving existing files and rows. Paths/subplans
+may remain inside one plan; parallel stages or different execution media alone
+do not create separate plans.
+During step 04, show a contextual Markdown link to the actual current plan
+file and explain choices, trade-offs, entry and boundaries. Ask for approval
+of that linked file's current contents, selection and boundaries. Keep SHA-256
+as internal verification evidence computed before the request and rechecked
+at start; do not show it in approval questions, titles, suggested answers or
+normal review summaries. Retain the internal baseline with the user decision
+in existing recoverable context; create no extra checksum/approval artifact.
 Every model edit invalidates approval for future execution. If start is deferred,
 leave only the model. Never create an execution plan, snapshot, realization,
-registration row, committed decision file, run or index during steps 03 or 04.
+registration row or separate decision file during steps 03 or 04.
 
-Only at the authorized start of step 05, recheck exact approval/content and
-freeze `realizations/<start>/plan-v1.md` from `plan-template`, then create
+Only at the authorized manual start of step 05, recheck exact approval/content and
+freeze `_realizations/<start>/plan-v1.md` from `plan-template`, then create
 `realization.md`. Stages and the realization link this immutable local plan.
-Other-mode registration, snapshot and decision creation likewise wait for this
-start; their existing automation/run mechanism and legacy names remain supported.
+A collapsed skill/action creates no Machine of Goals execution record when
+invoked; follow its applicable checks, permissions and stop points.
 Do not require executor files to finish review. See the canonical
 [all-mode boundary](../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-model-execution-boundary).
 
@@ -248,12 +267,24 @@ validation flow.
   A newly created frozen plan records `plan-template` and producer
   `machine-of-goals/plan-realization-agent`. The source model keeps its own
   model identity, template and synthesis producer unchanged.
-- Manual/interactive models may have independent named branches and contain no
-  progress or registry. `path-options.md` links the editable models and does
-  not become an execution/evidence index. Link only files that already exist.
-- At authorized start, freeze complete approved content and rebase links
+- Every plan contains expected transitions, with no execution progress,
+  acceptance, execution registry or statistics. Its
+  logical `branch` is distinct from selectable paths/subplans inside it.
+  The goal table links every actual `plan.md`, `plan-<id>.md` or
+  `plan<owner_id>.md`; omit a default row when no ordinary plan exists.
+  `path-options.md`, approval and frozen-plan/realization provenance link actual
+  selected file/anchors; never precreate files or hypothetical links.
+  See the canonical filename rule.
+- At authorized manual start, freeze complete approved content and rebase links
   without altering conditions/actions. Record the actual approved source hash
   and frozen-plan hash separately in the realization, with actual time/timezone.
+- Render each realization Stage Map State cell as a single emoji under the
+  workflow's Realization Progress Emojis rule. Keep the explanatory legend
+  above the map; omit state names in cells and duplicate text-status columns.
+  Prose progress summaries may add short labels. Legend: ⚪ pending, 🔄 in progress,
+  🟠 awaiting verification, ✅ completed, 🟡 partial, ⛔ blocked, ❌ failed,
+  🛠️ needs revision, ➖ not selected. Only verified/accepted outputs permit ✅;
+  keep textual metadata unchanged and never project progress into either plan.
 - Frozen plans remain immutable. Mutable current-stage, actions, progress,
   evidence and acceptance belong to the realization and three-part stage records.
   Capture stage contracts from that plan; verify input before action and output
@@ -263,20 +294,18 @@ validation flow.
   and requires renewed review plus an authorized successor. Verify already
   observed outputs against their original plan; preserve all earlier plans and
   facts. Inherited results retain origin and need an applicability check.
-- Other-mode models retain their `plan.md` registry and computed style, local
-  immutable `realizations/plan-revision-<N>.md` baselines, persistent realization
-  records and decisions. Registration/statistics/progress are bookkeeping;
-  they do not revise approved transition content. Changed transition content,
-  even for an unstarted stage, requires renewed review and a new frozen baseline
-  at authorized execution start. Never silently adopt edits into an active run.
-- Other-mode runs retain captured contracts, safe generated-command history,
-  successful action/validation commands with context/results/replay constraints,
-  and exact baseline/realization links. Recorded commands do not authorize replay.
-- Other-mode registration of an automatic realization computes `multi-pass`;
-  file creation and first validation are separate. Keep aggregate statistics in
-  its legacy registry, retained run links in realization artifacts and run index,
-  and bounded three-to-five terminal-run retention after statistics update.
-  Never apply this cleanup to documented manual/interactive walkthroughs.
+- A collapsed realization is a skill or automated action, not a wrapper around
+  another execution journal. Invocation creates no Machine of Goals directory,
+  frozen-plan copy, realization document, stage record or index. Keep covered
+  initial/intermediate/final checks and authorization in the mechanism.
+- Repeatability is independent of automation. No computed plan style,
+  registration transition or cumulative invocation statistics are required.
+- Preserve safe generated instructions and useful successful commands in the
+  manual stage's Actions section, with context, observed results and replay
+  constraints. Recorded commands do not authorize replay or automatic execution.
+- Inspect manual progress by following the goal's existing links to the
+  applicable realization and reading its status/current-stage and Stage Map.
+  Do not guess activity solely from the newest filename or mirror its progress.
 - Import/export retains context, model/plan distinction, paths, automation
   definitions and validation contracts. Imported editable material remains a
   model; import never authorizes execution or a new local execution baseline.

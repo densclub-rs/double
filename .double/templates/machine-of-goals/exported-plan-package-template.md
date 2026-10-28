@@ -17,7 +17,9 @@ derived-from:
 Keep editable models and historical execution plans distinct. Omit optional
 execution links when no realization has started. Import reusable content as a
 local model; no new local execution plan is created until authorized step 05.
-The legacy registration/run package fields below apply only to other modes.
+Package the goal/model alone or selected documented realizations with their
+frozen plans and evidence. A reusable skill/action is optional existing material;
+exporting or invoking it creates no Machine of Goals execution history.
 
 ```md
 ---
@@ -31,8 +33,8 @@ artifact-language: <language-code-or-name-used-for-this-artifact>
 goal-id: <goal-id>
 plan-id: <plan-id>
 path-options-id: <path-options-id>
-registered-realizations:
-  - <realization-record-id-or-artifact>
+documented-realizations:
+  - <selected-existing-realization-path>
 package-type: <markdown-plan|runbook|checklist|workflow|sdd-spec|script-scaffold|handoff-package|exchange-package>
 derived-from:
   - <goal-artifact-id-or-path>
@@ -62,10 +64,6 @@ derived-from:
 - Source model: [<model-title>](<plan-model-artifact-link>)
 - Historical frozen plan: [<plan-title>](<plan-artifact-link>) when one exists
 - Selected paths and subplans: [<path-or-subplan-label>](<path-or-subplan-link>)
-- Computed style: <multi-pass>
-- Plan realization registry: [<realization-registry-label>](<plan-model-artifact-link>#realization-registry)
-- Realization alignment statuses:
-- Aggregate realization statistics:
 - Supporting validation evidence:
 
 ## 3. Reusable Material
@@ -74,8 +72,8 @@ derived-from:
 - Reusable subgoals: [<subgoal-title>](<subgoal-artifact-link>)
 - Reusable checks:
 - Reusable scripts / workflows / specs: [<artifact-label>](<artifact-link>)
-- Reusable registered realizations: [<realization-label>](<plan-model-artifact-link>#<realization-record-id>)
-- Persistent realization artifacts: [<realization-label>](<realization-artifact-link>)
+- Optional existing skill/action: [<mechanism-label>](<mechanism-link>)
+- Selected documented realizations: [<realization-label>](<realization-artifact-link>)
 - Required adaptations:
 
 ## 4. Context-Specific Assumptions
@@ -94,7 +92,7 @@ Portable sequence or package outline:
 
 - What has been validated:
 - What has not been validated:
-- Validation decision source: <realization-stage-record-or-run-validation-blocks>
+- Validation decision source: <realization-result-or-stage-record>
 - Supporting evidence links:
 - Known failure modes:
 
@@ -113,14 +111,13 @@ Portable sequence or package outline:
 
 ## 9. Plan Export Notes
 
-- Exported editable model: `plan-model-<branch>.md` (legacy other-mode `plan.md`)
+- Exported editable plan: `plan.md` with its original stable plan ID and anchor
 - Exported frozen plans: <existing-plan-paths-and-source-identities-only>
 - Exported path-options artifact: `path-options.md`
-- Exported realization registry: section 10 of `plan.md`
-- Exported registered realization records:
-- Exported persistent realization artifacts:
+- Selected documented realizations and stage evidence:
 - Required validation contracts: initial, intermediate, and final state checks
-- Working run logs under `run/` are excluded by default.
-- Include a run log only when the user explicitly selects it as temporary
-  diagnostic context; it does not become required permanent package history.
+- Include only the walkthroughs and evidence selected for this package.
+- Preserve source identities and facts; importing experience does not establish
+  execution in the receiving context. A requested new manual start freezes its
+  own approved plan; invocation of a collapsed mechanism creates no execution record.
 ```

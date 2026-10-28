@@ -23,14 +23,19 @@ derived-from:
   planned action. Step 03 and step 04 use `plan-model-template`; approving or
   deferring a model never creates a plan, realization directory or realization.
 - Recheck the approved model content digest, selected path, entry and boundaries
-  before creating `realizations/<YYYY-MM-DDTHH-mm-ss>/plan-v1.md`.
+  before creating `_realizations/<YYYY-MM-DDTHH-mm-ss>/plan-v1.md`.
+- Always include `id: <id>` in the frozen plan's frontmatter, copying
+  the source model's generated ID unchanged and using it as the root anchor.
+  Do not add a duplicate `plan-id` field or generate a different identity when
+  freezing, revising or starting a successor realization. The exact frozen
+  copy is identified by its path, version and digest together with this `id`.
 - Freeze the approved goal context, transition, complete stage contracts,
   dependencies, checks and control boundaries. Copy the model's substantive
   sections and stable stage anchors; add plan identity/provenance and rebase
   relative links for the destination. Verify semantic equality with the approved
   model, allowing only that metadata/link adaptation and explicit selection.
 - `plan-version: 1` names the first frozen plan in this realization directory;
-  it does not inherit `model-revision`. Each successor has its own directory
+  it does not inherit `plan-revision`. Each successor has its own directory
   and first frozen plan. Never increment a version to overwrite an existing plan.
 - Compute the frozen file digest after writing it; record it in the realization.
   Keep the approved source digest separately because rebasing/provenance changes
@@ -42,11 +47,19 @@ derived-from:
 - Omit unused optional fields. A plan is the approved content for one concrete
   realization, not an editable planning document or progress report.
 
+The example below uses the default source `plan.md`. For a parallel variant
+`plan-<id>.md` or author variant `plan<owner_id>.md`, use its actual relative
+source path and distinct plan anchor in provenance and navigation, preserving
+its logical branch and approved revision. Update `plan-model-artifact`,
+`derived-from` where present and the source-model body link together; never
+fall back to `plan.md` for a named variant. Do not create or rename the source
+merely to fill its branch field. Frozen execution filenames remain unchanged.
+
 ## Frozen Plan Shape
 
 ````md
 ---
-id: <realization-id>-plan-v1
+id: <id>
 kind: plan-artifact
 template-id: plan-template
 project-id: <stable-project-id>
@@ -57,20 +70,20 @@ goal-id: <goal-id>
 realization-id: <realization-id>
 branch: <branch-name>
 plan-version: 1
-plan-model-artifact: ../../plan-model-<branch>.md
-model-revision: <approved-model-revision>
+plan-model-artifact: ../../plan.md
+plan-revision: <approved-plan-revision>
 approved-model-content-hash: sha256:<actual-approved-source-file-digest>
 created-at: <actual-ISO8601-time-with-offset>
 derived-from:
-  - ../../plan-model-<branch>.md
+  - ../../plan.md
 ---
 
-<a id="<realization-id>-plan-v1"></a>
+<a id="<id>"></a>
 
 # Plan: <Goal Title> / <Branch>
 
 Goal: [<goal-title>](../../<goal-id>.md#<goal-id>)
-Source model: [<branch>](../../plan-model-<branch>.md#<model-id>)
+Source model: [<branch>](../../plan.md#<id>)
 
 ## Approved Selection
 
@@ -87,17 +100,3 @@ The final placeholder requires the complete approved content, including goal
 success criteria, every applicable stage and alternative, stable anchors,
 conditions, actions, checks and dependencies. A link to a mutable model alone
 is insufficient; this plan must be readable without recovering old model bytes.
-
-## Other Execution Modes
-
-Their existing snapshot filename is `realizations/plan-revision-<N>.md`.
-Create it only at the authorized start of step 05 from the approved other-mode
-model in `plan-model-template`. Assign a new plan ID, `kind: plan-artifact`,
-`template-id: plan-template` and
-`produced-by: machine-of-goals/plan-realization-agent`; include
-source model, exact approval digest, selection and boundaries. Preserve stable
-stage anchors and rebase links. Remove mutable registry rows, run statistics,
-displayed-run metadata, progress projection and change-log bookkeeping from the
-frozen plan. Its transition content remains the exact approved model content.
-Never revise it for progress or adopt later model edits without renewed review
-and a new frozen baseline. Existing user snapshots are not silently converted.

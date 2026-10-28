@@ -39,24 +39,30 @@ status: release-candidate
 ## Manual and Interactive Execution Routing
 
 The [Model and Realization Execution Rule](../../workflows/machine-of-goals/machine-of-goals-workflow.md#model-and-realization-execution-rule)
-is active for manual/interactive model preparation, review, execution, and
-validation. For the three agents below, this table supplies their input/output
-contracts in that route; the old run/registry fields in their retained entries
-apply only to other execution modes.
+governs the documented walkthrough. These producer contracts are authoritative;
+there is no alternate registration or execution-log shape.
 
 | Agent | Input | Output | Templates |
 | --- | --- | --- | --- |
-| `plan-synthesis-agent` | Goal, paths, branch models, exact content approval | `plan-model`; approved selection in conversation | `plan-model-template` |
-| `plan-realization-agent` | Approved model/digest and authorized start, or existing frozen plan/current stage | immutable `plan-artifact`, `realization-artifact`, `stage-realization`, evidence | `plan-template`, `realization-template` (first shape), `stage-realization-template` |
-| `plan-validation-agent` | Captured conditions, actual outputs, evidence/statements, goal criteria | Updated `stage-realization` and `realization-artifact` | `stage-realization-template`, `realization-template` (first shape) |
+| `plan-synthesis-agent` | Goal, paths, selected editable plan(s) under the filename rule, exact content approval | `plan-model`; approved selection in conversation | `plan-model-template` |
+| `plan-realization-agent` | Approved model/digest and authorized start, or existing frozen plan/current stage | immutable `plan-artifact`, `realization-artifact`, `stage-realization`, evidence | `plan-template`, `realization-template`, `stage-realization-template` |
+| `plan-validation-agent` | Captured conditions, actual outputs, evidence/statements, goal criteria | Updated `stage-realization` and `realization-artifact` | `stage-realization-template`, `realization-template` |
 
+Review links the actual current plan file and asks the user to approve its
+contents, selection and boundaries. Digests are internal verification evidence;
+never include them in approval questions, titles, choices or normal summaries.
 Steps 03–04 never produce executor files, even after model approval. Only the
 authorized start of step 05 materializes the frozen plan and realization.
-The main realization map owns current-stage/progress. Input checks precede
+The main realization map owns current-stage/progress. Its State cells use only
+emoji, explained by the legend above; do not repeat state names in cells or add
+a duplicate status column. User progress handoffs may add prose labels under the
+canonical [progress rule](../../workflows/machine-of-goals/machine-of-goals-workflow.md#realization-progress-emojis).
+Use 🟠 after action and ✅ only after output acceptance.
+Input checks precede
 action; output checks precede completion. Documentary evidence is offered with
 an explicit user-statement fallback. A changed model ends the realization and
 requires an authorized successor with applicability-checked inherited facts.
-No separate decision, registration wrapper, run, index, or validation artifact
+No separate decision, registration wrapper, execution index or validation artifact
 is required. Common consent, language, and routing boundaries remain binding.
 
 ## Plan Synthesis Agent
@@ -78,13 +84,13 @@ is required. Common consent, language, and routing boundaries remain binding.
 - id: `plan-realization-agent`
 - role: `plan-realization-role`
 - stage: `05-plan-realization`
-- input: `plan-model`, `approved-model-selection`, `authorized-start`, `path-options`, `selected-plan-stage`, `working-context`; existing frozen plan/realization/run when resuming
+- input: `plan-model`, `approved-model-selection`, `authorized-start`, `path-options`, `selected-plan-stage`, `working-context`; existing frozen plan/realization when resuming
 - optional-input: `plan-stop-points`
-- output: immutable `plan-artifact`, `realization-artifact`, `realization-decision-at-start`, `plan-run`, `run-index`, `updated-plan-realization-registry-when-needed`
+- output: immutable `plan-artifact`, `realization-artifact`, `stage-realization` and directly linked evidence for documented manual execution; mechanism result only for a collapsed invocation
 - optional-output: `implementation-artifact`, `handoff-artifact`, `blocker-or-revision-note`
 - execution-contract: recheck exact approval at authorized start, freeze plan before action, capture stage contracts from the pinned plan; changed content returns to review
 - supported-modes: `execution`, `explain`, `dry-run`, `planning`
-- templates: `.double/templates/machine-of-goals/realization-template.md`, `.double/templates/machine-of-goals/plan-run-template.md`, `.double/templates/machine-of-goals/run-index-template.md`, `.double/templates/machine-of-goals/plan-template.md`
+- templates: `.double/templates/machine-of-goals/plan-template.md`, `.double/templates/machine-of-goals/realization-template.md`, `.double/templates/machine-of-goals/stage-realization-template.md`
 - system-prompt: `.double/prompts/machine-of-goals/system/plan-realization.md`
 - interaction-prompt: `.double/prompts/machine-of-goals/interaction/plan-realization.md`
 - definition: `.double/agents/machine-of-goals/plan-realization/plan-realization.md`
@@ -94,9 +100,9 @@ is required. Common consent, language, and routing boundaries remain binding.
 - id: `plan-validation-agent`
 - role: `plan-validation-role`
 - stage: `06-plan-validation`
-- input: `plan-run`, `realization-artifact`, `path-options`, `plan-realization-registry`, `stage-validation-criteria`, `goal-artifact`, `plan-artifact`, `execution-evidence`
-- output: `updated-plan-run`, `updated-realization-artifact`, `updated-plan-realization-registry`, `goal-progress-note`, `revision-or-continuation-decision`
-- optional-output: `updated-plan-model-bookkeeping`, `model-review-request`, `goal-closure-signal`; no new execution snapshot during validation
+- input: `realization-artifact`, `stage-realization`, `stage-validation-criteria`, `goal-artifact`, frozen `plan-artifact`, `execution-evidence`; or the collapsed mechanism and its actual result
+- output: updated `stage-realization` and `realization-artifact`, `revision-or-continuation-decision`; for collapsed invocation, validation outcome without new execution files
+- optional-output: `model-review-request`, `goal-closure-signal`; validation creates no snapshot and writes no progress into the model
 - validation-contract: validate against the attempt's captured criteria and evidence; preserve applicable prior acceptance and record any revalidation or rework
 - supported-modes: `validation`, `review`, `explain`
 - templates: `.double/templates/machine-of-goals/plan-template.md`
@@ -111,7 +117,7 @@ is required. Common consent, language, and routing boundaries remain binding.
 - optional: `true`
 - stage: `cross-step`, `07-plan-packaging-export`
 - input: `goal-artifact`, `plan-artifact`
-- optional-input: `path-options`, `plan-realization-registry`, `registered-realizations`, `validation-evidence`, `external-plan-or-analog`, `external-plan-realizations`, `export-target-or-intended-reuse`
+- optional-input: `path-options`, `selected-documented-realizations`, `existing-skills-or-actions`, `validation-evidence`, `external-plan-or-analog`, `external-plan-realizations`, `export-target-or-intended-reuse`
 - output: `imported-plan-adaptation`, `adapted-path-or-plan-fragment`, `exported-plan-package`, `reuse-and-adaptation-notes`
 - optional-output: `goal-closure-summary`
 - supported-modes: `import`, `export`, `explain`, `validation`
@@ -119,3 +125,9 @@ is required. Common consent, language, and routing boundaries remain binding.
 - system-prompt: `.double/prompts/machine-of-goals/system/plan-exchange.md`
 - interaction-prompt: `.double/prompts/machine-of-goals/interaction/plan-exchange.md`
 - definition: `.double/agents/machine-of-goals/plan-exchange/plan-exchange.md`
+
+Collapsed skills/actions have no required Machine of Goals execution record.
+Their invocations preserve covered checks and permissions; actual results are
+reported through the mechanism's interface. They never create synthetic
+realization rows or invocation journals. Manual progress is inspected from the
+goal's links to the applicable timestamped realization, not from the model.

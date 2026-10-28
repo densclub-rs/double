@@ -59,12 +59,16 @@ the evolving path-options catalog used by planning and realization.
 - keep plausible alternatives visible until the goal is closed or the user
   chooses to discard them
 - extend the catalog when new plausible paths appear over time
-- assign stable path ids that can be referenced by plan branches and
-  realizations
+- assign stable path ids, distinct from plan IDs and logical revision branches
+- identify paths that warrant independently developed parallel plan variants;
+  record this for synthesis as `plan-<id>.md`, without requiring an earlier
+  default plan or major divergence. An author's own variant uses `plan<owner_id>.md`.
+  Discovery creates only the path catalog; plan files and short plan IDs are
+  formed during step-03 synthesis, with no hypothetical file links
 - link the source goal in `Source Goal`, give every path a stable explicit
   anchor, and link planned paths to their plan stages or subplans
-- leave realization registration and execution statistics to section 10 of
-  `plan.md`
+- leave actual execution state and evidence to documented realizations;
+  never put progress or execution statistics in a plan
 - record every unresolved issue as an `Open Question`
 - when `Open Questions` remain, state that Path Discovery is not complete,
   offer to resolve them one by one, and wait for each user response

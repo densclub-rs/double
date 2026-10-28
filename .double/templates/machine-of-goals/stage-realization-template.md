@@ -29,6 +29,11 @@ it does not require a separate evidence or validation artifact.
 - Bind the record to its realization, stable stage ID and local immutable
   `plan-v1.md`. Capture effective conditions and intended action from that plan
   before action. Retain this content and the originating plan when inherited.
+- Preserve each condition ID from the frozen plan, including its stage prefix:
+  `<stage-id>-I<condition-number>` for inputs and
+  `<stage-id>-O<condition-number>` for outputs, such as `S02-I01`, `S02-O01`.
+  Use these exact IDs in evidence and validation references; do not renumber
+  captured or inherited conditions.
 - Verify frozen plan integrity before action and output acceptance. A source
   model edit requires renewed review and a successor before further planned
   action, preserving the frozen plan and all earlier facts. Validate observed
@@ -36,7 +41,10 @@ it does not require a separate evidence or validation artifact.
 - Verify input conditions before action. Verify output conditions before
   marking the stage completed in the realization map. An unresolved or failed
   input blocks action; an unresolved output remains awaiting verification or
-  blocked, rather than completed.
+  blocked, rather than completed. Reflect the actual outcome with the matching
+  emoji in the owning realization map: `🟠` before verification and `✅` only
+  after required outputs are accepted. Preserve partial/failed/revision markers
+  when those outcomes are recorded; do not copy progress into the frozen plan.
 - For each input and output group, offer documentary evidence appropriate
   to the conditions, such as a screenshot, photograph, document, or relevant
   command output. Record what was requested and whether it was supplied.
@@ -99,7 +107,7 @@ Documentary evidence requested: <what-was-requested-and-whether-it-was-available
 
 | Condition | Actual state and confirmation | Decision |
 | --- | --- | --- |
-| I01: <captured-required-condition> | <actual-state; documentary-link-or-explicit-user-statement> | <accepted|not-met|unconfirmed> |
+| <stage-id>-I01: <captured-required-condition> | <actual-state; documentary-link-or-explicit-user-statement> | <accepted|not-met|unconfirmed> |
 
 ## Actions
 
@@ -113,7 +121,7 @@ Documentary evidence requested: <what-was-requested-and-whether-it-was-available
 
 | Condition | Actual state and confirmation | Decision |
 | --- | --- | --- |
-| O01: <captured-required-condition> | <actual-state; documentary-link-or-explicit-user-statement> | <accepted|not-met|unconfirmed> |
+| <stage-id>-O01: <captured-required-condition> | <actual-state; documentary-link-or-explicit-user-statement> | <accepted|not-met|unconfirmed> |
 ````
 
 Use a short documentary reference such as `Document: [receipt](./attachments/receipt.png)`

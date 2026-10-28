@@ -24,14 +24,25 @@ Planning/review never owns execution-plan or realization creation.
 
 - Inputs: goal, path options, constraints/resources, success criteria, known
   uncertainty, relevant subgoals and existing model/realization context.
-- Step 03 output: `plan-model` from `plan-model-template`; for manual/interactive
-  work use `plan-model-<branch>.md`, with branch and `model-revision`. Other modes
-  retain the editable `plan.md` shape from that model template.
-- Step 04 output: `approved-model-selection` in the recoverable conversation:
-  exact model content/digest, selected path/subplan, entry point and boundaries.
-  Model approval can finish review while execution remains deferred.
+- Step 03 output: `plan-model` from `plan-model-template`, stored as
+  `<goal-directory>/plan.md` by default. Generate one short human-readable word
+  as `id` for every new plan and always write it in frontmatter, including
+  ordinary and author plans. The word must be derived from the plan's context:
+  jointly express its subject, core meaning and goal in a single word,
+  distinguishing it from other variants. Use lowercase English letters only;
+  on collision choose another word combining all three concepts, without digits.
+  The plan has only `id`; its root anchor equals that value. Revisions and frozen
+  copies retain it; exact paths, revisions/versions and digests identify copies.
+  Independent parallel variants use `plan-<id>.md`; an author's variant uses
+  `plan<owner_id>.md` with their `owner-id` and no hyphen after `plan`.
+  Variants may be formed directly at synthesis after discovery. Give each actual
+  plan its own `id` and goal-table row, preserving earlier files and rows.
+- Step 04 output: `approved-model-selection` naming the linked current plan
+  and its approved contents, selected path/subplan, entry and boundaries. Keep
+  the computed content fingerprint as internal verification evidence rather
+  than a user-facing approval identifier. Start may remain deferred.
 - These steps produce no `plan-artifact`, revision snapshot, realization,
-  registration row, committed decision file, run or run index.
+  registration row or separate decision file.
 
 ## Planning Rules
 
@@ -43,39 +54,46 @@ Planning/review never owns execution-plan or realization creation.
 - Define stable stage IDs/anchors, short English names/slugs, required inputs,
   intended actions, outputs, dependencies, resources, risks, checks and stop points.
   Include detail proportionate to the goal, whether autonomous or a subgoal.
-- Distinguish independent named approaches from selectable paths/subplans within
-  a model. Execution mechanisms alone are not different achievement paths.
+- Distinguish independently developed parallel plans from selectable paths or
+  subplans inside one plan, parallel stages, and logical revision lineage.
+  Follow the workflow's filename rule, check ID/filename collisions and never
+  overwrite another variant. Ordinary revisions keep the same identity, branch
+  and file. Keep the goal table and actual source links synchronized.
+  Execution mechanisms alone are not different achievement paths.
 - Discover/formulate delegated subgoals through their own goal/path/model flow.
   Record parent/subgoal entry, input, output, exit and continuation boundaries.
 - Use contextual Markdown links for paths, stages, subgoals and referenced
   artifacts. A direct cross-project reference need not be imported; retain
   source identity and scope. Do not add a universal navigation block.
-- Manual/interactive models contain no progress, acceptance, registry or run
-  statistics. Other-mode bookkeeping remains separately scoped to its legacy
-  model shape; none of it authorizes executor creation during steps 03–04.
+- Every plan model contains expected transitions only: no execution progress,
+  acceptance, registration or execution statistics. Manual progress belongs to
+  its timestamped realization; a collapsed skill/action creates no invocation record.
 
 ## Exact Content Review
 
-1. Present the actual model content, available branches, selectable paths or
-   subplans, material trade-offs, eligible entry points and proposed controls.
-   Other modes may compare existing compatible realizations without creating
-   or registering a new one.
-2. Recommend without selecting on the user's behalf. Obtain explicit approval
-   of the exact content, selection and boundaries. Compute the source SHA-256
-   digest from actual file bytes before registration changes bookkeeping.
-   Never invent approval or a hash; follow the workflow's separate transition
-   comparison for later other-mode bookkeeping updates.
-3. Retain the decision/digest in the conversation so the executor can recheck
-   it at start. If unavailable later, obtain renewed review. Every model edit
-   invalidates previous approval for future execution, even if compatible.
+1. Show a contextual Markdown link to the actual current plan file and present
+   its contents, available choices, trade-offs, eligible entries and boundaries.
+   Explain an existing requested skill/action through its covered model, checks
+   and boundaries without creating execution records.
+2. Recommend without selecting on the user's behalf. Ask the user to approve
+   the current contents of that linked file, selection and boundaries. Follow
+   the canonical Plan Approval Presentation rule: no checksum in the question,
+   title, suggested answers or normal review summaries. The user does not need
+   to compare, copy or approve a technical identifier.
+3. Before requesting approval, compute the actual file's SHA-256 internally.
+   Retain this internal baseline with the user decision in existing recoverable
+   tool/conversation context for the executor's start check; do not introduce
+   another artifact. If lost, show the current plan link for renewed review,
+   without asking for a checksum. Every content edit invalidates prior approval
+   for future execution. Never invent approval or a hash.
 4. Distinguish content approval from permission to start. If start is deferred,
    leave only the model. Existing exact sequence consent remains valid within
    its approved scope; silence, defaults and recommendations are not consent.
-5. At authorized step-05 start, `plan-realization-agent` rechecks approval and
+5. At authorized manual step-05 start, `plan-realization-agent` rechecks approval and
    freezes the plan using `plan-template` before creating the realization.
-   Manual/interactive files are `realizations/<start>/plan-v1.md` and
-   `realization.md`. Other-mode baseline/decision/registration also wait for
-   this start. Do not require those files to complete review or offer transition.
+   Manual/interactive files are `_realizations/<start>/plan-v1.md` and
+   `realization.md`. Invocation of a collapsed skill/action creates neither.
+   Do not require executor files to complete review or offer transition.
 
 ## Model Changes and History
 
@@ -83,9 +101,8 @@ Edit only the model during planning; increment its review revision and assess
 changed dependencies and earlier-result applicability. Return changed content
 to review before execution. An active manual/interactive realization ends as
 `model-changed` before further action; an authorized successor freezes its own
-plan. Other-mode changed execution needs a newly reviewed/frozen baseline and
-new run. Never edit an earlier frozen plan, rebind a historical run or relabel
-old facts. Already observed outputs remain verifiable against their original
+plan. Never edit an earlier frozen plan, rebind a historical realization or
+relabel old facts. Already observed outputs remain verifiable against their original
 plan and captured conditions.
 
 ## Control and Completion

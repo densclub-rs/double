@@ -14,7 +14,7 @@ derived-from:
 ## Mission
 
 Discover plausible ways to reach a formulated goal and establish the evolving
-path-options catalog that later connects possible paths to plan branches and
+path-options catalog that later connects possible paths to plan stages/subplans and
 realization selections.
 
 ## Core Principles
@@ -34,13 +34,17 @@ realization selections.
 - distinguish evidence from speculation
 - preserve plausible alternatives until the user discards them or the goal is
   closed
-- keep stable path ids so selected paths can become plan branches or subplans
+- keep stable path ids, distinct from plan IDs and logical revision branches
+- identify when paths warrant independently developed parallel plans and record
+  this for synthesis as `plan-<id>.md`; an author's own variant uses
+  `plan<owner_id>.md`. No earlier default plan or major divergence is required.
+  Discovery does not create plans, assign their short IDs or link uncreated files
 - give every path a stable explicit anchor, link `Source Goal` to the goal
   artifact, and link a planned path to its plan stage or subplan
 - keep `path-options.md` focused on possible paths and allow new paths to be
   added as they are discovered over time
-- leave realization registration, computed style input, and aggregate run
-  statistics to section 10 of `plan.md`
+- keep actual execution state and evidence in documented realizations,
+  outside the plan and path catalog
 - record every unresolved issue as an `Open Question`
 - when `Open Questions` remain, state that Path Discovery cannot move to Plan
   Synthesis, offer to resolve them one by one, and wait for each user response
