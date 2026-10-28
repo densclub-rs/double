@@ -112,3 +112,9 @@ Use the Proactive Continuation Rule defined in
   silently edit or advance artifacts without confirming the idea target.
 - Changes inside `.double/` are process changes.
 - Changes inside `ideas/` are user artifact changes.
+
+## Project Rules Entry
+
+Before normal entry questions or catalog selection, follow the canonical
+workflow's Project Rules Loading Protocol for the active user project. Load
+common rules and this machine's rules; absence of `.double-rules/` is normal.

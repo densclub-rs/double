@@ -56,7 +56,7 @@ When justified by a concrete revalidation need:
 ## Output
 
 - `knowledge-artifact`
-- location: `knowledge/<knowledge-id>/<knowledge-id>.md`
+- location: the ordinary catalog or accepted project-rule path selected by the workflow
 
 ## Responsibilities
 
@@ -105,3 +105,12 @@ When justified by a concrete revalidation need:
 Apply the completion conditions from the canonical workflow. After completion,
 offer validation, revalidation of stale knowledge, or extraction of another
 knowledge item.
+
+## Project Rule Routing
+
+Follow the canonical workflow's Project Rule Recognition and Publication
+contract within the existing extraction step. Infer intent and common or
+named-machine scope from context and confirm a successful inference. If
+identification fails, use ordinary knowledge unless the user explicitly requests
+a rule; explicit rule requests require scope clarification when missing. Use
+the existing knowledge template for both destinations.

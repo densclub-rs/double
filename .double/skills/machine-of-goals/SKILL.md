@@ -107,7 +107,7 @@ When the skill is activated, follow the workflow definition in
 
 Before producing or changing workflow artifacts, confirm or infer and explain:
 
-- target artifact catalog for a new goal; default to `./goals`
+- target artifact catalog for a new goal; use the project-rule base catalog, falling back to `./goals`
 - target goal, plan, imported plan, subgoal, or goal directory
 - parent goal directory when the target is a subgoal
 - current workflow step
@@ -122,7 +122,7 @@ default state:
 
 - current-step: `01-goal-formulation`
 - current-mode: `clarification`
-- goal-catalog: `ask-user`, default `./goals`
+- goal-catalog: `ask-user`, project-rule base catalog or default `./goals`
 - expected-output: `goal-artifact`
 
 If the user starts from an existing goal, plan, imported plan, or subgoal,
@@ -319,3 +319,9 @@ A No stops continuation without rejecting the completed result. If blocked,
 name the blocker and offer clarification or repair. At the workflow end, state
 completion instead of inventing a next step. After plan-stage execution, offer
 `06-plan-validation` before any further plan-stage execution.
+
+## Project Rules Entry
+
+Before normal entry questions or catalog selection, follow the canonical
+workflow's Project Rules Loading Protocol for the active user project. Load
+common rules and this machine's rules; absence of `.double-rules/` is normal.

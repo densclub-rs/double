@@ -225,3 +225,27 @@ def test_installer_tags_use_the_independent_workflow(repo):
     assert result.returncode == 1
     assert 'independent installer release workflow' in result.stderr
     assert not Path('dist').exists()
+
+
+@pytest.mark.parametrize('machine', MACHINES)
+def test_project_rule_protocol_ships_without_publishing_project_rules(repo, machine):
+    """Each independently installed machine carries entry instructions, not policy."""
+    workflow = f'.double/workflows/{machine}/{machine}-workflow.md'
+    write(workflow, (ROOT / workflow).read_text())
+    write('.double-rules/double-rules.md', '# Project rules\n\n## Common Rules\n\n- [Private rule](private/private.md)\n')
+    write('.double-rules/private/private.md', '# Private project policy\n')
+    git('add', '.')
+    git('commit', '-qm', 'project rules fixture')
+    channel = '-rc' if 'status: release-candidate\n' in (ROOT / workflow).read_text().split('---', 2)[1] else ''
+    tag = f'{machine}-1.2.4{channel}'
+    git('tag', tag)
+    result = cli('package', '--tag', tag)
+    assert result.returncode == 0, result.stderr
+    files = archive_files(Path(f'dist/double-{tag}.tar.gz'))
+    assert workflow in files
+    assert b'Project Rules Loading Protocol' in files[workflow]
+    assert b'Common Rules' in files[workflow]
+    assert b'`' + machine.encode() + b'`' in files[workflow]
+    assert not any(path.startswith('.double-rules/') for path in files)
+    assert all(path.startswith('.double/') and f'/{machine}/' in path for path in files)
+    assert Path('.double-rules/private/private.md').read_text() == '# Private project policy\n'

@@ -8,7 +8,7 @@ artifact-language: en
 knowledge-type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-10-22
+observed-at: 2026-10-28
 ttl: one month
 derived-from:
   - user-requested synchronization of model and realization workflow on 2026-10-22
@@ -39,7 +39,7 @@ project.
 
 ## Value
 
-`0.0.14`
+`0.0.15`
 
 ## Change Note
 
@@ -151,3 +151,12 @@ do not add mandatory layers to the new manual/interactive artifact shapes:
 - historical baselines and completed runs remain unchanged; progress and
   continuation require contract and dependency compatibility checks
 - existing release-candidate skill packaging remains supported
+
+## Project Rules Change
+
+This version adds project-owned Markdown rules discovery, unconditional common
+rule loading and machine-specific scope, configured catalog selection, and
+independent package delivery of the loading protocol. Machine of Knowledge
+also recognizes and confirms project rules using the existing knowledge
+artifact template. Assigned by the approved project-rules implementation on
+2026-10-28; this records a development version, not a published release.

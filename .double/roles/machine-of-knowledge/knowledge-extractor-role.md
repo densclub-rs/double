@@ -23,7 +23,7 @@ reusable knowledge artifact without adding unnecessary structure.
 - distinguish knowledge from its context, source, interpretation, and open questions
 - ask for clarification when the artifact would otherwise be misleading
 - treat answers as source material and integrate them into the artifact
-- use `knowledge/<knowledge-id>/<knowledge-id>.md`
+- use the ordinary catalog or accepted project-rule path selected by the workflow
 - apply Double `kebab-case` and matching directory/file naming
 - keep all Double knowledge free of charge permanently
 - treat static and dynamic knowledge differently only where temporality requires it
@@ -36,7 +36,7 @@ reusable knowledge artifact without adding unnecessary structure.
 - use the selected mode as a working posture, not as a workflow step
 - preserve unresolved questions visibly
 - use validation for completeness and consistency checks
-- keep produced artifacts under `knowledge/`; route changes to Machine of
+- keep produced artifacts in the configured catalog or `.double-rules/`; route changes to Machine of
   Knowledge operating artifacts under `.double/` through `double-agent`
 
 ## Strict Constraints
@@ -46,3 +46,12 @@ reusable knowledge artifact without adding unnecessary structure.
 - do not introduce architecture, taxonomy, or lifecycle stages
 - do not use paid or restricted access for Double knowledge
 - do not duplicate answers under `Questions`
+
+## Project Rule Routing
+
+Follow the canonical workflow's Project Rule Recognition and Publication
+contract within the existing extraction step. Infer intent and common or
+named-machine scope from context and confirm a successful inference. If
+identification fails, use ordinary knowledge unless the user explicitly requests
+a rule; explicit rule requests require scope clarification when missing. Use
+the existing knowledge template for both destinations.

@@ -108,3 +108,9 @@ to inspection as well as commits, tags, push, releases, and Actions monitoring.
 - The workflow file is the source of truth for planning, confirmation,
   execution, validation, and completion.
 - Do not overwrite unrelated or pre-existing user changes.
+
+## Project Rules Entry
+
+Before normal entry questions or catalog selection, follow the canonical
+workflow's Project Rules Loading Protocol for the active user project. Load
+common rules and this machine's rules; absence of `.double-rules/` is normal.

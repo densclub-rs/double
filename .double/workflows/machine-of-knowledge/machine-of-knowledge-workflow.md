@@ -15,6 +15,52 @@ derived-from:
 
 # Workflow: Machine of Knowledge
 
+## Project Rules Loading Protocol
+
+Before selecting a catalog, planning, or writing, load the current project's
+rules. This protocol belongs to this machine and is included in its package.
+
+1. Establish the active user project root from the request and available project
+   context. Do not substitute the installation directory of a globally installed
+   machine. If the root is ambiguous, clarify it before writing.
+2. Look for `.double-rules/` at that root. Its absence is normal: use this
+   workflow's defaults without creating a rules directory or asking the user
+   to configure one.
+3. When present, read `.double-rules/double-rules.md`. It is a Markdown index
+   with `Common Rules` and machine-id headings. Common rules apply to every
+   machine, including Double Agent, on every invocation regardless of task.
+   Read every linked common rule, then every rule under this machine's heading
+   (`machine-of-knowledge`). A rule may be linked under several machine headings; read it once.
+4. The links identify ordinary Machine of Knowledge artifacts, not a separate
+   rule template. Resolve index links relative to the index and artifact links
+   relative to their documents. Catalog settings in rule values are relative
+   to the active project root unless explicitly absolute. Use the existing
+   knowledge template and metadata; introduce no YAML configuration, additional
+   rule metadata, or mandatory rule-specific artifact sections.
+5. Missing machine headings mean no additional machine rules. An existing
+   directory with a missing index, a broken required link, an expired or draft
+   rule, or conflicting rules must be reported and resolved before dependent
+   work. Never silently ignore a rule or fall back past an unresolved conflict.
+   A rule's presence does not renew its knowledge validity period.
+6. Rules configure documented project settings and add project constraints;
+   they cannot bypass required approvals, validation, or higher-priority
+   instructions. Do not infer that machine-specific rules override common rules.
+   State material conflicts and ask for resolution before dependent actions.
+7. Keep `.double-rules/` in the project's version control. It is project-owned
+   knowledge, outside the installer-managed `.double/` tree. Package the loading
+   protocol with each machine, never the publishing project's actual rules.
+   Installation, update, and removal must preserve the user's rules. A repository
+   release tag records its project's rules in Git without shipping them to other
+   projects in a machine archive. Changes to this protocol require affected
+   machine version updates; project-rule edits alone do not require machine releases.
+
+The index is navigation, not a second copy of each knowledge value. Machine of
+Knowledge creates it only when the first project rule is accepted. It uses
+Markdown headings `Common Rules`, `double-agent`, `machine-of-knowledge`,
+`machine-of-ideas`, and `machine-of-goals`, with ordinary relative links under
+applicable headings; unused headings may be omitted. No agent-specific entry
+files are required by this protocol.
+
 ## Purpose
 
 This workflow extracts a piece of knowledge and preserves it as a knowledge
@@ -55,19 +101,21 @@ Before any working-file change, verify that `double-agent` is installed and
 available. If it is unavailable, do not change a `.double/` file; require
 installation first, then activate the Double Agent Skill.
 
-Machine of Knowledge remains responsible for knowledge artifacts under
-`knowledge/`; they are not Machine of Knowledge operating artifacts.
+Machine of Knowledge remains responsible for knowledge artifacts in the selected knowledge catalog and `.double-rules/`; they are not Machine of Knowledge operating artifacts.
 
 ## Knowledge Catalog Rule
 
-- The project catalog is `./knowledge` in the current Double project.
+- The ordinary knowledge catalog defaults to `./knowledge` in the active user
+  project; use the base catalog configured by applicable project rules.
 - The catalog follows the [Double layout naming convention](../../../Double.md#double-layout-naming-convention).
-- The catalog note is `knowledge/knowledge.md`.
-- Each knowledge item uses `knowledge/<knowledge-id>/<knowledge-id>.md`.
+- The catalog note is `<knowledge-catalog>/<catalog-name>.md`.
+- Ordinary items use `<knowledge-catalog>/<knowledge-id>/<knowledge-id>.md`.
+- Accepted project rules use `.double-rules/<knowledge-id>/<knowledge-id>.md`
+  and are linked from `.double-rules/double-rules.md`.
 - `<knowledge-id>` must use `kebab-case` and the artifact filename must match its directory name.
 - Machine operating material remains under `.double/`; it must not be published as knowledge merely because it supports extraction.
 
-If `knowledge/` does not yet exist, the first knowledge run may create the
+If the selected ordinary knowledge catalog does not yet exist, the first knowledge run may create the
 catalog and its `knowledge.md` note before publishing the first item.
 
 ## Permanent Free-of-Charge Rule
@@ -130,6 +178,38 @@ Dynamic does not mean continuous or predictable change and does not require
 automatic retrieval. Its shorter validity period only makes revalidation
 operationally relevant sooner.
 
+## Project Rule Recognition and Publication
+
+Within the existing extraction step, infer from the preservation request and
+conversation whether the knowledge most likely establishes a rule for running
+the current project through Double. Separately infer its scope: common to all
+machines, or one or more named machine ids (including `double-agent`). Subject
+matter alone is insufficient: knowledge about a machine need not be a rule.
+
+- When both project-rule intent and scope can be identified, state the inferred
+  classification and scope and ask the user to confirm before publication. Reuse
+  explicit confirmation already given; never infer approval from silence.
+- When identification is unsuccessful and the user has not explicitly requested
+  a project rule, preserve ordinary knowledge in the base knowledge catalog.
+- When the user explicitly requests a project rule, including conversion of an
+  existing item, scope is required. Ask whether it is common or which machines
+  it applies to if that scope has not been supplied or confirmed. Do not silently
+  save it as ordinary knowledge or assume every machine is an addressee.
+- After acceptance, use the existing knowledge artifact template, with its
+  existing grounding, access and temporal requirements. Do not create a new
+  rule artifact type, metadata schema, or mandatory content sections. A rule
+  awaiting confirmation must not be registered as active.
+- Publish the artifact at `.double-rules/<knowledge-id>/<knowledge-id>.md`.
+  Create the Markdown index if necessary and add its relative link under
+  `Common Rules` or each confirmed machine-id heading. Common rules are loaded
+  by all machines regardless of task; machine rules supplement them.
+- For conversion, move the existing artifact, preserve its id, update catalog
+  navigation and inbound relative links, and rebase its outgoing links. Remove
+  the old active copy; do not keep competing authoritative values. Preserve
+  source grounding and revalidate observation/TTL without inventing values.
+- Validate the destination, confirmation, scope, index links, preserved identity,
+  knowledge contract, and link integrity before declaring publication complete.
+
 ## Entry Protocol
 
 Before extraction, the agent must confirm:
@@ -141,6 +221,7 @@ Before extraction, the agent must confirm:
 5. whether the knowledge is `static` or `dynamic`
 6. the proposed `<knowledge-id>` and publication path
 7. the selected mode
+8. ordinary knowledge or confirmed project rule, with common or named-machine scope
 
 The agent may infer a proposed target, type, or id from explicit context, but
 must state the inference before using it when uncertainty could change the
@@ -188,7 +269,7 @@ Default mode: `strict-research`.
 - allowed-modes: `brainstorm`, `explain`, `strict-research`, `validation`, `editor`
 - required-inputs: `knowledge-subject`, `source-material`, `interaction-language`, `artifact-language`, `knowledge-type`, `knowledge-template`
 - produced-output: `knowledge-artifact`
-- output-location: `knowledge/<knowledge-id>/<knowledge-id>.md`
+- output-location: the ordinary catalog or project-rule path selected below
 - template: `.double/templates/machine-of-knowledge/knowledge-template.md`
 
 ### Extraction Rules
@@ -225,5 +306,5 @@ item.
 - produced-by: `knowledge-extraction-agent`
 - required-frontmatter: `id`, `kind`, `status`, `produced-by`, `interaction-language`, `artifact-language`, `knowledge-type`, `access`, `observed-at`, `ttl`, `derived-from`
 - optional-frontmatter: `retrieval-method`
-- publication-path: `knowledge/<knowledge-id>/<knowledge-id>.md`
+- publication-path: `<knowledge-catalog>/<knowledge-id>/<knowledge-id>.md` or `.double-rules/<knowledge-id>/<knowledge-id>.md`
 - access-value: `free-of-charge`

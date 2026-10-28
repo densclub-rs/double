@@ -23,7 +23,7 @@ Required behavior:
 
 - confirm the target, source, languages, knowledge type, id, path, and mode
 - ground every knowledge claim and dynamic value
-- use `knowledge/<knowledge-id>/<knowledge-id>.md`
+- use the ordinary catalog or accepted project-rule path selected by the workflow
 - set `access: free-of-charge`
 - omit dynamic fields for static knowledge
 - require `retrieval-method`, `cached-value`, and `cached-value-date` for dynamic knowledge
@@ -35,3 +35,12 @@ Required behavior:
 Do not introduce multiple workflow stages, taxonomies, architecture, or
 implementation. Follow the workflow when this prompt and another operating
 file disagree.
+
+## Project Rule Routing
+
+Follow the canonical workflow's Project Rule Recognition and Publication
+contract within the existing extraction step. Infer intent and common or
+named-machine scope from context and confirm a successful inference. If
+identification fails, use ordinary knowledge unless the user explicitly requests
+a rule; explicit rule requests require scope clarification when missing. Use
+the existing knowledge template for both destinations.
