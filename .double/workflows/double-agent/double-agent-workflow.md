@@ -10,6 +10,58 @@ artifact-language: en
 
 # Workflow: Double Agent
 
+## Project Rules Loading Protocol
+
+Here, project rules means project knowledge broadly: facts, settings,
+conventions, constraints, version knowledge and change history. A request about
+something at project level normally belongs in `.double-rules/`; it need not
+use the word "rule" or prescribe behavior. Preserve the directory and existing
+index headings as the discovery interface.
+
+Before selecting a catalog, planning, or writing, load the current project's
+rules. This protocol belongs to this machine and is included in its package.
+
+1. Establish the active user project root from the request and available project
+   context. Do not substitute the installation directory of a globally installed
+   machine. If the root is ambiguous, clarify it before writing.
+2. Look for `.double-rules/` at that root. Its absence is normal: use this
+   workflow's defaults without creating a rules directory or asking the user
+   to configure one.
+3. When present, read `.double-rules/double-rules.md`. It is a Markdown index
+   with `Common Rules` and machine-id headings. Common rules apply to every
+   machine, including Double Agent, on every invocation regardless of task.
+   Read every linked common rule, then every rule under this machine's heading
+   (`double-agent`). A rule may be linked under several machine headings; read it once.
+4. The links identify ordinary Machine of Knowledge artifacts, not a separate
+   rule template. Resolve index links relative to the index and artifact links
+   relative to their documents. Catalog settings in rule values are relative
+   to the active project root unless explicitly absolute. Use the existing
+   knowledge template and metadata; introduce no YAML configuration, additional
+   rule metadata, or mandatory rule-specific artifact sections.
+5. Missing machine headings mean no additional machine rules. An existing
+   directory with a missing index, a broken required link, an expired or draft
+   rule, or conflicting rules must be reported and resolved before dependent
+   work. Never silently ignore a rule or fall back past an unresolved conflict.
+   A rule's presence does not renew its knowledge validity period.
+6. Rules configure documented project settings and add project constraints;
+   they cannot bypass required approvals, validation, or higher-priority
+   instructions. Do not infer that machine-specific rules override common rules.
+   State material conflicts and ask for resolution before dependent actions.
+7. Keep `.double-rules/` in the project's version control. It is project-owned
+   knowledge, outside the installer-managed `.double/` tree. Package the loading
+   protocol with each machine, never the publishing project's actual rules.
+   Installation, update, and removal must preserve the user's rules. A repository
+   release tag records its project's rules in Git without shipping them to other
+   projects in a machine archive. Changes to this protocol require affected
+   machine version updates; project-rule edits alone do not require machine releases.
+
+The index is navigation, not a second copy of each knowledge value. Machine of
+Knowledge creates it only when the first project rule is accepted. It uses
+Markdown headings `Common Rules`, `double-agent`, `machine-of-knowledge`,
+`machine-of-ideas`, and `machine-of-goals`, with ordinary relative links under
+applicable headings; unused headings may be omitted. No agent-specific entry
+files are required by this protocol.
+
 ## Purpose
 
 This workflow defines how `double-agent` maintains Double operating artifacts
@@ -25,10 +77,39 @@ For a machine release, also follow the Machine Release Protocol below:
 
 ## Version Knowledge Rule
 
-The Double Agent version is preserved only in
-`knowledge/double-agent-version/double-agent-version.md`. A change to this
+The version source is resolved from applicable project knowledge first, using
+the Version Knowledge Resolution protocol in the Double Agent workflow. If no
+project source is established, use
+`knowledge/double-agent-version/double-agent-version.md` as the default.
+An invalid or conflicting project source blocks dependent work; it does not
+authorize fallback to the default. A change to this
 workflow, the Double Agent skill, agent, or role requires a separately planned
 version-knowledge update through the Machine of Knowledge workflow.
+
+## Version Knowledge Resolution
+
+Resolve version knowledge before reading, updating or comparing machine versions:
+
+1. Load `.double-rules/double-rules.md`, its `Common Rules` and `double-agent`
+   knowledge. For the selected machine's version lookup, also inspect links
+   under that machine's heading; this does not make all its other rules global.
+2. Prefer an indexed artifact with id `<machine>-version`. A project knowledge
+   artifact may instead link to the version artifact in its `Value` section.
+   Resolve document links relative to the containing document. This uses ordinary
+   Markdown links and existing artifact ids, with no new configuration schema.
+3. A single explicit project version source is authoritative. Record its resolved
+   path and use it consistently for reads, updates, readiness, tag comparison
+   and packaging. Do not compare competing authoritative copies by timestamp.
+4. Only if no project version source exists, read the default
+   `knowledge/<machine>-version/<machine>-version.md`. The default paths for
+   the four main modules remain supported without a rules directory.
+5. A missing index in an existing `.double-rules/`, broken required link,
+   multiple version sources, incorrect id, invalid value, draft or expired
+   source blocks dependent work. Report the problem; never hide it by fallback.
+6. Local preparation and CI must resolve the same source. For a tagged release,
+   resolve both index and knowledge from that exact tagged tree. External files
+   cannot serve as a reproducible tagged version source; preserve the source in
+   the candidate project tree before release.
 
 ## Scope and Routing
 
@@ -36,7 +117,7 @@ version-knowledge update through the Machine of Knowledge workflow.
 roles, modes, prompts, templates, registries, skills, and machine catalog
 indexes for Machine of Ideas, Machine of Goals, and Machine of Knowledge.
 
-User artifacts under `ideas/`, `goals/`, and `knowledge/` are outside this
+User artifacts in the configured idea, goal, knowledge catalogs and `.double-rules/` are outside this
 workflow's default editing scope. Release readiness includes read-only checks
 of project artifacts belonging to the selected machine. Split a mixed change
 request into separate proposed steps and route every project artifact edit to
@@ -173,7 +254,7 @@ Activate this protocol for requests such as "release Machine of Ideas",
 release does not itself authorize sending a message or pushing to GitHub.
 
 1. Identify the machine, requested channel, repository, remote, branch, and
-   dedicated `knowledge/<machine>-version/<machine>-version.md`. Supported
+   dedicated version knowledge source resolved by the protocol above. Supported
    machine identifiers are `machine-of-ideas`, `machine-of-goals`,
    `machine-of-knowledge`, and `double-agent`. Installer releases use a
    separate workflow and are outside this protocol.
@@ -243,7 +324,7 @@ readiness checks still apply.
    second RC must use a new available version under the current tag syntax.
    Treat older-version requests or conflicting remote/local tags as unresolved
    release decisions, rather than silently choosing a new version.
-2. Determine the prospective changelog baseline by the notes generator's rules
+2. Determine the comparison baseline using the existing baseline rules
    and confirm it using `baseline()` once the local candidate tag exists:
    the highest eligible earlier reachable stable/RC tag of the same machine;
    dev tags and tags at the candidate commit are excluded. Stable can use an
@@ -253,12 +334,25 @@ readiness checks still apply.
 3. Inspect all candidate machine files and changes since that baseline:
    frontmatter, identifiers, links, registry/template/workflow agreement, and
    version knowledge. Summarize actual changes for the commit and annotation.
-   Avoid generic release prose that hides what changed.
-4. After local preparation is approved, stage only the explicit approved file
+   Avoid generic release prose that hides what changed. Prepare a `### X.Y.Z[-rc|-dev] — YYYY-MM-DD` entry with concise change
+   bullets inside `Value` in the machine's resolved changelog knowledge. Resolve
+   `<machine>-changelog` from the project index as for version knowledge, using
+   `knowledge/<machine>-changelog/<machine>-changelog.md` only when no project
+   source is established. The approved entry includes the version/date heading.
+   Show its full text, allow user edits or requested corrections, and obtain
+   explicit Yes / No approval of the exact current entry before candidate
+   commit or tag creation. Plan approval is not entry approval. A later edit
+   invalidates entry approval and requires review and approval again. Stable
+   and RC may have different approved entries in their respective tagged trees.
+4. After local preparation and the exact entry are approved, stage only the explicit approved file
    list and verify the staged diff. If unrelated changes are already staged,
    use an isolated candidate/index or another method preserving their staging.
-   Create the local commit and an annotated local tag with a descriptive
-   message. Record the candidate commit and tag object IDs. If a suitable
+   Include the changelog in the candidate commit and create an annotated tag
+   whose full message equals the approved entry. Use `--cleanup=verbatim` when
+   creating the tag so Git preserves Markdown version headings beginning with
+   `#`. Verify the stored annotation against the complete approved entry.
+   Record the candidate commit
+   and tag object IDs. If a suitable
    commit already exists, use it rather than creating an empty commit.
 5. Recheck readiness in the exact tagged tree. Run the release suite and its
    candidate check, following the current test README, including
@@ -277,26 +371,21 @@ English, regardless of the conversation language. This includes change
 descriptions, headings, and link labels; preserve machine identifiers, version
 strings, URLs, and proper names as required.
 
-The current notes generator preserves the original language of commit/PR
-titles. Check every included title, not just the annotation. For a new local
-release commit, prepare an English subject and message. If an existing input
-would produce non-English announcement text, obtain an approved correction of
-that input or a separately approved generator change that produces the English
-text consistently locally and in CI. Do not rewrite unrelated history or
+The approved changelog entry and matching annotation must be English. Do not
 silently translate only the preview. An unresolved language mismatch blocks
-push and requires an updated English preview before final approval.
+push and requires an updated approved entry and preview.
 
 1. Generate release notes and `telegram-message.html` locally from the exact
    annotated tag using `python3 scripts/double-release/double-release-notes.py --tag
    <tag> --repository <owner/repository> --directory <preview-directory>`.
-   Use the same baseline, annotation, renderer revision, repository identity,
-   and commit/PR metadata selection as Actions. Verify equivalent GitHub API
-   access; a local commit-title fallback does not match CI using PR titles.
-   Do not expose tokens while checking credentials or capabilities.
+   Use the same tagged changelog entry, annotation, renderer revision and
+   repository identity as Actions. A missing, empty or ambiguous entry or an
+   annotation mismatch blocks publication. GitHub notes contain the full
+   entry; Telegram may shorten it and links to the full release.
 2. Show the complete resulting Telegram text and links in readable form and
    provide the generated HTML for inspection. Use the rendered output rather
-   than composing a separate sample. Show any actual annotation truncation,
-   omitted entries, and changelog links produced by the renderer. The only
+   than composing a separate sample. Show actual truncation and release links
+   produced by the renderer. The only
    permitted declared dynamic part is the future Actions run URL: show its
    position as an explicit placeholder and explain its substitution before
    approval. Render with that placeholder already present via the generator's
