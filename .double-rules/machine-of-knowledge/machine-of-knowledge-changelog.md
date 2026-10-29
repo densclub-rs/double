@@ -26,19 +26,20 @@ Changes recorded for the `machine-of-knowledge` module.
 
 ## Value
 
-### 0.0.3 — 2026-10-28
+### 0.0.3 — 2026-10-29
 
-- Allow schemas to remain undefined and omit the optional `Schema` section for unstructured knowledge; schema absence alone does not block completion or require migration.
-- Standardize defined schemas on JSON Schema Draft 2020-12 with an explicit dialect declaration, knowledge-bound schema id and schema/value validation; block missing or unsupported dialect declarations.
-- Resolve artifact placement from an applicable storage schema, allowing several independent knowledge files in one subject directory; retain the per-artifact directory layout as the default.
-- Validate structured layout descriptors against their JSON Schema and check resolved files, ids, anchors and index links separately.
-- Route project-level facts, settings, versions and history to `.double-rules/` without requiring an explicit rule label.
-- Clarify missing project-context scope instead of silently publishing project knowledge in the ordinary catalog.
-- Prefer project-defined version knowledge and retain the historical knowledge path as the default.
+- Load project-owned common and Machine of Knowledge rules before extraction.
+- Recognize project-level facts, settings, versions and history and route them to project rules.
+- Clarify missing project-context scope and honor configured knowledge catalogs.
+- Preserve project rules during machine installation and updates.
+- Prefer project-defined version knowledge and use the default path when no project source exists.
+- Allow knowledge artifacts without a defined schema and omit the optional Schema section for unstructured knowledge.
+- Validate defined schemas and values using JSON Schema Draft 2020-12.
+- Resolve artifact placement from applicable storage schemas, supporting multiple independent knowledge files in one subject directory.
+- Validate structured layout descriptors, resolved files, identifiers, anchors and index links.
 - Require knowledge artifacts to follow the template's defined fields and sections.
-- Keep machine change history in separate changelog knowledge.
-- Use the optional `Notes` section only for material gaps or uncertainty.
-- Align extraction instructions on `Value`, observation date and validity period for both knowledge types; include retrieval metadata only when justified.
+- Preserve machine change history in separate changelog knowledge.
+- Use Notes for material gaps or uncertainty and include retrieval metadata only when justified.
 
 ### 0.0.2 — 2026-10-28
 
