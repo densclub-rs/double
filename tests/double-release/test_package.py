@@ -302,12 +302,13 @@ def test_installer_tags_use_the_independent_workflow(repo):
 def test_project_rule_protocol_ships_without_publishing_project_rules(repo, machine):
     """Each independently installed machine carries entry instructions, not policy."""
     workflow = f'.double/workflows/{machine}/{machine}-workflow.md'
-    write(workflow, f'---\nstatus: stable\n---\n\n## Project Rules Loading Protocol\n\nCommon Rules apply to `{machine}`.\n')
+    write(workflow, (ROOT / workflow).read_text())
     write('.double-rules/double-rules.md', '# Project rules\n\n## Common Rules\n\n- [Private rule](private/private.md)\n')
     write('.double-rules/private/private.md', '# Private project policy\n')
     git('add', '.')
     git('commit', '-qm', 'project rules fixture')
-    tag = f'{machine}-1.2.4'
+    channel = '-rc' if 'status: release-candidate\n' in (ROOT / workflow).read_text().split('---', 2)[1] else ''
+    tag = f'{machine}-1.2.4{channel}'
     git('tag', tag)
     result = cli('package', '--tag', tag)
     assert result.returncode == 0, result.stderr

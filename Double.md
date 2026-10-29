@@ -49,6 +49,11 @@ Ideas are the most general concepts and principles to develop and grow **Double*
 * create any directory
 * create a Markdown file inside the directory with the same name as the directory
 
+This is the default layout. Knowledge artifacts may use a documented storage
+schema selected by their workflow, including several independent artifact
+files in one subject directory. Each artifact keeps its own id and matching
+root anchor; the catalog links to the actual files.
+
 
 Example:
 
