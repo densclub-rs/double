@@ -227,3 +227,25 @@ For external automatic realizations, this idea does not choose a registry format
 ## 12. Notes
 
 The agreed basic project rules are preserved in the knowledge artifact [Double Project](../../knowledge/double-project/double-project.md#double-project): the source tree location and the requirement to write knowledge artifacts in English.
+
+## 13. Development Artifacts
+
+### 13.1 Concepts
+
+[Concept artifact](./double-software-project-concepts.md) — extracted in `strict-research` mode; five concept-local questions remain for clarification.
+
+| Concept | Summary |
+| --- | --- |
+| [Machine Module](./double-software-project-concepts.md#concept-machine-module) | An installable implementation that owns a Double machine’s models, behavior, and knowledge of how to access its catalogs and registries. |
+| [Domain Continuity Across Environments](./double-software-project-concepts.md#concept-domain-continuity) | The persistence of Double’s domain meaning and accumulated work when the host agent, LLM provider, storage system, or execution location changes. |
+| [Working Scope and Knowledge Sources](./double-software-project-concepts.md#concept-working-scope) | The context in which artifacts and machine implementations are created, discovered, and used, together with the available local or shared sources of knowledge. |
+| [Context Assembly Through Machine-Owned Discovery](./double-software-project-concepts.md#concept-context-assembly) | Finding related artifacts and realizations across entity types and assembling compact context through the access functions owned by machine modules. |
+| [Intent-Linked Realization](./double-software-project-concepts.md#concept-intent-linked-realization) | An executable way of carrying out a plan that retains its connection to human intention, expected results, conditions of use, and approval points. |
+| [Realization and Access Separation](./double-software-project-concepts.md#concept-realization-access) | The distinction between the executable work and the mechanism through which an agent discovers or invokes that work. |
+| [Bounded Autonomy for Mastered Work](./double-software-project-concepts.md#concept-bounded-autonomy) | Reusing an applicable automatic realization without involving an external host agent, within the person’s agreed limits of control. |
+| [Durable Work Coordination](./double-software-project-concepts.md#concept-durable-coordination) | Maintaining understandable goal-execution state across pauses, restarts, approvals, retries, and related work, including parallel independent parts and dependent results. |
+| [Confidential Delegation](./double-software-project-concepts.md#concept-confidential-delegation) | Assigning part of a goal to a local or remote executor with only the information and authority needed for that part, while overall responsibility remains with Double Agent. |
+| [Scoped and Revocable Action Authority](./double-software-project-concepts.md#concept-action-authority) | User-controlled permission to perform a particular external action, evaluated through policies and exposed to executable code as a temporary capability rather than credentials. |
+| [Execution Isolation and Mediated Effects](./double-software-project-concepts.md#concept-execution-isolation) | The boundary that limits executable code’s resource access and prevents uncontrolled external effects, using complementary layers of isolation, runtime restrictions, capabilities, and policy. |
+| [Action Evidence and Explainability](./double-software-project-concepts.md#concept-action-evidence) | Records and verifiable evidence connecting an action to its goal and version, run, stage, and reason for permission. |
+| [Controlled Process Evolution](./double-software-project-concepts.md#concept-controlled-process-evolution) | Changing Double’s own ways of working through proposal, validation, tests or simulation, approval, and a new version, with room for project adaptation and shared improvements. |
