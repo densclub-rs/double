@@ -15,6 +15,8 @@ status: stable
 - definition: `.double/templates/machine-of-knowledge/knowledge-template.md`
 - producer: `knowledge-extraction-agent`
 - workflow-stage: `01-knowledge-extraction`
-- static-use: omit dynamic metadata
-- dynamic-use: require `retrieval-method`, `cached-value`, `cached-value-date`
+- static-and-dynamic-use: value, observation date and validity period; retrieval method only when justified
+- structure: follow the template exactly; use `Notes` only when needed to describe material gaps
+- schema-use: optional and may remain undefined; omit when unnecessary, without blocking completion
+- defined-schema-standard: only JSON Schema Draft 2020-12, explicit `$schema` and knowledge-bound `$id`; validate the schema and structured value
 - access: `free-of-charge`

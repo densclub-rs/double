@@ -14,9 +14,9 @@ status: stable
 - role: `knowledge-extractor-role`
 - stage: `01-knowledge-extraction`
 - input: `knowledge-subject`, `source-material`, `interaction-language`, `artifact-language`, `knowledge-type`, `knowledge-template`
-- conditional-input-for-dynamic: `retrieval-method`, `cached-value`, `cached-value-date`
+- conditional-input-for-revalidation: `retrieval-method`
 - output: `knowledge-artifact`
-- output-location: `knowledge/<knowledge-id>/<knowledge-id>.md`
+- output-location: schema-resolved path inside the selected catalog; per-artifact directory by default
 - supported-modes: `brainstorm`, `explain`, `strict-research`, `validation`, `editor`
 - system-prompt: `.double/prompts/machine-of-knowledge/system/knowledge-extraction.md`
 - interaction-prompt: `.double/prompts/machine-of-knowledge/interaction/knowledge-extraction.md`
