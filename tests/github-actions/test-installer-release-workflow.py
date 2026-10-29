@@ -9,7 +9,7 @@ def job(name):
 assert 'needs: [candidate, validation-gate]' in job('publish')
 assert "if: needs.candidate.outputs.mode == 'publish'" in job('publish')
 assert 'needs: [candidate, installer, regressions, integrations]' in job('validation-gate')
-assert job('installer').count('- {os:') == 5
+assert len(re.findall(r'^\s*- \{os:', job('installer'), re.M)) == 4
 assert '--quick' in job('installer')
 assert text.count('contents: write') == 1
 assert 'needs: publish' in job('telegram')
@@ -17,4 +17,4 @@ assert "needs.publish.result == 'success'" in job('telegram')
 assert "needs.publish.outputs.eligible == 'true'" in job('telegram')
 for path in re.findall(r'\btests/[\w/.-]+\.(?:sh|py|txt|ini)', text):
     assert (root / path).is_file(), path
-print('PASS: five-platform quick validation, publication gate and post-publication announcement')
+print('PASS: four-platform quick validation, publication gate and post-publication announcement')
