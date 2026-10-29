@@ -59,17 +59,20 @@ and must use the responsible machine workflow.
 - Check the complete owned `.double/` inventory against the requested channel,
   and machine-owned project documents for `release-candidate` or `stable`.
   Packager exclusions do not prove readiness. Plan status fixes separately.
-- Read the dedicated machine version knowledge and previous machine tags;
+- Resolve machine version knowledge from the project index first; use the
+  canonical workflow's default path only when no override exists. Invalid or
+  conflicting sources block dependent work.
+- Read the resolved machine version knowledge and previous machine tags;
   prepare and validate only the approved local commit and annotated tag.
+- Draft the version's changelog entry and obtain explicit approval of its exact
+  contents before candidate creation; edits require renewed approval. The tag
+  annotation and GitHub release notes must match that entry.
 - Before any push, show the full tag annotation and Telegram output from the
   real notes generator. Declare the future Actions run-link placeholder and
   stop on any other unresolved local/CI rendering difference. Dev has no
   Telegram announcement under the current workflow.
-- Write the annotated-tag message and the complete Telegram announcement in
-  English, independently of the conversation language. The current generator
-  preserves commit/PR titles, so inspect those inputs too; an English
-  annotation alone does not make the full announcement English. Follow the
-  canonical workflow's release-language rule when an input is not English.
+- Write the changelog entry, annotated-tag message and Telegram announcement
+  in English, independently of the conversation language.
 - Obtain explicit approval of the concrete message and identified publication
   before pushing. Plan approval is not message approval. Changed content
   requires a fresh preview and approval.
@@ -108,3 +111,9 @@ to inspection as well as commits, tags, push, releases, and Actions monitoring.
 - The workflow file is the source of truth for planning, confirmation,
   execution, validation, and completion.
 - Do not overwrite unrelated or pre-existing user changes.
+
+## Project Rules Entry
+
+Before normal entry questions or catalog selection, follow the canonical
+workflow's Project Rules Loading Protocol for the active user project. Load
+common rules and this machine's rules; absence of `.double-rules/` is normal.

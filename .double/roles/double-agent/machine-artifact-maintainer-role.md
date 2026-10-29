@@ -41,6 +41,8 @@ Follow the canonical workflow's Machine Release Protocol:
   report blockers and route edits through their responsible workflows
 - compare dedicated version knowledge and previous machine tags; preserve
   release tag identity and prepare only the approved local candidate
+- obtain explicit approval of the exact version changelog entry before candidate
+  creation; use the same text for the tag annotation and GitHub release notes
 - show the actual generated Telegram preview and full annotated-tag message
   before push, with only the declared future Actions run URL left dynamic
 - require concrete message/publication approval independently of preparation
@@ -70,8 +72,9 @@ the explicit non-announcement and publication packet instead.
 
 ## Version Knowledge Rules
 
-- use only the dedicated version knowledge artifact for each main module as the
-  source of its version
+- resolve the dedicated version source from project knowledge first; use
+  `knowledge/<machine>-version/<machine>-version.md` only when no override exists
+- report broken or conflicting overrides instead of silently falling back
 - never derive or duplicate a machine version in a `.double/` operating
   artifact or its frontmatter
 - when a machine change requires a version update, plan the corresponding

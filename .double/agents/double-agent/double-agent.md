@@ -75,6 +75,8 @@ approval before GitHub publication. Installer releases use a separate workflow.
   discouraged; use the channel/status mapping in the canonical workflow
 - check the full machine contract inventory and readiness of its project files
 - use dedicated version knowledge and existing machine tags for the candidate
+- obtain explicit approval of the exact version changelog entry before creating
+  the candidate; use that entry as the tag annotation and GitHub release notes
 - prepare the approved local commit, annotated tag, package, and real preview
 - show the tag annotation and Telegram message before any push; obtain explicit
   approval of that message and the identified publication, separately from
@@ -115,14 +117,16 @@ and prepare an accurate change plan.
 
 ## Version Knowledge Protocol
 
-- Machine versions are preserved only in the dedicated knowledge artifacts:
+- Resolve the authoritative version artifact from project knowledge first,
+  following the canonical workflow. When no override exists, use these defaults:
   `knowledge/double-agent-version/double-agent-version.md`,
   `knowledge/machine-of-goals-version/machine-of-goals-version.md`,
   `knowledge/machine-of-ideas-version/machine-of-ideas-version.md`, and
   `knowledge/machine-of-knowledge-version/machine-of-knowledge-version.md`.
 - Do not store a machine version or workflow version in a `.double/`
   frontmatter field.
-- Read the current machine version from its dedicated knowledge artifact; do
+- Report invalid or conflicting overrides; never silently fall back past them.
+- Read the current machine version from its resolved knowledge artifact; do
   not derive it from a workflow or another operating artifact.
 - When an operating change requires a version update, include the corresponding
   knowledge artifact as a separate, explicit update and route its content
