@@ -10,7 +10,7 @@ import subprocess
 import sys
 import tarfile
 
-from release_common import MACHINES, STATUSES, owned, parse
+from release_common import MACHINES, STATUSES, owned, parse, version_knowledge_path
 
 
 def warning(message):
@@ -87,7 +87,18 @@ def package(tag, machine):
         return (git('show', f'{commit}:{path}').decode('utf-8') if commit
                 else Path(path).read_text(encoding='utf-8'))
 
-    knowledge_path = f'knowledge/{machine}-version/{machine}-version.md'
+    def exists(path):
+        if not commit:
+            return Path(path).exists()
+        if Path(path).is_absolute() or path == '..' or path.startswith('../'):
+            raise ValueError('Tagged version sources must be inside the project tree.')
+        try:
+            git('cat-file', '-e', f'{commit}:{path}')
+            return True
+        except subprocess.SubprocessError:
+            return False
+
+    knowledge_path = version_knowledge_path(machine, read, exists)
     try:
         value = knowledge_value(read(knowledge_path))
     except (OSError, subprocess.SubprocessError):
@@ -142,9 +153,9 @@ def publish(tag, archive, kind):
         return subprocess.run(['gh', 'release', *map(str, args)], capture_output=True, text=True)
 
     notes = os.environ.get('RELEASE_NOTES_FILE', '')
-    if notes and not Path(notes).is_file():
-        warning('Release notes file is unavailable; publishing without generated notes.')
-        notes = ''
+    if not notes or not Path(notes).is_file() or not Path(notes).read_text().strip():
+        warning('Approved release notes are unavailable; publication stopped.')
+        return
     if gh('view', tag).returncode == 0:
         if gh('upload', tag, archive, 'dist/SHA256SUMS.txt', '--clobber').returncode:
             warning(f'GitHub Release upload failed for {tag}.')

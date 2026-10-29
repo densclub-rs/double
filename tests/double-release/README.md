@@ -22,6 +22,8 @@ python3 -m pytest -c tests/double-release/pytest.ini tests/double-release --rele
 That check writes the selected tag's archive and `SHA256SUMS.txt` to `dist/` in
 the caller checkout. Tooling may reside in a separate checkout, as in Actions.
 
+Packaging and release-note fixtures cover both grouped and default layouts.
+
 For a hosted check, dispatch `.github/workflows/release.yml` on the tooling
 branch with `tag=<existing-machine-tag>` and `validation_only=true`. pytest and
 exact-tag packaging run before any publication step. The validation-only mode

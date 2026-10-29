@@ -84,7 +84,7 @@ def test_warning_paths_do_not_announce_wrong_release(repo, monkeypatch, capsys, 
     if state == 'notes-edit-failure':
         write('missing-notes','Notes')
     assert release.main(['publish','--tag',tag]) == 0
-    assert ('published=true' in Path('output').read_text()) == (state in ('notes-missing','notes-edit-failure'))
+    assert ('published=true' in Path('output').read_text()) == (state == 'notes-edit-failure')
     assert '::warning::' in capsys.readouterr().err
     if state in ('no-match','no-gh'):
         assert calls == []

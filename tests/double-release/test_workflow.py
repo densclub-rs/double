@@ -35,6 +35,7 @@ def test_workflow_is_gated_and_uses_current_tooling():
     assert not gate.get('continue-on-error', False)
     notes=next(s for s in steps if s.get('id') == 'notes')
     assert notes['if'] == '${{ inputs.validation_only != true }}'
+    assert not notes.get('continue-on-error', False)
     evidence=next(s for s in steps if s.get('uses','').startswith('actions/upload-artifact@'))
     assert evidence['with']['retention-days'] == 14
     assert '--junitxml=test-results/release.xml' in gate['run']
