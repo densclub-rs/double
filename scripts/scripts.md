@@ -2,6 +2,73 @@
 
 Helpers, scripts and utilities to maintain Double project.
 
+## Local machine development
+
+Every installer command accepting `--machine` also accepts these aliases:
+`mog` = `machine-of-goals`, `moi` = `machine-of-ideas`,
+`mok` = `machine-of-knowledge`, and `da` = `double-agent`.
+Aliases are case-insensitive and may contain hyphens: `MOG` and `M-O-G`
+both select `machine-of-goals`. Registry records, package names and installation
+directories always use the full identifier. The mappings appear in `help`,
+`explain`, and the help for commands accepting `--machine`.
+
+Use the installer directly from a Double working directory to test a machine
+before publishing a release:
+
+```sh
+bash scripts/double-installer.sh dev \
+  --source /path/to/double \
+  --project /path/to/test-project \
+  --machine machine-of-goals
+```
+
+Both directories must exist and must be separate, without nesting. The command
+copies all regular files in `.double/<category>/<machine>/`, including skills
+and their support files. It includes modified, untracked and ignored working
+files regardless of document status. It excludes other machines and project
+artifacts in `ideas/`, `goals/` and `knowledge/`. Links and special files are
+refused. The source checkout and machine version knowledge stay unchanged.
+
+The command works offline and creates a project skill in
+`.agents/skills/<machine>/SKILL.md` by default. As with `add`, an interactive
+agent-discovery question can additionally select dedicated agent directories.
+Use `--agent codex` or `--agent claude` to select an adapter explicitly.
+Existing foreign skill directories are preserved and reported as integration
+failures; the payload and successful agent registrations remain installed.
+
+The installer registry records `version: development`, `channel: dev`,
+`tag: local-development` and `source: {type: development, path: ABSOLUTE_PATH}`.
+`status` displays that source, and `status --json` returns the full record.
+The installer ignores published GitHub `dev` packages. Release commands accept
+only `stable` and `rc`; `dev` exclusively means a local development directory.
+Legacy dev-release cache entries and registrations remain readable for cleanup
+and migration to stable/RC; new installations never select those packages.
+
+Repeat the same `dev` command after editing the machine to refresh the test
+project. Obsolete managed files are removed, local extra files are preserved,
+and previous machine directories are backed up. A write failure restores the
+previous payload and registry. Adopting unregistered machine directories asks
+for confirmation; `--yes` explicitly authorizes that adoption for automation.
+
+To return to published packages, run:
+
+```sh
+bash scripts/double-installer.sh update \
+  --project /path/to/test-project --machine machine-of-goals
+# Or check every registered installation:
+bash scripts/double-installer.sh update-all --non-interactive
+```
+
+For a local development installation, updates prefer the newest stable release,
+then the newest RC if no stable exists, regardless of numeric version. An
+already published stable may therefore replace the development copy immediately.
+With no eligible release, the local copy and its source registration remain.
+`--channel stable` or `--channel rc` explicitly selects a published channel.
+Successful replacement removes the local source marker and resumes normal
+release version comparisons. Updates never recopy the working source; use
+`dev` for that. Normal `remove` removes the registered machine and its owned
+agent skills.
+
 ## Release management
 
 Support for:
