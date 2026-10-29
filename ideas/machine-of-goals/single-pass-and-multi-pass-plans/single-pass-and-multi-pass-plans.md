@@ -52,7 +52,7 @@ A model change ends the current realization. A linked successor uses the changed
 
 ### Optional Collapse
 
-On request, an executed model and its walkthrough may be collapsed into a skill for an AI agent, an automated action, or a combination of both. This capability does not determine whether interactive execution may be repeated. The result retains its relationship to the goal, branch, model version, and documentation.
+On request, an executed model and its walkthrough may be collapsed into a skill for an AI agent, an automated action, or a combination of both. This capability does not determine whether interactive execution may be repeated. The result retains its relationship to the goal, branch, model version, and documentation. Invoking the resulting skill/action creates no additional Machine of Goals execution directory, snapshot or journal; its state checks and authorized boundaries still apply.
 
 ## 5. Key Points
 
@@ -69,7 +69,7 @@ On request, an executed model and its walkthrough may be collapsed into a skill 
 - Principle impact: separate models from progress, verify transitions, preserve provenance, and prepare safe publication copies.
 - Parent impact: the current model and documented-execution sections in the defining idea, concepts, and principles.
 - Semantic mismatch with the main idea: none.
-- The earlier automatic-registration-based single-pass/multi-pass distinction is superseded for this idea by the model and realization distinction. This clarification does not migrate retained other-mode operating contracts.
+- The earlier automatic-registration-based single-pass/multi-pass distinction is superseded for this idea by the model and realization distinction. The operating contract follows the same distinction; there is no separate legacy execution scheme or computed plan style.
 
 ## 7. Open Questions
 
@@ -77,7 +77,7 @@ No unresolved questions block the documented interactive-execution model. Detail
 
 ## 8. Boundaries / Non-Goals
 
-This clarification does not prescribe a collapse workflow, executable implementation, publishing platform, or automatic cleanup. It does not require separate registration, run-index, or evidence-manifest artifacts for interactive execution.
+This clarification does not prescribe a collapse workflow, executable implementation, publishing platform, or automatic cleanup. It does not require separate registration, execution-index or evidence-manifest artifacts for interactive execution.
 
 ## 9. Parent Integration
 

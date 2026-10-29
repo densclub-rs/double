@@ -18,7 +18,7 @@ derived-from:
 
 ## Scope
 
-One short Markdown document records the passage through one model stage.
+One short Markdown document records the passage through one frozen plan stage.
 Its filename is `<stage-id-lowercase>-<short-english-stage-slug>.md` inside
 the timestamped realization directory. Use exactly three main parts: input
 state, actions, and output state. Evidence is linked where it supports a fact;
@@ -26,17 +26,25 @@ it does not require a separate evidence or validation artifact.
 
 ## Stage Contract
 
-- Bind the record to its realization, stable stage ID, model file, branch,
-  and source model version. Capture effective input/output conditions and
-  the intended action before acting. Retain that content after action starts.
-- Compare the source model with the realization's recorded identity and
-  content digest before stage action and before output acceptance. A changed
-  model closes the realization and requires a successor; it does not rewrite
-  this record or erase actions already taken.
+- Bind the record to its realization, stable stage ID and local immutable
+  `plan-v1.md`. Capture effective conditions and intended action from that plan
+  before action. Retain this content and the originating plan when inherited.
+- Preserve each condition ID from the frozen plan, including its stage prefix:
+  `<stage-id>-I<condition-number>` for inputs and
+  `<stage-id>-O<condition-number>` for outputs, such as `S02-I01`, `S02-O01`.
+  Use these exact IDs in evidence and validation references; do not renumber
+  captured or inherited conditions.
+- Verify frozen plan integrity before action and output acceptance. A source
+  model edit requires renewed review and a successor before further planned
+  action, preserving the frozen plan and all earlier facts. Validate observed
+  output against the original plan; never rewrite it from the edited model.
 - Verify input conditions before action. Verify output conditions before
   marking the stage completed in the realization map. An unresolved or failed
   input blocks action; an unresolved output remains awaiting verification or
-  blocked, rather than completed.
+  blocked, rather than completed. Reflect the actual outcome with the matching
+  emoji in the owning realization map: `🟠` before verification and `✅` only
+  after required outputs are accepted. Preserve partial/failed/revision markers
+  when those outcomes are recorded; do not copy progress into the frozen plan.
 - For each input and output group, offer documentary evidence appropriate
   to the conditions, such as a screenshot, photograph, document, or relevant
   command output. Record what was requested and whether it was supplied.
@@ -81,8 +89,9 @@ artifact-language: <artifact-language>
 realization-id: <owning-realization-id>
 stage-id: <stable-stage-id>
 branch: <source-branch>
-plan-version: <source-MAJOR.MINOR.PATCH>
-plan-artifact: ../../plan-<source-branch>-v<source-major>.md
+plan-version: 1
+plan-artifact: ./plan-v1.md
+source-plan-artifact: <originating-frozen-plan-path-when-inherited>
 inherited-from: <originating-realization-id-or-null>
 ---
 
@@ -90,7 +99,7 @@ inherited-from: <originating-realization-id-or-null>
 
 # <Stage ID>: <Short English Name>
 
-Model stage: [<stage-id>](../../plan-<source-branch>-v<source-major>.md#stage-<stage-id-lowercase>)
+Plan stage: [<stage-id>](./plan-v1.md#stage-<stage-id-lowercase>)
 
 ## Input State
 
@@ -98,11 +107,11 @@ Documentary evidence requested: <what-was-requested-and-whether-it-was-available
 
 | Condition | Actual state and confirmation | Decision |
 | --- | --- | --- |
-| I01: <captured-required-condition> | <actual-state; documentary-link-or-explicit-user-statement> | <accepted|not-met|unconfirmed> |
+| <stage-id>-I01: <captured-required-condition> | <actual-state; documentary-link-or-explicit-user-statement> | <accepted|not-met|unconfirmed> |
 
 ## Actions
 
-Intended action: <captured-action-from-the-model>
+Intended action: <captured-action-from-the-frozen-plan>
 
 <actual-actions-in-order-with-relevant-commands-results-and-deviations>
 
@@ -112,7 +121,7 @@ Documentary evidence requested: <what-was-requested-and-whether-it-was-available
 
 | Condition | Actual state and confirmation | Decision |
 | --- | --- | --- |
-| O01: <captured-required-condition> | <actual-state; documentary-link-or-explicit-user-statement> | <accepted|not-met|unconfirmed> |
+| <stage-id>-O01: <captured-required-condition> | <actual-state; documentary-link-or-explicit-user-statement> | <accepted|not-met|unconfirmed> |
 ````
 
 Use a short documentary reference such as `Document: [receipt](./attachments/receipt.png)`
@@ -123,5 +132,5 @@ If unavailable, say so rather than inventing evidence, a timestamp, or a result.
 
 Add rows only for actual conditions. Before outputs are observed, keep their
 decisions unconfirmed and their actual-state cells factual. Omit
-`inherited-from` when the stage is newly performed. The realization map owns
+`inherited-from` and `source-plan-artifact` when the stage is newly performed. The realization map owns
 progress status; this record provides the facts that justify that status.

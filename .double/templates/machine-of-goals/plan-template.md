@@ -4,341 +4,99 @@ submodule: machine-of-goals
 id: plan-template
 kind: template
 status: release-candidate
-workflow-stage: plan-synthesis
+workflow-stage: plan-realization
 interaction-language: en
 artifact-language: en
 derived-from:
   - ../../workflows/machine-of-goals/machine-of-goals-workflow.md
-  - ../../../ideas/machine-of-goals/machine-of-goals-principles.md
+  - ./plan-model-template.md
 ---
 
-# Template: Plan
+# Template: Plan (Realization)
 
-## Scope
+## Frozen Plan Contract
 
-The model shape below is the artifact contract for manual and interactive
-execution. It contains expected transitions only. Execution progress, actual
-observations, and acceptance belong to a realization and its stage records.
-The [Model and Realization Execution Rule](../../workflows/machine-of-goals/machine-of-goals-workflow.md#model-and-realization-execution-rule)
-selects this shape for manual and interactive model preparation/execution.
-The existing shape for other execution modes is retained separately below.
+- Keep the user-facing document name `Plan`, with heading
+  `# Plan: <Goal Title> / <Branch>`. Provenance, metadata and realization
+  context distinguish this frozen plan from its editable source.
+- Use this template only at the authorized start of step 05, before the first
+  planned action. Step 03 and step 04 use `plan-model-template`; approving or
+  deferring a model never creates a plan, realization directory or realization.
+- Recheck the approved model content digest, selected path, entry and boundaries
+  before creating `_realizations/<YYYY-MM-DDTHH-mm-ss>/plan-v1.md`.
+- Always include `id: <id>` in the frozen plan's frontmatter, copying
+  the source model's generated ID unchanged and using it as the root anchor.
+  Do not add a duplicate `plan-id` field or generate a different identity when
+  freezing, revising or starting a successor realization. The exact frozen
+  copy is identified by its path, version and digest together with this `id`.
+- Freeze the approved goal context, transition, complete stage contracts,
+  dependencies, checks and control boundaries. Copy the model's substantive
+  sections and stable stage anchors; add plan identity/provenance and rebase
+  relative links for the destination. Verify semantic equality with the approved
+  model, allowing only that metadata/link adaptation and explicit selection.
+- `plan-version: 1` names the first frozen plan in this realization directory;
+  it does not inherit `plan-revision`. Each successor has its own directory
+  and first frozen plan. Never increment a version to overwrite an existing plan.
+- Compute the frozen file digest after writing it; record it in the realization.
+  Keep the approved source digest separately because rebasing/provenance changes
+  the bytes. Never invent either hash or a timestamp.
+- Once created, the plan is immutable. Progress, actual actions, observations,
+  evidence and acceptance belong to `realization.md` and stage records. Any model
+  edit needs renewed review before future action and an authorized successor;
+  earlier plans and their factual records remain intact.
+- Omit unused optional fields. A plan is the approved content for one concrete
+  realization, not an editable planning document or progress report.
 
-## Model Contract
+The example below uses the default source `plan.md`. For a parallel variant
+`plan-<id>.md` or author variant `plan<owner_id>.md`, use its actual relative
+source path and distinct plan anchor in provenance and navigation, preserving
+its logical branch and approved revision. Update `plan-model-artifact`,
+`derived-from` where present and the source-model body link together; never
+fall back to `plan.md` for a named variant. Do not create or rename the source
+merely to fill its branch field. Frozen execution filenames remain unchanged.
 
-- A goal may have independently evolving named branches. Different `branch`
-  values are parallel plans; versions within one branch describe evolution.
-- Store a model as `plan-<branch>-v<major>.md`. MINOR and PATCH update that
-  file; MAJOR preserves the earlier model and creates another file. Select
-  the current version within a branch, not across unrelated branches.
-- Use MAJOR.MINOR.PATCH according to model compatibility, not edit size. An
-  added prerequisite may invalidate earlier results.
-- Stage IDs such as `S01` are stable. Their anchors are `stage-s01`, etc.
-  Short English names supply slugs such as `prepare-documents`. IDs determine
-  stage identity; slugs provide readable realization filenames.
-- Every input and output condition has a stage-local ID, such as `I01` or
-  `O01`, and states what would establish it. Prefer relevant documentary
-  evidence; explicit user statements are an allowed fallback when documents
-  cannot be provided. Preserve the distinction in the realization.
-- The applicable exit-stage output conditions cover the goal's target state
-  and success criteria, so completing selected actions alone is not confused
-  with achieving the goal.
-- Do not create execution checkboxes, progress markers, a realization registry,
-  a run index, or a computed automation style in this model.
-- Add detail only where the goal requires it. Remove unused optional fields
-  and sections from generated documents. Metadata stays in Markdown
-  frontmatter; no separate metadata file is required.
-
-## Model Shape
+## Frozen Plan Shape
 
 ````md
 ---
-id: <goal-id>-plan-<branch>-v<major>
+id: <id>
 kind: plan-artifact
 template-id: plan-template
 project-id: <stable-project-id>
-produced-by: machine-of-goals/plan-synthesis-agent
+produced-by: machine-of-goals/plan-realization-agent
 interaction-language: <interaction-language>
 artifact-language: <artifact-language>
 goal-id: <goal-id>
+realization-id: <realization-id>
 branch: <branch-name>
-plan-version: <MAJOR.MINOR.PATCH>
+plan-version: 1
+plan-model-artifact: ../../plan.md
+plan-revision: <approved-plan-revision>
+approved-model-content-hash: sha256:<actual-approved-source-file-digest>
+created-at: <actual-ISO8601-time-with-offset>
 derived-from:
-  - <goal-artifact-path>
+  - ../../plan.md
 ---
 
-<a id="<goal-id>-plan-<branch>-v<major>"></a>
+<a id="<id>"></a>
 
 # Plan: <Goal Title> / <Branch>
 
-Goal: [<goal-title>](./<goal-id>.md#<goal-id>)
+Goal: [<goal-title>](../../<goal-id>.md#<goal-id>)
+Source model: [<branch>](../../plan.md#<id>)
 
-## Model
+## Approved Selection
 
-- Initial state: <expected-starting-state>
-- Target state: <desired-result>
-- Success criteria: <what-establishes-goal-achievement>
+- Content approval: <explicit-user-approval-and-recoverable-reference>
+- Start authorization: <explicit-consent-covering-this-start>
+- Selected path/subplan: <approved-selection-or-single-path>
+- Entry stage: <approved-stage-id>
+- Execution boundaries and stop points: <exact-approved-scope>
 
-## Stages
-
-| Stage | Input | Output | Next |
-| --- | --- | --- | --- |
-| [S01: Prepare Documents](#stage-s01) | <required-state> | <expected-state> | [S02](#stage-s02) |
-| [S02: Submit Application](#stage-s02) | <required-state> | <expected-state> | <stage-link-or-end> |
-
-<a id="stage-<stage-id-lowercase>"></a>
-
-## <Stage ID>: <Short English Name>
-
-Stage slug: `<short-english-kebab-case-name>`
-
-### Input Conditions
-
-- I01: <condition-and-how-it-can-be-established>
-
-### Actions
-
-<the-intended-action-and-any-relevant-dependencies-or-stop-points>
-
-### Output Conditions
-
-- O01: <condition-and-how-it-can-be-established>
+<copy-the-approved-model-context-and-stage-sections-here-with-rebased-links>
 ````
 
-Repeat the stage block for the actual stages, using matching IDs, anchors,
-and English slugs. The first two map rows above are examples, not mandatory
-stages. Optional path choices and subgoal references belong where their
-relationships are explained; they do not require another index.
-
-A change to this model ends an active manual or interactive realization and
-starts a linked successor against the new model. Retain applicable previous
-stage facts without relabeling the version under which actions occurred.
-Document the effective conditions and intended action in the stage record
-before action so later compatible updates cannot rewrite execution facts.
-
-## Existing Shape for Other Execution Modes
-
-The following pre-existing shape is retained unchanged for other modes.
-Its registration, run, automation, and revision rules are not part of this
-manual/interactive contract revision. It does not add extra artifacts to the
-model shape above. The workflow's mode-specific routing selects the
-applicable shape.
-
-```md
----
-id: <goal-id>-plan
-kind: plan-artifact
-template-id: plan-template
-project-id: <stable-project-id>
-produced-by: machine-of-goals/plan-synthesis-agent
-interaction-language: <language-code-or-name-used-for-dialogue>
-artifact-language: <language-code-or-name-used-for-this-artifact>
-goal-id: <goal-id>
-goal-artifact: <path-to-goal-artifact>
-path-options-artifact: <goal-directory>/path-options.md
-plan-artifact: <goal-directory>/plan.md
-plan-execution-style: <single-pass|multi-pass|not-yet-computed>
-parent-goal-id: <parent-goal-id-or-null>
-parent-plan-artifact: <parent-plan-artifact-or-null>
-# Keep both fields null until the first realization is registered.
-plan-revision: <positive-integer-or-null>
-plan-revision-artifact: <plan-revision-artifact-path-or-null>
-created-at: <YYYY-MM-DDTHH:MM:SSZ>
-updated-at: <YYYY-MM-DDTHH:MM:SSZ>
-derived-from:
-  - <goal-artifact-id-or-path>
-  - <path-options-id-or-path>
----
-
-<a id="<goal-id>-plan"></a>
-
-# Plan: <Goal Title>
-
-## 1. Plan Summary
-
-Briefly describe the plan as one transition model from the current state to the
-target state. Alternative achievement choices belong inside the model as paths,
-branches, or subplans.
-
-- Source goal: [<goal-title>](./<goal-id>.md#<goal-id>)
-- Source paths: [Path options](./path-options.md#<goal-id>-path-options)
-- Parent plan for a subgoal: [<parent-plan-title>](../plan.md#<parent-goal-id>-plan) or none
-
-### Current State
-
-<summary of the starting state>
-
-### Target State
-
-<summary of the desired state>
-
-### Success Criteria
-
-<summary of the conditions that establish success>
-
-## 2. State Validation Contract
-
-- Initial state checks:
-- Required intermediate state checks:
-- Final state checks:
-- Evidence requirements:
-- Stop when validation cannot be completed:
-
-## 3. Plan Map
-
-Use this section for stable stage topology. The `Progress` column is a derived
-visual projection of one explicitly named run, not the source of execution
-state. Detailed status and validation remain in that `plan-run`.
-
-- Displayed run: [<run-label>](./run/<realization-record-id>--<YYYYMMDDTHHMMSSZ>.md#<run-id>) or none
-- Displayed plan revision: [Revision <N>](./realizations/plan-revision-<N>.md#<goal-id>-plan) or none
-- Progress synchronized at: <YYYY-MM-DDTHH:MM:SSZ-or-never>
-
-Mirror progress by stable stage id only after checking frozen-contract and
-dependency compatibility. Revision equality alone is insufficient. Leave new
-unstarted stages neutral and clear incompatible projections. Never modify an
-immutable plan-revision snapshot to show execution progress.
-
-Legend: `⚪` not started; `🔄` in progress; `🟠` awaiting validation; `✅`
-accepted; `🟡` partial; `⛔` blocked; `❌` failed or rejected; `🛠️` needs
-revision; `➖` not selected.
-
-| Progress | Stage | Kind | Inputs | Outputs | Possible Next Stages | Required Validation |
-| --- | --- | --- | --- | --- | --- | --- |
-| ⚪ | [S01: <Stage 1 Name>](#stage-s01) | <stage|choice|subplan|merge|validation> | [<input artifact>](<input-artifact-link>) | [<output artifact>](<output-artifact-link>) | [S02](#stage-s02) | <check-id> |
-| ⚪ | [S02: <Stage 2 Name>](#stage-s02) | <stage|choice|subplan|merge|validation> | [S01](#stage-s01) | <state-or-artifact> | [S03](#stage-s03) | <check-id> |
-
-## 4. Stage Details
-
-<a id="stage-<stage-id>"></a>
-
-### Stage: <Stage Name>
-
-- Stage id: `<stage-id>`
-- Kind: <stage|choice|subplan|merge|validation>
-- Purpose:
-- Input state:
-- Output state:
-- Preconditions:
-- Actions:
-- Required resources:
-- Possible input stages:
-  - [<Input Stage Name>](#stage-<input-stage-id>)
-- Possible output stages:
-  - [<Output Stage Name>](#stage-<output-stage-id>)
-- Related paths or subplans:
-  - [<path-or-subplan-label>](./path-options.md#<path-or-subplan-id>)
-- Referenced goal, plan, realization, or artifact:
-  - [<artifact-label>](<artifact-or-anchor-link>)
-  - Relation: <local|parent|child|direct-reference|imported>
-  - Source project: <project-id-or-current>
-  - Source artifact: <artifact-id>
-  - Revision: <current|exact-revision-or-vcs-ref>
-  - Link scope: <project|workspace|remote>
-- Validation criteria:
-- Evidence expected:
-- Risks:
-- Stop points:
-
-## 5. Shared Dependencies
-
-- Internal dependencies:
-- External dependencies:
-- Decision dependencies:
-
-## 6. Shared Risks and Controls
-
-- Risk:
-- Impact:
-- Mitigation:
-- Stop condition:
-
-## 7. Automation Boundaries
-
-- Allowed automatic actions:
-- Actions requiring confirmation:
-- Actions not allowed:
-- Dry-run required before:
-
-## 8. Revision and Alignment Conditions
-
-- Refine unstarted stages without a revision when frozen obligations remain unchanged; log the change and assess dependencies.
-- Revise a stage when:
-- Create a plan revision when frozen obligations change or accepted results become inapplicable; identify revalidation or rework:
-- Revise the plan when:
-- Reformulate the goal when:
-- Mark realizations `review-required` when:
-
-## 9. Subgoal Integration Boundaries
-
-Add one row for every delegated subgoal plan.
-
-| Subgoal | Subgoal Plan | Entry Stage | Input Artifact | Output Artifact | Exit Stage | Parent Continuation |
-| --- | --- | --- | --- | --- | --- | --- |
-| [<subgoal-title>](./<subgoal-id>/<subgoal-id>.md#<subgoal-id>) | [<subgoal-plan-title>](./<subgoal-id>/plan.md#<subgoal-id>-plan) | [<stage-label>](#stage-<stage-id>) | [<artifact-label>](<artifact-link>) | [<artifact-label>](<artifact-link>) | [<subgoal-stage-label>](./<subgoal-id>/plan.md#stage-<stage-id>) | [<stage-label>](#stage-<stage-id>) |
-
-<a id="realization-registry"></a>
-
-## 10. Realization Registry
-
-Add a new row whenever a realization is registered. Selecting another path or
-subplan always creates a new row, even when it reuses the same realization
-mechanism or implementation. Preserve earlier rows as realization history.
-
-| Record | Realization Artifact | Realization | Kind | Selected Path or Subplan | Decision | Plan Revision | Realization Revision | Registration | Readiness | Alignment | Runs | Last Run | Last Result |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---: | --- | --- |
-| <a id="<realization-record-id>"></a>`<realization-record-id>` | [<realization-label>](./realizations/<realization-record-id>.md#<realization-record-id>) | [<realization-label>](<definition-or-implementation-link>) | <manual|shell|python|workflow|agentic|external> | [<path-or-subplan-label>](./path-options.md#<path-or-subplan-id>) | [<decision-label>](./realization-decision.md#<goal-id>-realization-decision) | [Revision <N>](./realizations/plan-revision-<N>.md#<goal-id>-plan) | [Revision <R>](./realizations/<realization-record-id>.md#<realization-record-id>-revision-<R>) | <registered|retired> at <YYYY-MM-DDTHH:MM:SSZ> | <draft|ready|unvalidated|failed> | <aligned|review-required|incompatible> | <count> | <YYYY-MM-DDTHH:MM:SSZ-or-never> | <running|succeeded|partial|failed|blocked|cancelled|precondition-failed|never> |
-
-`plan-execution-style` is computed from active rows: it is `multi-pass` when
-at least one automatic realization is registered and `single-pass` otherwise.
-Registration is the transition point.
-
-Statistics are cumulative and remain after bounded run files are removed.
-Individual retained runs are linked from each realization artifact and the
-shared [run index](./run/index.md#<goal-id>-run-index), not from this registry.
-Retain three to five terminal runs per realization record, with five as the
-default.
-
-Before the first realization is registered, keep both revision fields null,
-apply every clarification directly to this `plan.md`, and do not create a
-snapshot. When the first realization is registered, set `plan-revision` to 1,
-set `plan-revision-artifact`, and copy this plan to
-`./realizations/plan-revision-1.md`. Rebase relative links for the deeper
-directory and never overwrite an existing snapshot. Before copying, clear the
-displayed run, synchronization time, and derived progress so the snapshot has
-neutral markers and contains no mutable execution presentation.
-
-After registration, edit unstarted work without a revision if no frozen
-obligation changes; record its dependency and realization compatibility below.
-Create a new immutable revision before executing changed frozen obligations.
-Preserve completed runs and original acceptance; never rebind their baseline.
-Revision fields identify the historical baseline, not a byte-identical copy of
-the current plan. Runs freeze effective stage contracts before action.
-Registry, statistics, and progress alone do not create revisions.
-
-After the decision is committed, create the linked
-`./realizations/<realization-record-id>.md` before any run is created.
-
-<a id="plan-change-log"></a>
-
-## 11. Plan Change Log
-
-Append entries for post-baseline plan edits, including those creating a revision.
-Keep prior entries and stable stage ids. Do not overwrite a frozen run contract.
-
-<a id="plan-change-<change-id>"></a>
-
-### <Change Id> — <YYYY-MM-DDTHH:MM:SSZ>
-
-- Affected stages and change:
-- Reason:
-- Frozen obligations affected: <none-or-contract-links>
-- Dependency impact and earlier-result applicability:
-- Realization compatibility and approval scope:
-- Decision: <future-only-no-revision|new-revision-required>
-- Baseline and any new revision:
-- Revalidation or rework: <required-work-and-original-evidence-links> or none
-
-## 12. Open Questions
-
-- [ ] <question that affects planning or validation>
-```
+The final placeholder requires the complete approved content, including goal
+success criteria, every applicable stage and alternative, stable anchors,
+conditions, actions, checks and dependencies. A link to a mutable model alone
+is insufficient; this plan must be readable without recovering old model bytes.

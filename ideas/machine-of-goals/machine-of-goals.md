@@ -118,7 +118,7 @@ The machine can also help prepare project documentation for external software im
 
 It is quite possible that other methodologies exist or will appear; in that case, the machine of goals should adapt to these new methodologies.
 
-A skill provides reusable guidance for an agent; an automated action performs the covered actions in its environment and can produce ordinary logs without narrating every action as a manual walkthrough. An automatic realization must validate the initial state, required intermediate results, and final state defined by the plan. **Creating reusable ways to achieve goals and exchanging them with their execution experience within the Double ecosystem is one of the central ideas of Machine of Goals.**
+A skill provides reusable guidance for an agent; an automated action performs the covered actions in its environment and can produce ordinary logs without narrating every action as a manual walkthrough. Invoking a collapsed skill or automated action creates no Machine of Goals timestamped execution directory, frozen-plan copy, realization document, stage journal or additional index. Its reusable mechanism is the realization; the machine does not impose a second execution-history layer. Checks and user-selected authority remain binding. An automatic realization must validate the initial state, required intermediate results, and final state defined by the plan. **Creating reusable ways to achieve goals and exchanging them with their execution experience within the Double ecosystem is one of the central ideas of Machine of Goals.**
 
 Repeatability and automation are separate concerns. A manual walkthrough may serve as a reference for many later executions, while an executable realization may be used only once. Both manual and automatic experience can reveal changes needed in the model or its realizations. Exchange preserves the goal context, plan, relevant realizations, validation criteria, and selected documented walkthroughs with evidence prepared for the intended audience.
 
@@ -214,13 +214,13 @@ The idea of Machine of Goals is part of the Double ecosystem, just like the idea
 - A realization uses a timestamp-named directory, a main Markdown document, separate stage documents with input state, actions, and output state, and supporting attachments.
 - Structured metadata remains in Markdown frontmatter; separate YAML files and extra navigation indexes are unnecessary.
 - Simple manual execution should not require extra registration, release, or revision-snapshot artifacts merely to preserve the walkthrough.
-- `path-options.md` is a living catalog of achievement paths; realization choices and useful statistics remain discoverable in the plan context.
+- `path-options.md` is a living catalog of achievement paths. The goal links documented realizations; their own maps expose actual progress. The plan contains no execution registry, statistics or progress projection.
 - Source export can transfer the goal description and plan model alone, or include selected or all documented realizations and supporting evidence.
 - A manually executed model and its walkthrough can be collapsed on request into an AI-agent skill or an automated action; these are distinct possible results and may be combined.
 - The idea establishes these reuse and export capabilities without assigning their generation flow to a particular operating contract.
 - Repeatability does not depend on automation, and a manual execution example can support repeated use by other people.
 - Contextual Markdown links should connect goals, plan elements, realizations,
-  decisions, revisions, runs, and evidence where those relationships are used;
+  frozen plans, stage records and evidence where those relationships are used;
   artifacts should not repeat a universal navigation menu.
 - A goal, subgoal, plan, or realization in another project may be used by
   direct reference without first exporting or importing it.

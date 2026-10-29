@@ -5,7 +5,7 @@ description: >
   Use this skill when the user wants to formulate, clarify, inspect, plan,
   realize, validate, import, export, split, or continue a goal through the
   Machine of Goals. Trigger on goal artifacts, subgoals, path discovery, plan
-  synthesis, registered realizations, computed plan style, working plan runs,
+  synthesis, documented realizations, stage evidence, optional skills/actions,
   validation, plan exchange, reusable plans, or collapsed plans. Trigger and
   route to `double-agent` when the user asks to change Machine of Goals
   operating artifacts under `.double/`. Do not trigger on casual mentions of
@@ -39,7 +39,7 @@ registries, evidence catalogs, or companion documents for convenience. If the
 workflow provides no artifact for a piece of process information, record it in
 the appropriate existing artifact section instead of creating a new document.
 In particular, link screenshots and other validation evidence directly from
-the relevant plan-run stage or validation section; do not introduce a separate
+the relevant realization stage or Result section; do not introduce a separate
 evidence index unless the canonical workflow explicitly provides for one.
 
 Distinguish process artifacts from the actual deliverables of an approved
@@ -65,9 +65,9 @@ including:
 - synthesizing or revising a plan
 - choosing a realization decision
 - realizing plan stages
-- working with registered plan realizations, computed plan style, current plan
-  runs, or aggregate realization statistics
-- validating current run results or overall goal achievement
+- working with documented realizations, stage evidence or existing collapsed
+  skills and automated actions
+- validating realization stage results or overall goal achievement
 - importing an existing plan, analog, runbook, workflow, or reusable fragment
 - exporting a plan package, checklist, runbook, workflow,
   specification, or collapsed plan
@@ -97,7 +97,7 @@ workflow agent.
 
 Example:
 
-> I can treat this as a Machine of Goals run and inspect the current goal state.
+> I can treat this as a Machine of Goals workflow and inspect the current goal state.
 > Shall I start from the workflow entry protocol?
 
 ## Entry Protocol
@@ -107,7 +107,7 @@ When the skill is activated, follow the workflow definition in
 
 Before producing or changing workflow artifacts, confirm or infer and explain:
 
-- target artifact catalog for a new goal; default to `./goals`
+- target artifact catalog for a new goal; use the project-rule base catalog, falling back to `./goals`
 - target goal, plan, imported plan, subgoal, or goal directory
 - parent goal directory when the target is a subgoal
 - current workflow step
@@ -122,7 +122,7 @@ default state:
 
 - current-step: `01-goal-formulation`
 - current-mode: `clarification`
-- goal-catalog: `ask-user`, default `./goals`
+- goal-catalog: `ask-user`, project-rule base catalog or default `./goals`
 - expected-output: `goal-artifact`
 
 If the user starts from an existing goal, plan, imported plan, or subgoal,
@@ -141,18 +141,46 @@ Synthesis is not yet available, and offer to resolve the questions one by one.
 Offer transition to `03-plan-synthesis` only when at least one plausible path
 exists and no `Open Questions` remain.
 
-During `04-plan-review-and-decision`, show the user the selectable paths or
-subplans, their material trade-offs, and the compatible registered
-realizations. Ask the user to confirm the selected path or subplan explicitly.
-A recommendation is allowed, but neither the skill nor the responsible agent
-may make the selection on the user's behalf. Do not commit the realization
-decision or advance to `05-plan-realization` until the user confirms the
-selection, the selected realization row has been added to section 10 of
-`plan.md`, and the first executable baseline or current applicable revision
-snapshot exists without overwriting earlier history. A
-different selected path always creates a new realization row, even when it
-reuses the same realization mechanism. Before advancing, create the persistent
-`realizations/<realization-record-id>.md` artifact for the approved realization.
+The generated artifact keeps the user-facing name `Plan` and heading
+`# Plan: <Goal Title> / <Branch>` in planning and realization. `plan-model`
+is a technical role, not a replacement display name. Preserve the distinct
+metadata, templates and storage contracts below.
+
+During `03-plan-synthesis`, produce only `plan-model` from
+`plan-model-template`, stored as `<goal-directory>/plan.md` by default.
+Generate one short human-readable word as `id`, unique within the goal directory,
+for every new plan and always write it in frontmatter. The word must be derived
+from the plan's context: jointly express its subject, core meaning and goal in
+a single word, distinguishing it from other variants. Use lowercase English
+letters only; on collision choose another word combining all three concepts.
+The plan has only `id`; its root anchor equals that value. Revisions and frozen
+copies retain it, with exact paths, revisions/versions and digests identifying
+copies. `plan-id` in a referencing artifact points to this plan `id`; it is not
+an additional identity field on the plan. Independent parallel variants use
+`plan-<id>.md`; author variants use `plan<owner_id>.md` with the actual author's
+`owner-id`, without a hyphen after `plan`. Discovery may identify variants before
+synthesis; no earlier default plan or major divergence is required. Record each
+actual plan in the goal table, preserving existing files and rows. Paths/subplans
+may remain inside one plan; parallel stages or different execution media alone
+do not create separate plans.
+During step 04, show a contextual Markdown link to the actual current plan
+file and explain choices, trade-offs, entry and boundaries. Ask for approval
+of that linked file's current contents, selection and boundaries. Keep SHA-256
+as internal verification evidence computed before the request and rechecked
+at start; do not show it in approval questions, titles, suggested answers or
+normal review summaries. Retain the internal baseline with the user decision
+in existing recoverable context; create no extra checksum/approval artifact.
+Every model edit invalidates approval for future execution. If start is deferred,
+leave only the model. Never create an execution plan, snapshot, realization,
+registration row or separate decision file during steps 03 or 04.
+
+Only at the authorized manual start of step 05, recheck exact approval/content and
+freeze `_realizations/<start>/plan-v1.md` from `plan-template`, then create
+`realization.md`. Stages and the realization link this immutable local plan.
+A collapsed skill/action creates no Machine of Goals execution record when
+invoked; follow its applicable checks, permissions and stop points.
+Do not require executor files to finish review. See the canonical
+[all-mode boundary](../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-model-execution-boundary).
 
 ## Structured User Choices
 
@@ -230,78 +258,59 @@ validation flow.
   sections where artifact relationships are explained; frontmatter references
   do not replace those links, and a universal navigation block is not required.
 - Every artifact created from a Machine of Goals template records that
-  template's stable top-level `id` in frontmatter `template-id`; revisions and
-  plan revision snapshots preserve it.
+  template's stable top-level `id` in frontmatter `template-id`; a frozen
+  execution plan uses `plan-template` rather than the source model template.
 - External goals, plans, subplans, paths, and realizations may remain direct
   references when no copy or adaptation is requested; direct reference does
   not require Plan Exchange.
-- Each goal has one plan artifact at `<goal-directory>/plan.md`; alternative
-  achievement paths are selectable branches or subplans inside it.
-- `path-options.md` remains the living catalog of possible achievement paths.
-  Paths may be added, deprecated, or selected later without replacing retained
-  realization history.
-- Section 10 of `plan.md` is the realization registry and owns realization
-  records, computed style input, readiness, alignment, and aggregate run
-  statistics. A different selected path always creates a new row with a unique
-  realization record id.
-- Before the first realization, keep `plan-revision` and
-  `plan-revision-artifact` null, refine only `plan.md`, and create no snapshot.
-  The first realization freezes revision 1. Later revisions are required
-  only when frozen stage obligations change; compatible future-only edits
-  are recorded in the current plan change log.
-- Every approved manual or automatic realization has one persistent
-  `<goal-directory>/realizations/<realization-record-id>.md` artifact. Create it
-  after the decision and local plan snapshot and before any run.
-- Registering an automatic realization for the plan or a subplan changes the
-  computed style from `single-pass` to `multi-pass`; file creation and first
-  successful validation are not transition points.
-- Mutable execution state belongs in
-  `<goal-directory>/run/<realization-record-id>--<YYYYMMDDTHHMMSSZ>.md`. The
-  current `plan.md` may mirror only the run's derived emoji progress in its
-  Plan Map after frozen-contract and dependency compatibility checks; the run remains
-  authoritative, and immutable plan-revision snapshots are never updated.
-- Every command generated for human execution of a manual plan stage must be
-  appended to the current run before or when it is presented. Preserve
-  generation order and corrected or superseded commands; use placeholders or
-  protected-input references instead of literal secrets.
-- Successful plan-action and validation commands, including those executed by
-  the agent or an automatic realization, belong in the current run for reuse
-  and automation after observed success and before stage validation. Preserve
-  order, stage, purpose, working context, exact safe command, concise result,
-  and replay constraints. Failed attempts, redundant repeats and incidental
-  bookkeeping need not be logged as a full trace. Verify each retained command
-  in a group; recording a command does not authorize replay or automation.
-- Immutable copies of plan revisions used by realizations belong in
-  `<goal-directory>/realizations/plan-revision-<N>.md`. Rebase relative links
-  when copying `plan.md`, and never overwrite an existing revision snapshot.
-- `<goal-directory>/run/index.md` links active, pinned, and retained run files;
-  each realization artifact links its own retained runs, while the plan
-  realization registry links the artifact and index but not individual run
-  files.
-- A realization decision and every run must link the exact local
-  `realizations/plan-revision-<N>.md` snapshot and the exact realization
-  revision; `current` is allowed only before the execution commit point.
-- A realization decision is not committed until the selectable paths or
-  subplans have been shown to the user and the user has explicitly confirmed
-  the selected path or subplan.
-- Retain a configured three to five terminal run logs per realization record while
-  preserving aggregate statistics in the corresponding `plan.md` realization
-  row.
-- Import and export of reusable multi-pass plans preserve goal context, paths,
-  registered realizations, and validation contracts; bounded run logs are not
-  required package history.
-
-## Stage Contracts and Plan Changes
-
-Follow the [revision rule](../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-revision-history-rule) and
-[stage contract rule](../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-contract-rule):
-
-- Log compatible future-only edits without a new revision; assess dependencies
-  and realization fit. Preserve applicable accepted results.
-- Freeze each effective stage contract in its run before action; validate
-  against captured criteria and evidence. Preserve attempts and baseline links.
-- Create a new revision before executing changed frozen obligations; identify
-  revalidation or rework. Never rebind completed runs or invent legacy contracts.
+- Models use `plan-model-template`; frozen execution plans use `plan-template`.
+  A newly created frozen plan records `plan-template` and producer
+  `machine-of-goals/plan-realization-agent`. The source model keeps its own
+  model identity, template and synthesis producer unchanged.
+- Every plan contains expected transitions, with no execution progress,
+  acceptance, execution registry or statistics. Its
+  logical `branch` is distinct from selectable paths/subplans inside it.
+  The goal table links every actual `plan.md`, `plan-<id>.md` or
+  `plan<owner_id>.md`; omit a default row when no ordinary plan exists.
+  `path-options.md`, approval and frozen-plan/realization provenance link actual
+  selected file/anchors; never precreate files or hypothetical links.
+  See the canonical filename rule.
+- At authorized manual start, freeze complete approved content and rebase links
+  without altering conditions/actions. Record the actual approved source hash
+  and frozen-plan hash separately in the realization, with actual time/timezone.
+- Render each realization Stage Map State cell as a single emoji under the
+  workflow's Realization Progress Emojis rule. Keep the explanatory legend
+  above the map; omit state names in cells and duplicate text-status columns.
+  Prose progress summaries may add short labels. Legend: ⚪ pending, 🔄 in progress,
+  🟠 awaiting verification, ✅ completed, 🟡 partial, ⛔ blocked, ❌ failed,
+  🛠️ needs revision, ➖ not selected. Only verified/accepted outputs permit ✅;
+  keep textual metadata unchanged and never project progress into either plan.
+- Frozen plans remain immutable. Mutable current-stage, actions, progress,
+  evidence and acceptance belong to the realization and three-part stage records.
+  Capture stage contracts from that plan; verify input before action and output
+  before completion. Offer documentary evidence with an identified explicit
+  user-statement fallback. Resume awaiting outputs at validation, not by replay.
+- A source edit ends the active manual/interactive realization before new action
+  and requires renewed review plus an authorized successor. Verify already
+  observed outputs against their original plan; preserve all earlier plans and
+  facts. Inherited results retain origin and need an applicability check.
+- A collapsed realization is a skill or automated action, not a wrapper around
+  another execution journal. Invocation creates no Machine of Goals directory,
+  frozen-plan copy, realization document, stage record or index. Keep covered
+  initial/intermediate/final checks and authorization in the mechanism.
+- Repeatability is independent of automation. No computed plan style,
+  registration transition or cumulative invocation statistics are required.
+- Preserve safe generated instructions and useful successful commands in the
+  manual stage's Actions section, with context, observed results and replay
+  constraints. Recorded commands do not authorize replay or automatic execution.
+- Inspect manual progress by following the goal's existing links to the
+  applicable realization and reading its status/current-stage and Stage Map.
+  Do not guess activity solely from the newest filename or mirror its progress.
+- Import/export retains context, model/plan distinction, paths, automation
+  definitions and validation contracts. Imported editable material remains a
+  model; import never authorizes execution or a new local execution baseline.
+  Historical provider plans may remain historical package evidence. Existing
+  user-artifact conversion/migration requires separately authorized scope.
 
 ## Completion Handoff
 
@@ -319,3 +328,9 @@ A No stops continuation without rejecting the completed result. If blocked,
 name the blocker and offer clarification or repair. At the workflow end, state
 completion instead of inventing a next step. After plan-stage execution, offer
 `06-plan-validation` before any further plan-stage execution.
+
+## Project Rules Entry
+
+Before normal entry questions or catalog selection, follow the canonical
+workflow's Project Rules Loading Protocol for the active user project. Load
+common rules and this machine's rules; absence of `.double-rules/` is normal.

@@ -26,8 +26,9 @@ Changes recorded for the `machine-of-goals` module.
 
 ## Value
 
-### 0.0.15 — 2026-10-28
+### 0.0.15-rc — 2026-10-29
 
+- Load project-owned common and Machine of Goals rules and honor configured catalog settings.
 - Recognize project-level facts, versions and history as project context under `.double-rules/`.
 - Prefer project-defined version knowledge and retain the historical knowledge path as the default.
 - Separate the editable plan from the immutable execution plan; freeze approved content only when execution is authorized to start.
@@ -40,7 +41,6 @@ Changes recorded for the `machine-of-goals` module.
 - Resume existing realizations without repeating completed actions; require an authorized successor when approved execution obligations change.
 - Let collapsed skills and automated actions produce their native outputs without extra Machine of Goals execution records.
 - Remove obsolete execution-record contracts and align planning, realization, validation and exchange guidance.
-- Load project-owned common and Machine of Goals rules and honor configured catalog settings.
 
 ### 0.0.14-rc — 2026-10-22
 

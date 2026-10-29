@@ -67,7 +67,7 @@ derived-from:
 - Unknowns:
 - Reuse / import opportunity:
 - Lifecycle: <discovered|included-in-plan|implemented|exercised|validated|deprecated>
-- Plan element: [<plan-element-label>](./plan-<branch>-v<major>.md#<plan-anchor-or-subplan-id>) or none
+- Plan element: [<plan-element-label>](./plan.md#<model-anchor-or-subplan-id>) or none
 - Recommendation: <candidate|include-in-plan|keep-as-alternative|reject|needs-research>
 
 ## 4. Comparison
@@ -87,11 +87,21 @@ derived-from:
 
 ## Model Link Contract
 
-For manual and interactive execution, a discovered path can be represented
-inside a model or become an independently maintained plan branch. Link the
-actual branch model and relevant stage or subplan where the path relationship
-is described; include more than one link only when the path genuinely spans
-models. Before synthesis, use `none` rather than a link to an uncreated file.
-Do not turn this path catalog into another realization or evidence index.
-The generalized model-link placeholder does not change execution-mode choice
-or any automatic action contract.
+A discovered path can become a path/subplan inside one plan or an independently
+developed parallel plan. Record that need during discovery; create plans only
+at step-03 synthesis. Ordinary plans use `plan.md`, parallel variants use
+`plan-<id>.md`, and author variants use `plan<owner_id>.md`, without a hyphen
+after `plan`. No prior ordinary plan or major divergence is required.
+Each plan has only `id` in frontmatter, generated as one short human-readable
+word derived from the plan's context: jointly express its subject, core meaning
+and goal in a single word. Its root anchor equals `id`; generation/collision
+rules preserve all three concepts and use no numeric suffix. Plan IDs, path IDs
+and logical revision branches are distinct; parallel stages alone do not create
+separate plans. Link actual file/stage anchors and goal-table rows only.
+Before synthesis use `none` for an uncreated plan. Keep this catalog separate
+from realization registration and evidence.
+This link names an editable model, not a fixed execution plan. Its approval
+alone creates no plan/realization files. At execution, the realization links
+its own immutable plan. Do not create executor files during path discovery,
+synthesis or deferred review. Apply the same boundary to the default plan and
+every actual parallel or author variant without changing the automation mechanism.

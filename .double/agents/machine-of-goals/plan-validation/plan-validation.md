@@ -30,16 +30,26 @@ structured-choice, stop-point, and continuation rules remain binding.
 
 ### Inputs and Outputs
 
-- Inputs: goal/model criteria, the selected realization and stage record,
+- Inputs: goal and frozen-plan criteria, the selected realization and stage record,
   captured conditions, actual results, and supplied evidence or statements.
 - Outputs: updated `stage-realization` and `realization-artifact`. Final
   acceptance is summarized in the main Result, not a separate document.
 
 ### Execution Rules
 
-- Recheck source model identity/content before output acceptance. A changed
-  model ends the realization; preserve facts against captured criteria and
-  route to revision/review and an authorized successor.
+- Apply the workflow's Realization Progress Emojis rule to the realization map
+  and user-facing progress summaries/handoffs. State cells contain only one
+  emoji, explained by the legend above the map; do not repeat state names or
+  add a duplicate status column. Prose handoffs may add short labels. Keep
+  textual metadata unchanged. Initialize cells with `⚪`; show `🔄` during work
+  and `🟠` awaiting verification.
+  Use `✅` only after required outputs are accepted; preserve `🟡`, `⛔`, `❌`,
+  `🛠️` or `➖` for their actual recorded outcomes. Never put mutable progress
+  in the editable model or frozen plan.
+- Verify frozen plan integrity and validate observed outputs against that
+  unchanged plan and captured conditions. A changed source model blocks further
+  planned action and requires renewed review/authorized successor; it never
+  rewrites the earlier plan or prevents checking already observed results.
 - Compare actual outputs with the captured conditions. Offer relevant
   documentary evidence and inspect its applicability. When documents cannot
   be supplied, preserve the explicit user statement as the acceptance basis;
@@ -48,9 +58,11 @@ structured-choice, stop-point, and continuation rules remain binding.
   Missing or ambiguous confirmation cannot complete the stage. Record the
   decision through the existing dialogue/structured-choice rules where a user
   decision is needed; preserve decisions already explicitly supplied.
-- Update only the realization map after output acceptance. Its summary must
-  distinguish documentary and user-statement confirmation. Check applicable
-  exit and goal success criteria before completing the realization.
+- After the validation decision, update the realization map's emoji to the
+  recorded outcome. Only accepted required outputs permit `✅`;
+  partial, failed, blocked or needs-revision results keep their own markers.
+  Preserve documentary/user-statement confirmation in the summary. Check exit
+  and goal success criteria before completing the realization.
 - For inherited results, recheck inputs/dependencies/current applicability
   and preserve their original source version and factual basis.
 - Recommend only eligible next stages and use the existing continuation rule.
@@ -59,118 +71,26 @@ structured-choice, stop-point, and continuation rules remain binding.
 - Do not execute the next stage, weaken a criterion to fit a result, or write
   authoritative execution state into the model.
 
-## Retained Instructions for Other Execution Modes
+## Collapsed Automatic Realization
 
-The remainder is retained for other modes. Its legacy execution-data rules
-(run, registry, snapshot, statistics, or progress projection) do not apply to
-the manual/interactive route above. Common operating-change routing and user
-control boundaries still apply in either route. No collapsing or automatic
-behavior is redesigned by this synchronization.
+For a requested existing skill or automated action, follow the workflow's
+Automatic Realization Rule. Invoke only within its approved scope; preserve
+initial, required intermediate and final checks and stop points. Report the
+mechanism's actual result, missing confirmation or blocker. Create no Machine
+of Goals execution directory, frozen-plan copy, realization wrapper, stage
+journal or execution index for its invocation. Automatic action is not proof
+of success. A tool used inside a documented walkthrough remains part of that
+walkthrough, with its actual actions and evidence recorded there.
 
-## Purpose
+## Control and Contracts
 
-`Plan Validation` compares current run results or final goal results with
-explicit criteria, records the decision in the run, and updates aggregate
-statistics in the selected plan realization row.
+Follow canonical workflow routing, structured choices and continuation rules.
+Preserve already supplied exact authorization. After manual stage action, hand
+off to validation before further stage execution. Model edits require renewed
+review and an authorized successor; validate prior results against their
+unchanged frozen plan. Preserve source context when inheriting evidence.
+Route operating changes under `.double/` through installed `double-agent`.
+Existing user artifacts are history, not an alternative current contract;
+conversion requires separately authorized scope.
 
-## Position in Workflow
-
-- Step: `06-plan-validation`
-- Workflow: `machine-of-goals-workflow`
-- Stage type: `validation`
-- Default mode: `validation`
-
-## Inputs
-
-- `plan-run`
-- `path-options`
-- `stage-validation-criteria`
-- `goal-artifact`
-- `plan-artifact`
-- `selected-realization-record`
-- `realization-artifact`
-- `execution-evidence`
-
-## Outputs
-
-- `updated-plan-run`
-- `updated-realization-artifact` when run status or retention changes it
-- `updated-run-index` when retention removes a run
-- `updated-plan-artifact` for realization statistics and when plan revision is required
-- `plan-revision-snapshot` when frozen obligations change
-- `goal-progress-note`
-- `revision-or-continuation-decision`
-- `goal-closure-signal` when applicable
-
-## Responsibilities
-
-- validate results against explicit criteria
-- before accepting a stage, check that applicable successful plan-action and
-  validation commands are captured in execution order with context, observed
-  result and replay/automation constraints, or that no applicable commands
-  executed. Do not require a full trace or failed-command list; for command
-  groups do not infer earlier success from the last exit code alone
-- distinguish accepted, rejected, partial, blocked, and needs-revision results
-- conduct validation in dialogue until an explicit decision is reached
-- record validation decisions, evidence, and terminal result in the current run
-- update the run's Plan Map emoji after the validation decision and mirror it
-  into current `plan.md` only after frozen-contract and dependency compatibility checks
-- replace latest `running` result with the terminal result in the selected
-  realization row in `plan.md` without incrementing run count again
-- enforce bounded run retention after terminal statistics update
-- update the realization artifact and `run/index.md`; remove their links to a
-  run only when retention removes its file
-- verify contextual links to exact revisions and validation evidence before
-  accepting a terminal result
-- revise `plan.md` only when feedback changes the intended transition model and
-  mark affected realizations `review-required`
-- do not create a revision for realization registration against unchanged plan
-  content, aggregate statistics, timestamps, or progress projection
-- create a new snapshot only when frozen obligations change; follow the
-  linked Stage Contract and Plan Revision History rules
-- decide whether the workflow should continue, branch, revise, reformulate,
-  pause, close, or request export
-
-## Boundaries
-
-- interpret “working files” as files under `.double/`
-- interpret “project files” as user artifacts under `goals/`, `ideas/`, and
-  `knowledge/`
-- route requests to change working files to `double-agent`
-- if `double-agent` is unavailable, do not change a working file; require
-  its installation first
-- must not accept results without evidence or user confirmation where required
-- must not change success criteria to fit the result
-- must not execute the next stage
-- must not execute changed frozen obligations before their new local
-  revision snapshot and superseding contract exist
-- must not update an immutable plan-revision snapshot with execution progress
-- must not package reusable artifacts without `Plan Exchange`
-
-## Required Artifacts
-
-- System prompt: `.double/prompts/machine-of-goals/system/plan-validation.md`
-- Interaction prompt: `.double/prompts/machine-of-goals/interaction/plan-validation.md`
-- Role: `.double/roles/machine-of-goals/plan-validation-role.md`
-- Plan template: `.double/templates/machine-of-goals/plan-template.md`
-- Modes registry: `.double/registries/machine-of-goals/modes-registry.md`
-- Workflow: `.double/workflows/machine-of-goals/machine-of-goals-workflow.md`
-
-## Transition Rule
-
-The step is complete when an explicit validation decision has been recorded in
-the run, aggregate statistics have been updated, and changes to frozen
-obligations have their required new snapshot; future-only changes have a
-logged compatibility decision.
-
-## Stage Contracts and Plan Changes
-
-Follow the [revision rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-revision-history-rule) and
-[stage contract rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-contract-rule):
-
-- Log compatible future-only edits without a new revision; assess dependencies
-  and realization fit. Preserve applicable accepted results.
-- Freeze each effective stage contract in its run before action; validate
-  against captured criteria and evidence. Preserve attempts and baseline links.
-- Create a new revision before executing changed frozen obligations; identify
-  revalidation or rework. Never rebind completed runs or invent legacy contracts.
+Canonical workflow: [Machine of Goals](../../../workflows/machine-of-goals/machine-of-goals-workflow.md).

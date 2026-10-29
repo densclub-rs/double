@@ -220,7 +220,7 @@ A main realization document makes it clear when execution began, what model it f
 #### Boundaries
 
 - Creating the document does not establish successful execution.
-- No separate registration artifact, standalone YAML metadata file, or run index is required solely to record a manual start.
+- No separate registration artifact, standalone YAML metadata file, or additional execution index is required solely to record a manual start.
 
 #### Anti-Patterns
 
@@ -261,7 +261,7 @@ A stage account with input, actions, output, and supporting evidence lets anothe
 #### Boundaries
 
 - An expected output or completed marker alone is not evidence.
-- Automatic modules may emit ordinary logs without narrating every action.
+- Automatic modules may emit native operational logs; Machine of Goals creates no additional invocation journal, timestamped realization directory or frozen-plan copy for a collapsed skill/action.
 - Readable records need not reproduce an entire conversation or expose protected inputs.
 
 #### Anti-Patterns

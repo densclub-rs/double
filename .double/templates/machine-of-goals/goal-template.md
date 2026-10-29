@@ -21,7 +21,7 @@ kind: goal-artifact
 template-id: goal-template
 project-id: <stable-project-id>
 produced-by: machine-of-goals/goal-formulation-agent
-owner-id: double-project
+owner-id: densclub
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
 # Optional relationship field: parent-goal-id: <parent-goal-id>
@@ -116,41 +116,40 @@ Describe the state that should exist after successful realization.
 
 Possible paths: [Path options](./path-options.md#<goal-id>-path-options)
 
-| Branch | Version | Model |
+| Branch | Review revision | Plan |
 | --- | --- | --- |
-| <branch> | <MAJOR.MINOR.PATCH> | [<model-title>](./plan-<branch>-v<major>.md#<plan-id>) |
+| <default-branch> | <positive-integer> | [<plan-title>](./plan.md#<plan-id>) |
 
-| Started | Model | Realization |
+| Started | Frozen plan | Realization |
 | --- | --- | --- |
-| <actual-start-with-timezone> | <branch> / <version> | [<realization-label>](./realizations/<YYYY-MM-DDTHH-mm-ss>/realization.md#<realization-id>) |
+| <actual-start-with-timezone> | [Plan v1](./_realizations/<YYYY-MM-DDTHH-mm-ss>/plan-v1.md#<plan-id>) | [<realization-label>](./_realizations/<YYYY-MM-DDTHH-mm-ss>/realization.md#<realization-id>) |
 
 ```
 
 ## Artifact Navigation Scope
 
-For manual and interactive execution, section 11 above links real branch
-models and timestamped realizations directly. Add only existing useful rows;
-omit a table until its artifacts exist. The realization owns current stage,
-progress, and checks, so this goal navigation does not duplicate that state.
-No separate registration, decision artifact, run index, or computed automation
-style is required for the manual/interactive shape. Parallel branches may
-coexist; retained major versions in one branch describe evolution.
+The plan table records every actual plan's `id`, branch, review revision and
+file/anchor. The ordinary editable filename is `plan.md`.
+Every plan has only `id` in frontmatter, generated as one short
+human-readable word derived from the plan's context: jointly express its
+subject, core meaning and goal in a single word. The root anchor equals `id`.
+The sample row links ordinary `plan.md#<plan-id>`; include it only when that file
+exists, substituting the actual plan's `id`. Parallel variants use `plan-<id>.md`;
+author variants use `plan<owner_id>.md`, without a hyphen after `plan`. Each plan
+uses its own generated word as its root anchor regardless of filename. A goal
+may start with parallel variants and have no ordinary plan. Preserve every
+actual row/file; ordinary revisions keep the same `id`, branch and filename.
+Do not add hypothetical rows or infer a new file from branch metadata.
 
-## Existing Navigation for Other Execution Modes
+Omit the table only before any plan exists. Frozen-plan/realization rows appear
+only after authorized step-05 start. The realization owns current stage,
+progress and checks. Review revisions are not execution plan versions; no
+separate registration, decision, execution index or computed style is required.
 
-The pre-existing section below is retained unchanged for other modes. It is
-not an additional navigation block required in a manual/interactive goal.
-
-```md
-## 11. Machine of Goals Artifacts
-
-- Possible realization paths: [Path options](./path-options.md#<goal-id>-path-options)
-- Plan: [Current plan](./plan.md#<goal-id>-plan)
-- Plan realization registry: [Realizations](./plan.md#realization-registry)
-- Current plan revision used by realization: [Plan revision <N>](./realizations/plan-revision-<N>.md#<goal-id>-plan) or not yet created
-- Realization decision: [Current decision](./realization-decision.md#<goal-id>-realization-decision)
-- Current realization: [<realization-label>](./realizations/<realization-record-id>.md#<realization-record-id>) or not yet created
-- Retained execution attempts: [Run index](./run/index.md#<goal-id>-run-index)
-- Computed plan style: <single-pass|multi-pass|not-yet-computed>
-
-```
+To inspect manual progress, open the applicable realization from this table;
+its status, current-stage and Stage Map identify completed and remaining work.
+Do not mirror stage progress into the goal or plan. Determine activity from the
+realization's actual state, not merely the latest timestamp; show no active
+realization or multiple candidates explicitly. Link only existing documents.
+An invoked collapsed skill/action needs no synthetic realization row or local
+execution files. An existing reusable mechanism may be linked in context.
