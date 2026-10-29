@@ -135,6 +135,77 @@ def test_local_packaging_does_not_call_git(tmp_path, monkeypatch, machine):
     assert_checksum(Path(f'dist/double-{machine}-3.2.1-local.tar.gz'))
 
 
+def project_version(machine, value='9.8.7', path=None, status='stable'):
+    path = path or f'.double-rules/{machine}-version/{machine}-version.md'
+    write(path, f'---\nid: {machine}-version\nkind: knowledge-artifact\nstatus: {status}\n---\n\n## Value\n\n`{value}`\n')
+    return path
+
+
+@pytest.mark.parametrize('machine', MACHINES)
+@pytest.mark.parametrize('grouped', [False, True])
+def test_project_version_overrides_default_locally_and_in_tagged_tree(repo, machine, grouped):
+    path = f'.double-rules/{machine}/{machine}-version.md' if grouped else None
+    source = project_version(machine, path=path)
+    index = '.double-rules/double-rules.md'
+    link = source.removeprefix('.double-rules/')
+    write(index, f'# Project knowledge\n\n## {machine}\n\n- [Version]({link})\n')
+    result = cli('package', '--machine', machine)
+    assert result.returncode == 0, result.stderr
+    assert Path(f'dist/double-{machine}-9.8.7-local.tar.gz').exists()
+    assert '`1.2.4`' in Path(f'knowledge/{machine}-version/{machine}-version.md').read_text()
+    git('add', '.double-rules')
+    git('commit', '-qm', 'project version override')
+    tag = f'{machine}-9.8.7'
+    git('tag', tag)
+    project_version(machine, '10.0.0', path=source)
+    write(index, 'broken working index')
+    result = cli('package', '--tag', tag)
+    assert result.returncode == 0, result.stderr
+    files = archive_files(Path(f'dist/double-{tag}.tar.gz'))
+    assert all(b'version: 9.8.7\n' in data for data in files.values())
+    assert source not in files
+
+
+def test_project_setting_can_link_to_version_source(repo):
+    machine = 'machine-of-ideas'
+    project_version(machine, path='project-context/version.md')
+    write('.double-rules/double-rules.md', '# Project context\n\n## Common Rules\n\n- [Locations](locations/locations.md)\n')
+    write('.double-rules/locations/locations.md', '## Description\n\n[Old source](missing.md)\n\n## Value\n\n[Current version](../../project-context/version.md)\n')
+    result = cli('package', '--machine', machine)
+    assert result.returncode == 0, result.stderr
+    assert Path(f'dist/double-{machine}-9.8.7-local.tar.gz').exists()
+
+
+@pytest.mark.parametrize('problem', ['index-missing', 'broken-link', 'conflicting', 'draft', 'incorrect-id', 'invalid-value'])
+def test_broken_project_version_does_not_fall_back(repo, problem):
+    machine = 'machine-of-ideas'
+    source = project_version(machine, status='draft' if problem == 'draft' else 'stable')
+    index = '.double-rules/double-rules.md'
+    links = f'- [Version]({machine}-version/{machine}-version.md)\n'
+    if problem == 'conflicting':
+        project_version(machine, path='.double-rules/other/version.md')
+        links += '- [Other](other/version.md)\n'
+    if problem != 'index-missing':
+        write(index, '# Context\n\n## double-agent\n\n' + links)
+    if problem == 'broken-link':
+        Path(source).unlink()
+    elif problem == 'incorrect-id':
+        write(source, Path(source).read_text().replace(f'id: {machine}-version', 'id: unrelated'))
+    elif problem == 'invalid-value':
+        write(source, Path(source).read_text().replace('9.8.7', 'unknown'))
+    result = cli('package', '--machine', machine)
+    assert result.returncode == 1, result.stderr
+    assert not Path('dist').exists()
+
+
+def test_project_context_without_version_source_uses_default(repo):
+    write('.double-rules/double-rules.md', '# Context\n\n## Common Rules\n\n- [Setting](setting.md)\n')
+    write('.double-rules/setting.md', '## Value\n\nUse English.\n')
+    result = cli('package', '--machine', 'machine-of-ideas')
+    assert result.returncode == 0, result.stderr
+    assert Path('dist/double-machine-of-ideas-1.2.4-local.tar.gz').exists()
+
+
 @pytest.mark.parametrize('args,warning', [
     (['package'], 'Select --machine'),
     (['package','--machine','../invalid'], 'Select --machine'),
@@ -225,3 +296,26 @@ def test_installer_tags_use_the_independent_workflow(repo):
     assert result.returncode == 1
     assert 'independent installer release workflow' in result.stderr
     assert not Path('dist').exists()
+
+
+@pytest.mark.parametrize('machine', MACHINES)
+def test_project_rule_protocol_ships_without_publishing_project_rules(repo, machine):
+    """Each independently installed machine carries entry instructions, not policy."""
+    workflow = f'.double/workflows/{machine}/{machine}-workflow.md'
+    write(workflow, f'---\nstatus: stable\n---\n\n## Project Rules Loading Protocol\n\nCommon Rules apply to `{machine}`.\n')
+    write('.double-rules/double-rules.md', '# Project rules\n\n## Common Rules\n\n- [Private rule](private/private.md)\n')
+    write('.double-rules/private/private.md', '# Private project policy\n')
+    git('add', '.')
+    git('commit', '-qm', 'project rules fixture')
+    tag = f'{machine}-1.2.4'
+    git('tag', tag)
+    result = cli('package', '--tag', tag)
+    assert result.returncode == 0, result.stderr
+    files = archive_files(Path(f'dist/double-{tag}.tar.gz'))
+    assert workflow in files
+    assert b'Project Rules Loading Protocol' in files[workflow]
+    assert b'Common Rules' in files[workflow]
+    assert b'`' + machine.encode() + b'`' in files[workflow]
+    assert not any(path.startswith('.double-rules/') for path in files)
+    assert all(path.startswith('.double/') and f'/{machine}/' in path for path in files)
+    assert Path('.double-rules/private/private.md').read_text() == '# Private project policy\n'

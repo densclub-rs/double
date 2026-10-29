@@ -106,10 +106,9 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
-      - name: Prepare scoped release notes
+      - name: Prepare approved release notes
         if: ${{ inputs.validation_only != true }}
         id: notes
-        continue-on-error: true
         env:
           RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
           GH_TOKEN: ${{ github.token }}

@@ -8,12 +8,13 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+from datetime import date
 
-from release_common import owned, parse
+from release_common import owned, parse, project_knowledge_path
 
 
 def git(*args):
-    return subprocess.check_output(['git', *args], text=True).strip()
+    return subprocess.check_output(['git', *args], text=True, stderr=subprocess.PIPE).strip()
 
 
 def baseline(tag):
@@ -135,6 +136,74 @@ def tag_annotation(tag):
     return re.split(r'(?m)^-----BEGIN (?:PGP SIGNATURE|SSH SIGNATURE)-----', message)[0].strip()
 
 
+def approved_changelog(tag):
+    machine, _, _ = parse(tag)
+    version_text = tag[len(machine) + 1:]
+    tree = f'refs/tags/{tag}^{{commit}}'
+    def read(path):
+        return git('show', f'{tree}:{path}')
+    def exists(path):
+        if path.startswith('/') or path == '..' or path.startswith('../'):
+            raise ValueError('Tagged knowledge sources must be inside the project tree')
+        try:
+            git('cat-file', '-e', f'{tree}:{path}')
+            return True
+        except subprocess.CalledProcessError:
+            return False
+    path = project_knowledge_path(machine, 'changelog', read, exists)
+    try:
+        document = read(path)
+    except subprocess.CalledProcessError:
+        raise ValueError(f'Changelog is missing in the tagged tree: {path}') from None
+    values = re.split(r'^## Value\s*$', document, flags=re.M)
+    if len(values) != 2:
+        raise ValueError('Changelog must contain exactly one Value section')
+    value = re.split(r'^## (?!#)', values[1], maxsplit=1, flags=re.M)[0]
+    headings = list(re.finditer(r'^### ([0-9]+\.[0-9]+\.[0-9]+(?:-(?:rc|dev))?) — ([0-9]{4}-[0-9]{2}-[0-9]{2})[ \t]*$', value, re.M))
+    matches = [m for m in headings if m.group(1) == version_text]
+    if len(matches) != 1:
+        raise ValueError(f'Expected exactly one changelog entry for version {version_text}')
+    start = matches[0].end()
+    date.fromisoformat(matches[0].group(2))
+    next_heading = re.search(r'^### ', value[start:], re.M)
+    body = value[start:start + next_heading.start() if next_heading else None].strip()
+    if not body:
+        raise ValueError('Changelog entry is empty')
+    if not re.search(r'^- \S', body, re.M):
+        raise ValueError('Changelog entry must contain concise change bullets')
+    entry = value[matches[0].start():start].strip() + '\n\n' + body
+    if tag_annotation(tag) != entry:
+        raise ValueError('Annotated tag does not match the changelog entry')
+    return entry
+
+
+def render_approved(tag, entry, repo, run_url=''):
+    machine, version, kind = parse(tag)
+    header = f'{machine} {".".join(map(str, version))} — {kind}'
+    release_url = f'https://github.com/{repo}/releases/tag/{tag}'
+    footer = f'<a href="{html.escape(release_url, quote=True)}">Release</a>'
+    if run_url:
+        footer += f' · <a href="{html.escape(run_url, quote=True)}">Workflow run</a>'
+    prefix = f'<b>{html.escape(header)}</b>\n\n'
+    suffix = f'\n\n{footer}'
+    def build(text, truncated):
+        return prefix + html.escape(text) + ('\n\n… See the full release.' if truncated else '') + suffix
+    if len(build(entry, False).encode('utf-16-le')) // 2 <= 3600:
+        message = build(entry, False)
+    else:
+        low, high = 0, len(entry)
+        while low < high:
+            mid = (low + high + 1) // 2
+            if len(build(entry[:mid], True).encode('utf-16-le')) // 2 <= 3600:
+                low = mid
+            else:
+                high = mid - 1
+        if not low:
+            raise ValueError('Telegram metadata exceeds the length budget')
+        message = build(entry[:low].rstrip(), True)
+    return entry + '\n', message
+
+
 def render(tag, base, groups, repo, run_url='', annotation=''):
     machine, version, kind = parse(tag)
     release_url = f'https://github.com/{repo}/releases/tag/{tag}'
@@ -209,12 +278,10 @@ def main():
     parser.add_argument('--directory', default='dist')
     args = parser.parse_args()
     _, _, kind = parse(args.tag)
-    base = baseline(args.tag)
-    groups = entries(args.tag, base, args.repository)
+    entry = approved_changelog(args.tag)
     run_url = os.environ.get('GITHUB_SERVER_URL', 'https://github.com') + '/' + args.repository + '/actions/runs/' + os.environ.get('GITHUB_RUN_ID', '')
-    notes, message = render(args.tag, base, groups, args.repository,
-                            run_url if os.environ.get('GITHUB_RUN_ID') else '',
-                            annotation=tag_annotation(args.tag))
+    notes, message = render_approved(args.tag, entry, args.repository,
+                                     run_url if os.environ.get('GITHUB_RUN_ID') else '')
     directory = Path(args.directory)
     directory.mkdir(parents=True, exist_ok=True)
     (directory / 'release-notes.md').write_text(notes)
@@ -227,6 +294,6 @@ def main():
 if __name__ == '__main__':
     try:
         main()
-    except Exception:
-        print('::warning::Release notes could not be generated; notification skipped.', file=sys.stderr)
+    except Exception as error:
+        print(f'::error::Release notes could not be generated: {error}', file=sys.stderr)
         sys.exit(1)

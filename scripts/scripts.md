@@ -108,8 +108,17 @@ Without a tag, the source is the current working directory, including modified
 and untracked files; Git is not required. The archive includes Markdown files
 under `.double/` whose path contains the selected machine directory, regardless
 of status. Other machines and user artifacts are excluded. The version comes
-from `knowledge/<machine>-version/<machine>-version.md` and is injected into
-distribution copies only. Missing or invalid version knowledge is an error.
+from the project index `.double-rules/double-rules.md` when it identifies a
+version artifact directly or through a link in a project's knowledge `Value`.
+The artifact id is `<machine>-version`. Read `Common Rules`, `double-agent`
+and the selected machine's section. If no source is established, use
+`knowledge/<machine>-version/<machine>-version.md`. Broken or conflicting
+project sources are errors rather than permission to fall back. The resolved
+version is injected into distribution copies only. Tagged packaging resolves
+both the index and source from the tagged tree, never the working checkout.
+Index links may select a grouped layout such as
+`.double-rules/<machine>/<machine>-version.md`; resolution uses the artifact id
+and link rather than requiring a directory with the same name as the file.
 
 Output is `dist/double-<machine>-<version>-local.tar.gz` and
 `dist/SHA256SUMS.txt`. Repeating the command replaces the same archive;
@@ -128,21 +137,20 @@ inside GitHub Actions.
 
 ### Release changelog
 
-Annotated tag messages appear first as the release introduction; lightweight tags
-add no introduction. Long annotations are shortened in Telegram to fit its limit.
-
-Release notes and Telegram announcements describe commits touching the selected
-machine. Entries use PR titles when available, otherwise commit subjects, with
-Conventional Commit prefixes removed and the original language preserved.
-Merge commits without a PR title expand into the relevant merged commit
-subjects. Changed file paths filter the range but are not listed in the message.
-Descriptions of commits touching several areas retain their full context.
-The quality of the descriptions depends on the PR and commit titles.
-
-The baseline is the latest reachable earlier stable or RC version of the same
-machine. A stable release includes only changes since its own RC when available;
-an RC includes changes since the preceding RC or stable. Development tags are
-excluded. An initial release uses the available history.
+The generator resolves `<machine>-changelog` through the project index using
+the same source-selection rules as version knowledge. If no override exists,
+it uses `knowledge/<machine>-changelog/<machine>-changelog.md`. Both the index
+and source come from the exact tagged tree. Inside `Value`, select exactly
+one nonempty `### X.Y.Z[-rc|-dev] — YYYY-MM-DD` entry matching the full release
+version, including its channel suffix. Its complete text must match the
+annotated tag message. Create annotated tags with `--cleanup=verbatim` so Git
+preserves Markdown headings. Missing, duplicate, empty or mismatched entries stop
+publication. GitHub release notes contain that full text. Telegram uses the
+same text, truncates it as needed to fit, and links to the full release. RC and
+stable tags select their respective entries in their tagged trees. The full
+approved entry includes its version/date heading and change bullets.
+Double Agent obtains explicit approval of each entry before creating its tag,
+and separately obtains approval of the final publication and Telegram preview.
 
 ### Release tests
 

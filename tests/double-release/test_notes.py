@@ -127,19 +127,107 @@ class TestNotes:
         assert '<b>Added</b>' not in msg
 
     def test_dev_is_ineligible(self):
-        self.commit('feat: draft flow', {FILE: 'second'})
-        tag = self.tag(suffix='-dev')
+        changelog = f'knowledge/{MACHINE}-changelog/{MACHINE}-changelog.md'
+        entry = '### 1.1.0-dev — 2026-10-28\n\n- Draft changes'
+        self.commit('feat: draft flow', {FILE: 'second', changelog: f'## Value\n\n{entry}\n'})
+        tag = f'{MACHINE}-1.1.0-dev'
+        notes.git('tag', '-a', '--cleanup=verbatim', tag, '-m', entry)
         output = str(Path('outputs').resolve())
         with patch.dict(os.environ, {'GITHUB_OUTPUT': output}), patch('sys.argv', ['notes', '--tag', tag, '--repository', 'o/r']):
             notes.main()
         assert 'eligible<<' in Path(output).read_text()
         assert '\nfalse\n' in Path(output).read_text()
 
+    def test_approved_entry_comes_from_tagged_tree(self):
+        path = f'knowledge/{MACHINE}-changelog/{MACHINE}-changelog.md'
+        entry = '### 1.1.0-rc — 2026-10-28\n\n- Approved changes <safe> & complete.\n- First change'
+        self.commit('release', {path: f'## Value\n\n{entry}\n\n## Notes\n\nHistory\n'})
+        tag = f'{MACHINE}-1.1.0-rc'
+        notes.git('tag', '-a', '--cleanup=verbatim', tag, '-m', entry)
+        Path(path).write_text('Different working tree')
+        assert notes.approved_changelog(tag) == entry
+        md, message = notes.render_approved(tag, entry, 'owner/repo')
+        assert md == entry + '\n'
+        assert '&lt;safe&gt; &amp;' in message
+        assert 'releases/tag/' in message
+
+    def test_rc_and_stable_use_their_own_approved_tagged_entries(self):
+        path = f'knowledge/{MACHINE}-changelog/{MACHINE}-changelog.md'
+        rc_entry = '### 1.1.0-rc — 2026-10-27\n\n- RC changes'
+        self.commit('rc', {path: f'## Value\n\n{rc_entry}\n'})
+        rc = f'{MACHINE}-1.1.0-rc'
+        notes.git('tag', '-a', '--cleanup=verbatim', rc, '-m', rc_entry)
+        stable_entry = '### 1.1.0 — 2026-10-28\n\n- Stable changes'
+        self.commit('stable', {path: f'## Value\n\n{stable_entry}\n\n{rc_entry}\n'})
+        stable = f'{MACHINE}-1.1.0'
+        notes.git('tag', '-a', '--cleanup=verbatim', stable, '-m', stable_entry)
+        assert notes.approved_changelog(rc) == rc_entry
+        assert notes.approved_changelog(stable) == stable_entry
+
+    @pytest.mark.parametrize('grouped', [False, True])
+    def test_project_changelog_overrides_default_and_uses_tagged_index(self, grouped):
+        directory = MACHINE if grouped else f'{MACHINE}-changelog'
+        path = f'.double-rules/{directory}/{MACHINE}-changelog.md'
+        index = '.double-rules/double-rules.md'
+        entry = '### 1.1.0 — 2026-10-28\n\n- Project change'
+        self.commit('project changelog', {
+            path: f'---\nid: {MACHINE}-changelog\nstatus: stable\n---\n\n## Value\n\n{entry}\n',
+            index: f'# Project knowledge\n\n## double-agent\n\n- [Changelog]({directory}/{MACHINE}-changelog.md)\n',
+            f'knowledge/{MACHINE}-changelog/{MACHINE}-changelog.md': 'Obsolete default',
+        })
+        tag = f'{MACHINE}-1.1.0'
+        notes.git('tag', '-a', '--cleanup=verbatim', tag, '-m', entry)
+        Path(path).write_text('Local edits must not affect tagged notes')
+        Path(index).write_text('Changed local index')
+        assert notes.approved_changelog(tag) == entry
+
+    def test_missing_changelog_and_lightweight_tag_are_rejected(self):
+        with pytest.raises(ValueError):
+            notes.approved_changelog(f'{MACHINE}-1.0.0')
+        path = f'knowledge/{MACHINE}-changelog/{MACHINE}-changelog.md'
+        self.commit('candidate', {path: '## Value\n\n### 1.1.0 — 2026-10-28\n\n- Changes\n'})
+        tag = self.tag()
+        with pytest.raises(ValueError):
+            notes.approved_changelog(tag)
+
+    def test_git_default_tag_cleanup_cannot_silently_drop_version_heading(self):
+        path = f'knowledge/{MACHINE}-changelog/{MACHINE}-changelog.md'
+        entry = '### 1.1.0 — 2026-10-28\n\n- Approved changes'
+        self.commit('candidate', {path: f'## Value\n\n{entry}\n'})
+        tag = f'{MACHINE}-1.1.0'
+        notes.git('tag', '-a', tag, '-m', entry)
+        with pytest.raises(ValueError, match='does not match'):
+            notes.approved_changelog(tag)
+
+    @pytest.mark.parametrize('entry,annotation', [
+        ('### 1.1.0 — 2026-10-28\n\n', 'approved'),
+        ('### 1.1.0 — 2026-10-28\n\n- A\n\n### 1.1.0 — 2026-10-28\n\n- B', 'A'),
+        ('### 1.1.0 — 2026-10-28\n\n- A', 'different'),
+        ('### 1.0.0 — 2026-10-28\n\n- A', 'A'),
+        ('### 1.1.0 — 2026-02-30\n\n- A', 'A'),
+        ('### 1.1.0 — 2026-10-28\n\nNo concise change bullets', 'A'),
+    ])
+    def test_invalid_entry_blocks_generation(self, entry, annotation):
+        path = f'knowledge/{MACHINE}-changelog/{MACHINE}-changelog.md'
+        self.commit('candidate', {path: f'## Value\n\n{entry}\n'})
+        tag = f'{MACHINE}-1.1.0'
+        notes.git('tag', '-a', '--cleanup=verbatim', tag, '-m', annotation)
+        with pytest.raises(ValueError):
+            notes.approved_changelog(tag)
+
+    def test_telegram_truncates_but_github_keeps_complete_entry(self):
+        entry = '<🚀> & ' * 3000
+        md, message = notes.render_approved(f'{MACHINE}-1.1.0', entry, 'owner/repo', 'https://github.com/owner/repo/actions/runs/123')
+        assert md == entry + '\n'
+        assert len(message.encode('utf-16-le')) // 2 <= 3600
+        assert 'See the full release' in message
+        assert 'Workflow run' in message
+
     def test_tag_annotation_heads_message(self):
         self.commit('fix: flow', {FILE: 'second'})
         tag = f'{MACHINE}-1.1.0'
         annotation = 'Новый релиз <goals> & планы\n\nОписание изменений.'
-        notes.git('tag', '-a', tag, '-m', annotation)
+        notes.git('tag', '-a', '--cleanup=verbatim', tag, '-m', annotation)
         assert notes.tag_annotation(tag) == annotation
         md, message = notes.render(tag, None, {}, 'o/r', annotation=notes.tag_annotation(tag))
         assert md.startswith(annotation)
