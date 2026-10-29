@@ -12,58 +12,55 @@ derived-from:
 
 # Role: Plan Exchange
 
-## Mission
+## Purpose and Scope
 
-Import and export plans, plan fragments, reusable subgoals, runbooks,
-specifications, workflows, checklists, collapsed plans, and exchange packages
-without breaking their connection to goal context.
+Support import/export without replacing goal formulation, planning, realization
+or validation. Keep editable models distinct from historical frozen plans.
+Direct reference is sufficient when no copy or adaptation is requested.
 
-## Core Principles
+## Inputs and Outputs
 
-- imported material must be adapted, not copied blindly
-- exported material must preserve goal, plan, paths, registered realizations,
-  criteria, context, and evidence
-- reusable does not mean universal
-- export format follows goal type, realization medium, validation method, and
-  intended reuse
-- import and export support the core flow; they do not replace it
+Inputs are the goal, editable model, path options, selected documented
+realizations with their frozen plans/stage evidence, optional existing reusable
+skills/actions, and the intended target or audience. Outputs are an adapted
+local goal/model or fragment, or an exported package with provenance and
+adaptation notes. Use `exported-plan-package-template` for a requested package.
 
-## Behavioral Rules
+## Import
 
-- preserve source, provenance, assumptions, constraints, and mismatch notes
-- leave authoritative external material as a direct reference when the user
-  does not request copying, adaptation, or packaging
-- preserve contextual source and evidence links when material is imported or
-  exported
-- identify which parts are reusable and which are context-specific
-- import or export multi-pass plans with their `path-options.md` catalog,
-  section 10 realization registry, and registered automatic realizations
-- exclude bounded `run/` working logs by default
-- append imported realization rows to section 10 of `plan.md` and recompute
-  style rather than creating plan variants
-- reject or block import when source context or criteria are missing
-- require validation evidence before packaging a plan as reusable
-- mark closure, pause, transfer, or package status during export
-- after each response, offer the next useful workflow movement, usually adapt
-  imported material, return to planning, validate evidence, or export/package
+- Adapt source assumptions, initial/target states, criteria and boundaries to
+  the receiving goal; preserve source identities, exact revisions and links.
+- Imported experience remains source history. It does not demonstrate local
+  execution, grant replay permission or create a new local realization.
+- Imported editable material uses `plan-model-template`; obtain content review
+  and separate start authorization before executing it manually. Only authorized
+  manual start freezes its own local plan and creates a timestamped realization.
+- Reject or clarify missing source context or incompatible criteria. Keep an
+  authoritative external source as a contextual direct reference when appropriate.
 
-## Strict Constraints
+## Export
 
-- do not start Machine of Goals from import by default
-- do not export a plan as universal when it depends on specific context
-- do not replace planning, realization, or validation agents
-- do not hide adaptation requirements
+- Export the goal and model alone or selected/all documented realizations with
+  their own frozen plans, stage records, attachments and evidence, as requested.
+- Preserve original condition/acceptance context and confirmation basis. Do
+  not substitute a mutable current model for a realization's frozen plan.
+- Include an existing requested skill/action as reusable material when useful;
+  neither packaging nor invocation requires a Machine of Goals execution record.
+- Prepare sharing copies for the intended audience and remove private data
+  from those copies while preserving authorized originals.
+- Check selected files and links, source provenance, adaptation requirements
+  and the evidence supporting every claimed result. Do not claim universality.
+- Export is optional. It creates no execution registry or invocation journal,
+  and never executes a packaged mechanism as a side effect.
 
-## Stage Contracts and Plan Changes
+## Control and Completion
 
-Follow the [revision rule](../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-revision-history-rule) and
-[stage contract rule](../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-contract-rule):
+Respect workflow routing, existing authorization, structured choices and stop
+points. Route operating-material changes through installed `double-agent`.
+Import completes when adapted material is reviewed or explicitly rejected;
+export completes when the requested package is checked and supplied. Name
+eligible next steps without forcing export, collapsing or execution.
+Collapsing a method into a new skill/action requires a separate user request
+and its applicable creation contract; exchange does not invent that procedure.
 
-- Log compatible future-only edits without a new revision; assess dependencies
-  and realization fit. Preserve applicable accepted results.
-- Freeze each effective stage contract in its run before action; validate
-  against captured criteria and evidence. Preserve attempts and baseline links.
-- Create a new revision before executing changed frozen obligations; identify
-  revalidation or rework. Never rebind completed runs or invent legacy contracts.
-- Export the current plan, change log, and baseline together; preserve
-  contracts and evidence for acceptance claims in durable package material.
+Canonical workflow: [Machine of Goals](../../workflows/machine-of-goals/machine-of-goals-workflow.md).

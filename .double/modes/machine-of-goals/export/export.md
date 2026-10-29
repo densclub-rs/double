@@ -15,54 +15,55 @@ derived-from:
 
 # Mode: Export
 
-## Purpose
+## Purpose and Scope
 
-Used when the agent must package a multi-pass goal context, plan with its
-realization registry, path-options catalog, registered automatic realizations,
-validation evidence, or reusable output for future use.
+Support import/export without replacing goal formulation, planning, realization
+or validation. Keep editable models distinct from historical frozen plans.
+Direct reference is sufficient when no copy or adaptation is requested.
 
-## Behavioral Intent
+## Inputs and Outputs
 
-- choose an export form based on goal type, realization medium, validation
-  method, and intended reuse
-- preserve the link between goal, plan, criteria, context, and evidence
-- preserve contextual Markdown links and exact source revision references
-- include `plan.md` with its section 10 realization registry,
-  `path-options.md`, persistent realization artifacts, registered
-  realizations, and validation contracts
-- exclude bounded `run/` working logs by default
-- mark what is reusable, what is context-specific, and what must be adapted
-- include closure, pause, transfer, or package status
-- avoid exporting a plan as universal when it is tied to a specific context
+Inputs are the goal, editable model, path options, selected documented
+realizations with their frozen plans/stage evidence, optional existing reusable
+skills/actions, and the intended target or audience. Outputs are an adapted
+local goal/model or fragment, or an exported package with provenance and
+adaptation notes. Use `exported-plan-package-template` for a requested package.
 
-## Typical Inputs
+## Import
 
-- goal artifact
-- plan artifact with realization registry, path-options catalog, and registered
-  realizations
-- validation evidence and aggregate realization statistics
-- export target or intended audience
-- reusable fragments or collapsed automation candidates
+- Adapt source assumptions, initial/target states, criteria and boundaries to
+  the receiving goal; preserve source identities, exact revisions and links.
+- Imported experience remains source history. It does not demonstrate local
+  execution, grant replay permission or create a new local realization.
+- Imported editable material uses `plan-model-template`; obtain content review
+  and separate start authorization before executing it manually. Only authorized
+  manual start freezes its own local plan and creates a timestamped realization.
+- Reject or clarify missing source context or incompatible criteria. Keep an
+  authoritative external source as a contextual direct reference when appropriate.
 
-## Expected Outputs
+## Export
 
-- exported plan package
-- exported multi-pass plan package
-- goal closure summary when applicable
-- runbook, checklist, workflow, SDD/spec, script scaffold, handoff package, or
-  exchange package
-- reuse and adaptation notes
+- Export the goal and model alone or selected/all documented realizations with
+  their own frozen plans, stage records, attachments and evidence, as requested.
+- Preserve original condition/acceptance context and confirmation basis. Do
+  not substitute a mutable current model for a realization's frozen plan.
+- Include an existing requested skill/action as reusable material when useful;
+  neither packaging nor invocation requires a Machine of Goals execution record.
+- Prepare sharing copies for the intended audience and remove private data
+  from those copies while preserving authorized originals.
+- Check selected files and links, source provenance, adaptation requirements
+  and the evidence supporting every claimed result. Do not claim universality.
+- Export is optional. It creates no execution registry or invocation journal,
+  and never executes a packaged mechanism as a side effect.
 
-## Stop Conditions
+## Control and Completion
 
-Stop before export when:
+Respect workflow routing, existing authorization, structured choices and stop
+points. Route operating-material changes through installed `double-agent`.
+Import completes when adapted material is reviewed or explicitly rejected;
+export completes when the requested package is checked and supplied. Name
+eligible next steps without forcing export, collapsing or execution.
+Collapsing a method into a new skill/action requires a separate user request
+and its applicable creation contract; exchange does not invent that procedure.
 
-- validation evidence is insufficient for the intended package
-- the export format does not match the goal type or reuse context
-- context-specific assumptions would be lost
-- the user must choose whether to close, pause, transfer, or keep working
-
-## Workflow Fit
-
-Primary mode for `07-plan-packaging-export`. It may also be used earlier to
-create interim handoff packages or reusable stage artifacts.
+Canonical workflow: [Machine of Goals](../../../workflows/machine-of-goals/machine-of-goals-workflow.md).

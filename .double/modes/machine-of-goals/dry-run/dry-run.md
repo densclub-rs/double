@@ -32,7 +32,7 @@ export without causing real-world effects.
 
 - selected plan stage or automation candidate
 - plan artifact and selected path or subplan
-- registered realization when simulating an existing realization
+- existing documented realization or skill/action when simulating its behavior
 - automation boundaries
 - validation criteria and stop points
 - relevant working context

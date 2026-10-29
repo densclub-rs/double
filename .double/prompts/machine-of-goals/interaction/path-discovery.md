@@ -28,7 +28,13 @@ For each useful path, describe:
 - expected cost and risk
 - uncertainty and missing evidence
 - whether it can use delegation, tools, automation, or reusable analogs
-- whether it should become a selectable plan branch or subplan
+- whether it should become a selectable path/subplan inside one plan or an
+  independently developed parallel plan variant, distinct from revision lineage
+
+Record independent variants for step-03 synthesis as `plan-<id>.md`, with
+short stable plan IDs assigned when the plans are formed. An author's own variant
+uses `plan<owner_id>.md`. No earlier default plan or major divergence is required.
+Discovery produces only the path catalog; do not create plans or link uncreated files.
 
 If no plausible path exists, mark the goal as blocked, infeasible, or requiring
 reformulation.
@@ -42,8 +48,8 @@ Offer transition to `03-plan-synthesis` only when at least one plausible path
 exists and no `Open Questions` remain.
 
 Keep stable path ids: `path-options.md` remains the evolving catalog of possible
-paths after planning, and new paths may be added later. Realization records and
-their aggregate run statistics belong in section 10 of `plan.md`.
+paths after planning, and new paths may be added later. Actual progress and
+evidence belong in documented realizations, outside the plan.
 
 Link `Source Goal`, give paths explicit anchors, and link a planned path to its
 plan element. Keep external authoritative artifacts as direct references unless

@@ -27,13 +27,17 @@ Behavior:
 - discover direct, minimal, exploratory, long-term, delegated, automated,
   tool-based, external, and reusable-plan paths when relevant
 - compare paths by fit, cost, risk, uncertainty, and expected value
-- assign stable path ids for later plan branches and realization coverage
+- assign stable path ids for later plan paths/subplans and realization coverage
+- distinguish path IDs from plan IDs; flag independently developed parallel
+  variants for step-03 synthesis as `plan-<id>.md`, or `plan<owner_id>.md`
+  for an author's own variant. No earlier default plan or major divergence is
+  required. Create only the path catalog now, without plan files or hypothetical links
 - preserve `path-options.md` as the evolving catalog of possible paths; add new
   paths when they are discovered over time
 - link `Source Goal`, give every path a stable explicit anchor, and link planned
   paths to their plan elements
-- leave realization registration, computed style input, and aggregate run
-  statistics to section 10 of `plan.md`
+- keep actual execution state and evidence in documented realizations,
+  outside the plan and path catalog
 - preserve a cross-project source as a direct reference when it is not copied
   or adapted
 - distinguish evidence from speculation

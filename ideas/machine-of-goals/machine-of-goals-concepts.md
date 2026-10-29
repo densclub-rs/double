@@ -271,7 +271,7 @@ Versions connect executions to the model they used. MINOR and PATCH updates rema
 
 #### Definition
 
-A concrete passage through an identified plan model, preserved as both factual evidence and readable documentation. Its start creates a main Markdown document in a directory named by year, month, day, hour, minute, and second. Frontmatter records the start, timezone, model file, branch, and version; the body presents the stage map and current progress.
+A concrete manual or interactive passage through an identified plan model, preserved as both factual evidence and readable documentation. Its start creates a main Markdown document in a directory named by year, month, day, hour, minute, and second. Frontmatter records the start, timezone, model file, branch, and version; the body presents the stage map and current progress.
 
 #### Source in Idea
 
@@ -279,7 +279,7 @@ A concrete passage through an identified plan model, preserved as both factual e
 
 #### Role in the Idea
 
-The realization gives execution one understandable home. It records what happened in a computer, social, or mixed environment and connects stage documents and attachments without an additional registration artifact or goal-wide run index.
+The realization gives execution one understandable home. It records what happened in a computer, social, or mixed environment and connects stage documents and attachments without an additional registration artifact or goal-wide execution index.
 
 #### Related Concepts
 
@@ -325,7 +325,7 @@ Stage records keep a walkthrough readable at human scale. The realization map op
 - Expected output and observed output remain distinguishable; an unfinished stage may have no verified output yet.
 - A report, an observation, and a completed check have different evidentiary meaning.
 - Corrected commands remain alongside earlier generated commands in generation order; commands use protected-input references rather than literal secrets.
-- Ordinary automatic logs need not narrate every action in this three-part form.
+- A collapsed skill/action invocation creates no Machine of Goals stage journal; native operational logs follow the mechanism's own contract.
 
 #### Questions
 
@@ -590,6 +590,7 @@ Collapsing turns an understood way of acting into a module for reuse. A skill su
 - A documented manual walkthrough is already valuable without being collapsed.
 - The covered initial, required intermediate, and final state checks remain meaningful in an automatic module.
 - Collapsing is a separate activity from publication or export.
+- Invoking a collapsed skill/action creates no Machine of Goals execution directory, frozen-plan copy, realization wrapper, stage journal or execution index. Covered checks and user-selected authority remain binding.
 
 #### Questions
 

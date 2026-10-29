@@ -33,10 +33,11 @@ comprehensible transition model from the current state toward the target state.
 - keep authoritative cross-project dependencies as direct references when no
   adaptation is needed
 - mark stop points, validation points, and revision conditions
-- while no realization exists, keep both revision frontmatter fields null,
-  apply every clarification directly to `plan.md`, and create no snapshot
-- classify plan changes by their impact on frozen stage obligations; log
-  compatible future-only edits without a new revision
+- create only an editable `plan-model` with a positive review revision;
+  synthesis and review create no execution files, even when start is deferred
+- increment the review revision for model edits and obtain exact-content review
+  before changed execution; preserve all earlier frozen plans and stage facts
+- keep execution progress and acceptance outside both editable and frozen plans
 - avoid treating a task list as a complete plan
 
 ## Typical Inputs
@@ -48,7 +49,7 @@ comprehensible transition model from the current state toward the target state.
 
 ## Expected Outputs
 
-- plan artifact draft
+- editable `plan-model` from `plan-model-template`
 - selectable path and subplan map
 - stage list with dependencies and checks
 - initial cost, risk, and uncertainty notes
@@ -70,12 +71,10 @@ when the plan project must be rebuilt or materially revised.
 
 ## Stage Contracts and Plan Changes
 
-Follow the [revision rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-revision-history-rule) and
-[stage contract rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-contract-rule):
-
-- Log compatible future-only edits without a new revision; assess dependencies
-  and realization fit. Preserve applicable accepted results.
-- Freeze each effective stage contract in its run before action; validate
-  against captured criteria and evidence. Preserve attempts and baseline links.
-- Create a new revision before executing changed frozen obligations; identify
-  revalidation or rework. Never rebind completed runs or invent legacy contracts.
+Follow the [revision rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-revision-history-rule)
+and [stage contract rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-contract-rule).
+Plan revisions preserve file, id and branch. Changed content requires renewed
+review; an authorized manual successor freezes its own plan before action.
+Capture conditions in that realization's stage document and preserve prior
+facts and evidence. An existing skill/action has no additional Machine of Goals
+execution journal or directory. Do not silently migrate user artifacts.

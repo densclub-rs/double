@@ -13,60 +13,55 @@ derived-from:
 
 # Mode: Import
 
-## Purpose
+## Purpose and Scope
 
-Used when the agent must adapt an existing goal, plan, subgoal, reusable
-fragment, external method, or analog into the current goal context.
+Support import/export without replacing goal formulation, planning, realization
+or validation. Keep editable models distinct from historical frozen plans.
+Direct reference is sufficient when no copy or adaptation is requested.
 
-## Behavioral Intent
+## Inputs and Outputs
 
-- do not import an authoritative external artifact when a direct reference is
-  sufficient; import only when material must be copied or adapted
-- preserve contextual Markdown links and exact source revisions
+Inputs are the goal, editable model, path options, selected documented
+realizations with their frozen plans/stage evidence, optional existing reusable
+skills/actions, and the intended target or audience. Outputs are an adapted
+local goal/model or fragment, or an exported package with provenance and
+adaptation notes. Use `exported-plan-package-template` for a requested package.
 
-- keep imported material linked to the current goal, current state, target
-  state, and success criteria
-- adapt rather than copy blindly
-- preserve source, assumptions, constraints, and mismatch notes
-- import a multi-pass plan by adapting its goal context, `plan.md`,
-  `path-options.md` catalog, section 10 realization registry, and validation
-  contracts
-- append imported realization rows to section 10 of `plan.md` and recompute
-  computed style
-- exclude bounded working run logs by default
-- distinguish reusable plan fragments from full goal plans
-- avoid treating an imported plan as valid until it has been reviewed
+## Import
 
-## Typical Inputs
+- Adapt source assumptions, initial/target states, criteria and boundaries to
+  the receiving goal; preserve source identities, exact revisions and links.
+- Imported experience remains source history. It does not demonstrate local
+  execution, grant replay permission or create a new local realization.
+- Imported editable material uses `plan-model-template`; obtain content review
+  and separate start authorization before executing it manually. Only authorized
+  manual start freezes its own local plan and creates a timestamped realization.
+- Reject or clarify missing source context or incompatible criteria. Keep an
+  authoritative external source as a contextual direct reference when appropriate.
 
-- current goal artifact or goal draft
-- existing analog, plan, runbook, checklist, workflow, spec, or user-provided
-  material
-- imported path-options catalog and plan realization registry
-- registered automatic realization artifacts and their source context
-- source context and known limitations
+## Export
 
-## Expected Outputs
+- Export the goal and model alone or selected/all documented realizations with
+  their own frozen plans, stage records, attachments and evidence, as requested.
+- Preserve original condition/acceptance context and confirmation basis. Do
+  not substitute a mutable current model for a realization's frozen plan.
+- Include an existing requested skill/action as reusable material when useful;
+  neither packaging nor invocation requires a Machine of Goals execution record.
+- Prepare sharing copies for the intended audience and remove private data
+  from those copies while preserving authorized originals.
+- Check selected files and links, source provenance, adaptation requirements
+  and the evidence supporting every claimed result. Do not claim universality.
+- Export is optional. It creates no execution registry or invocation journal,
+  and never executes a packaged mechanism as a side effect.
 
-- adapted goal, path, plan, subgoal, or plan fragment
-- adapted single plan with selectable paths or subplans
-- registered realization rows in section 10 of `plan.md`
-- source and provenance note
-- fit and mismatch analysis
-- review recommendation before execution
+## Control and Completion
 
-## Stop Conditions
+Respect workflow routing, existing authorization, structured choices and stop
+points. Route operating-material changes through installed `double-agent`.
+Import completes when adapted material is reviewed or explicitly rejected;
+export completes when the requested package is checked and supplied. Name
+eligible next steps without forcing export, collapsing or execution.
+Collapsing a method into a new skill/action requires a separate user request
+and its applicable creation contract; exchange does not invent that procedure.
 
-Stop before adopting imported material when:
-
-- the source goal context is missing
-- success criteria do not match the current goal
-- assumptions or constraints conflict with the current state
-- imported paths or validation contracts cannot be reconciled with the current
-  goal
-- user approval is needed to accept the adaptation
-
-## Workflow Fit
-
-Cross-step mode. It can support `01-goal-formulation`, `02-path-discovery`,
-`03-plan-synthesis`, and later plan revision.
+Canonical workflow: [Machine of Goals](../../../workflows/machine-of-goals/machine-of-goals-workflow.md).

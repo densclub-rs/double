@@ -17,93 +17,31 @@ derived-from:
 
 ## Purpose
 
-Used when the agent must interactively help the user choose how realization
-should start and under which control boundaries the plan may proceed.
+Review the actual current model contents, choices, entry and control boundaries.
+Approval and permission to start are separate decisions.
 
 ## Behavioral Intent
 
-- compare selectable paths, plan branches, and compatible registered
-  realizations without collapsing trade-offs too early
-- show the selectable paths or subplans, material trade-offs, and compatible
-  registered realizations to the user
-- recommend an option when useful while keeping the recommendation distinct
-  from the user's decision
-- ask the user to confirm the selected path or subplan explicitly and wait for
-  the response
-- after path confirmation, choose an entry point for realization
-- after path confirmation, select a compatible realization row or append a
-  manual or interactive realization to section 10 of `plan.md`
-- append a new row whenever another path or subplan is selected, even when the
-  realization mechanism is reused
-- define automation boundaries and confirmation points
-- decide where dry run is required or useful
-- define validation strategy and revision conditions
-- make the realization decision explicit before execution begins
-- record the user's explicit path or subplan confirmation in the realization
-  decision
-- before the first realization, require null revision fields and no snapshot
-- when registering the first realization, set revision 1, clear displayed-run
-  metadata and derived progress, copy the current plan with neutral emoji
-  markers to `realizations/plan-revision-1.md`, and rebase its relative links
-- for a later realization against unchanged plan content, reuse the applicable
-  current snapshot and preserve every earlier snapshot unchanged
-- create `realizations/<realization-record-id>.md` for the approved manual or
-  automatic realization before the execution transition
-- require resolvable exact plan and realization revision links before the
-  execution commit point
-- link selected paths, subplans, realization, and first stage in the decision
+- Link the actual selected plan file and show its contents, branches, paths or
+  subplans and material trade-offs. Preserve a selection already explicitly made.
+- Recommend without deciding for the user. Obtain explicit content/selection
+  approval using the workflow's structured-choice and presentation rules.
+- Compute SHA-256 internally before asking; keep it recoverable with the user
+  decision for the start check. Show no checksum in approval questions or choices.
+- Every model edit requires renewed review. Do not infer approval from silence.
+- A deferred start leaves only the editable model and conversation decision.
+  Review creates no frozen plan, realization directory, execution index,
+  registration or separate decision document.
+- At authorized manual step-05 start the executor rechecks exact approval,
+  freezes the plan and creates the realization. These files are not review
+  prerequisites. A collapsed skill/action requires its own authorization and
+  creates no Machine of Goals invocation record.
+- Clarify missing scope, entry, criteria, permissions or approval context before
+  offering execution. Do not automatically collapse the plan or invoke a mechanism.
 
-## Typical Inputs
+## Completion
 
-- plan artifact with realization registry and separate path-options artifact
-- path comparison
-- goal criteria and constraints
-- user risk tolerance and automation preferences
-- explicit user response confirming the selected path or subplan
+Step 04 completes with the exact content/selection decision. Offer the eligible
+next action, preserving exact consent already supplied. Start may remain deferred.
 
-## Expected Outputs
-
-- realization decision
-- user-confirmed path or subplan, realization record, and first entry point
-- local `realizations/plan-revision-<N>.md` snapshot
-- persistent `realizations/<realization-record-id>.md` realization artifact
-- automation boundary notes
-- confirmation and stop points
-- validation strategy for the first realization cycle
-
-## Stop Conditions
-
-Stop before execution when:
-
-- selectable paths or subplans and their material trade-offs have not been
-  shown to the user
-- the user has not explicitly confirmed the selected path or subplan
-- the selected local plan revision snapshot does not exist or would require
-  overwriting an earlier snapshot
-- the selected realization artifact does not exist
-- no path, branch, or realization record has been selected
-- automation boundaries are unclear
-- the first stage lacks a validation strategy
-- a selected plan or realization revision is mutable or unresolvable
-- the decision would exceed user-approved risk or authority
-
-Silence, an agent recommendation, or a request to review the plan is not path
-confirmation. The agent must not select or confirm a path or subplan on the
-user's behalf.
-
-## Workflow Fit
-
-Primary mode for `04-plan-review-and-decision`. It may also be used whenever
-validation creates a branch, pause, stop, or major revision decision.
-
-## Stage Contracts and Plan Changes
-
-Follow the [revision rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-revision-history-rule) and
-[stage contract rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-contract-rule):
-
-- Log compatible future-only edits without a new revision; assess dependencies
-  and realization fit. Preserve applicable accepted results.
-- Freeze each effective stage contract in its run before action; validate
-  against captured criteria and evidence. Preserve attempts and baseline links.
-- Create a new revision before executing changed frozen obligations; identify
-  revalidation or rework. Never rebind completed runs or invent legacy contracts.
+Canonical workflow: [Machine of Goals](../../../workflows/machine-of-goals/machine-of-goals-workflow.md).

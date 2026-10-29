@@ -17,84 +17,38 @@ derived-from:
 
 ## Purpose
 
-Used when the agent must realize a selected plan stage through action,
-delegation, automation, handoff, or creation of implementation artifacts.
+Perform authorized work through a documented manual realization or an existing
+requested collapsed skill/action. The plan remains a model in both cases.
 
-## Behavioral Intent
+## Documented Manual Execution
 
-- act only within the selected plan stage and approved boundaries
-- explain the stage before irreversible, external, or automated work
-- refine the stage when execution reveals missing detail
-- create scripts, workflows, checklists, specs, or handoff artifacts only when
-  they serve the current stage
-- create or resume
-  `<goal-directory>/run/<realization-record-id>--<YYYYMMDDTHHMMSSZ>.md`
-- require `<goal-directory>/realizations/<realization-record-id>.md` and add
-  every created run link to it
-- require the plan revision link to resolve to
-  `<goal-directory>/realizations/plan-revision-<N>.md`, require an exact
-  realization revision link, and maintain `<goal-directory>/run/index.md`
-- on creation, increment run count and set latest run time and result `running`
-  in the selected realization row in `plan.md`
-- update the run with selected paths, checkboxes, concise work, produced
-  artifacts, validation evidence, and blockers
-- update the run's Plan Map emoji whenever a stage changes state and mirror it
-  into the current `plan.md` Plan Map only after frozen-contract and
-  dependency compatibility checks by stable stage id
-- append every command generated for human execution of a manual stage to the
-  run before or when presenting it; preserve corrected and superseded commands
-  as separate ordered entries and keep literal secrets out of command text
-- link stages, produced artifacts, and evidence in their execution context
-- append an automatic realization row to section 10 of `plan.md` when it is
-  made available and immediately recompute style
-- reuse the historical baseline for compatible future-only changes; log
-  their dependency and realization compatibility decision
+- Inputs: exact approved model/digest, selection, entry and boundaries, with
+  start authorization; or the existing realization, frozen plan and current stage.
+- At authorized start, freeze `_realizations/<start>/plan-v1.md`, then create
+  `realization.md`. Record actual start/timezone and separate source/frozen hashes.
+- Resume the existing realization; check pending outputs before repeating action.
+- Show the frozen stage and capture its input/action/output contract. Verify
+  inputs before action and respect authority and stop points.
+- Preserve actual actions, safe commands/corrections, results and evidence in
+  the stage's Actions section. Request documentary confirmation first, using
+  explicitly identified condition-specific statements when unavailable.
+- Update progress only in the realization; action success leaves outputs awaiting
+  validation. Hand off to `06-plan-validation` before another stage.
+- Model edits require renewed review and an authorized successor; retain prior
+  frozen plans and evidence. Never project execution state into either plan.
 
-## Typical Inputs
+## Collapsed Automatic Execution
 
-- realization decision
-- path-options artifact and plan realization registry
-- selected realization record
-- selected realization artifact
-- selected local plan revision snapshot
-- selected plan stage
-- automation boundaries and stop points
-- validation criteria for the stage
-- relevant working directory or external context
-
-## Expected Outputs
-
-- plan-run artifact
-- updated realization artifact
-- updated plan artifact when registration or run start changes its realization
-  registry, or when a contract-compatible emoji projection changes
-- implementation artifact, handoff artifact, or execution note when applicable
-- discovered risks, blockers, or revision needs
+Invoke the existing authorized skill/action under its covered checks and
+boundaries. Create no Machine of Goals execution directory, frozen plan,
+realization document, stage journal or execution index for the invocation.
+Return its actual result or blocker; invocation alone does not establish success.
+Creating a new mechanism requires a separate request.
 
 ## Stop Conditions
 
-Stop before continuing when:
+Stop on unaccepted inputs, missing approval, changed model, missing or corrupt
+manual frozen-plan context, unavailable evidence or work beyond authority.
+A tool/script inside a manual walkthrough remains part of that documented stage.
 
-- the next action exceeds approved boundaries
-- validation criteria are missing
-- the selected local plan revision snapshot is missing
-- the selected realization artifact is missing
-- the stage requires a new decision, subgoal, dry run, or external authority
-- the result is ready for validation
-
-## Workflow Fit
-
-Primary mode for `05-plan-realization`. It normally hands off to `validation`
-after the run produces a stage or final result.
-
-## Stage Contracts and Plan Changes
-
-Follow the [revision rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-revision-history-rule) and
-[stage contract rule](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-contract-rule):
-
-- Log compatible future-only edits without a new revision; assess dependencies
-  and realization fit. Preserve applicable accepted results.
-- Freeze each effective stage contract in its run before action; validate
-  against captured criteria and evidence. Preserve attempts and baseline links.
-- Create a new revision before executing changed frozen obligations; identify
-  revalidation or rework. Never rebind completed runs or invent legacy contracts.
+Canonical workflow: [Machine of Goals](../../../workflows/machine-of-goals/machine-of-goals-workflow.md).

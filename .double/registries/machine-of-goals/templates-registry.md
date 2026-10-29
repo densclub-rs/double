@@ -19,12 +19,10 @@ outputs and their stable template identifiers.
 | --- | --- | --- |
 | `goal-artifact` | `goal-template` | `.double/templates/machine-of-goals/goal-template.md` |
 | `path-options` | `path-options-template` | `.double/templates/machine-of-goals/path-options-template.md` |
+| `plan-model` | `plan-model-template` | `.double/templates/machine-of-goals/plan-model-template.md` |
 | `plan-artifact` | `plan-template` | `.double/templates/machine-of-goals/plan-template.md` |
-| `realization-decision` | `realization-decision-template` | `.double/templates/machine-of-goals/realization-decision-template.md` |
 | `realization-artifact` | `realization-template` | `.double/templates/machine-of-goals/realization-template.md` |
 | `stage-realization` | `stage-realization-template` | `.double/templates/machine-of-goals/stage-realization-template.md` |
-| `plan-run` | `plan-run-template` | `.double/templates/machine-of-goals/plan-run-template.md` |
-| `run-index` | `run-index-template` | `.double/templates/machine-of-goals/run-index-template.md` |
 | `exported-plan-package` | `exported-plan-package-template` | `.double/templates/machine-of-goals/exported-plan-package-template.md` |
 
 ## Usage Rule
@@ -38,50 +36,48 @@ outputs and their stable template identifiers.
 
 ## Model and Realization Shape
 
-For manual and interactive execution, use the model and realization shapes
-at the beginning of `plan-template` and `realization-template`, and use
-`stage-realization-template` for stage documents. Their generated artifact
-names do not include an execution-mode prefix.
+- Both editable and frozen documents keep the user-facing name `Plan` and
+  heading `# Plan: <Goal Title> / <Branch>`. Technical kinds and template IDs
+  distinguish their roles without changing the artifact name to `Plan Model`.
+- Step 03: create `<goal-directory>/plan.md` from `plan-model-template` by
+  default. Every plan has only `id`, a generated short human-readable word
+  derived from the plan's context: jointly express its subject, core meaning
+  and goal in a single word. Always write it in frontmatter and use it as the
+  root anchor. Use lowercase English letters only and choose another word
+  combining all three concepts on collision. Revisions and frozen copies retain
+  the same `id`; paths, revisions/versions and digests identify exact copies.
+  Parallel variants use `plan-<id>.md`; author variants use `plan<owner_id>.md`
+  with the actual author's `owner-id`, without a hyphen after `plan`. Variants
+  may be formed directly at synthesis after discovery. Keep each actual plan's
+  `id`, branch, review revision and file/anchor in the goal table. `plan-id` in
+  another artifact references this `id`, rather than duplicating plan identity.
+- Step 04: show the actual plan file link and request approval of its current
+  contents, path/entry and boundaries. Keep the computed digest internal, not
+  in the question, title, choices or normal summary. A deferred start leaves
+  only the model; any edit requires renewed review of the linked contents.
+- Authorized manual step-05 start: freeze `_realizations/<start>/plan-v1.md` from
+  `plan-template` with `kind: plan-artifact`, `plan-version: 1` and approved
+  source provenance. Rebase links without changing approved transition content.
+- Create `realization.md` in that directory after the plan, recording its exact
+  digest and the approved source digest separately. Stage records link the local
+  frozen plan; progress, evidence and actual results stay in these records.
+  Render each State cell with only an emoji, explained by the canonical
+  legend above the map; do not repeat state words or add a duplicate status
+  column. 🟠 means awaiting verification; ✅ requires
+  accepted output conditions. Preserve textual metadata and keep both plans
+  free of mutable execution progress.
+- Request documentary evidence first; explicit user statements are an identified
+  fallback. Verify input before action and output before completion. The model
+  and frozen plan contain no execution progress.
+- A source edit stops further planned action, requires renewed review and an
+  authorized successor. Preserve the old plan and facts; validate already
+  observed outputs against that unchanged plan. Inherited results retain origin
+  and require an applicability check.
+- No separate decision, registration wrapper, execution index, evidence manifest or
+  validation document is required on the manual/interactive route. Omit unused
+  optional fields/sections and never link nonexistent execution files.
 
-- Model: `plan-<branch>-v<major>.md`, with `branch` and `plan-version` in
-  Markdown frontmatter, stable stage anchors, and short English stage names.
-  Independent branches may coexist; compatible updates stay in one file,
-  while a major model change preserves the earlier model in another file.
-- Realization: `realizations/<YYYY-MM-DDTHH-mm-ss>/realization.md`, with
-  actual start, timezone, model identity/content digest, current stage, and
-  a compact progress map. Selection context is included here when needed.
-- Stage: `<stage-id-lowercase>-<stage-slug>.md` in that same directory, with
-  three main parts: input state, actions, and output state. Capture effective
-  conditions and intended action before execution and retain factual results.
-- Request suitable documentary evidence for input and output checks. If it
-  cannot be provided, an explicit user statement can support acceptance;
-  preserve that basis without claiming independent documentary verification.
-  Silence and unrelated evidence do not establish acceptance.
-- Keep progress only in the realization. Accept input conditions before stage
-  action and output conditions before completion. Model changes end the
-  realization and require a linked successor; inherit results only after an
-  applicability check and retain their original factual context.
-- Do not require a separate realization decision, registration wrapper, run,
-  run index, evidence manifest, or validation document for this shape.
-- Keep generated documents concise; omit unused optional fields and sections.
-
-The [Model and Realization Execution Rule](../../workflows/machine-of-goals/machine-of-goals-workflow.md#model-and-realization-execution-rule)
-routes manual and interactive steps 03–06 to these shapes. Existing other-mode
-shapes and rules below remain separately scoped; they must not be added as
-mandatory layers to this route. No skill, collapsing, or automatic-action
-behavior is changed here.
-
-## Existing Rules for Other Execution Modes
-
-- preserve `template-id` when revising an artifact or copying `plan.md` into a
-  `realizations/plan-revision-<N>.md` snapshot
-- keep the plan template's revision fields null before the first realization;
-  freeze revision 1 for the first executable baseline and revise thereafter
-  only when frozen stage obligations change; log compatible future-only edits
-  without a revision
-- capture each effective stage contract in the run before action; use captured
-  criteria and evidence for validation, preserving historical baseline links
-- use the workflow file as the canonical source for step order and transition
-  conditions
-- use agent cards and the agents registry to determine which agent produces
-  each artifact
+A collapsed skill/action is the reusable mechanism itself. Invocation creates
+no Machine of Goals execution artifacts. There are no alternate execution
+shapes or computed plan styles. See the canonical
+[execution boundary](../../workflows/machine-of-goals/machine-of-goals-workflow.md#plan-model-execution-boundary).
