@@ -66,7 +66,7 @@ printf 'unowned sentinel\n' > "$project/keep.txt"
 bash "$installer" releases > "$fixture/releases.txt"
 grep -F 'machine-of-ideas' "$fixture/releases.txt" >/dev/null
 test ! -e "$DOUBLE_STATE_DIR/installer/releases"
-bash "$installer" add --project "$project" --machine machine-of-ideas > "$fixture/add-download.log"
+bash "$installer" add --project "$project" --machine M-O-I > "$fixture/add-download.log"
 cat "$fixture/add-download.log"
 grep -F 'Release not cached; downloading:' "$fixture/add-download.log" >/dev/null
 test -f "$DOUBLE_STATE_DIR/installer/releases/machine-of-ideas-1.0.0/$archive"
@@ -85,8 +85,8 @@ jq -e '(.archives|length)==1 and (.installations|length)==1' "$fixture/status.js
 # Compare against the shell's canonical path: checks native-jq/MSYS argument handling.
 canonical="$(cd "$project" && pwd -P)"
 MSYS2_ARG_CONV_EXCL="$canonical" jq -e --arg project "$canonical" '.installations | length == 1 and .[0].project == $project' "$DOUBLE_STATE_DIR/installer/registry.json" >/dev/null
-bash "$installer" update --project "$project" --machine machine-of-ideas --non-interactive
-bash "$installer" remove --project "$project" --machine machine-of-ideas --yes
+bash "$installer" update --project "$project" --machine moi --non-interactive
+bash "$installer" remove --project "$project" --machine MOI --yes
 test ! -e "$project/.double/templates/machine-of-ideas/example.md"
 bash "$installer" uninstall-all --yes
 test -f "$project/keep.txt"

@@ -28,6 +28,30 @@ case "${OSTYPE:-}" in
     ;;
 esac
 
+resolve_machine() {
+  [ -z "$1" ] || [[ "$1" =~ ^[a-zA-Z0-9][a-zA-Z0-9-]*$ ]] || usage_error 'Invalid machine identifier.'
+  case "$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]')" in
+    mog|m-o-g) printf '%s\n' machine-of-goals ;;
+    moi|m-o-i) printf '%s\n' machine-of-ideas ;;
+    mok|m-o-k) printf '%s\n' machine-of-knowledge ;;
+    da|d-a) printf '%s\n' double-agent ;;
+    *) printf '%s\n' "$1" ;;
+  esac
+}
+
+machine_aliases() {
+  cat <<'EOF'
+
+Machine aliases:
+  mog / m-o-g  -> machine-of-goals
+  moi / m-o-i  -> machine-of-ideas
+  mok / m-o-k  -> machine-of-knowledge
+  da  / d-a    -> double-agent
+Aliases for --machine are case-insensitive: MOG and M-O-G also work.
+Full machine identifiers remain supported; the registry uses canonical names.
+EOF
+}
+
 usage() {
   cat <<'EOF'
 Double Installer
@@ -35,11 +59,12 @@ Double Installer
   double-installer.sh help
   double-installer.sh explain
   double-installer.sh doctor
-  double-installer.sh releases [--machine ID] [--channel stable|rc|dev]
+  double-installer.sh releases [--machine ID] [--channel stable|rc]
   double-installer.sh download --machine ID [--version VERSION] [--channel CHANNEL]
-  double-installer.sh download [--all]   (all machines: stable -> rc -> dev)
+  double-installer.sh download [--all]   (all machines: stable -> rc)
   double-installer.sh install ...   (alias of download)
   double-installer.sh add --project DIR --machine ID [--agent codex|claude] [--version VERSION] [--channel CHANNEL] [--yes]
+  double-installer.sh dev --source DOUBLE_DIR --project DIR --machine ID [--agent codex|claude] [--yes]
   double-installer.sh remove --project DIR --machine ID [--yes]
   double-installer.sh status [--json]
   double-installer.sh update --project DIR --machine ID [--channel CHANNEL] [--non-interactive]
@@ -53,13 +78,14 @@ Double Installer
   double-installer.sh uninstall-all [--yes]
 
 Use COMMAND --help or COMMAND --explain for detailed command guidance.
-Bulk selection: one latest version per machine, stable then rc then dev.
+Bulk selection: one latest version per machine, stable then rc.
 add lists detected agents and asks to integrate all; decline keeps shared skills only.
 Non-terminal input defaults to shared skills; --agent selects an explicit adapter.
 add --global installs globally; update --global updates registered machines.
 Download/install only cache packages; add integrates projects or global agents.
 add automatically downloads missing releases; a separate download is optional.
 Minimal flow: [doctor] -> releases -> add.
+Local development: dev copies working machine directories without GitHub access.
 Agent skills: ~/.agents/skills (Codex), ~/.claude/skills (Claude Code).
 CLAUDE_CONFIG_DIR overrides the Claude directory; foreign skills are preserved.
 
@@ -69,24 +95,80 @@ Implemented: all listed commands.
 Installation and usage instructions:
 https://github.com/densclub-rs/double/blob/066bd419c649ca0fa20bc77d11fb21a54f35af97/knowledge/double-installer/double-installer.md
 EOF
+  machine_aliases
 }
 
 
 format_explanation() {
-  if [ ! -t 1 ] || [ "${TERM:-}" = dumb ] || [ -n "${NO_COLOR+x}" ]; then
-    cat
-    return
+  local colored=false
+  if [ -t 1 ] && [ "${TERM:-}" != dumb ] && [ -z "${NO_COLOR+x}" ]; then
+    colored=true
   fi
-  # Styling is presentation-only; redirected help remains byte-for-byte plain.
-  awk '
-    BEGIN { esc=sprintf("%c",27); reset=esc "[0m"; heading=esc "[1;36m"; usage=esc "[32m"; option=esc "[33m" }
-    /^[a-z][a-z-]*$/ || /^Double Installer/ || /^Command explanations:$/ {
+  # Keep section spacing in every output mode; add colors only in terminals.
+  awk -v colored="$colored" -v command_help="${1:-false}" '
+    BEGIN {
+      if (colored=="true") {
+        esc=sprintf("%c",27); reset=esc "[0m"; heading=esc "[1;36m"
+        synopsis=esc "[36m"; usage=esc "[32m"; option=esc "[33m"
+      }
+    }
+    command_help=="true" {
+      lines[NR]=$0
+      if (/^  Usage:/) usage_start=NR
+      next
+    }
+    in_usage && !/^         double-installer.sh/ {
+      if ($0!="") print ""
+      in_usage=0
+    }
+    /^[a-z][a-z-]*$/ {
+      print heading $0 reset; synopsis_next=1; next
+    }
+    /^Double Installer/ || /^Command explanations:$/ {
       print heading $0 reset; next
     }
-    /Usage:/ || /^         double-installer.sh/ {
+    synopsis_next {
+      print synopsis $0 reset; synopsis_next=0; next
+    }
+    /^  Usage:/ {
+      sub(/^  /, "")
+      print ""; print usage $0 reset; in_usage=1; next
+    }
+    /^         double-installer.sh/ {
+      sub(/^  /, "")
       print usage $0 reset; next
     }
+    /^  double-installer.sh/ {
+      print usage $0 reset; next
+    }
+    /^Use COMMAND/ {
+      print synopsis $0 reset; next
+    }
+    /^[A-Z][A-Za-z ]*:/ {
+      label=substr($0,1,index($0,":"))
+      rest=substr($0,length(label)+1)
+      gsub(/--[a-z][a-z-]*/, option "&" reset, rest)
+      print synopsis label reset rest; next
+    }
     { gsub(/--[a-z][a-z-]*/, option "&" reset); print }
+    END {
+      if (command_help!="true" || !usage_start) exit
+      line=lines[usage_start]; sub(/^  Usage: /, "Usage: ", line)
+      print usage line reset
+      usage_end=usage_start+1
+      while (lines[usage_end] ~ /^         double-installer.sh/) {
+        line=lines[usage_end]; sub(/^         /, "       ", line)
+        print usage line reset; usage_end++
+      }
+      print ""
+      print synopsis lines[2] reset
+      print ""
+      for (i=3; i<=NR; i++) {
+        if (i>=usage_start && i<usage_end) continue
+        line=lines[i]; gsub(/--[a-z][a-z-]*/, option "&" reset, line)
+        print line
+      }
+    }
   '
 }
 
@@ -141,10 +223,10 @@ EOF
       cat <<'EOF'
 releases
   Query GitHub releases and list machine, version, channel and tag.
-  Usage: double-installer.sh releases [--machine ID] [--channel stable|rc|dev]
-  Stable is the default. Select rc or dev explicitly to list that channel.
+  Usage: double-installer.sh releases [--machine ID] [--channel stable|rc]
+  Stable is the default. Select rc explicitly to list that channel.
   Uses the network; does not download archives or install machines.
-  Terminal colors distinguish stable/rc/dev; NO_COLOR, TERM=dumb or redirection
+  Terminal colors distinguish stable/rc; NO_COLOR, TERM=dumb or redirection
   disables styling and retains plain tab-separated output.
 EOF
       ;;
@@ -153,9 +235,9 @@ EOF
 $1
   Download verified machine packages into the local installer cache.
   Usage: double-installer.sh $1 [--all]
-         double-installer.sh $1 --machine ID [--version VERSION] [--channel stable|rc|dev]
+         double-installer.sh $1 --machine ID [--version VERSION] [--channel stable|rc]
   With no options, or --all, choose one version per machine: prefer stable,
-  otherwise rc, otherwise dev; select the latest numeric version in that channel.
+  otherwise rc; select the latest numeric version in that channel.
   Explicit --machine defaults to stable. --version selects a numeric version
   within the chosen channel. --all cannot combine with machine/version/channel.
   install is an alias of download; neither integrates machines into projects.
@@ -168,9 +250,9 @@ EOF
       cat <<'EOF'
 add
   Install machine files and register skills with selected AI agents.
-  Usage: double-installer.sh add --project DIR --machine ID [--agent codex|claude] [--version VERSION] [--channel stable|rc|dev] [--yes]
-         double-installer.sh add --global [--agent codex|claude] [--machine ID] [--channel stable|rc|dev] [--yes]
-  Prefer stable, then rc, then dev; newest numeric version within that channel.
+  Usage: double-installer.sh add --project DIR --machine ID [--agent codex|claude] [--version VERSION] [--channel stable|rc] [--yes]
+         double-installer.sh add --global [--agent codex|claude] [--machine ID] [--channel stable|rc] [--yes]
+  Prefer stable, then rc; newest numeric version within that channel.
   --channel restricts selection; --version accepts an exact numeric version.
   Prerelease installation requires confirmation, even with explicit --channel.
   Found unregistered machine directories require separate adoption confirmation.
@@ -191,7 +273,7 @@ add
   --agent codex uses the same standard shared root; --agent claude explicitly
   creates DIR/.claude/skills or the global Claude skills root. Claude Code is not
   assumed to discover the shared root automatically. Omitted global --machine
-  selects all machines, preferring stable, then rc, then dev. Global skills live
+  selects all machines, preferring stable, then rc. Global skills live
   in ~/.agents/skills and ~/.claude/skills (CLAUDE_CONFIG_DIR overrides Claude).
   Repeating global add may attach/repair skills; existing payloads are not upgraded.
   Use update for upgrades. Download and verify packages; track payload and skills
@@ -199,6 +281,27 @@ add
   failures roll back only that agent; retain payload and successful registrations,
   continue other agents, then return nonzero on any failure. Repeat add to retry
   integration without reinstalling/upgrading the machine payload.
+EOF
+      ;;
+    dev)
+      cat <<'EOF'
+dev
+  Copy a machine from a local Double working directory into a test project.
+  Usage: double-installer.sh dev --source DOUBLE_DIR --project DIR --machine ID [--agent codex|claude] [--yes]
+  Copy all regular files under .double/<category>/<machine>/, including skills
+  and support files, regardless of status or Git tracking. Other machines and
+  user ideas/goals/knowledge are excluded. Source and project must be separate,
+  non-nested directories. Links and special files are refused.
+  No GitHub requests, release cache or version-knowledge changes are made.
+  Register version development, channel dev and the absolute local source.
+  Repeat dev to refresh the working copy, removing obsolete managed files.
+  Back up an existing payload before replacement; unregistered directories
+  require adoption confirmation (or --yes). Preserve foreign skill directories.
+  Agent selection and independent skill registration follow add semantics.
+  update/update-all replace local development with a published stable or RC,
+  preferring stable, regardless of its numeric version. With no eligible release
+  keep the development copy. Published GitHub dev packages are ignored.
+  Ordinary update never recopies the local source; run dev again to do that.
 EOF
       ;;
     remove)
@@ -229,17 +332,19 @@ EOF
       cat <<'EOF'
 update
   Update registered project or global machines; use add for initial installation.
-  Usage: double-installer.sh update --project DIR --machine ID [--channel stable|rc|dev] [--non-interactive]
-         double-installer.sh update --global [--agent codex|claude] [--machine ID] [--channel stable|rc|dev] [--non-interactive]
+  Usage: double-installer.sh update --project DIR --machine ID [--channel stable|rc] [--non-interactive]
+         double-installer.sh update --global [--agent codex|claude] [--machine ID] [--channel stable|rc] [--non-interactive]
   Project updates retain the recorded channel unless explicitly overridden.
-  Global selection defaults to stable, then rc, then dev. Only registered global
+  Global selection defaults to stable, then rc. Only registered global
   machines are updated; --agent filters by an existing agent connection. It never
   discovers or registers new agents. Use add --global for new connections.
   Global payload lives in installer state; tracked skill entry points connect
   ~/.agents/skills (Codex) and ~/.claude/skills (Claude Code). CLAUDE_CONFIG_DIR
   overrides the Claude root. Foreign skills are preserved; collisions are refused.
   Download/verify newer packages, back up replaced files, then update the registry.
-  Do not downgrade versions. Interactive updates offer backup cleanup;
+  Local development installations instead select stable, then RC by default,
+  regardless of numeric version; no eligible release leaves the local copy intact.
+  Published installations do not downgrade versions. Interactive updates offer backup cleanup;
   --non-interactive retains backups. Does not upgrade this installer script.
 EOF
       ;;
@@ -249,10 +354,12 @@ update-all
   Update every registered project and global machine installation.
   Group machines alphabetically, then visit their projects in path order.
   Show indented results per installation and a final success/failure summary.
-  Usage: double-installer.sh update-all [--channel stable|rc|dev] [--non-interactive]
-  Project entries retain their channel; global entries use stable -> rc -> dev
+  Usage: double-installer.sh update-all [--channel stable|rc] [--non-interactive]
+  Project entries retain their channel; global entries use stable -> rc
   unless --channel overrides it. Download verified updates, back up replacements
-  and update registry records. No version downgrades. Continue across entries;
+  and update registry records. Release installations never downgrade versions.
+  Local development copies select stable, then RC, regardless of version.
+  Continue across entries;
   any failed update causes a nonzero final exit.
   Does not update cache-only machines, add new machines/agents or upgrade the
   installer itself. --non-interactive keeps backups and suppresses cleanup prompts.
@@ -300,6 +407,9 @@ EOF
       ;;
     *) usage_error "Unknown command: $1" ;;
   esac
+  case "$1" in
+    releases|download|install|add|dev|remove|update|backups-clean) machine_aliases ;;
+  esac
 }
 
 explain_all() {
@@ -320,7 +430,7 @@ JSON processing requires jq, and packages use tar and a SHA-256 utility.
 Command explanations:
 EOF
   local name
-  for name in help explain doctor releases download install add remove status update update-all backups-clean cron-add cron-remove uninstall-all; do
+  for name in help explain doctor releases download install add dev remove status update update-all backups-clean cron-add cron-remove uninstall-all; do
     printf '\n';explain_command "$name"
   done
 }
@@ -434,7 +544,7 @@ action_printf() {
   shift 2
   printf -v message "$format" "$@"
   case "${command_name:-}" in
-    add|update|update-all) ;;
+    add|dev|update|update-all) ;;
     *) printf '%s' "$message";return ;;
   esac
   case "$level" in
@@ -545,7 +655,7 @@ installation_consent() {
   local answer
   action_printf warning '%s\n' "$1"
   [ "${yes:-false}" = true ] && return 0
-  [ -t 0 ] || fail 'Installation requires confirmation; rerun interactively or use add --yes.'
+  [ -t 0 ] || fail "Installation requires confirmation; rerun interactively or use $command_name --yes."
   action_printf warning 'Continue? [y/N] '
   read -r answer || answer=''
   case "$answer" in y|Y|yes) ;; *) fail 'Installation cancelled.' ;; esac
@@ -618,7 +728,7 @@ release_catalog() {
   jq --arg machine "$machine" --arg channel "$channel" '
     [ .[] | select(.draft == false)
       | . as $release
-      | try (.tag_name | capture("^(?<machine>[a-z0-9][a-z0-9-]*)-(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)(?:-(?<channel>rc|dev))?$")) catch empty
+      | try (.tag_name | capture("^(?<machine>[a-z0-9][a-z0-9-]*)-(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)(?:-(?<channel>rc))?$")) catch empty
       | .channel = (.channel // "stable")
       | select($channel == "all" or .channel == $channel)
       | select($machine == "" or .machine == $machine)
@@ -734,6 +844,10 @@ registry_check() {
       (.directories|type)=="array" and all(.directories[]; type=="string") and
       (.version|type)=="string" and (.tag|type)=="string" and
       (.channel=="stable" or .channel=="rc" or .channel=="dev")) and
+    all(.installations[]; .source == null or
+      (.source.type=="development" and (.source.path|type)=="string" and
+       (.source.path|startswith("/")) and (.source.path|explode|all(.>=32)) and
+       .version=="development" and .tag=="local-development" and .channel=="dev")) and
     all(.installations[]; . as $r | (.integrations // []) as $i |
       ($i|type)=="array" and all($i[];
         (.agent=="shared" or .agent=="codex" or .agent=="claude") and
@@ -796,7 +910,7 @@ add_machine() {
   if [ -z "$channel" ] || [ "$channel" = all ];then
     channel=all;release_catalog
     jq --arg v "$version" '[.[]|select($v=="" or .version==$v)]' "$work_dir/catalog.json" > "$work_dir/eligible.json"
-    row=$(jq 'sort_by([{stable:2,rc:1,dev:0}[.channel],(.version|split(".")|map(tonumber))]) | last // empty' "$work_dir/eligible.json")
+    row=$(jq 'sort_by([{stable:2,rc:1}[.channel],(.version|split(".")|map(tonumber))]) | last // empty' "$work_dir/eligible.json")
   else
     release_catalog
     row=$(jq --arg v "$version" '[.[]|select($v=="" or .version==$v)][0] // empty' "$work_dir/catalog.json")
@@ -893,6 +1007,121 @@ add_machine() {
   integrate_selected_agents
 }
 
+# Local development uses the same bounded ownership, snapshots and independent
+# agent transactions as release installation, without inventing a release cache.
+dev_machine() {
+  local dir file root installed backup='' manual=false created transaction_done result=0
+  project_init
+  [ -d "$source" ] || usage_error 'Source must be an existing Double directory.'
+  source=$(cd "$source" && pwd -P)
+  case "$source" in *$'\n'*|*$'\r'*|*$'\t'*) usage_error 'Control characters in source paths are unsupported.' ;; esac
+  [ "$source" != / ] || usage_error 'Filesystem root cannot be a source.'
+  case "$project/" in "$source/"*) usage_error 'Source and project must be separate, non-nested directories.' ;; esac
+  case "$source/" in "$project/"*) usage_error 'Source and project must be separate, non-nested directories.' ;; esac
+  no_symlinks "$source/.double"
+  [ -d "$source/.double" ] || usage_error 'Source has no .double directory.'
+  : > "$work_dir/new-files"
+  for dir in "$source"/.double/*/"$machine";do
+    [ ! -e "$dir" ] && [ ! -L "$dir" ] && continue
+    no_symlinks "$dir"
+    [ -d "$dir" ] || fail 'Source machine root is not a directory.'
+    [ -z "$(find "$dir" ! -type d ! -type f -print)" ] || fail 'Source contains links or special entries.'
+    [ -z "$(find "$dir" -name $'*\n*' -print)" ] || fail 'Line breaks in source filenames are unsupported.'
+    root=${dir#"$source/"}
+    (cd "$source" && find "$root" -type f -print) >> "$work_dir/new-files" || fail 'Cannot inventory local machine.'
+  done
+  [ -s "$work_dir/new-files" ] || fail 'No local files for the selected machine.'
+  LC_ALL=C sort "$work_dir/new-files" > "$work_dir/files"
+  inventory_check
+  cp "$work_dir/files" "$work_dir/new-files"
+  # Stage the complete source before any destination mutation.
+  mkdir "$work_dir/unpacked"
+  while IFS= read -r file;do
+    mkdir -p "$work_dir/unpacked/$(dirname "$file")"
+    cp -p -- "$source/$file" "$work_dir/unpacked/$file" || fail 'Cannot stage local machine file.'
+  done < "$work_dir/new-files"
+  [ -f "$work_dir/unpacked/.double/skills/$machine/SKILL.md" ] ||
+    [ -f "$work_dir/unpacked/.double/workflows/$machine/$machine-workflow.md" ] ||
+    fail 'Local machine has no skill/workflow entry point.'
+  state_init;mutation_begin
+  installed=$(jq --arg p "$project" --arg m "$machine" '.installations[]|select(.project==$p and .machine==$m)' "$registry")
+  : > "$work_dir/files"
+  if [ -n "$installed" ];then
+    integration_check "$installed"
+    printf '%s' "$installed" | jq -r '.files[]' > "$work_dir/files"
+    inventory_check
+    while IFS= read -r file;do
+      if [ -e "$project/$file" ];then
+        jq -e --arg f "$file" '.files|index($f)!=null' <<< "$installed" >/dev/null || fail "Unowned destination exists: $file"
+        [ -f "$project/$file" ] || fail 'Managed destination is not a regular file.'
+      fi
+    done < "$work_dir/new-files"
+  fi
+  cat "$work_dir/files" "$work_dir/new-files" > "$work_dir/all-files"
+  machine_roots "$work_dir/all-files" > "$work_dir/roots"
+  if [ -z "$installed" ];then
+    for dir in "$project"/.double/*/"$machine";do
+      [ ! -e "$dir" ] && [ ! -L "$dir" ] && continue
+      no_symlinks "$dir"
+      [ -d "$dir" ] || fail 'Manual machine root is not a directory.'
+      printf '%s\n' "${dir#"$project/"}" >> "$work_dir/roots"
+      manual=true
+    done
+    if [ "$manual" = true ];then
+      installation_consent "Unregistered machine found: $machine in $project. Back up and replace its directories?"
+    fi
+  fi
+  LC_ALL=C sort -u "$work_dir/roots" > "$work_dir/roots.sorted"
+  mv "$work_dir/roots.sorted" "$work_dir/roots"
+  if [ -n "$installed" ] || [ "$manual" = true ];then
+    no_symlinks "$state/backups";mkdir -p "$state/backups"
+    backup=$(mktemp -d "$state/backups/backup.XXXXXX")
+    if [ -n "$installed" ];then printf '%s\n' "$installed" > "$backup/installation.json"
+    else jq -n --arg p "$project" --arg m "$machine" '{project:$p,machine:$m,source:"manual"}' > "$backup/installation.json";fi
+    snapshot_directories "$project" "$work_dir/roots" "$backup"
+    printf 'complete\n' > "$backup/complete"
+    action_printf info 'Machine directory backup: %s\n' "$backup"
+  fi
+  transaction=$(mktemp -d "$state/transactions/dev.XXXXXX")
+  transaction_project="$project";transaction_kind=dev
+  snapshot_directories "$project" "$work_dir/roots" "$transaction"
+  cp -p "$registry" "$transaction/registry-before.json" || fail 'Cannot preserve installation registry.'
+  : > "$transaction/directories"
+  if [ "$manual" = true ];then
+    while IFS= read -r dir;do rm -rf -- "$project/$dir" || fail 'Cannot replace manual machine directory.';done < "$work_dir/roots"
+  else
+    while IFS= read -r file;do rm -f -- "$project/$file" || fail 'Cannot remove previous file.';done < "$work_dir/files"
+  fi
+  while IFS= read -r file;do
+    dir=$(dirname "$file");created=''
+    while [ "$dir" != . ] && [ ! -d "$project/$dir" ];do
+      created="$dir"$'\n'"$created";dir=$(dirname "$dir")
+    done
+    printf '%s' "$created" >> "$transaction/directories"
+    mkdir -p "$project/$(dirname "$file")"
+    cp -p -- "$work_dir/unpacked/$file" "$project/$file" || fail 'Development write failed; rolling back.'
+  done < "$work_dir/new-files"
+  jq -Rn '[inputs]' < "$work_dir/new-files" > "$work_dir/files.json"
+  sort -u "$transaction/directories" | jq -Rn '[inputs|select(length>0)]' > "$work_dir/created.json"
+  jq --arg p "$project" --slurpfile d "$work_dir/created.json" \
+    '([$d[0][]] + [.installations[]|select(.project==$p)|.directories[]])|unique' "$registry" > "$work_dir/dirs.json"
+  jq --arg p "$project" --arg m "$machine" --arg source "$source" \
+    --slurpfile f "$work_dir/files.json" --slurpfile d "$work_dir/dirs.json" '
+    ([.installations[]|select(.project==$p and .machine==$m)][0] // {project:$p,machine:$m}) as $old |
+    .installations = ([.installations[]|select(.project!=$p or .machine!=$m)] +
+      [$old + {version:"development",tag:"local-development",channel:"dev",scope:"project",
+        source:{type:"development",path:$source},files:$f[0],directories:$d[0]}])
+  ' "$registry" > "$state/registry.new" || fail 'Cannot stage development registration.'
+  mv "$state/registry.new" "$registry" || fail 'Cannot commit development registration.'
+  transaction_done="$transaction";transaction='';rm -rf -- "$transaction_done"
+  action_printf success 'Installed %s in %s (development from %s)\n' "$machine" "$project" "$source"
+  offer_backup_cleanup "$backup"
+  # Refresh old adapters and retain their independent failure results.
+  refresh_integrations || result=1
+  integrate_selected_agents || result=1
+  return "$result"
+}
+
 remove_machine() {
   local row file dir
   project_init;state_init;mutation_begin
@@ -957,12 +1186,19 @@ confirm_action() {
 }
 
 update_machine() {
-  local installed row tag cached archive expected actual file dir backup transaction_done
+  local installed row tag cached archive expected actual file dir backup transaction_done development=false
   project_init;state_init;mutation_begin
   installed=$(jq --arg p "$project" --arg m "$machine" '.installations[]|select(.project==$p and .machine==$m)' "$registry")
   [ -n "$installed" ] || fail 'Machine is not registered in this project.'
   integration_check "$installed"
-  if [ -z "$channel" ] && [ "$(printf '%s' "$installed"|jq -r '.scope // "project"')" = global ];then
+  if printf '%s' "$installed" | jq -e '.source.type=="development"' >/dev/null;then development=true;fi
+  if [ -z "$channel" ] && { [ "$development" = true ] || [ "$(printf '%s' "$installed" | jq -r .channel)" = dev ]; };then
+    channel=all;latest_machines
+    # Local development is replaced by the preferred stable/RC even when its
+    # version is lower than the source checkout's future machine version.
+    row=$(jq '.[0] // empty' "$work_dir/latest.json")
+    [ -z "$row" ] || channel=$(printf '%s' "$row"|jq -r .channel)
+  elif [ -z "$channel" ] && [ "$(printf '%s' "$installed"|jq -r '.scope // "project"')" = global ];then
     channel=all;latest_machines
     row=$(jq '.[0] // empty' "$work_dir/latest.json")
     [ -z "$row" ] || channel=$(printf '%s' "$row"|jq -r .channel)
@@ -972,7 +1208,7 @@ update_machine() {
     row=$(jq '.[0] // empty' "$work_dir/catalog.json")
   fi
   [ -n "$row" ] || { action_printf warning 'No applicable release: %s (%s) in %s\n' "$machine" "$channel" "$project"; return 0; }
-  if ! jq -ne --arg a "$(printf '%s' "$row"|jq -r .version)" --arg b "$(printf '%s' "$installed"|jq -r .version)" \
+  if [ "$development" = false ] && ! jq -ne --arg a "$(printf '%s' "$row"|jq -r .version)" --arg b "$(printf '%s' "$installed"|jq -r .version)" \
     --arg old "$(printf '%s' "$installed"|jq -r '.tag|if endswith("-dev") then "dev" elif endswith("-rc") then "rc" else "stable" end')" --arg new "$channel" \
     '($a|split(".")|map(tonumber)) as $av | ($b|split(".")|map(tonumber)) as $bv |
       {dev:0,rc:1,stable:2} as $rank | ($av > $bv) or ($av == $bv and $rank[$new] > $rank[$old])' >/dev/null; then
@@ -1024,6 +1260,7 @@ update_machine() {
   cp -Rp "$backup/old" "$transaction/old" || fail 'Cannot preserve update recovery directories.'
   cp "$backup/roots" "$transaction/roots" || fail 'Cannot preserve update roots.'
   cp "$backup/snapshot-complete" "$transaction/snapshot-complete" || fail 'Cannot preserve snapshot marker.'
+  cp -p "$registry" "$transaction/registry-before.json" || fail 'Cannot preserve installation registry.'
   printf '%s\n' "$installed" > "$transaction/installation.json"
   transaction_kind=update;transaction_project="$project"
   while IFS= read -r file; do rm -f -- "$project/$file" || fail 'Cannot remove previous file.'; done < "$work_dir/files"
@@ -1040,7 +1277,7 @@ update_machine() {
   jq -Rn '[inputs]' < "$transaction/directories" > "$work_dir/dirs.json"
   jq --arg p "$project" --arg m "$machine" --arg t "$tag" --arg v "$version" --arg c "$channel" \
     --slurpfile f "$work_dir/files.json" --slurpfile d "$work_dir/dirs.json" \
-    '(.installations[]|select(.project==$p and .machine==$m)) |= (.version=$v|.tag=$t|.channel=$c|.files=$f[0]|.directories=((.directories+$d[0])|unique))' \
+    '(.installations[]|select(.project==$p and .machine==$m)) |= (del(.source)|.version=$v|.tag=$t|.channel=$c|.files=$f[0]|.directories=((.directories+$d[0])|unique))' \
     "$registry" > "$state/registry.new" || fail 'Cannot stage registry update.'
   mv "$state/registry.new" "$registry" || fail 'Cannot commit registry update.'
   transaction_done="$transaction";transaction='';rm -rf -- "$transaction_done"
@@ -1188,7 +1425,7 @@ latest_machines() {
   jq '
     [.[] | . as $r | select(([.assets[]|select(.name == ("double-"+$r.tag+".tar.gz"))]|length)==1)
       | select(([.assets[]|select(.name=="SHA256SUMS.txt")]|length)==1)]
-    | group_by(.machine) | map(max_by([{stable:2,rc:1,dev:0}[.channel], (.version|split(".")|map(tonumber))]))
+    | group_by(.machine) | map(max_by([{stable:2,rc:1}[.channel], (.version|split(".")|map(tonumber))]))
     | sort_by(.machine)
   ' "$work_dir/catalog.json" > "$work_dir/latest.json" || fail 'Cannot select latest machine releases.'
 }
@@ -1260,7 +1497,8 @@ integrate_selected_agents() {
   local a result=0
   # Payload commits independently; every agent owns its own lock and rollback.
   if [ -n "$mutation_lock" ];then rmdir "$mutation_lock";mutation_lock='';fi
-  for a in "${add_agents[@]}";do
+  # Bash 3.2 with nounset treats an empty array as unset (first dev install).
+  for a in ${add_agents[@]+"${add_agents[@]}"};do
     if (
       work_dir=$(mktemp -d "${TMPDIR:-/tmp}/double-installer.XXXXXX")
       transaction='';mutation_lock='';trap cleanup EXIT
@@ -1524,7 +1762,7 @@ global_remove() {
 command_name="${1:-help}"
 # Help is dispatched before dependencies, network access or state mutation.
 for argument in "${@:2}"; do
-  case "$argument" in --help|--explain|-h) explain_command "$command_name" | format_explanation; exit 0 ;; esac
+  case "$argument" in --help|--explain|-h) explain_command "$command_name" | format_explanation true; exit 0 ;; esac
 done
 [ "$command_name" != install ] || command_name=download
 action_indent=''
@@ -1532,11 +1770,11 @@ action_indent=''
 if [ "$command_name" = update ] && [ "${DOUBLE_INSTALLER_NESTED_UPDATE:-}" = 1 ];then action_indent='    ';fi
 action_colors=false
 case "$command_name" in
-  add|update|update-all)
+  add|dev|update|update-all)
     if [ -t 1 ] && [ "${TERM:-}" != dumb ] && [ -z "${NO_COLOR+x}" ];then action_colors=true;fi ;;
 esac
 case "$command_name" in
-  help|--help|-h) usage ;;
+  help|--help|-h) usage | format_explanation ;;
   explain|--explain) [ "$#" -eq 1 ] || usage_error 'explain accepts no arguments.';explain_all | format_explanation ;;
   doctor)
     [ "$#" -eq 1 ] || usage_error 'doctor accepts no arguments.'
@@ -1550,14 +1788,14 @@ case "$command_name" in
       if [ "$1" = --all ];then [ "$command_name" = download ] || usage_error '--all requires download/install';all=true;shift;continue;fi
       [ "$#" -ge 2 ] || usage_error "Missing value for $1"
       case "$1" in
-        --machine) machine="$2" ;;
+        --machine) machine=$(resolve_machine "$2") ;;
         --channel) channel="$2";explicit_channel=true ;;
         --version) [ "$command_name" = download ] || usage_error '--version requires download'; version="$2" ;;
         *) usage_error "Unknown option: $1" ;;
       esac
       shift 2
     done
-    case "$channel" in stable|rc|dev) ;; *) usage_error 'Channel must be stable, rc, or dev.' ;; esac
+    case "$channel" in stable|rc) ;; *) usage_error 'Published channel must be stable or rc; use dev --source DIR for local development.' ;; esac
     [ -z "$machine" ] || [[ "$machine" =~ ^[a-z0-9][a-z0-9-]*$ ]] || usage_error 'Invalid machine identifier.'
     [ -z "$version" ] || [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || usage_error 'Invalid numeric version.'
     [ "$command_name" != download ] || [ "$all" = true ] || [ -n "$machine" ] || usage_error 'download requires --machine.'
@@ -1581,6 +1819,29 @@ case "$command_name" in
       download_release
     fi
     ;;
+  dev)
+    shift
+    project='' machine='' source='' agent='' yes=false non_interactive=false
+    integration_scope=project;add_agents=();selected_agents=()
+    while [ "$#" -gt 0 ];do
+      if [ "$1" = --yes ];then yes=true;shift;continue;fi
+      [ "$#" -ge 2 ] || usage_error "Missing value for $1"
+      case "$1" in
+        --source) source="$2" ;; --project) project="$2" ;;
+        --machine) machine=$(resolve_machine "$2") ;; --agent) agent="$2" ;;
+        *) usage_error "Unknown option: $1" ;;
+      esac
+      shift 2
+    done
+    [ -n "$project" ] && [ -n "$source" ] && [ -n "$machine" ] || usage_error 'dev requires --source, --project and --machine.'
+    [[ "$machine" =~ ^[a-z0-9][a-z0-9-]*$ ]] || usage_error 'Invalid machine identifier.'
+    case "$agent" in ''|codex|claude) ;; *) usage_error 'Supported agents: codex, claude.' ;; esac
+    doctor >/dev/null || fail 'Missing dependencies.'
+    work_dir=$(mktemp -d "${TMPDIR:-/tmp}/double-installer.XXXXXX")
+    project_init
+    select_agents;add_agents=("${selected_agents[@]}")
+    dev_machine
+    ;;
   add|remove)
     shift
     project='' machine='' version='' channel='' yes=false global=false agent='' non_interactive=false
@@ -1592,7 +1853,7 @@ case "$command_name" in
       fi
       [ "$#" -ge 2 ] || usage_error "Missing value for $1"
       case "$1" in
-        --project) project="$2" ;; --machine) machine="$2" ;;
+        --project) project="$2" ;; --machine) machine=$(resolve_machine "$2") ;;
         --agent) agent="$2" ;;
         --version) [ "$command_name" = add ] || usage_error '--version is only for add';version="$2" ;;
         --channel) [ "$command_name" = add ] || usage_error '--channel is only for add';channel="$2" ;;
@@ -1603,7 +1864,7 @@ case "$command_name" in
     [ "$global" = true ] || [ -n "$project" ] || usage_error "Provide --project or --global."
     if [ "$global" != true ] || [ "$command_name" = remove ];then [ -n "$machine" ] || usage_error 'Provide --machine.';fi
     [ -z "$machine" ] || [[ "$machine" =~ ^[a-z0-9][a-z0-9-]*$ ]] || usage_error 'Invalid machine.'
-    case "$channel" in ''|stable|rc|dev) ;; *) usage_error 'Invalid channel.' ;; esac
+    case "$channel" in ''|stable|rc) ;; *) usage_error 'Published channel must be stable or rc; use dev --source DIR for local development.' ;; esac
     [ -z "$version" ] || [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || usage_error 'Invalid version.'
     doctor >/dev/null || fail 'Missing dependencies.'
     work_dir=$(mktemp -d "${TMPDIR:-/tmp}/double-installer.XXXXXX")
@@ -1675,7 +1936,8 @@ case "$command_name" in
           .installations | group_by(.project) | .[] |
           ("  " + $heading + .[0].project + $reset),
           (sort_by(.machine)[] | "    - " + .machine + "  " + .version + "  (" +
-            ({stable:$stable,rc:$rc,dev:$dev}[.channel]) + .channel + $reset + ")")
+            ({stable:$stable,rc:$rc,dev:$dev}[.channel]) + .channel + $reset + ")" +
+            (if .source.type=="development" then "  source: " + .source.path else "" end))
         ' "$registry"
       fi
     fi
@@ -1692,13 +1954,13 @@ case "$command_name" in
       case "$1" in
         --agent) agent="$2" ;;
         --project) [ "$command_name" != update-all ] || usage_error 'update-all does not accept --project';project="$2" ;;
-        --machine) [ "$command_name" != update-all ] || usage_error 'update-all does not accept --machine';machine="$2" ;;
+        --machine) [ "$command_name" != update-all ] || usage_error 'update-all does not accept --machine';machine=$(resolve_machine "$2") ;;
         --channel) [ "$command_name" != backups-clean ] || usage_error 'Cleanup has no channel';channel="$2" ;;
         *) usage_error "Unknown option: $1" ;;
       esac;shift 2
     done
     [ -z "$machine" ] || [[ "$machine" =~ ^[a-z0-9][a-z0-9-]*$ ]] || usage_error 'Invalid machine identifier.'
-    case "$channel" in ''|stable|rc|dev) ;; *) usage_error 'Invalid channel.' ;; esac
+    case "$channel" in ''|stable|rc) ;; *) usage_error 'Published channel must be stable or rc; use dev --source DIR for local development.' ;; esac
     doctor >/dev/null || fail 'Missing dependencies.'
     work_dir=$(mktemp -d "${TMPDIR:-/tmp}/double-installer.XXXXXX")
     [ -z "$agent" ] || [ "$global" = true ] || usage_error '--agent requires --global.'
