@@ -4,7 +4,7 @@ kind: goal-artifact
 template-id: goal-template
 project-id: double
 produced-by: machine-of-goals/goal-formulation-agent
-owner-id: double-project
+owner-id: densclub
 interaction-language: en
 artifact-language: en
 goal-scope: subgoal
