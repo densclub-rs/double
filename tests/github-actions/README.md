@@ -33,7 +33,7 @@ disposable GitHub Linux runner (`DOUBLE_DISPOSABLE_CRON=1`). It exercises the
 runner's real scheduler and restores its previous crontab. Do not invoke it on
 a developer host.
 
-`.github/workflows/double-installer.yml` runs the quick suite on five OS/architecture
+`.github/workflows/double-installer.yml` runs the quick suite on four Linux/macOS OS/architecture
 combinations. Repository regressions and live/cron integration also gate tagged
 publication. Branch pushes validate only. Eligible annotated installer tags can
 publish `double-installer.sh` and `SHA256SUMS.txt`, followed by the approved
