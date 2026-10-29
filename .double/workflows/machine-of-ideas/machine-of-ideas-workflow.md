@@ -17,6 +17,58 @@ derived-from:
 
 # Workflow: Machine of Ideas
 
+## Project Rules Loading Protocol
+
+Here, project rules means project knowledge broadly: facts, settings,
+conventions, constraints, version knowledge and change history. A request about
+something at project level normally belongs in `.double-rules/`; it need not
+use the word "rule" or prescribe behavior. Preserve the directory and existing
+index headings as the discovery interface.
+
+Before selecting a catalog, planning, or writing, load the current project's
+rules. This protocol belongs to this machine and is included in its package.
+
+1. Establish the active user project root from the request and available project
+   context. Do not substitute the installation directory of a globally installed
+   machine. If the root is ambiguous, clarify it before writing.
+2. Look for `.double-rules/` at that root. Its absence is normal: use this
+   workflow's defaults without creating a rules directory or asking the user
+   to configure one.
+3. When present, read `.double-rules/double-rules.md`. It is a Markdown index
+   with `Common Rules` and machine-id headings. Common rules apply to every
+   machine, including Double Agent, on every invocation regardless of task.
+   Read every linked common rule, then every rule under this machine's heading
+   (`machine-of-ideas`). A rule may be linked under several machine headings; read it once.
+4. The links identify ordinary Machine of Knowledge artifacts, not a separate
+   rule template. Resolve index links relative to the index and artifact links
+   relative to their documents. Catalog settings in rule values are relative
+   to the active project root unless explicitly absolute. Use the existing
+   knowledge template and metadata; introduce no YAML configuration, additional
+   rule metadata, or mandatory rule-specific artifact sections.
+5. Missing machine headings mean no additional machine rules. An existing
+   directory with a missing index, a broken required link, an expired or draft
+   rule, or conflicting rules must be reported and resolved before dependent
+   work. Never silently ignore a rule or fall back past an unresolved conflict.
+   A rule's presence does not renew its knowledge validity period.
+6. Rules configure documented project settings and add project constraints;
+   they cannot bypass required approvals, validation, or higher-priority
+   instructions. Do not infer that machine-specific rules override common rules.
+   State material conflicts and ask for resolution before dependent actions.
+7. Keep `.double-rules/` in the project's version control. It is project-owned
+   knowledge, outside the installer-managed `.double/` tree. Package the loading
+   protocol with each machine, never the publishing project's actual rules.
+   Installation, update, and removal must preserve the user's rules. A repository
+   release tag records its project's rules in Git without shipping them to other
+   projects in a machine archive. Changes to this protocol require affected
+   machine version updates; project-rule edits alone do not require machine releases.
+
+The index is navigation, not a second copy of each knowledge value. Machine of
+Knowledge creates it only when the first project rule is accepted. It uses
+Markdown headings `Common Rules`, `double-agent`, `machine-of-knowledge`,
+`machine-of-ideas`, and `machine-of-goals`, with ordinary relative links under
+applicable headings; unused headings may be omitted. No agent-specific entry
+files are required by this protocol.
+
 ## Purpose
 
 This workflow defines the prototype of the basic thinking scheme of the idea machine.
@@ -25,8 +77,12 @@ This workflow defines the prototype of the basic thinking scheme of the idea mac
 
 ## Version Knowledge Rule
 
-The machine version is preserved only in
-`knowledge/machine-of-ideas-version/machine-of-ideas-version.md`. Changes to
+The version source is resolved from applicable project knowledge first, using
+the Version Knowledge Resolution protocol in the Double Agent workflow. If no
+project source is established, use
+`knowledge/machine-of-ideas-version/machine-of-ideas-version.md` as the default.
+An invalid or conflicting project source blocks dependent work; it does not
+authorize fallback to the default. Changes to
 the structure of steps, artifact contracts, agent roles, language protocol, or
 transition conditions require the version knowledge to be updated through the
 Double Agent protocol.
@@ -170,7 +226,7 @@ neither concepts nor principles exist.
 
 ## Root Idea Placement Rule
 
-When the user starts work on a new idea and does not identify it as a sub-idea of an existing idea, the target is a root idea. A root idea artifact must be published directly under `ideas/` using the layout `ideas/<idea-id>/<idea-id>.md`.
+When the user starts work on a new idea and does not identify it as a sub-idea of an existing idea, the target is a root idea. A root idea artifact must be published directly under the base idea catalog configured by project rules, default `ideas/`, using `<idea-catalog>/<idea-id>/<idea-id>.md`.
 
 The agent must not place a new root idea inside a workflow, process, or topic directory such as `ideas/machine-of-ideas/`. A nested location is allowed only when the user explicitly says the new idea is a sub-idea or names the parent idea directory.
 
