@@ -26,12 +26,13 @@ Changes recorded for the `machine-of-ideas` module.
 
 ## Value
 
-### 0.2.6 — 2026-10-28
+### 0.2.6 — 2026-10-29
 
-- Recognize project-level facts, versions and history as project context under `.double-rules/`.
-- Prefer project-defined version knowledge and retain the historical knowledge path as the default.
 - Load project-owned common and Machine of Ideas rules before starting work.
-- Honor project catalog settings and preserve project rules during machine installation or updates.
+- Recognize project-level facts, settings, versions and history as project context under `.double-rules/`.
+- Honor project-configured idea catalog settings and retain `ideas/` as the default.
+- Prefer project-defined version knowledge and use the historical path when no project source exists.
+- Preserve project rules during machine installation and updates without including them in machine archives.
 
 ### 0.2.5 — 2026-10-14
 
