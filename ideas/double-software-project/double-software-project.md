@@ -43,6 +43,8 @@ Double brings together at least the Idea Machine, Knowledge Machine, Goal Machin
 
 The machines' models, code, and behavior belong to the Double project. A separate declarative YAML contract for each machine is not needed: installing or updating a machine means updating the implementation of a Double module. The platform should support installing and updating these implementations both globally and within a particular user project. For example, in a given project, a user may use just one specific Double machine. What's more, while working on a project, the user may change and adapt a Double machine to their own needs. The Double project should provide ways to share these modifications among interested users, and the most successful changes should be accepted and incorporated into Double itself.
 
+Software modules of the Double project can be developed as standalone applications and also form part of Double AI Agent.
+
 ### 4.2. A Universal Interface and Thin Integrations
 
 The Double CLI is the main universal software interface. External environments, including Claude, Codex, ChatGPT, VS Code, and others, work with Double through a stable CLI/API. MCP can serve as another adapter for accessing and interacting with Double.
@@ -50,6 +52,7 @@ The Double CLI is the main universal software interface. External environments, 
 The proposed command family:
 
 ```text
+double install ...
 double goal ...
 double idea ...
 double knowledge ...
@@ -60,19 +63,19 @@ double context ...
 
 A skill or plugin for an AI platform explains to the local host agent how to use Double. The core logic stays inside Double. After the initial connection, new capabilities arrive through Double updates, without moving every new feature into the platform's plugin.
 
-Automated capabilities can, when needed, be exported as a native SKILL, for example through `double export skill --target claude ...`, or made available through MCP. A capability like this may rely on a standalone external script. SKILL and MCP let users distribute an implementation or provide access to it; they do not require its core logic to move into a plugin for a particular AI platform.
+Automated capabilities can, when needed, be exported as a native SKILL, for example through `double goal --export skill --target claude ...`, or made available through MCP. A capability like this may rely on a standalone external script. SKILL and MCP let users distribute an implementation or provide access to it; they do not require its core logic to move into a plugin for a particular AI platform.
 
 The Double project defines ways to share accumulated knowledge both about the project itself and about other areas of an individual user's activity where Double is used.
 
 ### 4.3. Search, Context, and Project Scope
 
-Each machine has its own catalog for publishing the corresponding artifacts: ideas, goals, or knowledge. A machine module loaded into Double implements functions for accessing its catalogs and registries. Through these functions, Double Agent can search for published artifacts and available realizations, access related materials, and clarify the working context. Knowledge of how the catalogs are organized and how to access them belongs to the corresponding machine module.
+Each machine has its own catalog for publishing the corresponding artifacts: ideas, goals, or knowledge. A machine module loaded into Double implements functions for accessing its catalogs and registries. Through these functions, Double AI Agent can search for published artifacts and available realizations, access related materials, and clarify the working context. Knowledge of how the catalogs are organized and how to access them belongs to the corresponding machine module.
 
 Unified search covers Double's own space. An external agent does not need to choose an entity type in advance: a query such as `double search "distributed execution"` may return related goals, ideas, knowledge, and flows.
 
 `double context` provides compact working context: related ideas, knowledge, goals, flows, decisions, and possibly code. This lets an external agent start with an already accumulated and organized knowledge base, drawing on the individual and shared experience of Double users.
 
-A project is a working scope of its own. Creating and searching for entities should be possible both globally and within a project. The rules for using these scopes together have not yet been defined. Projects may be local, accessible only to a particular user, or shared with a limited audience or the public. In any case, Double Agent should maintain a registry of available knowledge sources for finding additional ideas, goals, and knowledge.
+A project is a working scope of its own. Creating and searching for entities should be possible both globally and within a project. The rules for using these scopes together have not yet been defined. Projects may be local, accessible only to a particular user, or shared with a limited audience or the public. In any case, Double AI Agent should maintain a registry of available knowledge sources for finding additional ideas, goals, and knowledge.
 
 Sharing accumulated ideas, goals, and knowledge should rely on publicly available Internet methods and services, such as GitLab and GitHub, public file storage, or cloud services. The Double project does not prohibit commercial or paid distribution of knowledge, but this would require dedicated private commercial channels for distributing information, built on the open part of Double.
 
@@ -92,7 +95,7 @@ Double helps people clarify their goals and learn ways to achieve them. As exper
 
 The form used to describe this work and the way it becomes executable actions and code are not fixed here. What matters is the ability to collapse and automate repeated manual actions into either software modules for the Double runtime or external shell scripts that can run on their own. One example is setting up a personal workspace on a computer. Another is simplifying and automating verification of the state reached: for example, documenting the process of obtaining a required document to preserve the nuances of navigating bureaucratic procedures.
 
-Double Agent learns about available automatic realizations through the catalog and registry access functions provided by loaded machine modules. Through them, the agent finds a realization and clarifies its context using related artifacts, including the original goal and plan, to understand its purpose and conditions of use. The same plan may have different realizations; an external script is one of them. A different form of execution does not, by itself, create a new path to the goal. Specific formats for describing and invoking realizations are not fixed here.
+Double AI Agent learns about available automatic realizations through the catalog and registry access functions provided by loaded machine modules. Through them, the agent finds a realization and clarifies its context using related artifacts, including the original goal and plan, to understand its purpose and conditions of use. The same plan may have different realizations; an external script is one of them. A different form of execution does not, by itself, create a new path to the goal. Specific formats for describing and invoking realizations are not fixed here.
 
 Execution inside the Double runtime is not required for every automated function: a standalone script can do its job without it. An executable realization and the way to access it are distinct: the script does the work, while SKILL or MCP makes that capability available to agents.
 
@@ -114,7 +117,7 @@ This creates a basis for confidential delegation: an external party can do part 
 
 ### 4.8. Independence from External Environments
 
-Work with goals, ideas, knowledge, and processes belongs to Double Agent. External environments provide ways to access and execute this work while preserving its underlying domain model.
+Work with goals, ideas, knowledge, and processes belongs to Double AI Agent. External environments provide ways to access and execute this work while preserving its underlying domain model.
 
 Double should be able to evolve independently of a particular LLM provider, storage system, or execution location. The specific internal design that enables this separation is not chosen here.
 
@@ -126,7 +129,7 @@ Exporting a script or SKILL, or providing access through MCP, does not remove th
 
 External code, ideas, goals, and knowledge are considered untrusted by default. A signature or provenance check does not replace security requirements and restrictions during execution.
 
-Code accepted for execution by Double Agent does not get full access to the execution environment: direct access to file systems, the network, the working environment, passwords, and so on. All interaction is controlled by Double Agent's security system. For example, instead of calling `fetch()` or the Google API directly, the code calls the agent's `capability.invoke(...)`. Each external action must receive user approval at one of several levels: once, for the session, permanently for a project, or permanently at the global level. At any time, the user can audit permissions and revoke those previously granted.
+Code accepted for execution by Double AI Agent does not get full access to the execution environment: direct access to file systems, the network, the working environment, passwords, and so on. All interaction is controlled by Double AI Agent's security system. For example, instead of calling `fetch()` or the Google API directly, the code calls the agent's `capability.invoke(...)`. Each external action must receive user approval at one of several levels: once, for the session, permanently for a project, or permanently at the global level. At any time, the user can audit permissions and revoke those previously granted.
 
 Tokens, passwords, and accounts are not passed to the code; it receives a temporary capability to perform an allowed action.
 
@@ -142,13 +145,13 @@ capability boundary
 policy engine
 ```
 
-Signatures, hashes, static checks, isolated execution environments (sandboxes), capability restrictions, policies, approvals, and audits complement one another. No single mechanism is considered sufficient on its own. The absence of a direct channel to the outside, even for compromised code, is a required property that will need to be strictly enforced in Double Agent's execution system.
+Signatures, hashes, static checks, isolated execution environments (sandboxes), capability restrictions, policies, approvals, and audits complement one another. No single mechanism is considered sufficient on its own. The absence of a direct channel to the outside, even for compromised code, is a required property that will need to be strictly enforced in Double AI Agent's execution system.
 
 ### 4.10. Explainable Actions and Process Development
 
 Audit records and verifiable evidence should make it possible to establish what action was performed, which goal and version it belonged to, in which run and at which stage of work, and why it was allowed. This is part of building trust in shared goal programs.
 
-Double Agent allows the processes of Double machines to change through a controlled sequence:
+Double AI Agent allows the processes of Double machines to change through a controlled sequence:
 
 ```text
 proposal → validation → tests/simulation → approval → new version
@@ -161,7 +164,7 @@ This means Double could potentially use its own machines to develop itself. Rule
 | Element | Role in the Idea |
 | --- | --- |
 | User | Expresses intentions, refines plans, and makes decisions at approval points |
-| Double Agent | Interacts with the person and participates in orchestrating the machines |
+| Double AI Agent | Interacts with the person and participates in orchestrating the machines |
 | Idea / Knowledge / Goal / Flow Machines | Develop ideas, preserve knowledge, work with goals, and change processes |
 | Project | Defines the working context and connects project artifacts |
 | CLI / API / MCP | Give external agents access to Double |
@@ -175,7 +178,7 @@ This means Double could potentially use its own machines to develop itself. Rule
 ## 6. Assumptions
 
 - A proven way to achieve a goal can be made repeatable and handed over to Double within agreed limits, preserving the meaning of the work and human control.
-- A stable interface will keep integrations with LLM platforms thin as Double's machines evolve.
+- A stable interface will allow Double's machines to evolve without requiring changes to integrations with LLM platforms, keeping those integrations thin and easy to maintain.
 - Sufficient context can be assembled for an individual task without giving the executor the entire plan.
 - The effects of executable code can be limited by a controlled capability boundary. This assumption requires a threat model and verification of isolation.
 - Global and project implementations of machines can be updated in a controlled way, keeping new ways of working with knowledge reproducible.
@@ -189,7 +192,7 @@ This means Double could potentially use its own machines to develop itself. Rule
 5. **Delegating part of a goal.** Double gives a remote executor a separate task and the context it needs. The executor returns a result without receiving the whole intent.
 6. **A controlled external action.** Goal code invokes a capability. The Policy Engine allows or denies the action, or requests approval; credentials stay under Double's control, and the decision is recorded in the audit log.
 7. **Developing its own process.** The Flow Machine takes a change through proposal, validation, testing or simulation, approval, and the release of a new version.
-8. **A standalone realization and integration.** A repeatable function is collapsed into a shell script that can run on its own. When needed, it is exported as a SKILL or made available through MCP. Double Agent learns about the realization and uses it for a suitable task.
+8. **A standalone realization and integration.** A repeatable function is collapsed into a shell script that can run on its own. When needed, it is exported as a SKILL or made available through MCP. Double AI Agent learns about the realization and uses it for a suitable task.
 
 ## 8. Signs of Value
 
@@ -211,7 +214,7 @@ There are no open questions at the idea level.
 
 The idea sets the boundaries of Double as software: its own machines and context, interaction interfaces, the transition from intention to action, long-running execution, security, and controlled process development.
 
-The core logic stays within Double rather than moving into plugins for LLM platforms or external AI agents. Native skills remain a compatibility format for major AI agents. The choice of programming languages will be made later, during development. At first glance, shell scripting (Bash, Zsh) and TypeScript (JavaScript) look like useful starting points for the Double project.
+The core logic stays within Double rather than moving into plugins for LLM platforms or external AI agents. Native skills remain a compatibility format for major AI agents. Programming languages and architecture will be determined and refined during development.
 
 This initial description does not choose a format for describing work, an execution model, Double's implementation language, a database, a transport, a sandbox product, or a final API design. The idea does not set an implementation plan or change the machines' existing working contracts. This broad idea provides a basis for defining the core concepts and principles of the Double software agent.
 
@@ -236,6 +239,7 @@ The agreed basic project rules are preserved in the knowledge artifact [Double P
 
 | Concept | Summary |
 | --- | --- |
+| [Standalone and Composable Software Modules](./double-software-project-concepts.md#concept-standalone-and-composable-modules) | Double software modules can be developed as standalone applications and also form part of Double AI Agent. |
 | [Machine Module](./double-software-project-concepts.md#concept-machine-module) | An installable implementation that owns a Double machine’s models, behavior, and knowledge of how to access its catalogs and registries. |
 | [Domain Continuity Across Environments](./double-software-project-concepts.md#concept-domain-continuity) | The persistence of Double’s domain meaning and accumulated work when the host agent, LLM provider, storage system, or execution location changes. |
 | [Working Scope and Knowledge Sources](./double-software-project-concepts.md#concept-working-scope) | The context in which artifacts and machine implementations are created, discovered, and used, together with the available local or shared sources of knowledge. |
@@ -244,7 +248,7 @@ The agreed basic project rules are preserved in the knowledge artifact [Double P
 | [Realization and Access Separation](./double-software-project-concepts.md#concept-realization-access) | The distinction between the executable work and the mechanism through which an agent discovers or invokes that work. |
 | [Bounded Autonomy for Mastered Work](./double-software-project-concepts.md#concept-bounded-autonomy) | Reusing an applicable automatic realization without involving an external host agent, within the person’s agreed limits of control. |
 | [Durable Work Coordination](./double-software-project-concepts.md#concept-durable-coordination) | Maintaining understandable goal-execution state across pauses, restarts, approvals, retries, and related work, including parallel independent parts and dependent results. |
-| [Confidential Delegation](./double-software-project-concepts.md#concept-confidential-delegation) | Assigning part of a goal to a local or remote executor with only the information and authority needed for that part, while overall responsibility remains with Double Agent. |
+| [Confidential Delegation](./double-software-project-concepts.md#concept-confidential-delegation) | Assigning part of a goal to a local or remote executor with only the information and authority needed for that part, while overall responsibility remains with Double AI Agent. |
 | [Scoped and Revocable Action Authority](./double-software-project-concepts.md#concept-action-authority) | User-controlled permission to perform a particular external action, evaluated through policies and exposed to executable code as a temporary capability rather than credentials. |
 | [Execution Isolation and Mediated Effects](./double-software-project-concepts.md#concept-execution-isolation) | The boundary that limits executable code’s resource access and prevents uncontrolled external effects, using complementary layers of isolation, runtime restrictions, capabilities, and policy. |
 | [Action Evidence and Explainability](./double-software-project-concepts.md#concept-action-evidence) | Records and verifiable evidence connecting an action to its goal and version, run, stage, and reason for permission. |

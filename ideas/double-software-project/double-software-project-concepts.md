@@ -16,7 +16,7 @@ Idea: [Implementing Double as Software](./double-software-project.md#double-soft
 
 ## 1. Conceptual Summary
 
-The central pattern is continuity from accumulated human experience to executable work: machine modules make knowledge discoverable, context gives a realization meaning, and coordinated execution preserves its connection to intention. External environments provide access and execution locations while Double retains ownership of its domain processes.
+The central pattern is continuity from accumulated human experience to executable work: machine modules make knowledge discoverable, context gives a realization meaning, and coordinated execution preserves its connection to intention. Double software modules can be standalone applications and also form part of Double AI Agent. External environments provide access and execution locations while Double retains ownership of its domain processes.
 
 A second pattern concerns the boundaries of that execution. Realization, access, authority, isolation, and evidence are distinct concepts. Delegation and autonomy change who performs or interprets work, while retaining questions of user control and information disclosure. Controlled evolution applies the same concern for deliberate change to the machines themselves.
 
@@ -27,6 +27,35 @@ This extraction is grounded in the source idea’s architectural hypothesis. It 
 A concept is a stable meaning unit describing an entity, relationship, process, distinction, tension, or interpretive frame that survives different implementations. It provides material for principle synthesis without itself being a rule, requirement, task, or design decision.
 
 ## 3. Core Concepts
+
+<a id="concept-standalone-and-composable-modules"></a>
+
+### concept-standalone-and-composable-modules: Standalone and Composable Software Modules
+
+#### Definition
+
+Double software modules can be developed as standalone applications and also form part of Double AI Agent.
+
+#### Source in Idea
+
+Explicit source material: section 4.1 of [the source idea](./double-software-project.md#double-software-project). The concept label is an analytical formulation of that material.
+
+#### Role in the Idea
+
+Connects independent use of Double software to its participation in a larger agent, allowing capabilities to be developed and used without requiring the complete agent.
+
+#### Related Concepts
+
+- [Machine Module](#concept-machine-module): A machine implementation is a particular kind of Double module; the standalone and composable relationship concerns software modules more broadly.
+- [Realization and Access Separation](#concept-realization-access): How executable work is accessed is distinct from whether a software module can stand alone or form part of the agent.
+
+#### Boundaries
+
+Standalone operation does not imply absence of dependencies or permissions. Forming part of the agent does not select a packaging format, language, architecture, integration mechanism, or execution boundary. This concept does not claim that all modules must run independently.
+
+#### Questions
+
+No unresolved conceptual questions identified in this pass.
 
 <a id="concept-machine-module"></a>
 
@@ -258,7 +287,7 @@ No unresolved conceptual questions identified in this pass.
 
 #### Definition
 
-Assigning part of a goal to a local or remote executor with only the information and authority needed for that part, while overall responsibility remains with Double Agent.
+Assigning part of a goal to a local or remote executor with only the information and authority needed for that part, while overall responsibility remains with Double AI Agent.
 
 #### Source in Idea
 
@@ -396,14 +425,14 @@ No unresolved conceptual questions identified in this pass.
 
 | Term or entity | Why it remains supporting material |
 | --- | --- |
-| Double Agent; user; host agent; executor | Actors with different responsibilities across the concepts; naming an actor alone does not explain the relevant relationship. |
+| Double AI Agent; user; host agent; executor | Actors with different responsibilities across the concepts; naming an actor alone does not explain the relevant relationship. |
 | Idea, Knowledge, Goal, and Flow Machines | Named domains of machine behavior; this idea does not define each machine’s full conceptual model. |
 | CLI, API, MCP, native SKILL, plugins | Interface and compatibility forms supporting domain continuity and access separation. |
 | Search, context, catalog, registry | Operations or organizational structures supporting discovery and context assembly; no schema is selected. |
 | Goal, path, plan, realization, result | Domain vocabulary retained in the intent-linked realization distinction; execution variants do not automatically create new paths. |
 | Capability Broker; Policy Engine; sandbox | Proposed mechanisms or component labels supporting authority and isolation, rather than selected component designs. |
 | Signature, hash, static check, provenance | Supporting checks and origin information; they neither authorize actions nor prove execution confinement. |
-| Bash, Zsh, TypeScript, JavaScript, nono | Possible implementation technologies, not conceptual commitments or verified product choices. |
+| nono | An example of a possible isolation tool, not a conceptual commitment or verified product choice. |
 | GitHub, GitLab, public storage, cloud services | Examples of sharing infrastructure; commercial channels remain possible without defining a business model. |
 | Bootstrap; installation; update | Lifecycle operations supporting module availability; the shell-to-CLI sequence is an illustrative installation arrangement. |
 | Token use, energy costs, environmental impact | Expected consequences of reuse requiring measurement, not demonstrated properties. |
@@ -411,6 +440,7 @@ No unresolved conceptual questions identified in this pass.
 ## 5. Candidate Inputs for Principle Synthesis
 
 - Domain continuity, machine ownership, and access separation: where domain behavior belongs as environments change.
+- Standalone and composable software modules: the relationship between independent applications and their participation in Double AI Agent.
 - Working scope and context assembly: the relationship between local adaptation, global availability, shared sources, and relevance.
 - Intent-linked realization and bounded autonomy: preservation of purpose and result criteria when mastered work becomes executable and reusable.
 - Durable coordination and confidential delegation: continuity of responsibility despite pauses, parallel work, and changes of execution location.
