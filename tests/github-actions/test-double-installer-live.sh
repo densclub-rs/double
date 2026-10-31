@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Explicit rc smoke against real public release, in disposable project/state.
+# Smoke against a real stable public release, in disposable project/state.
 set -euo pipefail
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../test-log.sh"
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/github-api-auth.sh"
@@ -13,12 +13,16 @@ export DOUBLE_STATE_DIR="$fixture/state"
 mkdir "$fixture/project"
 printf 'unowned\n' > "$fixture/project/keep"
 installer="${DOUBLE_TEST_INSTALLER:-$repo/scripts/double-installer.sh}"
-bash "$installer" releases --machine machine-of-ideas --channel rc
-bash "$installer" add --project "$fixture/project" --machine machine-of-ideas --version 0.2.3 --channel rc --yes
-archive="$DOUBLE_STATE_DIR/installer/releases/machine-of-ideas-0.2.3-rc/double-machine-of-ideas-0.2.3-rc.tar.gz"
+bash "$installer" releases --machine machine-of-ideas --channel stable > "$fixture/releases"
+cat "$fixture/releases"
+version="$(awk -F '\t' '$1 == "machine-of-ideas" && $3 == "stable" {print $2; exit}' "$fixture/releases")"
+[[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo 'No published stable machine-of-ideas release available.' >&2; exit 1; }
+tag="machine-of-ideas-$version"
+bash "$installer" add --project "$fixture/project" --machine machine-of-ideas --version "$version" --channel stable --yes
+archive="$DOUBLE_STATE_DIR/installer/releases/$tag/double-$tag.tar.gz"
 # add verifies SHA256SUMS; independently record actual payload digest in evidence.
 if command -v sha256sum >/dev/null; then sha256sum "$archive"; else shasum -a 256 "$archive"; fi
-jq -e '.installations | length == 1 and .[0].tag == "machine-of-ideas-0.2.3-rc"' "$DOUBLE_STATE_DIR/installer/registry.json" >/dev/null
+jq -e --arg tag "$tag" '.installations | length == 1 and .[0].tag == $tag' "$DOUBLE_STATE_DIR/installer/registry.json" >/dev/null
 # Historical published versions expose list; current source exposes status.
 help_output=$(bash "$installer" help)
 case "$help_output" in
@@ -29,6 +33,6 @@ bash "$installer" remove --project "$fixture/project" --machine machine-of-ideas
 bash "$installer" uninstall-all --yes
 test -f "$fixture/project/keep"
 test ! -e "$DOUBLE_STATE_DIR/installer"
-printf 'PASS: real machine-of-ideas-0.2.3-rc download, verified checksum, installation and cleanup\n'
+printf 'PASS: real %s download, verified checksum, installation and cleanup\n' "$tag"
 
 test_log "END live package smoke; elapsed=$((SECONDS-phase_started))s"
