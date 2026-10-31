@@ -189,4 +189,8 @@ remain research and planning details.
 
 ## 11. Machine of Goals Artifacts
 
-Possible paths have not yet been documented. No plan or realization exists.
+Possible paths: [Path options](./path-options.md#double-system-installer-path-options).
+
+| Branch | Review revision | Plan |
+| --- | --- | --- |
+| main | 2 | [Double System Installer plan](./plan.md#doublebootstrap) |

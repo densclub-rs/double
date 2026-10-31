@@ -1,5 +1,7 @@
 # Double
 
+See the [README](README.md#installation) for installation instructions.
+
 >
 > **The program that does not exist… *yet* !**
 > 
