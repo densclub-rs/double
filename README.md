@@ -12,13 +12,13 @@ artifacts may have different access terms. Read the full [project idea](Double.m
 
 ## Screencast
 
-<!-- To embed the video, upload it to GitHub and put the generated
-https://github.com/user-attachments/assets/... URL on its own line here. -->
+See the installer set up a test project and a Codex agent create an idea, a
+goal, and a project rule. The English terminal replay uses real commands and
+agent responses, is edited to shorten waiting time, and has no audio.
 
-[Watch the first-steps screencast](_media/double-first-steps.mp4) to see the
-installer set up a test project and a Codex agent create an idea, a goal, and a
-project rule. The English terminal replay uses real commands and agent
-responses, is edited to shorten waiting time, and has no audio.
+https://github.com/user-attachments/assets/2650d2a1-a533-405a-8ee0-b0b3e700ba66
+
+[Download the screencast](_media/double-first-steps.mp4)
 
 ## Installation
 
