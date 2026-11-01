@@ -1,1 +1,0 @@
-See [Double](../Double.md)
