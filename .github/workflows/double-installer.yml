@@ -83,6 +83,9 @@ jobs:
           bash tests/github-actions/installer-ci-environment.sh 2>&1 | tee test-results/environment.log
       - name: Run quick installer checks
         run: bash tests/github-actions/run-installer-tests.sh --quick 2>&1 | tee test-results/installer.log
+      - name: Check Windows bootstrap in Git Bash
+        if: runner.os == 'Windows'
+        run: bash scripts/install.sh --system --accept-rc 2>&1 | tee test-results/windows-bootstrap.log
       - name: Check system bootstrap
         run: python3 tests/github-actions/test-system-installer.py 2>&1 | tee test-results/system-installer.log
       - name: Retain evidence
