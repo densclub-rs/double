@@ -393,6 +393,45 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
  know=release('1.0.0','rc','machine-of-knowledge')
  installer=release('0.1.1','rc','double-installer');installer['assets'][0]['name']='double-installer.sh'
  fixtures([stable,older,rc,goals,goalsdev,know,installer])
+ bulk=root/'bulk project';bulk.mkdir()
+ other=root/'other bulk project';other.mkdir()
+ out=run('update','--project',posix_path(bulk),'--all')
+ assert 'Checked 0 registered machines' in out and 'machine-of-goals' in out and 'machine-of-ideas' in out
+ run('add','--project',posix_path(bulk),'--machine','machine-of-ideas','--yes')
+ run('add','--project',posix_path(other),'--machine','machine-of-knowledge','--yes')
+ out=run('update','--project',posix_path(bulk))
+ assert 'Checked 1 registered machines' in out and 'machine-of-goals' in out and 'machine-of-knowledge' in out
+ assert '  - machine-of-ideas ' not in out
+ run('add','--project',posix_path(bulk),'--all','--yes')
+ bulk_rows=[x for x in json.loads(registry.read_text())['installations'] if x['project']==posix_path(bulk)]
+ assert {x['machine'] for x in bulk_rows}=={'machine-of-ideas','machine-of-goals','machine-of-knowledge'}
+ assert {x['machine']:x['channel'] for x in bulk_rows}=={'machine-of-ideas':'stable','machine-of-goals':'rc','machine-of-knowledge':'rc'}
+ out=run('update','--project',posix_path(bulk),'--all')
+ assert 'Checked 3 registered machines' in out and 'No additional published machines' in out
+ partial=root/'partial bulk project';partial.mkdir()
+ foreign=partial/'.agents/skills/machine-of-goals';foreign.mkdir(parents=True)
+ (foreign/'SKILL.md').write_text('foreign skill')
+ out=run('add','--project',posix_path(partial),'--yes',code=1)
+ assert 'continuing with the remaining machines' in out and (foreign/'SKILL.md').read_text()=='foreign skill'
+ partial_rows=[x for x in json.loads(registry.read_text())['installations'] if x['project']==posix_path(partial)]
+ assert {x['machine'] for x in partial_rows}=={'machine-of-ideas','machine-of-goals','machine-of-knowledge'}
+ for item in partial_rows: run('remove','--project',posix_path(partial),'--machine',item['machine'],'--yes')
+ filtered=root/'filtered bulk project';filtered.mkdir()
+ run('add','--project',posix_path(filtered),'--channel','stable','--yes')
+ filtered_rows=[x for x in json.loads(registry.read_text())['installations'] if x['project']==posix_path(filtered)]
+ assert [x['machine'] for x in filtered_rows]==['machine-of-ideas']
+ run('remove','--project',posix_path(filtered),'--machine','machine-of-ideas','--yes')
+ if os.name!='nt':
+  terminal_bulk=root/'terminal bulk project';terminal_bulk.mkdir()
+  run_tty('add','--project',posix_path(terminal_bulk),'--all','--agent','codex','--channel','rc',answer='y\ny\ny')
+  terminal_rows=[x for x in json.loads(registry.read_text())['installations'] if x['project']==posix_path(terminal_bulk)]
+  assert len(terminal_rows)==3
+  for item in terminal_rows: run('remove','--project',posix_path(terminal_bulk),'--machine',item['machine'],'--yes')
+ run('add','--project',posix_path(bulk),'--all','--machine','moi',code=2)
+ run('add','--project',posix_path(bulk),'--version','1.0.0',code=2)
+ run('update','--project',posix_path(bulk),'--all','--machine','moi',code=2)
+ for item in bulk_rows: run('remove','--project',posix_path(bulk),'--machine',item['machine'],'--yes')
+ run('remove','--project',posix_path(other),'--machine','machine-of-knowledge','--yes')
  run('install')
  run('download','--machine','machine-of-ideas',code=1)
  run('download');run('download','--all');run('install','--all')
@@ -410,7 +449,23 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
  run('download','--all',code=1);assert cached_archive.read_bytes()==b'corrupt'
  cached_archive.write_bytes(original_archive)
  cache=root/'state/installer/releases'
- assert {x.name for x in cache.iterdir()}=={stable['tag_name'],goals['tag_name'],know['tag_name']}
+ expected_cache={stable['tag_name'],goals['tag_name'],know['tag_name']}
+ if os.name!='nt': expected_cache.add(rc['tag_name'])
+ assert {x.name for x in cache.iterdir()}==expected_cache
+ # A registry entry alone does not mean the payload still exists. Restore it,
+ # including when just one managed file is missing, while keeping integrations.
+ repair=root/'repair project';repair.mkdir()
+ run('add','--project',posix_path(repair),'--machine','machine-of-ideas','--yes')
+ repair_entry=repair/'.double/skills/machine-of-ideas/SKILL.md'
+ repair_entry.unlink()
+ output=run('add','--project',posix_path(repair),'--machine','machine-of-ideas','--yes')
+ assert 'incomplete' in output and repair_entry.is_file()
+ repair_row=next(x for x in json.loads(registry.read_text())['installations'] if x['project']==posix_path(repair))
+ assert [x['agent'] for x in repair_row['integrations']]==['shared']
+ shutil.rmtree(repair/'.double')
+ run('add','--project',posix_path(repair),'--machine','machine-of-ideas','--yes')
+ assert repair_entry.is_file()
+ run('remove','--project',posix_path(repair),'--machine','machine-of-ideas','--yes')
  run('download','--all','--channel','rc',code=2)
  run('download','--all','--machine','machine-of-ideas',code=2)
  run('releases','--all',code=2)

@@ -80,7 +80,7 @@ See `scripts/double-installer.sh help` for syntax.
 | `add` | Install machine files in a project and register the version |
 | `remove` | Remove owned machine files and its registry entry |
 | `status` | Show downloaded machine archives and registered installations |
-| `update` | Update one installation, backing up previous contents first |
+| `update` | Update one or all registered machines in a project, backing up previous contents first |
 | `update-all` | Update registered installations and report per-installation results |
 | `backups-clean` | Delete selected installer backups after explicit confirmation |
 | `cron-add` | Create one marked update task with the specified schedule |
@@ -90,13 +90,24 @@ See `scripts/double-installer.sh help` for syntax.
 `--project` must identify an existing project directory. `--machine` selects
 a published machine identifier; it is not a filesystem path. `--version`
 selects an exact version; absence means highest applicable numeric version.
-`--channel` is `stable`, `rc`, or `dev`. releases and explicit download
-default to stable. add defaults to stable → rc → dev, choosing the newest
+`--channel` is `stable` or `rc` for published releases. releases and explicit download
+default to stable. add defaults to stable → rc, choosing the newest
 numeric version in the first available channel. Prerelease installation requires
 affirmative terminal consent (also for explicit --channel), or add --yes.
 Updates do not downgrade; project updates retain the registered channel unless
 overridden. A bulk override applies explicitly to targeted installations.
 Ignore drafts and automatic repository source archives.
+
+For a project, omit `--machine` or pass `--all` to `add` to install all
+available published machines. The preferred release is stable, then RC; an
+explicit `--channel` restricts the selection. Agent selection happens once,
+and each machine is installed independently. Existing installations retain
+their versions unless an incomplete installation needs restoring. Omit
+`--machine` or pass `--all` to `update` to update all registered machines in
+that project. It also lists published machines not yet registered there, without
+installing them. Both bulk operations continue after individual failures and
+return a nonzero status if an operation fails. `update-all` remains the command
+for updating installations across all projects and global scope.
 
 Interactive destructive commands show their scope and ask confirmation;
 `--yes` confirms that displayed scope without prompting. Unattended updates
@@ -266,6 +277,8 @@ bash scripts/double-installer.sh doctor
 bash scripts/double-installer.sh releases
 bash scripts/double-installer.sh releases --channel rc
 bash scripts/double-installer.sh add --project /path/to/project --machine machine-of-ideas --channel rc
+bash scripts/double-installer.sh add --project /path/to/project --all
+bash scripts/double-installer.sh update --project /path/to/project --all
 bash scripts/double-installer.sh status
 bash scripts/double-installer.sh update-all --non-interactive
 bash scripts/double-installer.sh backups-clean --project /path/to/project

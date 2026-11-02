@@ -17,7 +17,11 @@ while [ "$#" -gt 0 ]; do
   esac
   shift
 done
-case $(uname -s) in Darwin|Linux) ;; *) fail 'This iteration supports Linux and macOS; Windows support is deferred.' ;; esac
+case $(uname -s) in Darwin|Linux|MINGW*|MSYS*|CYGWIN*) ;; *) fail 'Supported platforms: Linux, macOS and Windows with Git Bash.' ;; esac
+# Native Windows jq needs binary output to avoid CRLF in paths and checksums.
+case "${OSTYPE:-}" in
+  msys*|cygwin*) jq() { command jq --binary "$@"; } ;;
+esac
 for tool in curl jq mktemp mkdir mv chmod awk sed tr dirname basename cp rm uname sort cut; do
   command -v "$tool" >/dev/null 2>&1 || fail "Missing $tool; install it and retry."
 done

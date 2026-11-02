@@ -50,7 +50,7 @@ jobs:
     needs: candidate
     name: Installer / ${{ matrix.os }} / ${{ matrix.arch }}
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 10
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
@@ -93,8 +93,13 @@ jobs:
           esac
           python3 tests/github-actions/test-system-installer.py 2>&1 | tee test-results/system-installer.log
       - name: Check Windows bootstrap in Git Bash
-        if: ${{ !cancelled() && runner.os == 'Windows' }}
-        run: bash scripts/install.sh --system --accept-rc 2>&1 | tee test-results/windows-bootstrap.log
+        if: ${{ runner.os == 'Windows' }}
+        run: |
+          target="$(cygpath -u "$RUNNER_TEMP")/double-bootstrap-bin"
+          mkdir -p "$target"
+          export PATH="$target:$PATH"
+          bash scripts/install.sh --system --install-dir "$target" --accept-rc 2>&1 | tee test-results/windows-bootstrap.log
+          bash "$target/double-installer" --help >> test-results/windows-bootstrap.log
       - name: Retain evidence
         if: always()
         uses: actions/upload-artifact@v4

@@ -46,7 +46,11 @@ Use `--install-dir /absolute/path` to choose a different directory. If the selec
 
 ## Requirements
 
-The first bootstrap script supports Linux and macOS with Bash 3.2 or newer. Windows Git Bash support is planned for a later iteration.
+The bootstrap supports Linux and macOS with Bash 3.2 or newer, and Windows
+through Git Bash. On Windows, run the commands in Git Bash; the user installation
+is placed in `~/.local/bin`, and `--system` uses Git Bash's `/usr/local/bin`
+and requires permission to write there. It does not configure PowerShell or
+Windows system PATH.
 
 The bootstrap needs `curl`, `jq`, standard shell utilities, and either
 `sha256sum` or `shasum`.

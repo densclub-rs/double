@@ -36,7 +36,7 @@ while [ "$#" -gt 0 ]; do
  case $1 in -o) out=$2; shift 2;; -H) shift 2;; -*) shift;; *) url=$1; shift;; esac
 done
 case "$url" in *releases?*) cp "$FIXTURE/releases.json" "$out";; */installer) cp "$FIXTURE/payload" "$out";; */sums) cp "$FIXTURE/sums" "$out";; *) exit 1;; esac
-''')
+''', encoding='utf-8', newline='\n')
         curl.chmod(0o755)
         (self.root / 'payload').write_bytes(PAYLOAD)
         (self.root / 'sums').write_text(hashlib.sha256(PAYLOAD).hexdigest() + '  double-installer.sh\n')
