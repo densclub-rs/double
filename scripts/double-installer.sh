@@ -74,9 +74,9 @@ Double Installer
   double-installer.sh status [--json]
   double-installer.sh update --project DIR --machine ID [--channel CHANNEL] [--non-interactive]
   double-installer.sh update --project DIR [--all] [--channel CHANNEL] [--non-interactive]
-  double-installer.sh add --global [--agent codex|claude] [--machine ID] [--channel CHANNEL] [--yes]
-  double-installer.sh update --global [--agent codex|claude] [--machine ID] [--channel CHANNEL]
-  double-installer.sh remove --global --machine ID [--agent codex|claude] [--yes]
+  double-installer.sh add --global [--agent codex|claude|antigravity] [--machine ID] [--channel CHANNEL] [--yes]
+  double-installer.sh update --global [--agent codex|claude|antigravity] [--machine ID] [--channel CHANNEL]
+  double-installer.sh remove --global --machine ID [--agent codex|claude|antigravity] [--yes]
   double-installer.sh update-all [--channel CHANNEL] [--non-interactive]
   double-installer.sh backups-clean [--project DIR] [--machine ID] [--yes]
   double-installer.sh cron-add --schedule 'CRON EXPRESSION'
@@ -85,14 +85,15 @@ Double Installer
 
 Use COMMAND --help or COMMAND --explain for detailed command guidance.
 Bulk selection: one latest version per machine, stable then rc.
-add lists detected agents and asks to integrate all; decline keeps shared skills only.
+add lists detected agents and offers applicable dedicated integrations; decline keeps shared skills only.
 Non-terminal input defaults to shared skills; --agent selects an explicit adapter.
 add --global installs globally; update --global updates registered machines.
 Download/install only cache packages; add integrates projects or global agents.
 add automatically downloads missing releases; a separate download is optional.
 Minimal flow: [doctor] -> releases -> add.
 Local development: dev copies working machine directories without GitHub access.
-Agent skills: ~/.agents/skills (Codex), ~/.claude/skills (Claude Code).
+Agent skills: ~/.agents/skills (shared), ~/.claude/skills (Claude Code),
+~/.gemini/config/skills (global Antigravity).
 CLAUDE_CONFIG_DIR overrides the Claude directory; foreign skills are preserved.
 
 Default state root: ~/.local/state/double
@@ -258,7 +259,7 @@ add
   Install machine files and register skills with selected AI agents.
   Usage: double-installer.sh add --project DIR --machine ID [--agent codex|claude] [--version VERSION] [--channel stable|rc] [--yes]
          double-installer.sh add --project DIR [--all] [--agent codex|claude] [--channel stable|rc] [--yes]
-         double-installer.sh add --global [--agent codex|claude] [--machine ID] [--channel stable|rc] [--yes]
+         double-installer.sh add --global [--agent codex|claude|antigravity] [--machine ID] [--channel stable|rc] [--yes]
   Prefer stable, then rc; newest numeric version within that channel.
   --channel restricts selection; --version accepts an exact numeric version.
   Prerelease installation requires confirmation, even with explicit --channel.
@@ -271,17 +272,18 @@ add
   verified mechanism as download, or reuses and revalidates a cached archive.
   Minimal flow: [doctor] -> releases -> add. releases helps choose the machine;
   add refreshes release selection itself and checks dependencies automatically.
-  Without --agent, list detected agents and ask whether to integrate all of them.
+  Without --agent, list detected agents and show the shared integration path.
+  When dedicated integrations are available, ask whether to add the listed paths.
   No (the default) writes only DIR/.agents/skills or ~/.agents/skills globally.
-  Yes reuses that shared skill for compatible agents and adds dedicated roots
-  where required (currently Claude Code's .claude/skills). Each operation is
+  Yes also adds detected Claude Code and global Antigravity dedicated roots. Each operation is
   independent. No agents or non-terminal input selects shared skills only;
   --agent selects an explicit adapter without this list or prompt.
   --agent codex uses the same standard shared root; --agent claude explicitly
   creates DIR/.claude/skills or the global Claude skills root. Claude Code is not
   assumed to discover the shared root automatically. Omitted --machine (or
   --all) selects all available machines, preferring stable, then rc. Global skills live
-  in ~/.agents/skills and ~/.claude/skills (CLAUDE_CONFIG_DIR overrides Claude).
+  in ~/.agents/skills, ~/.claude/skills (CLAUDE_CONFIG_DIR overrides Claude),
+  and ~/.gemini/config/skills for Antigravity. --agent antigravity is global only.
   Repeating add may attach/repair skills; existing payloads are not upgraded.
   Use update for upgrades. Download and verify packages; track payload and skills
   in the registry. Refuse foreign skill collisions. Agent operations are independent:
@@ -316,7 +318,7 @@ EOF
 remove
   Remove registered machine files and update the registry, preserving unrelated files.
   Usage: double-installer.sh remove --project DIR --machine ID [--yes]
-         double-installer.sh remove --global --machine ID [--agent codex|claude] [--yes]
+         double-installer.sh remove --global --machine ID [--agent codex|claude|antigravity] [--yes]
   Global removal with --agent detaches that agent; other connections retain the
   shared payload. Removing all connections also removes the global payload.
   Destructive removal requires confirmation or --yes. Cache and existing backups
@@ -341,7 +343,7 @@ update
   Update registered project or global machines; use add for initial installation.
   Usage: double-installer.sh update --project DIR --machine ID [--channel stable|rc] [--non-interactive]
          double-installer.sh update --project DIR [--all] [--channel stable|rc] [--non-interactive]
-         double-installer.sh update --global [--agent codex|claude] [--machine ID] [--channel stable|rc] [--non-interactive]
+         double-installer.sh update --global [--agent codex|claude|antigravity] [--machine ID] [--channel stable|rc] [--non-interactive]
   Project updates retain the recorded channel unless explicitly overridden.
   Without --machine, or with --all, update every registered machine in the
   project and list available machines that can be added separately.
@@ -349,7 +351,8 @@ update
   machines are updated; --agent filters by an existing agent connection. It never
   discovers or registers new agents. Use add --global for new connections.
   Global payload lives in installer state; tracked skill entry points connect
-  ~/.agents/skills (Codex) and ~/.claude/skills (Claude Code). CLAUDE_CONFIG_DIR
+  ~/.agents/skills (shared), ~/.claude/skills (Claude Code), and
+  ~/.gemini/config/skills (Antigravity). CLAUDE_CONFIG_DIR
   overrides the Claude root. Foreign skills are preserved; collisions are refused.
   Download/verify newer packages, back up replaced files, then update the registry.
   Local development installations instead select stable, then RC by default,
@@ -501,6 +504,9 @@ doctor_agents() {
   done
   doctor_agent copilot 'GitHub Copilot' 'copilot' "${COPILOT_HOME:-$HOME/.copilot}" "${copilot_extensions[@]}"
   doctor_agent gemini 'Gemini CLI' 'gemini' "$HOME/.gemini"
+  doctor_agent antigravity 'Google Antigravity' 'agy antigravity' "$HOME/.gemini/antigravity" \
+    "${app_root:+$app_root/Antigravity.app}" "${user_apps:+$user_apps/Antigravity.app}" \
+    "${win_apps:+$win_apps/Antigravity/Antigravity.exe}" "config:$HOME/.gemini/antigravity-cli"
   doctor_agent opencode 'OpenCode' 'opencode' "${XDG_CONFIG_HOME:-$HOME/.config}/opencode"
   doctor_agent cascade 'Cascade / Windsurf' 'windsurf devin' "$HOME/.codeium/windsurf" \
     "${app_root:+$app_root/Windsurf.app}" "${user_apps:+$user_apps/Windsurf.app}" \
@@ -511,7 +517,7 @@ doctor_agents() {
   printf 'Detection uses executable paths and existing directories/files; agents are never launched.\n'
   printf 'Config alone may be stale; NOT FOUND means no known local evidence, not confirmed absence.\n'
   printf 'Detection does not verify login, versions, skill support or skill loading.\n'
-  printf 'Agent detection is independent of add adapters (currently codex/claude; shared by default).\n'
+  printf 'Agent detection is independent of explicit adapters; shared integration is selected by default.\n'
   fi
 }
 
@@ -860,11 +866,13 @@ registry_check() {
        .version=="development" and .tag=="local-development" and .channel=="dev")) and
     all(.installations[]; . as $r | (.integrations // []) as $i |
       ($i|type)=="array" and all($i[];
-        (.agent=="shared" or .agent=="codex" or .agent=="claude") and
+        (.agent=="shared" or .agent=="codex" or .agent=="claude" or .agent=="antigravity") and
         (.root|type)=="string" and (.root|startswith("/")) and .root!="/" and
+        (if .agent=="antigravity" then ($r.scope=="global" and (.root|endswith("/config"))) else true end) and
         (.root|explode|all(.>=32)) and .file==("skills/"+$r.machine+"/SKILL.md") and
         (.directories|type)=="array" and (. as $a | all(.directories[];
-          .==$a.root or .==($a.root+"/skills") or .==($a.root+"/skills/"+$r.machine)))) and
+          .==$a.root or .==($a.root+"/skills") or .==($a.root+"/skills/"+$r.machine) or
+          ($a.agent=="antigravity" and ($a.root|endswith("/config")) and .==($a.root|rtrimstr("/config")))))) and
       ([$i[].agent]|length)==([$i[].agent]|unique|length)) and
     ([.installations[]|[.project,.machine]]|length) ==
     ([.installations[]|[.project,.machine]]|unique|length)
@@ -1487,11 +1495,23 @@ download_all() {
 }
 
 select_agents() {
-  local agent_scan_mode=found detected_agents=('') detected answer=''
+  local agent_scan_mode=found detected_agents=('') detected answer='' claude_detected=false antigravity_detected=false shared_path claude_path antigravity_path scope_label
   local doctor_heading='' doctor_ok='' doctor_warning='' doctor_reset=''
   selected_agents=()
-  if [ -n "$agent" ];then selected_agents+=("$agent");return;fi
+  if [ "${integration_scope:-project}" = global ];then
+    scope_label='Global';shared_path="$HOME/.agents/skills";claude_path="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills";antigravity_path="$HOME/.gemini/config/skills"
+  else
+    scope_label="Project ($project)";shared_path="$project/.agents/skills";claude_path="$project/.claude/skills"
+  fi
+  action_printf info 'Integration scope: %s\n' "$scope_label"
+  if [ -n "$agent" ];then
+    selected_agents+=("$agent")
+    case "$agent" in claude) detected="$claude_path" ;; antigravity) detected="$antigravity_path" ;; *) detected="$shared_path" ;; esac
+    action_printf info 'Selected %s integration: %s\n' "$agent" "$detected"
+    return
+  fi
   selected_agents+=(shared)
+  action_printf info 'Shared integration will be installed at: %s\n' "$shared_path"
   if [ -t 1 ] && [ "${TERM:-}" != dumb ] && [ -z "${NO_COLOR+x}" ];then
     doctor_heading=$'\033[1;36m';doctor_ok=$'\033[32m';doctor_warning=$'\033[33m';doctor_reset=$'\033[0m'
   fi
@@ -1500,23 +1520,33 @@ select_agents() {
     action_printf warning 'No agents detected; installing shared .agents/skills only.\n';return
   fi
   action_printf warning 'Detection is based on local evidence; it does not verify agent login or skill loading.\n'
-  if [ ! -t 0 ];then
-    action_printf warning 'Non-interactive input; installing shared .agents/skills only. Use --agent for an explicit integration.\n';return
+  for detected in "${detected_agents[@]}";do
+    [ "$detected" != claude ] || claude_detected=true
+    if [ "$detected" = antigravity ] && [ "${integration_scope:-project}" = global ];then antigravity_detected=true;fi
+  done
+  if [ "$claude_detected" = false ] && [ "$antigravity_detected" = false ];then
+    action_printf info 'No detected agent requires an additional dedicated integration.\n';return
   fi
-  action_printf info 'Add integrations for all detected agents? [y/N] '
+  if [ ! -t 0 ];then
+    action_printf warning 'Non-interactive input; dedicated integrations will not be added. Use --agent to select one explicitly.\n';return
+  fi
+  if [ "$claude_detected" = true ];then action_printf info 'Additional Claude Code integration: %s\n' "$claude_path";fi
+  if [ "$antigravity_detected" = true ];then action_printf info 'Additional Antigravity integration: %s\n' "$antigravity_path";fi
+  action_printf info 'Add the additional integrations listed above? [y/N] '
   if ! IFS= read -r answer;then answer='';fi
   case "$answer" in
     y|Y|yes|YES)
       for detected in "${detected_agents[@]}";do
         case "$detected" in
           claude) selected_agents+=(claude) ;;
+          antigravity) if [ "$antigravity_detected" = true ];then selected_agents+=(antigravity);fi ;;
           # These agents discover the common Agent Skills root; one copy is enough.
           ''|codex|cursor|copilot|gemini|opencode|cascade|pi) ;;
         esac
       done
-      action_printf info 'Selected: shared .agents/skills for compatible agents; dedicated roots where required.\n'
+      action_printf info 'Selected: shared and listed additional integrations.\n'
       ;;
-    *) action_printf info 'Selected: shared .agents/skills only.\n' ;;
+    *) action_printf info 'Selected: shared integration only.\n' ;;
   esac
 }
 
@@ -1555,13 +1585,14 @@ agent_root() {
   case "$1" in
     shared|codex) if [ "${integration_scope:-global}" = project ];then agent_dir="$project/.agents";else agent_dir="$HOME/.agents";fi ;;
     claude) if [ "${integration_scope:-global}" = project ];then agent_dir="$project/.claude";else agent_dir="${CLAUDE_CONFIG_DIR:-$HOME/.claude}";fi ;;
+    antigravity) [ "${integration_scope:-global}" = global ] || usage_error 'Antigravity has a dedicated integration only for global scope.';agent_dir="$HOME/.gemini/config" ;;
     *) usage_error 'Supported agents: codex, claude.' ;;
   esac
   agent_dir="${agent_dir%/}"
   case "$agent_dir" in /*) ;; *) usage_error 'Agent directory must be absolute (use a Git Bash path on Windows).' ;; esac
   case "$agent_dir" in *$'\n'*|*$'\r'*|*$'\t'*|*'<'*|*'>'*) usage_error 'Unsupported agent path characters.' ;; esac
   [ "$agent_dir" != / ] || usage_error 'Agent directory cannot be filesystem root.'
-  [ -d "$(dirname "$agent_dir")" ] || usage_error 'Agent directory parent must already exist.'
+  [ "$1" = antigravity ] || [ -d "$(dirname "$agent_dir")" ] || usage_error 'Agent directory parent must already exist.'
   no_symlinks "$agent_dir/skills/$machine/SKILL.md"
 }
 
@@ -1569,8 +1600,9 @@ integration_check() {
   # Existing external inventory has strict generated names and directory scopes.
   printf '%s' "$1" | jq -e '
     . as $r | (.integrations // []) as $i | ($i|type)=="array" and
-    all($i[]; (.agent=="shared" or .agent=="codex" or .agent=="claude") and
+    all($i[]; (.agent=="shared" or .agent=="codex" or .agent=="claude" or .agent=="antigravity") and
       (.root|type)=="string" and (.root|startswith("/")) and .root!="/" and
+      (if .agent=="antigravity" then ($r.scope=="global" and (.root|endswith("/config"))) else true end) and
       (.root|explode|all(.>=32)) and .file==("skills/"+$r.machine+"/SKILL.md") and
       (.directories|type)=="array" and all(.directories[]; type=="string")) and
     ([$i[].agent]|length)==([$i[].agent]|unique|length)
@@ -1579,7 +1611,7 @@ integration_check() {
   printf '%s' "$1"|jq -c '.integrations[]?' > "$work_dir/check-integrations"
   while IFS= read -r line; do
     target=$(printf '%s' "$line"|jq -r '.root+"/"+.file');no_symlinks "$target"
-    printf '%s' "$line" | jq -e '. as $i | all(.directories[]; .==$i.root or .==($i.root+"/skills") or .==($i.root+"/skills/"+($i.file|split("/")[1])))' >/dev/null || fail 'Invalid agent directory inventory.'
+    printf '%s' "$line" | jq -e '. as $i | all(.directories[]; .==$i.root or .==($i.root+"/skills") or .==($i.root+"/skills/"+($i.file|split("/")[1])) or ($i.agent=="antigravity" and ($i.root|endswith("/config")) and .==($i.root|rtrimstr("/config"))))' >/dev/null || fail 'Invalid agent directory inventory.'
   done < "$work_dir/check-integrations"
 }
 
@@ -1710,7 +1742,7 @@ EOF
   # Carry ownership of shared created directories to the last remaining skill.
   jq -Rn '[inputs]' < "$transaction/directories" > "$work_dir/agent-dirs.json"
   jq --arg p "$project" --arg m "$machine" --arg a "$agent" --arg root "$agent_dir" --arg file "skills/$machine/SKILL.md" --arg scope "$integration_scope" --slurpfile d "$work_dir/agent-dirs.json" '
-    . as $reg | ([$d[0][]] + [.installations[].integrations[]? | select(.root==$root) | .directories[] | select(.==$root or .==($root+"/skills") or .==($root+"/skills/"+$m))])|unique as $dirs |
+    . as $reg | ([$d[0][]] + [.installations[].integrations[]? | select(.root==$root) | .directories[] | select(.==$root or .==($root+"/skills") or .==($root+"/skills/"+$m) or ($a=="antigravity" and .==($root|rtrimstr("/config"))))])|unique as $dirs |
     $reg | (.installations[]|select(.project==$p and .machine==$m)) |=
       (.scope=$scope | .integrations=((.integrations // [] | map(select(.agent!=$a))) + [{agent:$a,root:$root,file:$file,directories:$dirs}]))
   ' "$registry" > "$state/registry.new" || fail 'Cannot stage registry update.'
@@ -1960,7 +1992,7 @@ case "$command_name" in
     [ -z "$version" ] || [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || usage_error 'Invalid version.'
     doctor >/dev/null || fail 'Missing dependencies.'
     work_dir=$(mktemp -d "${TMPDIR:-/tmp}/double-installer.XXXXXX")
-    [ -z "$agent" ] || [ "$agent" = codex ] || [ "$agent" = claude ] || usage_error 'Supported agents: codex, claude.'
+    case "$agent" in ''|codex|claude) ;; antigravity) [ "$global" = true ] || usage_error '--agent antigravity requires --global; project skills use the shared root.' ;; *) usage_error 'Supported agents: codex, claude, antigravity.' ;; esac
     if [ "$global" = true ];then
       [ -z "$project" ] || usage_error '--global conflicts with --project'
       [ -z "$version" ] || usage_error '--version is currently supported only for project add.'

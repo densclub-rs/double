@@ -483,12 +483,20 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
  commonrow=next(x for x in json.loads(registry.read_text())['installations'] if x['machine']=='machine-of-ideas')
  assert [i['agent'] for i in commonrow['integrations']]==['shared']
  run('uninstall-all','--yes')
+ # Global Antigravity is independent of the shared root and owns a new parent safely.
+ anti=home/'.gemini/config/skills/machine-of-ideas/SKILL.md'
+ run('add','--global','--machine','machine-of-ideas','--agent','antigravity','--yes')
+ assert anti.is_file() and not (home/'.agents/skills/machine-of-ideas/SKILL.md').exists()
+ run('update','--global','--machine','machine-of-ideas','--agent','antigravity','--non-interactive')
+ run('remove','--global','--machine','machine-of-ideas','--agent','antigravity','--yes')
+ assert not anti.exists() and not (home/'.gemini').exists()
  (home/'.codex').mkdir();(home/'.claude').mkdir()
  if os.name!='nt':
   # A real terminal input exercises consent instead of assuming piped text is consent.
   declined=root/'interactive declined';declined.mkdir()
   output=run_tty('add','--project',posix_path(declined),'--machine','machine-of-ideas',answer='n')
-  assert 'Add integrations for all detected agents?' in output and 'Claude Code' in output
+  assert 'Integration scope: Project (' in output and posix_path(declined/'.agents/skills') in output
+  assert 'Add the additional integrations listed above?' in output and posix_path(declined/'.claude/skills') in output
   assert (declined/'.agents/skills/machine-of-ideas/SKILL.md').exists() and not (declined/'.claude').exists()
   run('remove','--project',posix_path(declined),'--machine','machine-of-ideas','--yes')
   accepted=root/'interactive accepted';accepted.mkdir()
@@ -499,13 +507,17 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
   run('remove','--project',posix_path(accepted),'--machine','machine-of-ideas','--yes')
   explicit=root/'interactive explicit';explicit.mkdir()
   output=run_tty('add','--project',posix_path(explicit),'--machine','machine-of-ideas','--agent','claude')
-  assert 'Add integrations for all detected agents?' not in output
+  assert 'Add the additional integrations listed above?' not in output and posix_path(explicit/'.claude/skills') in output
   assert not (explicit/'.agents').exists() and (explicit/'.claude/skills/machine-of-ideas/SKILL.md').exists()
   run('remove','--project',posix_path(explicit),'--machine','machine-of-ideas','--yes')
+  (home/'.gemini/antigravity').mkdir(parents=True)
   output=run_tty('add','--global','--machine','machine-of-ideas')
-  assert output.count('Add integrations for all detected agents?')==1
+  assert output.count('Add the additional integrations listed above?')==1
+  assert 'Integration scope: Global' in output and posix_path(home/'.agents/skills') in output and posix_path(home/'.claude/skills') in output
+  assert posix_path(home/'.gemini/config/skills') in output and anti.is_file()
   assert (home/'.agents/skills/machine-of-ideas/SKILL.md').exists() and (home/'.claude/skills/machine-of-ideas/SKILL.md').exists()
   run('remove','--global','--machine','machine-of-ideas','--yes')
+  assert not anti.exists() and (home/'.gemini/antigravity').is_dir()
 
  # Project-local agent installation, explicit targeting and scope isolation.
  local1=root/'agent project one';local2=root/'agent project two'
