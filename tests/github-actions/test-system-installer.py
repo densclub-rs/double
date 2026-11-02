@@ -11,6 +11,14 @@ import unittest
 
 SCRIPT = Path(__file__).resolve().parents[2] / 'scripts/install.sh'
 PAYLOAD = b'#!/bin/bash\necho launched > "$HOME/was-launched"\n'
+BASH = os.environ.get('DOUBLE_TEST_BASH', 'bash')
+if os.name == 'nt' and (BASH == 'bash' or not os.environ.get('DOUBLE_TEST_CYGPATH')):
+    raise RuntimeError('Windows tests require explicit Git Bash and cygpath paths')
+
+def shell_path(path):
+    if os.name == 'nt':
+        return subprocess.check_output([os.environ['DOUBLE_TEST_CYGPATH'], '-u', str(path)], text=True).strip()
+    return str(path)
 
 class BootstrapTests(unittest.TestCase):
     def setUp(self):
@@ -32,7 +40,7 @@ case "$url" in *releases?*) cp "$FIXTURE/releases.json" "$out";; */installer) cp
         curl.chmod(0o755)
         (self.root / 'payload').write_bytes(PAYLOAD)
         (self.root / 'sums').write_text(hashlib.sha256(PAYLOAD).hexdigest() + '  double-installer.sh\n')
-        self.env = dict(os.environ, HOME=str(self.root), FIXTURE=str(self.root), PATH=str(self.dest) + ':' + str(self.bin) + ':' + os.environ['PATH'])
+        self.env = dict(os.environ, HOME=shell_path(self.root), FIXTURE=shell_path(self.root), PATH=os.pathsep.join((str(self.dest), str(self.bin), os.environ['PATH'])))
 
     def tearDown(self): self.tmp.cleanup()
 
@@ -43,7 +51,7 @@ case "$url" in *releases?*) cp "$FIXTURE/releases.json" "$out";; */installer) cp
         (self.root / 'releases.json').write_text(json.dumps(rows))
 
     def run_bootstrap(self, *args):
-        return subprocess.run(['bash', str(SCRIPT), '--install-dir', str(self.dest), *args], env=self.env, stdin=subprocess.DEVNULL, capture_output=True, text=True)
+        return subprocess.run([BASH, shell_path(SCRIPT), '--install-dir', shell_path(self.dest), *args], env=self.env, stdin=subprocess.DEVNULL, capture_output=True, text=True)
 
     def test_stable_selected_without_tty_and_never_launched(self):
         result = self.run_bootstrap()
@@ -133,11 +141,12 @@ case "$url" in *releases?*) cp "$FIXTURE/releases.json" "$out";; */installer) cp
         self.assertEqual(target.read_text(), 'existing')
 
     def test_noninteractive_path_absence_fails(self):
-        self.env['PATH'] = str(self.bin) + ':' + os.environ['PATH']
+        self.env['PATH'] = os.pathsep.join((str(self.bin), os.environ['PATH']))
         result = self.run_bootstrap('--accept-rc')
         self.assertNotEqual(result.returncode, 0)
         self.assertFalse((self.dest / 'double-installer').exists())
 
+    @unittest.skipIf(os.name == 'nt', 'Windows symlink creation requires additional privileges')
     def test_symlink_target_is_refused(self):
         target = self.dest / 'double-installer'
         target.symlink_to(self.root / 'foreign')
@@ -191,7 +200,7 @@ case "$url" in *releases?*) cp "$FIXTURE/releases.json" "$out";; */installer) cp
         (self.root / 'sums').write_text(hashlib.sha256(payload).hexdigest() + '  double-installer.sh\n')
         result = self.run_bootstrap('--accept-rc')
         self.assertEqual(result.returncode, 0, result.stderr)
-        invoke = subprocess.run([str(self.dest / 'double-installer'), '--help'], env=self.env, capture_output=True, text=True)
+        invoke = subprocess.run([BASH, shell_path(self.dest / 'double-installer'), '--help'], env=self.env, capture_output=True, text=True)
         self.assertEqual(invoke.returncode, 0, invoke.stderr)
         self.assertIn('Double', invoke.stdout)
 
