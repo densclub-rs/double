@@ -74,6 +74,20 @@ agent skills.
 Support for:
 * GitHub Actions
 
+### Clean up GitHub releases
+
+Preview older published installer and machine releases before deletion:
+
+```sh
+python3 scripts/double-release/clean-releases.py
+```
+
+For each known Double component, the script keeps the most recently published
+release, including stable, RC and development releases. It ignores drafts and
+unrecognized tags, and retrieves all pages. To delete the displayed older
+releases, rerun with `--apply`; Git tags are retained. The selection is fetched
+again at execution time. Use `--repo OWNER/REPO` to target another repository.
+
 ### `double-release/`
 
 Tooling lives in `scripts/double-release/`; its pytest suite and dependencies
