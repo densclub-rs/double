@@ -102,6 +102,6 @@ Before synthesis use `none` for an uncreated plan. Keep this catalog separate
 from realization registration and evidence.
 This link names an editable model, not a fixed execution plan. Its approval
 alone creates no plan/realization files. At execution, the realization links
-its own immutable plan. Do not create executor files during path discovery,
+the approved main plan. Do not create executor files during path discovery,
 synthesis or deferred review. Apply the same boundary to the default plan and
 every actual parallel or author variant without changing the automation mechanism.

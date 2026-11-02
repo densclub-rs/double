@@ -89,21 +89,17 @@ Planning/review never owns execution-plan or realization creation.
 4. Distinguish content approval from permission to start. If start is deferred,
    leave only the model. Existing exact sequence consent remains valid within
    its approved scope; silence, defaults and recommendations are not consent.
-5. At authorized manual step-05 start, `plan-realization-agent` rechecks approval and
-   freezes the plan using `plan-template` before creating the realization.
-   Manual/interactive files are `_realizations/<start>/plan-v1.md` and
-   `realization.md`. Invocation of a collapsed skill/action creates neither.
-   Do not require executor files to complete review or offer transition.
+5. At authorized manual step-05 start, recheck exact approval and create the
+   realization linked to the actual main plan. Do not create a local copy.
 
 ## Model Changes and History
 
-Edit only the model during planning; increment its review revision and assess
-changed dependencies and earlier-result applicability. Return changed content
-to review before execution. An active manual/interactive realization ends as
-`model-changed` before further action; an authorized successor freezes its own
-plan. Never edit an earlier frozen plan, rebind a historical realization or
-relabel old facts. Already observed outputs remain verifiable against their original
-plan and captured conditions.
+Before changing stage or substage composition or numbering, follow the workflow's
+preservation decision: ask whether to preserve affected realizations; if yes,
+copy the old plan as `plan.md` and update links before the edit; if no, offer
+deletion only with separate explicit consent. Nonstructural edits need no copy.
+Every changed plan requires renewed approval before future action. Preserve
+captured conditions and earlier facts; validate observed outputs against them.
 
 ## Control and Completion
 

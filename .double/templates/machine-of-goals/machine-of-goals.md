@@ -36,17 +36,11 @@ identify copies. Parallel variants use `plan-<id>.md`; author variants use
 this `id` using `plan-id`; the plan itself has no duplicate identity field.
 Each actual plan has a goal-table row, including variants formed directly at
 synthesis after discovery. Source links identify the selected file and anchor.
-`plan-template` freezes
-approved content only at the authorized manual start of step 05. The Realization and
-Stage Realization templates record progress, actions and input/output checks
-against that immutable local plan. Documentary evidence is requested first;
-explicit user statements remain an identified fallback when unavailable.
-
-After step 03 and deferred step 04, only the model exists. A manual/interactive
-start creates `_realizations/<start>/plan-v1.md` and `realization.md` before the
-first action. Generated files have no mode prefix. The realization and its
-stage records own all progress and evidence; plans contain expected transitions
-only. No additional registration, execution journal or index is required.
+At authorized start the realization and stage records link the approved main
+plan. No local plan copy is created. The records own progress and evidence;
+plans contain expected transitions only. Before a structural edit, follow the
+workflow's preservation decision. Documentary evidence is requested first;
+explicit user statements are an identified fallback when unavailable.
 A collapsed skill/action creates no Machine of Goals execution records when
 invoked. See the
 [execution rule](../../workflows/machine-of-goals/machine-of-goals-workflow.md#model-and-realization-execution-rule)

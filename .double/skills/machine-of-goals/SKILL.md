@@ -174,9 +174,11 @@ Every model edit invalidates approval for future execution. If start is deferred
 leave only the model. Never create an execution plan, snapshot, realization,
 registration row or separate decision file during steps 03 or 04.
 
-Only at the authorized manual start of step 05, recheck exact approval/content and
-freeze `_realizations/<start>/plan-v1.md` from `plan-template`, then create
-`realization.md`. Stages and the realization link this immutable local plan.
+Only at authorized manual step-05 start, recheck exact approval and create the
+realization linked to the main plan. Do not create a local plan copy at start.
+Before structural edits, follow the workflow's preservation decision: preserve
+old plans as local `plan.md` and update links if chosen; otherwise offer deletion
+only with separate explicit consent. New realizations link the new main plan.
 A collapsed skill/action creates no Machine of Goals execution record when
 invoked; follow its applicable checks, permissions and stop points.
 Do not require executor files to finish review. See the canonical
@@ -258,15 +260,12 @@ validation flow.
   sections where artifact relationships are explained; frontmatter references
   do not replace those links, and a universal navigation block is not required.
 - Every artifact created from a Machine of Goals template records that
-  template's stable top-level `id` in frontmatter `template-id`; a frozen
-  execution plan uses `plan-template` rather than the source model template.
+  template's stable top-level `id` in frontmatter `template-id`; preserved copies retain their source provenance.
 - External goals, plans, subplans, paths, and realizations may remain direct
   references when no copy or adaptation is requested; direct reference does
   not require Plan Exchange.
-- Models use `plan-model-template`; frozen execution plans use `plan-template`.
-  A newly created frozen plan records `plan-template` and producer
-  `machine-of-goals/plan-realization-agent`. The source model keeps its own
-  model identity, template and synthesis producer unchanged.
+- Models use `plan-model-template`. Preserved local copies retain the original
+  plan identity, template and producer; `plan-template` guides preservation.
 - Every plan contains expected transitions, with no execution progress,
   acceptance, execution registry or statistics. Its
   logical `branch` is distinct from selectable paths/subplans inside it.
@@ -275,9 +274,8 @@ validation flow.
   `path-options.md`, approval and frozen-plan/realization provenance link actual
   selected file/anchors; never precreate files or hypothetical links.
   See the canonical filename rule.
-- At authorized manual start, freeze complete approved content and rebase links
-  without altering conditions/actions. Record the actual approved source hash
-  and frozen-plan hash separately in the realization, with actual time/timezone.
+- At authorized manual start link the actual approved main plan and record its
+  revision and source digest; create no local plan copy.
 - Render each realization Stage Map State cell as a single emoji under the
   workflow's Realization Progress Emojis rule. Keep the explanatory legend
   above the map; omit state names in cells and duplicate text-status columns.
@@ -285,15 +283,10 @@ validation flow.
   🟠 awaiting verification, ✅ completed, 🟡 partial, ⛔ blocked, ❌ failed,
   🛠️ needs revision, ➖ not selected. Only verified/accepted outputs permit ✅;
   keep textual metadata unchanged and never project progress into either plan.
-- Frozen plans remain immutable. Mutable current-stage, actions, progress,
-  evidence and acceptance belong to the realization and three-part stage records.
-  Capture stage contracts from that plan; verify input before action and output
-  before completion. Offer documentary evidence with an identified explicit
-  user-statement fallback. Resume awaiting outputs at validation, not by replay.
-- A source edit ends the active manual/interactive realization before new action
-  and requires renewed review plus an authorized successor. Verify already
-  observed outputs against their original plan; preserve all earlier plans and
-  facts. Inherited results retain origin and need an applicability check.
+- Capture effective stage conditions and actions before acting; verify observed
+  outputs against captured conditions. Preserve facts and evidence. Before a
+  structural edit follow the explicit preservation decision; a nonstructural
+  edit requires renewed approval but no local plan copy.
 - A collapsed realization is a skill or automated action, not a wrapper around
   another execution journal. Invocation creates no Machine of Goals directory,
   frozen-plan copy, realization document, stage record or index. Keep covered

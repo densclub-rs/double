@@ -30,7 +30,7 @@ structured-choice, stop-point, and continuation rules remain binding.
 
 ### Inputs and Outputs
 
-- Inputs: goal and frozen-plan criteria, the selected realization and stage record,
+- Inputs: goal and captured plan criteria, the selected realization and stage record,
   captured conditions, actual results, and supplied evidence or statements.
 - Outputs: updated `stage-realization` and `realization-artifact`. Final
   acceptance is summarized in the main Result, not a separate document.
@@ -46,10 +46,9 @@ structured-choice, stop-point, and continuation rules remain binding.
   Use `✅` only after required outputs are accepted; preserve `🟡`, `⛔`, `❌`,
   `🛠️` or `➖` for their actual recorded outcomes. Never put mutable progress
   in the editable model or frozen plan.
-- Verify frozen plan integrity and validate observed outputs against that
-  unchanged plan and captured conditions. A changed source model blocks further
-  planned action and requires renewed review/authorized successor; it never
-  rewrites the earlier plan or prevents checking already observed results.
+- Validate observed outputs against the conditions captured before action.
+  Renew approval before acting on changed plan content. Follow the workflow's
+  preservation decision before structural edits; never rewrite earlier facts.
 - Compare actual outputs with the captured conditions. Offer relevant
   documentary evidence and inspect its applicability. When documents cannot
   be supplied, preserve the explicit user statement as the acceptance basis;
@@ -86,9 +85,8 @@ walkthrough, with its actual actions and evidence recorded there.
 
 Follow canonical workflow routing, structured choices and continuation rules.
 Preserve already supplied exact authorization. After manual stage action, hand
-off to validation before further stage execution. Model edits require renewed
-review and an authorized successor; validate prior results against their
-unchanged frozen plan. Preserve source context when inheriting evidence.
+off to validation before further stage execution. Model edits require renewed review before future action; validate prior results
+against their captured conditions. Preserve source context when inheriting evidence.
 Route operating changes under `.double/` through installed `double-agent`.
 Existing user artifacts are history, not an alternative current contract;
 conversion requires separately authorized scope.

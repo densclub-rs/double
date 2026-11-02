@@ -118,6 +118,6 @@ Portable sequence or package outline:
 - Required validation contracts: initial, intermediate, and final state checks
 - Include only the walkthroughs and evidence selected for this package.
 - Preserve source identities and facts; importing experience does not establish
-  execution in the receiving context. A requested new manual start freezes its
+  execution in the receiving context. A requested new manual start links its
   own approved plan; invocation of a collapsed mechanism creates no execution record.
 ```

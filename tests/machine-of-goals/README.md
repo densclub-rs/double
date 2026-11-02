@@ -24,27 +24,23 @@ existing user artifacts as part of contract validation.
 | Create any new plan: ordinary, parallel or author variant | Synthesize one short meaningful word jointly expressing the actual plan's subject, core meaning and goal, distinguishing it from other variants. A readable coined word is allowed. Use lowercase English letters only, without spaces, hyphens or digits. Write only `id` in plan frontmatter and use it as the root anchor; use it in the filename only for parallel variants. Do not add a duplicate plan identity field |
 | An ID names only the subject, action or goal, or uses several hyphen-separated words | It does not satisfy the contract. Synthesize one word combining all three concepts from this plan's context |
 | The generated word is already used by another plan | Choose another single word derived from the same plan's context that still combines its subject, core meaning and goal. Do not choose a random/unrelated word, generate numeric/opaque codes or append a numeric suffix. Preserve existing plans and their IDs |
-| Revise or freeze a plan, start a successor realization | Retain the same `id` and root anchor in the source and frozen plans. Exact file paths, revisions/versions and digests identify copies. The realization keeps its own `id` and references the plan through `plan-id` |
-| Finish step 03 for an ordinary plan with branch `tool-readiness` | `plan.md`, generated word as `id` and root anchor, heading `Plan`, kind `plan-model`, template `plan-model-template`; branch metadata alone creates no additional plan; no executor files/directory |
-| Revise the default plan within its existing lineage | Same logical `branch`, updated review revision and goal-table row; still `plan.md`, no new branch file |
+| Revise a plan | Retain the same `id`, root anchor and branch; increment the review revision and review changed content before action |
+| Change stage or substage composition or numbering | Before the edit, ask whether to preserve affected realizations. If yes, preserve the old plan as local `plan.md` and update links; if no, offer deletion only with separate explicit consent. New realizations link the updated main plan |
+| Edit without changing stage/substage structure or numbering | No local plan copy; preserve captured conditions and facts, and renew approval before further action |
+| Start or resume a documented realization | Link the approved main plan; do not create a local plan copy. Capture stage conditions before action and validate observed results against those conditions |
 | Discovery identifies independent parallel variants before any plan exists | Record the finding in `path-options.md` only. Step 03 generates short IDs unique within the goal directory and creates `plan-<id>.md` per actual variant, with matching `id` and root anchor and actual goal-table row; no prior `plan.md`, major divergence or execution files required |
 | Add another parallel variant beside an existing plan | Preserve every existing file/row; create a distinct `plan-<id>.md`, checking ID/filename collisions before writing. Revisions retain its sole `id`, file and logical branch |
 | An author creates their own variant | Use exactly `plan<owner_id>.md`, actual author's `owner-id`, distinct ID/anchor and actual goal-table row; no inserted hyphen or defaulting to the goal owner; resolve collisions without overwriting another variant |
 | One plan has parallel stages or multiple realization media | Keep the selected plan's filename; concurrency or a shell/Python/workflow choice alone does not create an independent plan |
-| Review and start a named variant | Approval links the actual `plan-<id>.md` or `plan<owner_id>.md`. At authorized start, frozen-plan/realization source paths, anchors and digests refer to that file; frozen filenames remain `plan-v1.md` and `realization.md` |
-| Approve the linked plan contents in step 04 and defer start | User sees the current plan file link, contents and scope; no checksum in the question/choices/summary. Internal content fingerprint remains recoverable for the start check. Same files; no new frozen plan, realization, registration, separate decision or execution index |
-| Edit model after approval, then request start | Approval mismatch returns to review; no new executor files or planned action |
-| Authorize step 05 with exact current content approved | First freeze `_realizations/<start>/plan-v1.md`, then create `realization.md`, with separate source and frozen-file digests, before any planned action |
-| Act and verify in steps 05–06 | State cells contain only one emoji, with the explanatory legend above the map; no repeated state words or duplicate status column. Prose handoffs may add labels. Use 🟠 after action and ✅ only after output acceptance; preserve other outcome markers, textual metadata and evidence; frozen plan digest stays unchanged |
-| Edit source after starting | Stop further planned actions; old frozen plan stays byte-identical; observed outputs can be verified against it; renewed review and authorized successor are required for changed execution |
-| Resume without new model edits | Use the existing frozen plan and realization; verify pending outputs without repeating actions or creating another start |
-| Inspect manual progress | Follow goal → actual timestamped realization → Stage Map/current stage → stage facts/evidence; neither editable nor frozen plan has progress. Activity is not inferred solely from the latest filename |
+| Review and start a named variant | Approval and realization links use the actual selected variant and anchor; start creates no local plan copy |
+| Approve and defer start | No realization or separate decision file is created |
+| Act and verify | Use the canonical emoji legend; `🟠` awaits verification, `✅` requires acceptance. Preserve captured conditions and evidence |
+| Inspect manual progress | Follow goal → realization → Stage Map → stage facts/evidence; do not infer activity solely from the latest filename |
 | Invoke an existing authorized collapsed skill/action | Covered initial/intermediate/final checks and authority remain binding; no Machine of Goals execution directory, frozen-plan copy, realization wrapper, stage journal, index or invocation statistics |
 | Repeat a manual walkthrough | Start its own authorized timestamped realization; repeatability does not require automation registration or a computed plan style |
 | Import/export a model with selected documented realizations | Preserve source frozen plans and evidence; imported history does not establish local execution and exchange creates no invocation record |
 
-A frozen plan must preserve approved transition content and boundaries, with
-only provenance/identity metadata and relative-link rebasing. Human/agent review
-must check semantic preservation; the structural suite cannot establish it for
-arbitrary generated documents. Existing user-artifact repair/migration requires
-separate authorization.
+A preserved local plan must retain the prior plan's identity, conditions and
+structure, with links rebased for its location. Human/agent review must check
+semantic preservation; structural tests cannot establish it for arbitrary files.
+Existing user-artifact migration requires separate authorization.

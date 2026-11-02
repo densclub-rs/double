@@ -120,9 +120,9 @@ Possible paths: [Path options](./path-options.md#<goal-id>-path-options)
 | --- | --- | --- |
 | <default-branch> | <positive-integer> | [<plan-title>](./plan.md#<plan-id>) |
 
-| Started | Frozen plan | Realization |
+| Started | Plan | Realization |
 | --- | --- | --- |
-| <actual-start-with-timezone> | [Plan v1](./_realizations/<YYYY-MM-DDTHH-mm-ss>/plan-v1.md#<plan-id>) | [<realization-label>](./_realizations/<YYYY-MM-DDTHH-mm-ss>/realization.md#<realization-id>) |
+| <actual-start-with-timezone> | [Plan](./plan.md#<plan-id>) | [<realization-label>](./_realizations/<YYYY-MM-DDTHH-mm-ss>/realization.md#<realization-id>) |
 
 ```
 
@@ -141,7 +141,7 @@ may start with parallel variants and have no ordinary plan. Preserve every
 actual row/file; ordinary revisions keep the same `id`, branch and filename.
 Do not add hypothetical rows or infer a new file from branch metadata.
 
-Omit the table only before any plan exists. Frozen-plan/realization rows appear
+Omit the table only before any plan exists. Plan/realization rows appear
 only after authorized step-05 start. The realization owns current stage,
 progress and checks. Review revisions are not execution plan versions; no
 separate registration, decision, execution index or computed style is required.
