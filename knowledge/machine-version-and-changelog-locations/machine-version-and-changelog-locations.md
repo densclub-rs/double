@@ -8,9 +8,10 @@ artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-10-29
+observed-at: 2026-11-02
 ttl: one month
 derived-from:
+  - user instruction on 2026-11-02 to preserve approved tag messages exactly
   - .double/agents/double-agent/double-agent.md
   - user instruction to preserve separate machine changelogs on 2026-10-28
   - user-requested version, date and concise changelog format on 2026-10-28
@@ -130,6 +131,18 @@ Use a version heading with a date, followed by a concise list of changes:
   approval.
 - Use the complete approved entry as the annotated tag message and GitHub
   release text. Telegram may shorten the message and link to the full release.
+
+### Annotated Tag Message Preservation
+
+- Create an annotated release tag with `git tag -a --cleanup=verbatim -F
+  <approved-message-file> <tag>` so Git retains the complete approved message,
+  including Markdown headings beginning with `#`.
+- Before creating the tag, verify that the message file contains the exact
+  approved changelog entry. After creation, read the tag object and compare its
+  complete annotation with the approved entry and changelog, including the
+  version and date heading. Do not publish if any content differs.
+- Follow Double Agent's existing tag and release recovery rules if the check
+  fails; this rule does not authorize overwriting or moving an existing tag.
 
 ## Notes
 

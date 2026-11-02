@@ -11,6 +11,7 @@ value-type: text
 observed-at: 2026-11-02
 ttl: one month
 derived-from:
+  - user-approved release preparation for machine-of-goals 0.0.17-rc on 2026-11-02
   - user-approved release preparation for machine-of-goals 0.0.16-rc on 2026-11-02
   - user-approved plan structure and realization preservation contract changes on 2026-11-02
   - user-approved removal of legacy execution contracts and progress in plans on 2026-10-27
@@ -61,4 +62,4 @@ project.
 
 ## Value
 
-`0.0.16`
+`0.0.17`

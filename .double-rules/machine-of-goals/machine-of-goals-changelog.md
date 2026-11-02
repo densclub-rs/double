@@ -26,7 +26,7 @@ Changes recorded for the `machine-of-goals` module.
 
 ## Value
 
-### 0.0.16-rc — 2026-11-02
+### 0.0.17-rc — 2026-11-03
 
 - Structure plan conditions and stage actions as sections and lists.
 - Link new realizations to the approved main plan without creating a local copy.
