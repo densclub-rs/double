@@ -3,6 +3,9 @@
 # Goal (archived): https://github.com/densclub-rs/double/blob/double-installer-0.1.5-rc/goals/double-installer/double-installer.md
 set -euo pipefail
 
+# Release packaging verifies this value against the immutable release tag.
+installer_version='0.1.10-rc'
+
 # Git Bash needs LF jq output, literal JSON string values and explicit native
 # input filenames: MSYS conversion is unreliable for paths containing quotes.
 case "${OSTYPE:-}" in
@@ -56,6 +59,7 @@ usage() {
   cat <<'EOF'
 Double Installer
 
+  double-installer.sh --version
   double-installer.sh help
   double-installer.sh explain
   double-installer.sh doctor
@@ -1840,6 +1844,11 @@ global_remove() {
 }
 
 command_name="${1:-help}"
+if [ "$command_name" = --version ];then
+  [ "$#" -eq 1 ] || { printf 'Error: --version accepts no arguments.\n' >&2;exit 2; }
+  printf 'double-installer %s\n' "$installer_version"
+  exit 0
+fi
 # Help is dispatched before dependencies, network access or state mutation.
 for argument in "${@:2}"; do
   case "$argument" in --help|--explain|-h) explain_command "$command_name" | format_explanation true; exit 0 ;; esac

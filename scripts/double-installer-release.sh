@@ -38,6 +38,9 @@ out="dist/$tag"
 mkdir -p "$out"
 git show "$commit:scripts/double-installer.sh" > "$out/double-installer.sh"
 bash -n "$out/double-installer.sh"
+[ "$(bash "$out/double-installer.sh" --version)" = "double-installer ${tag#double-installer-}" ] || {
+  echo 'Installer version does not match release tag' >&2; exit 1;
+}
 chmod +x "$out/double-installer.sh"
 (
   cd "$out"

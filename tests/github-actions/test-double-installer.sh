@@ -94,6 +94,9 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
   digest=hashlib.sha256((assets/name).read_bytes()).hexdigest()
   (assets/'SHA256SUMS.txt').write_text(f'{digest}  {name}\n', encoding="utf-8", newline="\n")
  # Informational requests must not invoke network/state-changing command bodies.
+ import re
+ assert re.fullmatch(r'double-installer \d+\.\d+\.\d+(?:-(?:rc|dev))?',run('--version',extra={'HTTP_FAIL':'1'}).strip())
+ run('--version','unexpected',code=2)
  commands=('help','explain','doctor','releases','download','install','add','dev','remove','status','update','update-all','backups-clean','cron-add','cron-remove','uninstall-all')
  guide=run('explain',extra={'HTTP_FAIL':'1'})
  assert 'Double Installer — detailed guide' in guide

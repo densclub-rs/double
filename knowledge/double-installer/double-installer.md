@@ -73,6 +73,7 @@ See `scripts/double-installer.sh help` for syntax.
 
 | Command | Intended behavior |
 | --- | --- |
+| `--version` | Print the installed Double Installer version without network or state access |
 | `doctor` | Check dependencies and report evidence for eight supported detection candidates |
 | `explain` | Explain the installer and every command in detail |
 | `releases` | List published release packages; stable channel by default |
@@ -97,6 +98,9 @@ affirmative terminal consent (also for explicit --channel), or add --yes.
 Updates do not downgrade; project updates retain the registered channel unless
 overridden. A bulk override applies explicitly to targeted installations.
 Ignore drafts and automatic repository source archives.
+
+The installer version is recorded in the script itself. Release packaging
+checks that it matches the release tag before producing a published asset.
 
 For a project, omit `--machine` or pass `--all` to `add` to install all
 available published machines. The preferred release is stable, then RC; an
