@@ -81,7 +81,7 @@ See `scripts/double-installer.sh help` for syntax.
 | `add` | Install machine files in a project and register the version |
 | `remove` | Remove owned machine files and its registry entry |
 | `status` | Show downloaded machine archives and registered installations |
-| `update` | Update one or all registered machines in a project, backing up previous contents first |
+| `update` | Update registered machines across all installations, or restrict updates to a project or global scope |
 | `update-all` | Update registered installations and report per-installation results |
 | `backups-clean` | Delete selected installer backups after explicit confirmation |
 | `cron-add` | Create one marked update task with the specified schedule |
@@ -110,8 +110,9 @@ their versions unless an incomplete installation needs restoring. Omit
 `--machine` or pass `--all` to `update` to update all registered machines in
 that project. It also lists published machines not yet registered there, without
 installing them. Both bulk operations continue after individual failures and
-return a nonzero status if an operation fails. `update-all` remains the command
-for updating installations across all projects and global scope.
+return a nonzero status if an operation fails. `update` without `--project` or
+`--global` updates all registered project and global installations; `--all` is
+optional. `update-all` remains an equivalent command for that scope.
 
 Interactive destructive commands show their scope and ask confirmation;
 `--yes` confirms that displayed scope without prompting. Unattended updates
@@ -283,6 +284,7 @@ bash scripts/double-installer.sh releases --channel rc
 bash scripts/double-installer.sh add --project /path/to/project --machine machine-of-ideas --channel rc
 bash scripts/double-installer.sh add --project /path/to/project --all
 bash scripts/double-installer.sh update --project /path/to/project --all
+bash scripts/double-installer.sh update
 bash scripts/double-installer.sh status
 bash scripts/double-installer.sh update-all --non-interactive
 bash scripts/double-installer.sh backups-clean --project /path/to/project

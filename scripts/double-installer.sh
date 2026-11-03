@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Release packaging verifies this value against the immutable release tag.
-installer_version='0.1.10-rc'
+installer_version='0.1.11-rc'
 
 # Git Bash needs LF jq output, literal JSON string values and explicit native
 # input filenames: MSYS conversion is unreliable for paths containing quotes.
@@ -74,6 +74,7 @@ Double Installer
   double-installer.sh status [--json]
   double-installer.sh update --project DIR --machine ID [--channel CHANNEL] [--non-interactive]
   double-installer.sh update --project DIR [--all] [--channel CHANNEL] [--non-interactive]
+  double-installer.sh update [--all] [--channel CHANNEL] [--non-interactive]
   double-installer.sh add --global [--agent codex|claude|antigravity] [--machine ID] [--channel CHANNEL] [--yes]
   double-installer.sh update --global [--agent codex|claude|antigravity] [--machine ID] [--channel CHANNEL]
   double-installer.sh remove --global --machine ID [--agent codex|claude|antigravity] [--yes]
@@ -343,10 +344,12 @@ update
   Update registered project or global machines; use add for initial installation.
   Usage: double-installer.sh update --project DIR --machine ID [--channel stable|rc] [--non-interactive]
          double-installer.sh update --project DIR [--all] [--channel stable|rc] [--non-interactive]
+         double-installer.sh update [--all] [--channel stable|rc] [--non-interactive]
          double-installer.sh update --global [--agent codex|claude|antigravity] [--machine ID] [--channel stable|rc] [--non-interactive]
   Project updates retain the recorded channel unless explicitly overridden.
   Without --machine, or with --all, update every registered machine in the
   project and list available machines that can be added separately.
+  Without --project or --global, update all registered project and global installations.
   Global selection defaults to stable, then rc. Only registered global
   machines are updated; --agent filters by an existing agent connection. It never
   discovers or registers new agents. Use add --global for new connections.
@@ -2093,13 +2096,13 @@ case "$command_name" in
     if [ "$global" = true ];then
       [ -z "$project" ] || usage_error '--global conflicts with --project'
       global_update
-    elif [ "$command_name" = update ]; then
-      [ -n "$project" ] || usage_error 'update requires --project or --global.'
+    elif [ "$command_name" = update ] && [ -n "$project" ]; then
       if [ -n "$machine" ];then update_machine;else project_update_all;fi
     elif [ "$command_name" = backups-clean ]; then
       [ -z "$project" ] || project_init
       clean_backups
     else
+      [ -z "$machine" ] || usage_error '--machine requires --project or --global.'
       state_init;registry_check
       [ -f "$registry" ] || { action_printf warning 'No registered installations.\n';exit 0; }
       script_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)/$(basename "${BASH_SOURCE[0]}")"

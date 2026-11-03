@@ -256,7 +256,7 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
  # A failed replacement rolls back while bulk update still updates an independent project.
  cp.write_text('#!/bin/sh\ncase "$*" in *unpacked*"update A"*) exit 1;; esac\nexec /bin/cp "$@"\n', encoding="utf-8", newline="\n");cp.chmod(0o755)
  # Explicit stable override lets B leave its selected rc policy only because version is newer.
- run('update-all','--channel','stable','--non-interactive',code=1)
+ run('update','--all','--channel','stable','--non-interactive',code=1)
  assert (a/'.double/templates/machine-of-ideas/new.md').exists()
  assert not (a/'.double/templates/machine-of-ideas/newer.md').exists()
  assert next(x for x in json.loads(registry.read_text())['installations'] if x['project']==posix_path(a))['version']=='1.11.0'
@@ -411,6 +411,10 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
  assert {x['machine']:x['channel'] for x in bulk_rows}=={'machine-of-ideas':'stable','machine-of-goals':'rc','machine-of-knowledge':'rc'}
  out=run('update','--project',posix_path(bulk),'--all')
  assert 'Checked 3 registered machines' in out and 'No additional published machines' in out
+ for args in (('update',),('update','--all')):
+  out=run(*args,'--non-interactive')
+  assert '4 installations checked' in out and posix_path(bulk) in out and posix_path(other) in out
+ run('update','--machine','moi',code=2)
  partial=root/'partial bulk project';partial.mkdir()
  foreign=partial/'.agents/skills/machine-of-goals';foreign.mkdir(parents=True)
  (foreign/'SKILL.md').write_text('foreign skill')
