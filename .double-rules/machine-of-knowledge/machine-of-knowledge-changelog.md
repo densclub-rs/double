@@ -8,7 +8,7 @@ artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-10-28
+observed-at: 2026-11-04
 ttl: one month
 derived-from:
   - .double-rules/machine-of-knowledge/machine-of-knowledge-version.md
@@ -25,6 +25,13 @@ derived-from:
 Changes recorded for the `machine-of-knowledge` module.
 
 ## Value
+
+### 0.0.4 — 2026-11-04
+
+- Identify potential knowledge overlap and resolve semantic identity with the user.
+- Reconcile confirmed identities while preserving scope-specific values and their temporal metadata.
+- Review and refactor affected schemas, paths and references, validating schemas and structured values.
+- Apply project rule precedence over equivalent group rules while preserving both scoped values.
 
 ### 0.0.3 — 2026-10-29
 

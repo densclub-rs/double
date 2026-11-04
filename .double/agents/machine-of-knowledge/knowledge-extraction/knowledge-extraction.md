@@ -64,6 +64,7 @@ When justified by a concrete revalidation need:
 - confirm interaction and artifact languages separately
 - classify the knowledge as static or dynamic
 - propose a `kebab-case` knowledge id
+- follow the workflow's Knowledge Identity and Semantic Overlap protocol: inspect relevant knowledge, clarify possible equivalence with the user, and reconcile confirmed identity and affected schemas without losing scope-specific values
 - resolve the applicable storage schema before choosing paths; use the default layout only when no schema applies
 - support several independent artifact files in a schema-defined subject directory and register their actual links
 - ground claims and values in source material or user input

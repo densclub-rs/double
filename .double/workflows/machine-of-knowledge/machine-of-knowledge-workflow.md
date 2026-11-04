@@ -133,6 +133,46 @@ Machine of Knowledge remains responsible for knowledge artifacts in the selected
 If the selected ordinary knowledge catalog does not yet exist, the first knowledge run may create the
 catalog and its `knowledge.md` note before publishing the first item.
 
+## Knowledge Identity and Semantic Overlap
+
+Within knowledge extraction, review, or an authorized refactoring, inspect the
+relevant available knowledge in the affected catalogs and scopes for possible
+overlap before creating or reconciling an item. Compare the subject, scope,
+meaning, and applicable values; do not infer equivalence from similar wording
+alone. A matching `id` is a candidate for the same knowledge, not proof that
+independently created artifacts have the same meaning. Report a same-id
+collision with different meanings and resolve it with the user before dependent
+work; do not silently overwrite or apply precedence to unrelated knowledge.
+
+When different ids may describe the same knowledge, present the evidence and
+differences to the user. Ask whether the meanings and scopes actually overlap;
+do not silently merge them. After confirmation and authorization of the concrete
+refactoring, agree on one canonical knowledge id and reconcile the artifacts.
+Preserve meaning, provenance, and the distinct scope-specific values and their
+temporal metadata. A shared identity across group and project scopes does not
+mean collapsing their values into one artifact. For confirmed equivalent
+project and group rules, the project value unconditionally overrides the group
+value in that project. This describes the intended relationship; the group
+loading protocol for all machines is not established by this workflow.
+
+Review any value or storage schemas that describe the affected knowledge,
+including schema identifiers, references, descriptors, and dependent paths.
+If schemas differ or the refactoring changes their meaning, show the differences,
+propose a consistent schema, and obtain the user's decision on its meaning.
+After approval, refactor applicable schemas, identifiers, anchors, paths,
+indexes, and incoming and outgoing links as needed. Preserve schema-free
+knowledge when a schema is unnecessary. Validate each defined schema using the
+Knowledge Schema Standard, validate every applicable structured value and
+descriptor, and check actual paths, links, identities, scopes, and preserved
+values. Do not remove an independent scope-specific value as a duplicate.
+Resolve ambiguity, broken dependencies, or an invalid schema before dependent
+changes; do not invent meanings or silently fall back.
+
+This protocol does not authorize rewriting artifacts outside the user's agreed
+scope, change the project rules loading protocol, or introduce new mandatory
+metadata. Use the existing artifact template and route operating-artifact
+changes to Double Agent.
+
 ## Knowledge Schema Standard
 
 When a knowledge artifact includes `Schema`, use **JSON Schema Draft 2020-12**

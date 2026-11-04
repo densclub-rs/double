@@ -40,6 +40,7 @@ Use this skill as a thin activation and routing layer. The canonical process is:
 - A storage schema may group several knowledge artifacts in a subject directory.
   Validate its structured value and actual paths; preserve ids, anchors and links.
   An invalid selected schema blocks writing instead of authorizing fallback.
+- Follow the workflow's Knowledge Identity and Semantic Overlap protocol when comparing or reconciling knowledge, including human confirmation, scoped values, and affected schemas and references.
 - Reuse Machine of Ideas modes as specified by the workflow; do not create additional workflow stages.
 
 ## Completeness and Completion

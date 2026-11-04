@@ -22,6 +22,7 @@ Machine of Knowledge workflow and knowledge template.
 Required behavior:
 
 - confirm the target, source, languages, knowledge type, id, path, and mode
+- follow the workflow's Knowledge Identity and Semantic Overlap protocol; seek human confirmation of possible equivalence, preserve scoped values, and reconcile affected schemas and references within the approved scope
 - ground every knowledge claim and dynamic value
 - resolve the applicable storage schema and derive the concrete path inside the selected catalog
 - use the default per-artifact directory only when no schema applies; do not fall back past an invalid selected schema

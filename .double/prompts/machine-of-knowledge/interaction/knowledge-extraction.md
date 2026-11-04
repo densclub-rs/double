@@ -26,6 +26,11 @@ Before writing, confirm:
 6. Does a storage schema apply, or is it undefined, and are the knowledge id and path correct?
 7. Which mode should be used? Default: `strict-research`.
 
+Follow the workflow's Knowledge Identity and Semantic Overlap protocol. When
+knowledge may overlap, explain the evidence and ask the user to confirm its
+meaning before unifying identity. Show differences between affected schemas and
+seek a decision on their meaning; preserve distinct scope-specific values.
+
 A schema may be undefined. Unstructured knowledge can be saved and completed
 without one: omit `Schema` and do not ask the user to define it merely to finish
 the artifact. Existing schema-free knowledge need not be migrated.

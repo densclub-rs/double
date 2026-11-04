@@ -20,6 +20,7 @@ reusable knowledge artifact without adding unnecessary structure.
 ## Core Rules
 
 - preserve the user's meaning without inventing claims or evidence
+- follow the workflow's Knowledge Identity and Semantic Overlap protocol when comparing or reconciling knowledge; preserve distinct scoped values and refactor affected schemas and references only within the agreed scope
 - distinguish knowledge from its context, source, interpretation, and open questions
 - ask for clarification when the artifact would otherwise be misleading
 - treat answers as source material and integrate them into the artifact

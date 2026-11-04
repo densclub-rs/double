@@ -8,11 +8,12 @@ artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-10-28
+observed-at: 2026-11-04
 ttl: one month
 derived-from:
   - knowledge/double-main-modules/double-main-modules.md
   - user-provided project versioning decision
+  - user-approved Machine of Knowledge 0.0.4 release preparation on 2026-11-04
 ---
 
 <a id="machine-of-knowledge-version"></a>
@@ -26,4 +27,4 @@ project.
 
 ## Value
 
-`0.0.3`
+`0.0.4`
