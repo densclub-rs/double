@@ -26,6 +26,15 @@ Changes recorded for the `machine-of-knowledge` module.
 
 ## Value
 
+### 0.0.5 — 2026-11-04
+
+- Load applicable project and group knowledge from three directory levels.
+- Prefer the nearest usable whole knowledge item and silently skip unusable rules.
+- Create and update project or group knowledge at the selected directory level.
+- Identify semantic overlap and reconcile confirmed knowledge identities with the user.
+- Preserve scoped values and refactor affected schemas, paths and references.
+- Keep release version checks strict and reproducible.
+
 ### 0.0.4 — 2026-11-04
 
 - Identify potential knowledge overlap and resolve semantic identity with the user.

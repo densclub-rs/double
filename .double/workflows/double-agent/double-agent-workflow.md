@@ -12,62 +12,67 @@ artifact-language: en
 
 ## Project Rules Loading Protocol
 
-Here, project rules means project knowledge broadly: facts, settings,
-conventions, constraints, version knowledge and change history. A request about
-something at project level normally belongs in `.double-rules/`; it need not
-use the word "rule" or prescribe behavior. Preserve the directory and existing
-index headings as the discovery interface.
+Project and group rules are ordinary project knowledge, including facts,
+settings, conventions, constraints, versions, and change history. Before
+selecting a catalog, planning, or writing, resolve the applicable knowledge
+for the active user project. This protocol is packaged with each machine.
 
-Before selecting a catalog, planning, or writing, load the current project's
-rules. This protocol belongs to this machine and is included in its package.
+1. Establish the active project root from the request and context, not the
+   installation directory. If it is ambiguous, clarify it before writing.
+2. Examine at most three distinct directories: the project root, its immediate
+   parent, and that parent's parent. These represent project, nearest group,
+   and outer group. Each level is optional; stop at the filesystem root without
+   inspecting a directory twice. In each directory use `.double-rules/` and
+   its Markdown index `.double-rules/double-rules.md` if usable.
+3. For this machine select links under `Common Rules` and its machine-id
+   heading at each usable index. Resolve links relative to the index, artifact
+   links relative to their containing documents, and catalog settings relative
+   to the active project root unless explicitly absolute. Repeated links to
+   the same resolved artifact at one level are read once. Missing headings
+   contribute no rules. Use existing Machine of Knowledge artifacts and their
+   metadata; do not introduce a separate rule template or configuration.
+4. Silently skip absent, inaccessible, malformed, broken, draft, expired, or
+   otherwise unusable indexes, links, and artifacts. An unusable entry never
+   blocks ordinary work or renews a knowledge validity period. At one level,
+   if distinct usable artifacts have the same `id`, silently exclude all of
+   those conflicting artifacts for that id at that level. A broken entry does
+   not invalidate other usable links in an otherwise usable index.
+5. For each id select the nearest usable, non-conflicting whole knowledge
+   artifact: project, immediate parent, then second parent. Do not merge fields
+   or values. If a closer candidate is unusable or conflicting, try the next
+   level. Distinct ids remain distinct knowledge. If no usable rule applies,
+   use the machine defaults. Semantic overlap of distinct ids is handled by
+   Machine of Knowledge, not silently assumed during rule loading.
+6. Rules cannot bypass higher-priority instructions, required approvals, or
+   validation. Common and machine-specific headings have no inherent priority
+   within a level. Release preparation separately performs strict reproducible
+   version-source checks on the candidate tree; silent ordinary loading does
+   not authorize an ambiguous or external release version source.
+7. Rules are user-owned knowledge outside installer-managed `.double/`; preserve
+   each level during installation, updates, and removal. Package each machine's
+   loading protocol, never a publishing project's or group's actual rules.
+   Changes to this protocol require affected machine version updates; editing
+   knowledge alone does not require machine releases.
 
-1. Establish the active user project root from the request and available project
-   context. Do not substitute the installation directory of a globally installed
-   machine. If the root is ambiguous, clarify it before writing.
-2. Look for `.double-rules/` at that root. Its absence is normal: use this
-   workflow's defaults without creating a rules directory or asking the user
-   to configure one.
-3. When present, read `.double-rules/double-rules.md`. It is a Markdown index
-   with `Common Rules` and machine-id headings. Common rules apply to every
-   machine, including Double Agent, on every invocation regardless of task.
-   Read every linked common rule, then every rule under this machine's heading
-   (`double-agent`). A rule may be linked under several machine headings; read it once.
-4. The links identify ordinary Machine of Knowledge artifacts, not a separate
-   rule template. Resolve index links relative to the index and artifact links
-   relative to their documents. Catalog settings in rule values are relative
-   to the active project root unless explicitly absolute. Use the existing
-   knowledge template and metadata; introduce no YAML configuration, additional
-   rule metadata, or mandatory rule-specific artifact sections.
-5. Missing machine headings mean no additional machine rules. An existing
-   directory with a missing index, a broken required link, an expired or draft
-   rule, or conflicting rules must be reported and resolved before dependent
-   work. Never silently ignore a rule or fall back past an unresolved conflict.
-   A rule's presence does not renew its knowledge validity period.
-6. Rules configure documented project settings and add project constraints;
-   they cannot bypass required approvals, validation, or higher-priority
-   instructions. Do not infer that machine-specific rules override common rules.
-   State material conflicts and ask for resolution before dependent actions.
-7. Keep `.double-rules/` in the project's version control. It is project-owned
-   knowledge, outside the installer-managed `.double/` tree. Package the loading
-   protocol with each machine, never the publishing project's actual rules.
-   Installation, update, and removal must preserve the user's rules. A repository
-   release tag records its project's rules in Git without shipping them to other
-   projects in a machine archive. Changes to this protocol require affected
-   machine version updates; project-rule edits alone do not require machine releases.
-
-The index is navigation, not a second copy of each knowledge value. Machine of
-Knowledge creates it only when the first project rule is accepted. It uses
-Markdown headings `Common Rules`, `double-agent`, `machine-of-knowledge`,
-`machine-of-ideas`, and `machine-of-goals`, with ordinary relative links under
-applicable headings; unused headings may be omitted. No agent-specific entry
-files are required by this protocol.
+At each level the index is navigation, not a copy of knowledge values. Machine
+of Knowledge creates it when the first rule at that level is accepted. It uses
+`Common Rules`, `double-agent`, `machine-of-knowledge`, `machine-of-ideas`,
+and `machine-of-goals` headings with ordinary relative links; other machine-id
+headings may be used and unused headings omitted. No agent-specific entry files
+are required.
 
 ## Purpose
 
-This workflow defines how `double-agent` maintains Double operating artifacts
-under `.double/` and prepares machine releases in the Double repository. It is
-the canonical algorithm for controlled cross-machine process changes and
-release preparation, approval, publication, and verification.
+Double Agent actively assists people with project work using Double: answer
+questions, offer advice and alternatives, and help identify the machine suited
+to the work. Route specialized artifact work through its owning machine rather
+than replacing it. This workflow is also the canonical algorithm for controlled
+machine operating changes under `.double/` and machine release preparation,
+approval, publication, and verification.
+
+For a new machine, its idea, concepts, and principles are developed through
+Machine of Ideas. Double Agent helps form and review its operating contracts
+against those artifacts, Double's foundational ideas, and existing machines.
 
 `Clarify -> Inspect -> Plan -> Confirm -> Apply -> Validate -> Complete`
 
@@ -77,18 +82,21 @@ For a machine release, also follow the Machine Release Protocol below:
 
 ## Version Knowledge Rule
 
-The version source is resolved from applicable project knowledge first, using
-the Version Knowledge Resolution protocol in the Double Agent workflow. If no
-project source is established, use
+For ordinary work resolve the version source from usable project and group
+knowledge using the Project Rules Loading Protocol. If no usable source is
+established, use
 `knowledge/double-agent-version/double-agent-version.md` as the default.
-An invalid or conflicting project source blocks dependent work; it does not
-authorize fallback to the default. A change to this
+Ordinary work silently skips invalid or conflicting rule sources and uses the
+next usable scope or default. Release preparation uses the strict tagged-tree
+version resolution in the Double Agent workflow. A change to this
 workflow, the Double Agent skill, agent, or role requires a separately planned
 version-knowledge update through the Machine of Knowledge workflow.
 
 ## Version Knowledge Resolution
 
-Resolve version knowledge before reading, updating or comparing machine versions:
+For ordinary work apply the Project Rules Loading Protocol, including silent
+fallback to the nearest usable source. The strict procedure below applies only
+to machine release preparation, comparison, and tagged packaging:
 
 1. Load `.double-rules/double-rules.md`, its `Common Rules` and `double-agent`
    knowledge. For the selected machine's version lookup, also inspect links
@@ -115,7 +123,7 @@ Resolve version knowledge before reading, updating or comparing machine versions
 
 `double-agent` maintains working files under `.double/`: workflows, agents,
 roles, modes, prompts, templates, registries, skills, and machine catalog
-indexes for Machine of Ideas, Machine of Goals, and Machine of Knowledge.
+indexes, including existing machines and new machines being developed.
 
 User artifacts in the configured idea, goal, knowledge catalogs and `.double-rules/` are outside this
 workflow's default editing scope. Release readiness includes read-only checks
@@ -159,6 +167,23 @@ Remain in planning mode until the user approves a plan. Present ordered plan
 items; for every item state its target artifact, intended edit, and validation.
 State the current version knowledge and every proposed version-knowledge
 follow-up.
+
+Before seeking agreement on a machine change plan, inspect the relevant sources
+and compare the proposed changes in three areas: Double's foundational ideas;
+the affected machine's own idea, concepts, and principles; and other relevant
+machines. Present one table with an area, result, and supporting evidence for
+each area. Use only 🟢 for no discrepancy found in the checked material, 🔴 for
+an identified discrepancy, and 🟡 for insufficient evidence. Explain the
+legend. Below the table describe each finding, uncertainty, possible solutions,
+and consequences, and ask the person how to proceed. Distinguish an inferred
+concern from an established contradiction; do not represent an unchecked area
+as passing. Incorporate the person's answer into the plan before agreement.
+
+For a local machine the person may decide to proceed despite a contradiction
+with Double's foundational ideas. Explain that such a contradiction prevents
+adding the machine to the public Double repository until resolved. Project
+members determine the nature and consequences of inter-machine inconsistencies;
+do not impose a fixed public outcome for every such finding.
 
 For a base-template change, offer a read-only impact list of derived
 artifacts. Do not apply a template change to derived artifacts unless they are

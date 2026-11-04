@@ -19,6 +19,7 @@ derived-from:
   - user-approved project version source precedence and unchanged version values on 2026-10-28
   - user-approved schema-based storage and grouping artifacts by machine on 2026-10-28
   - user-required version and changelog components in the schema on 2026-10-29
+  - user-approved ordinary rule fallback and strict release version checking on 2026-11-04
 ---
 
 <a id="machine-version-and-changelog-locations"></a>
@@ -36,16 +37,18 @@ Applied for every module identifier `<machine>`.
 
 ### Version
 
-Resolve the current machine's version source from applicable project knowledge
-in `.double-rules/` first. Use a directly indexed `<machine>-version` artifact
-or a link to that artifact in an indexed knowledge item's `Value`. Read the
-`Common Rules`, `double-agent` and selected machine's index headings.
+For ordinary work resolve the current machine's version using applicable usable
+project and group knowledge, following the machines' rule loading protocol.
+Use a directly indexed `<machine>-version` artifact or a link to it in an
+indexed knowledge item's `Value`. For version lookup include `Common Rules`,
+`double-agent`, and the selected machine's headings. Silently skip unusable or
+conflicting rules and use the next usable scope or the default
+`knowledge/<machine>-version/<machine>-version.md`.
 
-When no project source is established, use
-`knowledge/<machine>-version/<machine>-version.md` as the default. A broken,
-conflicting or invalid project source blocks dependent work instead of
-triggering fallback. Local reads and updates use the resolved source; tagged
-packaging resolves the index and source from the exact tagged tree.
+Release preparation and tagged packaging use a separate strict check: resolve
+the source from the exact candidate or tagged tree, report broken, conflicting,
+or invalid sources, and block an ambiguous or non-reproducible release. An
+external group source cannot by itself establish the tagged version.
 
 ### Storage Layout
 

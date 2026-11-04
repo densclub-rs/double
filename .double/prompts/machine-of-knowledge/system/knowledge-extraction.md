@@ -44,11 +44,10 @@ file disagree.
 
 ## Project Rule Routing
 
-Follow the canonical workflow's Project Rule Recognition and Publication
-contract within the existing extraction step. Infer intent and common or
-named-machine scope from context and confirm a successful inference. If
-project-context intent is present, route facts, settings, versions and history
-to `.double-rules/` as well as prescriptive rules. Wording such as "project
-knowledge" or "at project level" is sufficient; clarify missing scope rather
-than silently routing it to the ordinary catalog. Use the existing knowledge
-template for both destinations.
+Follow the workflow's Project Rule Recognition and Publication contract.
+Identify the selected project, immediate-parent group, or second-parent group
+level as well as common or named-machine applicability. Reuse explicit user
+choices and clarify missing group level or machine scope. Route facts, settings,
+versions, history, and prescriptive rules to the selected level's
+`.double-rules/`, using the existing knowledge template. Respect filesystem
+permissions for writes outside the project root.

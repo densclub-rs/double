@@ -8,7 +8,7 @@ artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-11-02
+observed-at: 2026-11-04
 ttl: one month
 derived-from:
   - .double-rules/machine-of-goals/machine-of-goals-version.md
@@ -25,6 +25,12 @@ derived-from:
 Changes recorded for the `machine-of-goals` module.
 
 ## Value
+
+### 0.0.18-rc — 2026-11-04
+
+- Load applicable project and group knowledge from three directory levels.
+- Prefer the nearest usable whole knowledge item and silently skip unusable rules.
+- Keep release version checks strict and reproducible.
 
 ### 0.0.17-rc — 2026-11-03
 

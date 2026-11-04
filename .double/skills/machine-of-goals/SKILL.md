@@ -325,5 +325,6 @@ completion instead of inventing a next step. After plan-stage execution, offer
 ## Project Rules Entry
 
 Before normal entry questions or catalog selection, follow the canonical
-workflow's Project Rules Loading Protocol for the active user project. Load
-common rules and this machine's rules; absence of `.double-rules/` is normal.
+workflow's Project Rules Loading Protocol for the active user project and its
+two nearest parent levels. Select usable common and this machine's rules by id;
+silently skip unusable sources and use the nearest usable scope.

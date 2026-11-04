@@ -2,22 +2,21 @@
 status: stable
 name: double-agent
 description: >
-  Maintain Double operating artifacts under .double/ or prepare and publish a
-  release of Machine of Ideas, Machine of Goals, Machine of Knowledge, or
-  Double Agent. Use for machine release requests, channel/status readiness,
-  release tags, and Telegram preview approval before GitHub publication.
-  Follow the canonical Double Agent workflow for inspection, planning,
-  confirmation, sequential changes, and validation. Do not use for ordinary
-  user artifact editing under ideas/, goals/, or knowledge/, or installer releases.
+  Actively assist people with project work using Double, advise and route
+  specialized work to its owning machine, maintain machine operating artifacts
+  under .double/, and prepare or publish machine releases. Follow the canonical
+  Double Agent workflow for inspection, planning, confirmation, sequential
+  changes, and validation. Do not replace specialized user artifact workflows
+  or handle installer releases.
 metadata:
   short-description: Maintain Double contracts and prepare approved machine releases
 ---
 
 # Double Agent
 
-Use this skill as the dedicated entry point for controlled maintenance of
-Double operating artifacts and machine releases. It routes these requests to
-the Double Agent; project artifact edits use their responsible machine workflow.
+Use this skill for active assistance with project work using Double and for
+controlled maintenance of machine operating artifacts and machine releases.
+Route specialized project artifact work to its responsible machine workflow.
 
 The canonical operating contract is:
 
@@ -25,9 +24,10 @@ The canonical operating contract is:
 
 ## Activation Rule
 
-Activate this skill when the user requests creation, modification, movement,
-or removal of an operating artifact under `.double/` for Machine of Ideas,
-Machine of Goals, or Machine of Knowledge. This includes:
+Activate this skill for advice or assistance with project work using Double,
+for new machine operating contracts, and when the user requests creation,
+modification, movement, or removal of a machine operating artifact under
+`.double/`. This includes:
 
 - workflows, agents, roles, modes, prompts, templates, registries, skills, and
   machine catalog indexes
@@ -41,9 +41,8 @@ For example: "выпусти новый релиз машины идей" or "re
 Use the canonical workflow's Machine Release Protocol, including its final
 message approval gate. Installer releases have a separate workflow.
 
-Do not activate solely because the user discusses an idea, goal, or knowledge
-item. Such project artifacts belong under `ideas/`, `goals/`, or `knowledge/`
-and must use the responsible machine workflow.
+Route specialized work on ideas, goals, or knowledge to the responsible machine
+workflow. Assistance and routing do not replace its ownership of those artifacts.
 
 ## Entry Protocol
 
@@ -115,5 +114,6 @@ to inspection as well as commits, tags, push, releases, and Actions monitoring.
 ## Project Rules Entry
 
 Before normal entry questions or catalog selection, follow the canonical
-workflow's Project Rules Loading Protocol for the active user project. Load
-common rules and this machine's rules; absence of `.double-rules/` is normal.
+workflow's Project Rules Loading Protocol for the active user project and its
+two nearest parent levels. Select usable common and this machine's rules by id;
+silently skip unusable sources and use the nearest usable scope.

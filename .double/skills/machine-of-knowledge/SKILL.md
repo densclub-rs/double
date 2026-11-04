@@ -1,7 +1,7 @@
 ---
 status: stable
 name: machine-of-knowledge
-description: Extract, preserve, inspect, validate, or refresh knowledge through the Double Machine of Knowledge. Use when the user asks to capture knowledge as an artifact, distinguish static from dynamic knowledge, maintain retrieval metadata and a cached value, work with the knowledge catalog, preserve or convert project rules under `.double-rules/`, or continue an existing knowledge artifact. Do not trigger for casual factual questions, idea development, or goal planning unless the user explicitly asks to enter the Machine of Knowledge workflow.
+description: Extract, preserve, inspect, validate, or refresh knowledge through the Double Machine of Knowledge. Use when the user asks to capture knowledge as an artifact, distinguish static from dynamic knowledge, maintain retrieval metadata and a cached value, work with the knowledge catalog, preserve or convert project or group rules under `.double-rules/`, or continue an existing knowledge artifact. Do not trigger for casual factual questions, idea development, or goal planning unless the user explicitly asks to enter the Machine of Knowledge workflow.
 ---
 
 # Machine of Knowledge
@@ -54,16 +54,16 @@ Use this skill as a thin activation and routing layer. The canonical process is:
 ## Project Rules Entry
 
 Before normal entry questions or catalog selection, follow the canonical
-workflow's Project Rules Loading Protocol for the active user project. Load
-common rules and this machine's rules; absence of `.double-rules/` is normal.
+workflow's Project Rules Loading Protocol for the active user project and its
+two nearest parent levels. Select usable common and this machine's rules by id;
+silently skip unusable sources and use the nearest usable scope.
 
 ## Project Rule Routing
 
-Follow the canonical workflow's Project Rule Recognition and Publication
-contract within the existing extraction step. Infer intent and common or
-named-machine scope from context and confirm a successful inference. If
-project-context intent is present, route facts, settings, versions and history
-to `.double-rules/` as well as prescriptive rules. Wording such as "project
-knowledge" or "at project level" is sufficient; clarify missing scope rather
-than silently routing it to the ordinary catalog. Use the existing knowledge
-template for both destinations.
+Follow the workflow's Project Rule Recognition and Publication contract.
+Identify the selected project, immediate-parent group, or second-parent group
+level as well as common or named-machine applicability. Reuse explicit user
+choices and clarify missing group level or machine scope. Route facts, settings,
+versions, history, and prescriptive rules to the selected level's
+`.double-rules/`, using the existing knowledge template. Respect filesystem
+permissions for writes outside the project root.

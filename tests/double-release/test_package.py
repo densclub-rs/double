@@ -320,3 +320,36 @@ def test_project_rule_protocol_ships_without_publishing_project_rules(repo, mach
     assert not any(path.startswith('.double-rules/') for path in files)
     assert all(path.startswith('.double/') and f'/{machine}/' in path for path in files)
     assert Path('.double-rules/private/private.md').read_text() == '# Private project policy\n'
+
+
+@pytest.mark.parametrize('machine', MACHINES)
+def test_tagged_package_preserves_and_excludes_ancestor_group_rules(tmp_path, monkeypatch, machine):
+    outer = tmp_path / 'organization'
+    group = outer / 'team'
+    project = group / 'project'
+    project.mkdir(parents=True)
+    group_rules = []
+    for directory, value in [(outer, 'organization'), (group, 'team')]:
+        rule = directory / '.double-rules' / 'private.md'
+        rule.parent.mkdir()
+        rule.write_text(value, encoding='utf-8')
+        group_rules.append((rule, value))
+    monkeypatch.chdir(project)
+    monkeypatch.setenv('GH_TOKEN', '')
+    monkeypatch.delenv('GITHUB_OUTPUT', raising=False)
+    git('init', '-q')
+    git('config', 'user.email', 'fixture@example.invalid')
+    git('config', 'user.name', 'Fixture')
+    version(machine)
+    write(f'.double/agents/{machine}/agent.md', '---\nstatus: stable\n---\n\n# Agent\n')
+    git('add', '.')
+    git('commit', '-qm', 'fixture')
+    tag = f'{machine}-1.2.4'
+    git('tag', tag)
+
+    result = cli('package', '--tag', tag)
+
+    assert result.returncode == 0, result.stderr
+    files = archive_files(Path(f'dist/double-{tag}.tar.gz'))
+    assert set(files) == {f'.double/agents/{machine}/agent.md'}
+    assert all(path.read_text(encoding='utf-8') == value for path, value in group_rules)
