@@ -44,13 +44,13 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
 ''', encoding="utf-8", newline="\n");fake.chmod(0o755);native_python_shim(fake)
  env=dict(os.environ,PATH=str(bindir)+os.pathsep+os.environ['PATH'],FIXTURE=tmp,DOUBLE_STATE_DIR=posix_path(root/'state'))
  case_number=0
- def run(*args,code=0,extra=None):
+ def run(*args,code=0,extra=None,cwd=None):
   global case_number
   case_number+=1
   stamp=lambda: datetime.now(timezone.utc).isoformat(timespec='seconds').replace('+00:00','Z')
   started=time.monotonic()
   print(f'[{stamp()}] START fixture {case_number}: {args[0]} expected_exit={code}',flush=True)
-  r=subprocess.run([bash_exe,script,*args],env=dict(env,**(extra or {})),capture_output=True,text=True,encoding='utf-8',timeout=180)
+  r=subprocess.run([bash_exe,script,*args],env=dict(env,**(extra or {})),capture_output=True,text=True,encoding='utf-8',timeout=180,cwd=cwd)
   print(f'[{stamp()}] END fixture {case_number}: {args[0]} exit={r.returncode} elapsed={time.monotonic()-started:.3f}s',flush=True)
   if r.returncode!=code:
    inventory=root/'state/installer/registry.json'
@@ -167,10 +167,42 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
 
  # S03: actual file and registry lifecycle in two isolated projects.
  pages([stable]);package(stable)
+ # Bare --project uses cwd at the end or before another option.
+ current=root/'current project тест';current.mkdir()
+ run('add','--machine','m-o-i','--project',cwd=current)
+ assert (current/'.double/templates/machine-of-ideas/example.md').exists()
+ run('add','--project','--machine','m-o-i',cwd=current)
+ run('update','--project','--machine','m-o-i','--non-interactive',cwd=current)
+ run('backups-clean','--yes','--project',cwd=current)
+ run('add','--global','--machine','m-o-i','--project',cwd=current,code=2)
+ run('update-all','--project',cwd=current,code=2)
+ run('remove','--machine','m-o-i','--yes','--project',cwd=current)
+ assert not (current/'.double/templates/machine-of-ideas/example.md').exists()
  project1=root/'project one';project2=root/'проект два'
  project1.mkdir();project2.mkdir()
  run('add','--project',posix_path(project1),'--machine','machine-of-ideas')
  run('add','--project',posix_path(project2),'--machine','machine-of-ideas')
+ # Status targets only the selected project and defaults a bare flag to cwd.
+ for args,cwd in [
+  (('status','--project'),project1),
+  (('status','--project',posix_path(project1)),None),
+ ]:
+  out=run(*args,cwd=cwd)
+  assert posix_path(project1) in out and posix_path(project2) not in out
+  assert 'Downloaded machine archives:' not in out
+ for args,cwd in [
+  (('status','--project','--json'),project1),
+  (('status','--json','--project'),project1),
+  (('status','--project',posix_path(project1),'--json'),None),
+ ]:
+  snapshot=json.loads(run(*args,cwd=cwd))
+  assert snapshot['archives']==[] and len(snapshot['installations'])==1
+  assert snapshot['installations'][0]['project']==posix_path(project1)
+ empty_project=root/'empty project';empty_project.mkdir()
+ assert json.loads(run('status','--project','--json',cwd=empty_project))=={'archives':[],'installations':[]}
+ assert 'No registered installations.' in run('status','--project',cwd=empty_project)
+ run('status','--project',posix_path(root/'missing project'),code=2)
+ run('status','--project','',code=2)
  installed=project1/'.double/templates/machine-of-ideas/example.md'
  assert installed.read_bytes()==b'machine content'
  registry=root/'state/installer/registry.json'
@@ -262,6 +294,15 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
  assert next(x for x in json.loads(registry.read_text())['installations'] if x['project']==posix_path(a))['version']=='1.11.0'
  assert next(x for x in json.loads(registry.read_text())['installations'] if x['project']==posix_path(b))['version']=='3.0.0'
  cp.unlink()
+ # Scripted bulk updates can explicitly delete only their newly created backups.
+ before_backups=set(backups.glob('backup.*'))
+ newer=release('1.12.0');pages([newer]);package(newer)
+ out=run('update-all','--non-interactive','--backup-policy','delete')
+ assert 'Delete this backup?' not in out
+ assert set(backups.glob('backup.*'))==before_backups
+ run('update-all','--non-interactive','--backup-policy','ask',code=2)
+ run('update-all','--backup-policy','invalid',code=2)
+ run('status','--json','--non-interactive')
  # Explicit backup cleanup filters by canonical project and requires confirmation.
  run('backups-clean','--project',posix_path(a),code=1)
  run('backups-clean','--project',posix_path(a),'--yes')

@@ -49,7 +49,7 @@ printf 'user artifact\n' > "$source_dir/ideas/keep.md"
 printf 'user project sentinel\n' > "$project/keep.md"
 mkdir -p "$payload/templates/machine-of-goals"
 printf 'installed other machine\n' > "$payload/templates/machine-of-goals/keep.md"
-dev
+(cd "$project" && bash "$installer" dev --source "$source_dir" --machine M-O-I --project)
 test ! -e "$fixture/requests"
 test ! -e "$DOUBLE_STATE_DIR/installer/releases"
 cmp "$source_dir/.double/skills/$machine/agents/openai.yaml" "$payload/skills/$machine/agents/openai.yaml"

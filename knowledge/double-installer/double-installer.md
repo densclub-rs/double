@@ -88,7 +88,15 @@ See `scripts/double-installer.sh help` for syntax.
 | `cron-remove` | Remove only this installer's marked tasks |
 | `uninstall-all` | Remove all registered machines, cron tasks, and installer-owned state |
 
-`--project` must identify an existing project directory. `--machine` selects
+`--project [DIR]` selects an existing project directory. A bare `--project`
+uses the current working directory, including when followed by another option.
+For example, `double-installer add --machine m-o-k --project` targets the
+current directory. `double-installer status --project` shows installations
+registered in the current project; `status --project DIR` selects another
+project. Project status omits the shared download catalog; `--json` remains
+available, with an empty archives array and filtered installations. Omitting `--project` entirely preserves each command's
+existing scope rules (in particular, unscoped `update` updates all registered
+installations). `--machine` selects
 a published machine identifier; it is not a filesystem path. `--version`
 selects an exact version; absence means highest applicable numeric version.
 `--channel` is `stable` or `rc` for published releases. releases and explicit download
@@ -116,7 +124,27 @@ optional. `update-all` remains an equivalent command for that scope.
 
 Interactive destructive commands show their scope and ask confirmation;
 `--yes` confirms that displayed scope without prompting. Unattended updates
-use `--non-interactive`, never prompt, and retain backups. Interactive updates
+use `--non-interactive`, never prompt, and retain backups by default.
+All commands accept `--non-interactive`, including commands without prompts.
+Required consent must still be supplied with `--yes`; otherwise the command
+fails without reading stdin, even in a terminal. `add --yes` and `dev --yes`
+also suppress optional prompts; use `--agent` for a dedicated integration.
+
+`add`, `dev`, `update`, and `update-all` accept `--backup-policy keep|delete|ask`.
+`keep` retains newly created backups without asking; `delete` explicitly
+approves their deletion after successful installation or update. Existing
+backups are unaffected. The default `ask` offers cleanup only interactively;
+`--non-interactive` or `--yes` retains backups unless `delete` is specified.
+Explicit `--backup-policy ask --non-interactive` is a usage error.
+For example:
+
+```bash
+bash scripts/double-installer.sh update-all --non-interactive --backup-policy delete
+bash scripts/double-installer.sh add --project DIR --machine machine-of-goals --non-interactive --yes --backup-policy keep
+bash scripts/double-installer.sh backups-clean --non-interactive --yes
+```
+
+Interactive updates
 offer backup deletion afterward. Full uninstall deletes backups as requested,
 without preserving them as an exception to cleanup.
 
@@ -254,7 +282,9 @@ from dev to rc or rc to stable is allowed when that channel is explicitly select
 
 `update-all` reports each installation independently and returns failure if any
 fails. Each child operation holds the shared mutation lock. A terminal update
-asks whether to delete its new backup; `--non-interactive` retains it.
+asks whether to delete its new backup; `--non-interactive` retains it by
+default. `--backup-policy delete` removes the new backup without prompting,
+including when invoked through bulk or global update commands.
 `backups-clean` optionally filters by canonical project and machine, lists the
 matching copies, and requires confirmation or `--yes`. It does not delete
 release downloads or project files.

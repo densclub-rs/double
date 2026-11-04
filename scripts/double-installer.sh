@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Release packaging verifies this value against the immutable release tag.
-installer_version='0.1.11-rc'
+installer_version='0.1.12-rc'
 
 # Git Bash needs LF jq output, literal JSON string values and explicit native
 # input filenames: MSYS conversion is unreliable for paths containing quotes.
@@ -67,19 +67,19 @@ Double Installer
   double-installer.sh download --machine ID [--version VERSION] [--channel CHANNEL]
   double-installer.sh download [--all]   (all machines: stable -> rc)
   double-installer.sh install ...   (alias of download)
-  double-installer.sh add --project DIR --machine ID [--agent codex|claude] [--version VERSION] [--channel CHANNEL] [--yes]
-  double-installer.sh add --project DIR [--all] [--agent codex|claude] [--channel CHANNEL] [--yes]
-  double-installer.sh dev --source DOUBLE_DIR --project DIR --machine ID [--agent codex|claude] [--yes]
-  double-installer.sh remove --project DIR --machine ID [--yes]
-  double-installer.sh status [--json]
-  double-installer.sh update --project DIR --machine ID [--channel CHANNEL] [--non-interactive]
-  double-installer.sh update --project DIR [--all] [--channel CHANNEL] [--non-interactive]
+  double-installer.sh add --project [DIR] --machine ID [--agent codex|claude] [--version VERSION] [--channel CHANNEL] [--yes]
+  double-installer.sh add --project [DIR] [--all] [--agent codex|claude] [--channel CHANNEL] [--yes]
+  double-installer.sh dev --source DOUBLE_DIR --project [DIR] --machine ID [--agent codex|claude] [--yes]
+  double-installer.sh remove --project [DIR] --machine ID [--yes]
+  double-installer.sh status [--project [DIR]] [--json]
+  double-installer.sh update --project [DIR] --machine ID [--channel CHANNEL] [--non-interactive]
+  double-installer.sh update --project [DIR] [--all] [--channel CHANNEL] [--non-interactive]
   double-installer.sh update [--all] [--channel CHANNEL] [--non-interactive]
   double-installer.sh add --global [--agent codex|claude|antigravity] [--machine ID] [--channel CHANNEL] [--yes]
   double-installer.sh update --global [--agent codex|claude|antigravity] [--machine ID] [--channel CHANNEL]
   double-installer.sh remove --global --machine ID [--agent codex|claude|antigravity] [--yes]
-  double-installer.sh update-all [--channel CHANNEL] [--non-interactive]
-  double-installer.sh backups-clean [--project DIR] [--machine ID] [--yes]
+  double-installer.sh update-all [--channel CHANNEL] [--non-interactive] [--backup-policy keep|delete|ask]
+  double-installer.sh backups-clean [--project [DIR]] [--machine ID] [--yes]
   double-installer.sh cron-add --schedule 'CRON EXPRESSION'
   double-installer.sh cron-remove
   double-installer.sh uninstall-all [--yes]
@@ -102,6 +102,17 @@ DOUBLE_STATE_DIR overrides the state root for isolated tests.
 Implemented: all listed commands.
 Installation and usage instructions:
 https://github.com/densclub-rs/double/blob/066bd419c649ca0fa20bc77d11fb21a54f35af97/knowledge/double-installer/double-installer.md
+Project selection:
+  --project [DIR]          Omit DIR to use the current directory.
+
+Common automation options:
+  --non-interactive         Never prompt; required consent needs --yes.
+  --yes                    Approve consent for add/dev/remove/backups-clean/uninstall-all.
+  --backup-policy POLICY   add/dev/update/update-all: keep, delete, or ask (default).
+                           Non-interactive defaults to keep; ask is incompatible.
+                           --yes suppresses optional prompts and retains backups
+                           unless --backup-policy delete is specified.
+
 EOF
   machine_aliases
 }
@@ -258,8 +269,8 @@ EOF
       cat <<'EOF'
 add
   Install machine files and register skills with selected AI agents.
-  Usage: double-installer.sh add --project DIR --machine ID [--agent codex|claude] [--version VERSION] [--channel stable|rc] [--yes]
-         double-installer.sh add --project DIR [--all] [--agent codex|claude] [--channel stable|rc] [--yes]
+  Usage: double-installer.sh add --project [DIR] --machine ID [--agent codex|claude] [--version VERSION] [--channel stable|rc] [--yes]
+         double-installer.sh add --project [DIR] [--all] [--agent codex|claude] [--channel stable|rc] [--yes]
          double-installer.sh add --global [--agent codex|claude|antigravity] [--machine ID] [--channel stable|rc] [--yes]
   Prefer stable, then rc; newest numeric version within that channel.
   --channel restricts selection; --version accepts an exact numeric version.
@@ -297,7 +308,7 @@ EOF
       cat <<'EOF'
 dev
   Copy a machine from a local Double working directory into a test project.
-  Usage: double-installer.sh dev --source DOUBLE_DIR --project DIR --machine ID [--agent codex|claude] [--yes]
+  Usage: double-installer.sh dev --source DOUBLE_DIR --project [DIR] --machine ID [--agent codex|claude] [--yes]
   Copy all regular files under .double/<category>/<machine>/, including skills
   and support files, regardless of status or Git tracking. Other machines and
   user ideas/goals/knowledge are excluded. Source and project must be separate,
@@ -318,7 +329,7 @@ EOF
       cat <<'EOF'
 remove
   Remove registered machine files and update the registry, preserving unrelated files.
-  Usage: double-installer.sh remove --project DIR --machine ID [--yes]
+  Usage: double-installer.sh remove --project [DIR] --machine ID [--yes]
          double-installer.sh remove --global --machine ID [--agent codex|claude|antigravity] [--yes]
   Global removal with --agent detaches that agent; other connections retain the
   shared payload. Removing all connections also removes the global payload.
@@ -330,11 +341,14 @@ EOF
       cat <<'EOF'
 status
   Show downloaded machine archives and all registered local/global installations.
-  Usage: double-installer.sh status [--json]
+  Usage: double-installer.sh status [--project [DIR]] [--json]
   Default output includes an archive table followed by projects with nested
   machine/version/channel lists, colored in terminals. NO_COLOR or TERM=dumb disables colors; redirected output is plain.
   --json emits one object: archives and installations arrays, with no headings
   or ANSI colors. Archive records contain machine, version, channel and archive.
+  --project [DIR] shows only that project's registered installations, omitting
+  the shared archive catalog. Omit DIR to use the current directory. In JSON
+  project mode, archives is empty and installations is filtered to the project.
   Reads local state only; it neither queries GitHub nor rechecks archive hashes.
 EOF
       ;;
@@ -342,8 +356,8 @@ EOF
       cat <<'EOF'
 update
   Update registered project or global machines; use add for initial installation.
-  Usage: double-installer.sh update --project DIR --machine ID [--channel stable|rc] [--non-interactive]
-         double-installer.sh update --project DIR [--all] [--channel stable|rc] [--non-interactive]
+  Usage: double-installer.sh update --project [DIR] --machine ID [--channel stable|rc] [--non-interactive]
+         double-installer.sh update --project [DIR] [--all] [--channel stable|rc] [--non-interactive]
          double-installer.sh update [--all] [--channel stable|rc] [--non-interactive]
          double-installer.sh update --global [--agent codex|claude|antigravity] [--machine ID] [--channel stable|rc] [--non-interactive]
   Project updates retain the recorded channel unless explicitly overridden.
@@ -361,7 +375,8 @@ update
   Local development installations instead select stable, then RC by default,
   regardless of numeric version; no eligible release leaves the local copy intact.
   Published installations do not downgrade versions. Interactive updates offer backup cleanup;
-  --non-interactive retains backups. Does not upgrade this installer script.
+  --non-interactive retains backups by default. --backup-policy delete removes
+  newly created backups without prompting; keep retains them. Does not upgrade this installer script.
 EOF
       ;;
     update-all)
@@ -378,14 +393,16 @@ update-all
   Continue across entries;
   any failed update causes a nonzero final exit.
   Does not update cache-only machines, add new machines/agents or upgrade the
-  installer itself. --non-interactive keeps backups and suppresses cleanup prompts.
+  installer itself. --non-interactive keeps backups by default and never prompts.
+  Use --backup-policy delete to delete newly created backups automatically,
+  or --backup-policy keep to retain them. ask is interactive only.
 EOF
       ;;
     backups-clean)
       cat <<'EOF'
 backups-clean
   Delete saved installer backups, optionally limited to one project or machine.
-  Usage: double-installer.sh backups-clean [--project DIR] [--machine ID] [--yes]
+  Usage: double-installer.sh backups-clean [--project [DIR]] [--machine ID] [--yes]
   With no filters, select all owned backups. Show selected backups and require
   confirmation or --yes. Does not uninstall machines or clear downloaded archives.
 EOF
@@ -612,6 +629,7 @@ update_all() {
       args=(update --project "$project_path" --machine "$machine_name")
       [ -z "$channel" ] || args+=(--channel "$channel")
       [ "$non_interactive" = false ] || args+=(--non-interactive)
+      [ "${backup_policy:-ask}" = ask ] || args+=(--backup-policy "$backup_policy")
       checked=$((checked + 1))
       if DOUBLE_INSTALLER_NESTED_UPDATE=1 bash "$script_path" "${args[@]}";then
         succeeded=$((succeeded + 1))
@@ -674,6 +692,7 @@ installation_consent() {
   local answer
   action_printf warning '%s\n' "$1"
   [ "${yes:-false}" = true ] && return 0
+  [ "${non_interactive:-false}" = false ] || fail "Confirmation required; use --yes."
   [ -t 0 ] || fail "Installation requires confirmation; rerun interactively or use $command_name --yes."
   action_printf warning 'Continue? [y/N] '
   read -r answer || answer=''
@@ -1166,6 +1185,7 @@ remove_machine() {
   printf 'Remove %s from %s\n' "$machine" "$project"
   if [ "$yes" != true ]; then
     local answer
+    [ "${non_interactive:-false}" = false ] || fail 'Removal requires confirmation; use --yes.'
     [ -t 0 ] || fail 'Removal requires confirmation; use --yes.'
     printf 'Continue? [y/N] '; read -r answer
     case "$answer" in y|Y|yes) ;; *) fail 'Removal cancelled.' ;; esac
@@ -1203,7 +1223,11 @@ remove_machine() {
 offer_backup_cleanup() {
   local backup="$1" answer
   [ -n "$backup" ] || return 0
-  if [ "${non_interactive:-false}" = false ] && [ -t 0 ];then
+  case "${backup_policy:-ask}" in
+    delete) rm -rf -- "$backup" || fail 'Backup cleanup failed.';return 0 ;;
+    keep) return 0 ;;
+  esac
+  if [ "${non_interactive:-false}" = false ] && [ "${yes:-false}" = false ] && [ -t 0 ];then
     action_printf warning 'Delete this backup? [y/N] '
     read -r answer || answer=''
     case "$answer" in y|Y|yes) rm -rf -- "$backup" ;; esac
@@ -1214,6 +1238,7 @@ offer_backup_cleanup() {
 confirm_action() {
   local answer
   [ "$yes" = true ] && return 0
+  [ "${non_interactive:-false}" = false ] || fail "Confirmation required; use --yes."
   [ -t 0 ] || fail 'Confirmation required; use --yes.'
   printf 'Continue? [y/N] '; read -r answer
   case "$answer" in y|Y|yes) ;; *) fail 'Cancelled.' ;; esac
@@ -1530,7 +1555,7 @@ select_agents() {
   if [ "$claude_detected" = false ] && [ "$antigravity_detected" = false ];then
     action_printf info 'No detected agent requires an additional dedicated integration.\n';return
   fi
-  if [ ! -t 0 ];then
+  if [ "${non_interactive:-false}" = true ] || [ "${yes:-false}" = true ] || [ ! -t 0 ];then
     action_printf warning 'Non-interactive input; dedicated integrations will not be added. Use --agent to select one explicitly.\n';return
   fi
   if [ "$claude_detected" = true ];then action_printf info 'Additional Claude Code integration: %s\n' "$claude_path";fi
@@ -1811,6 +1836,7 @@ project_update_all() {
     local args=(update --project "$project" --machine "$(printf '%s' "$row"|jq -r .machine)")
     [ -z "$channel" ] || args+=(--channel "$channel")
     [ "$non_interactive" = false ] || args+=(--non-interactive)
+    [ "${backup_policy:-ask}" = ask ] || args+=(--backup-policy "$backup_policy")
     count=$((count+1))
     if ! DOUBLE_INSTALLER_NESTED_UPDATE=1 bash "$script_path" "${args[@]}";then
       result=1;action_printf error 'Update failed; continuing with other project machines.\n' >&2
@@ -1831,7 +1857,7 @@ project_update_all() {
   if [ -s "$work_dir/project-available" ];then
     action_printf info 'Additional machines available to add:\n'
     cat "$work_dir/project-available"
-    action_printf info 'Run add --project DIR --machine ID, or add --project DIR --all.\n'
+    action_printf info 'Run add --project [DIR] --machine ID, or add --project [DIR] --all.\n'
   else
     action_printf info 'No additional published machines available to add.\n'
   fi
@@ -1849,6 +1875,7 @@ global_update() {
     local args=(update --project "$(printf '%s' "$row"|jq -r .project)" --machine "$(printf '%s' "$row"|jq -r .machine)")
     [ -z "$channel" ] || args+=(--channel "$channel")
     [ "$non_interactive" = false ] || args+=(--non-interactive)
+    [ "${backup_policy:-ask}" = ask ] || args+=(--backup-policy "$backup_policy")
     if ! bash "$script_path" "${args[@]}";then result=1;fi
   done < "$work_dir/global-updates"
   return "$result"
@@ -1878,6 +1905,29 @@ global_remove() {
   remove_machine
 }
 
+# Common automation options are accepted by every command, including read-only
+# commands. Keep explicit consent separate from the promise never to read stdin.
+non_interactive=false
+backup_policy=ask
+backup_policy_explicit=false
+filtered_args=()
+while [ "$#" -gt 0 ];do
+  case "$1" in
+    --non-interactive) non_interactive=true;shift ;;
+    --backup-policy)
+      [ "$#" -ge 2 ] || usage_error 'Missing value for --backup-policy'
+      case "$2" in keep|delete|ask) ;; *) usage_error 'Backup policy must be keep, delete or ask.' ;; esac
+      backup_policy="$2";backup_policy_explicit=true;shift 2 ;;
+    *) filtered_args+=("$1");shift ;;
+  esac
+done
+set -- ${filtered_args[@]+"${filtered_args[@]}"}
+if [ "$backup_policy_explicit" = true ];then
+  case "${1:-help}" in add|dev|update|update-all) ;;
+    *) usage_error '--backup-policy requires add, dev, update or update-all.' ;;
+  esac
+  [ "$non_interactive" = false ] || [ "$backup_policy" != ask ] || usage_error '--backup-policy ask conflicts with --non-interactive.'
+fi
 command_name="${1:-help}"
 if [ "$command_name" = --version ];then
   [ "$#" -eq 1 ] || { printf 'Error: --version accepts no arguments.\n' >&2;exit 2; }
@@ -1945,10 +1995,15 @@ case "$command_name" in
     ;;
   dev)
     shift
-    project='' machine='' source='' agent='' yes=false non_interactive=false
+    project='' machine='' source='' agent='' yes=false
     integration_scope=project;add_agents=();selected_agents=()
     while [ "$#" -gt 0 ];do
       if [ "$1" = --yes ];then yes=true;shift;continue;fi
+      # A bare --project selects the current directory; do not consume the
+      # following option as a directory name.
+      if [ "$1" = --project ] && { [ "$#" -eq 1 ] || [[ "$2" == -* ]]; };then
+        project="$PWD";shift;continue
+      fi
       [ "$#" -ge 2 ] || usage_error "Missing value for $1"
       case "$1" in
         --source) source="$2" ;; --project) project="$2" ;;
@@ -1968,13 +2023,18 @@ case "$command_name" in
     ;;
   add|remove)
     shift
-    project='' machine='' version='' channel='' yes=false global=false agent='' non_interactive=false all=false
+    project='' machine='' version='' channel='' yes=false global=false agent='' all=false
     integration_scope=project;add_agents=();selected_agents=()
     while [ "$#" -gt 0 ]; do
       if [ "$1" = --global ];then global=true;shift;continue;fi
       if [ "$1" = --all ];then [ "$command_name" = add ] || usage_error '--all is only for add';all=true;shift;continue;fi
       if [ "$1" = --yes ]; then
         yes=true;shift;continue
+      fi
+      # A bare --project selects the current directory; do not consume the
+      # following option as a directory name.
+      if [ "$1" = --project ] && { [ "$#" -eq 1 ] || [[ "$2" == -* ]]; };then
+        project="$PWD";shift;continue
       fi
       [ "$#" -ge 2 ] || usage_error "Missing value for $1"
       case "$1" in
@@ -2010,9 +2070,17 @@ case "$command_name" in
     fi
     ;;
   status)
-    status_json=false
-    if [ "$#" -eq 2 ] && [ "$2" = --json ]; then status_json=true
-    elif [ "$#" -ne 1 ]; then usage_error 'Usage: status [--json]'; fi
+    shift;status_json=false;project=''
+    while [ "$#" -gt 0 ];do
+      case "$1" in
+        --json) [ "$status_json" = false ] || usage_error 'Duplicate --json';status_json=true;shift ;;
+        --project)
+          if [ "$#" -eq 1 ] || [[ "$2" == -* ]];then project="$PWD";shift
+          else project="$2";[ -n "$project" ] || usage_error 'Project must be an existing directory.';shift 2;fi ;;
+        *) usage_error 'Usage: status [--project [DIR]] [--json]' ;;
+      esac
+    done
+    [ -z "$project" ] || project_init
     type -P jq >/dev/null 2>&1 || fail 'Install jq to read local status.'
     state_init;registry_check
     no_symlinks "$state/releases"
@@ -2021,9 +2089,10 @@ case "$command_name" in
       color_reset=$'\033[0m';color_heading=$'\033[1;36m'
       color_stable=$'\033[32m';color_rc=$'\033[33m';color_dev=$'\033[35m';color_muted=$'\033[2m'
     fi
-    if [ "$status_json" = false ]; then printf '%sDownloaded machine archives:%s\n' "$color_heading" "$color_reset"; fi
+    if [ "$status_json" = false ] && [ -z "$project" ]; then printf '%sDownloaded machine archives:%s\n' "$color_heading" "$color_reset"; fi
     archive_count=0;archive_json='';archive_separator=''
     for cached in "$state/releases/"*; do
+      [ -z "$project" ] || break
       [ -d "$cached" ] && [ ! -L "$cached" ] || continue
       tag=${cached##*/}
       [[ "$tag" =~ ^(machine-[a-z0-9-]+)-([0-9]+\.[0-9]+\.[0-9]+)(-(rc|dev))?$ ]] || continue
@@ -2047,20 +2116,21 @@ case "$command_name" in
     if [ "$status_json" = true ]; then
       if [ -f "$registry" ]; then
         # Bash opens Unicode paths; native Windows jq --slurpfile does not.
-        jq -M --argjson archives "[$archive_json]" \
-          '{archives:$archives,installations:.installations}' < "$registry"
+        jq -M --arg project "$project" --argjson archives "[$archive_json]" \
+          '{archives:$archives,installations:[.installations[] | select($project=="" or ((.scope // "project")=="project" and .project==$project))]}' < "$registry"
       else
         jq -Mn --argjson archives "[$archive_json]" '{archives:$archives,installations:[]}'
       fi
     else
-      [ "$archive_count" -gt 0 ] || printf '%sNo downloaded machine archives.%s\n' "$color_muted" "$color_reset"
+      [ -n "$project" ] || [ "$archive_count" -gt 0 ] || printf '%sNo downloaded machine archives.%s\n' "$color_muted" "$color_reset"
+      if [ -n "$project" ];then printf '%sProject: %s%s\n' "$color_heading" "$project" "$color_reset";fi
       printf '\n%sRegistered installations:%s\n' "$color_heading" "$color_reset"
-      if [ ! -f "$registry" ] || [ "$(jq '.installations | length' "$registry")" -eq 0 ];then
+      if [ ! -f "$registry" ] || [ "$(jq --arg project "$project" '[.installations[] | select($project=="" or ((.scope // "project")=="project" and .project==$project))] | length' "$registry")" -eq 0 ];then
         printf '%sNo registered installations.%s\n' "$color_muted" "$color_reset"
       else
-        jq -r --arg heading "$color_heading" --arg reset "$color_reset" \
+        jq -r --arg project "$project" --arg heading "$color_heading" --arg reset "$color_reset" \
           --arg stable "$color_stable" --arg rc "$color_rc" --arg dev "$color_dev" '
-          .installations | group_by(.project) | .[] |
+          [.installations[] | select($project=="" or ((.scope // "project")=="project" and .project==$project))] | group_by(.project) | .[] |
           ("  " + $heading + .[0].project + $reset),
           (sort_by(.machine)[] | "    - " + .machine + "  " + .version + "  (" +
             ({stable:$stable,rc:$rc,dev:$dev}[.channel]) + .channel + $reset + ")" +
@@ -2070,14 +2140,19 @@ case "$command_name" in
     fi
     ;;
   update|update-all|backups-clean)
-    shift;project='' machine='' channel='' version='' yes=false non_interactive=false global=false agent='' all=false
+    shift;project='' machine='' channel='' version='' yes=false global=false agent='' all=false
     while [ "$#" -gt 0 ]; do
       case "$1" in
         --global) [ "$command_name" = update ] || usage_error '--global is for update';global=true;shift;continue ;;
         --all) [ "$command_name" = update ] || usage_error '--all is for update';all=true;shift;continue ;;
         --yes) [ "$command_name" = backups-clean ] || usage_error '--yes is for backup cleanup';yes=true;shift;continue ;;
-        --non-interactive) [ "$command_name" != backups-clean ] || usage_error 'Use --yes for cleanup';non_interactive=true;shift;continue ;;
       esac
+      # A bare --project selects the current directory; do not consume the
+      # following option as a directory name.
+      if [ "$1" = --project ] && { [ "$#" -eq 1 ] || [[ "$2" == -* ]]; };then
+        [ "$command_name" != update-all ] || usage_error 'update-all does not accept --project'
+        project="$PWD";shift;continue
+      fi
       [ "$#" -ge 2 ] || usage_error "Missing value for $1"
       case "$1" in
         --agent) agent="$2" ;;

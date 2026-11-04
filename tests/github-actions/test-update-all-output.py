@@ -29,11 +29,12 @@ command_name=update-all
 action_colors=false
 if [ -t 1 ] && [ "${TERM:-}" != dumb ] && [ -z "${NO_COLOR+x}" ];then action_colors=true;fi
 jq() { command jq -b "$@"; }
-registry="$1";work_dir="$2";channel=rc;non_interactive=true;script_path=unused
+registry="$1";work_dir="$2";channel=rc;non_interactive=true;backup_policy=delete;script_path=unused
 bash() {
   [ "$DOUBLE_INSTALLER_NESTED_UPDATE" = 1 ] || return 9
   if [ "${CHECK_INPUT:-0}" = 1 ];then read -r answer; [ "$answer" = yes ] || return 7;fi
   [ "$7" = --channel ] && [ "$8" = rc ] && [ "$9" = --non-interactive ] || return 8
+  [ "${10}" = --backup-policy ] && [ "${11}" = delete ] || return 8
   action_indent='    ' action_printf success 'Checked %s at %s\n' "$6" "$4"
   [ "${SIMULATE_FAILURE:-0}" != 1 ] || [ "$4" != /project/a ]
 }
