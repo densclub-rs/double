@@ -26,7 +26,7 @@ Changes recorded for the `machine-of-knowledge` module.
 
 ## Value
 
-### 0.0.6 — 2026-11-04
+### 0.0.7-rc — 2026-11-04
 
 - Assess whether each new or changed knowledge item needs a schema.
 - Represent composite values with Markdown sections and lists of atomic properties.
