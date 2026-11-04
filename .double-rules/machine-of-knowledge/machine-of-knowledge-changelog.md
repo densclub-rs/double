@@ -26,6 +26,14 @@ Changes recorded for the `machine-of-knowledge` module.
 
 ## Value
 
+### 0.0.6 — 2026-11-04
+
+- Assess whether each new or changed knowledge item needs a schema.
+- Represent composite values with Markdown sections and lists of atomic properties.
+- Describe value structure and meaning in JSON Schema.
+- Keep supplemental explanations, examples and uncertainty in Notes.
+- Preserve existing schema-free knowledge and JSON descriptors.
+
 ### 0.0.5 — 2026-11-04
 
 - Load applicable project and group knowledge from three directory levels.

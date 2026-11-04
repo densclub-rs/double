@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-knowledge
 id: knowledge-extraction-interaction-prompt
 kind: prompt
-status: stable
+status: release-candidate
 produced-by: knowledge-extraction-agent
 mode: shared
 derived-from:
@@ -31,9 +31,12 @@ knowledge may overlap, explain the evidence and ask the user to confirm its
 meaning before unifying identity. Show differences between affected schemas and
 seek a decision on their meaning; preserve distinct scope-specific values.
 
-A schema may be undefined. Unstructured knowledge can be saved and completed
-without one: omit `Schema` and do not ask the user to define it merely to finish
-the artifact. Existing schema-free knowledge need not be migrated.
+Assess whether a schema helps interpret each new or changed value. For composite
+values and lists of properties, propose a source-grounded schema describing
+structure and meaning when useful. A schema may be undefined; do not ask for one
+merely to finish an otherwise unambiguous artifact. Existing schema-free
+knowledge need not be migrated. Follow the workflow's Markdown representation
+and place supplemental explanations in `Notes`.
 
 When `Schema` is needed, use only JSON Schema Draft 2020-12 with its explicit
 `$schema` declaration and a stable `$id` tied to the knowledge artifact. Follow

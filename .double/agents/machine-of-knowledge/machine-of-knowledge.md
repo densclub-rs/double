@@ -1,5 +1,5 @@
 ---
-status: stable
+status: release-candidate
 style: double
 submodule: machine-of-knowledge
 mindmap-plugin: basic

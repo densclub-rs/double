@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-knowledge
 id: knowledge-extraction-agent
 kind: agent
-status: stable
+status: release-candidate
 role: knowledge-extractor-role
 workflow: machine-of-knowledge-workflow
 interaction-language: en
@@ -75,9 +75,10 @@ When justified by a concrete revalidation need:
 - use `retrieval-method` for the invocation type and preserve the exact invocation in the `Command` section
 - invent no value, observation time, validity period, or retrieval method
 - keep `access: free-of-charge`
-- integrate answers into the artifact and describe material remaining gaps in `Notes` only when needed
+- integrate answers into the artifact; place supplemental context and material remaining gaps in `Notes`
 - enforce the template's allowed fields and sections; preserve version history as separate knowledge
-- allow `Schema` to remain undefined; omit it for unstructured knowledge when no schema is needed, without blocking completion or inventing a placeholder
+- assess the need for `Schema` for each new or changed item; create a grounded schema when it helps interpret composite values or property meanings, and omit it when unnecessary
+- follow the workflow's Markdown subsection and property-list representation for composite values
 - when `Schema` is defined, use only JSON Schema Draft 2020-12 with an explicit `$schema` and knowledge-bound `$id`; validate the schema and structured value
 - keep the artifact minimal and straightforward
 

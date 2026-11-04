@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-knowledge
 id: knowledge-extraction-system-prompt
 kind: prompt
-status: stable
+status: release-candidate
 produced-by: knowledge-extraction-agent
 mode: shared
 derived-from:
@@ -26,14 +26,15 @@ Required behavior:
 - ground every knowledge claim and dynamic value
 - resolve the applicable storage schema and derive the concrete path inside the selected catalog
 - use the default per-artifact directory only when no schema applies; do not fall back past an invalid selected schema
-- allow unstructured knowledge without a defined schema; omit `Schema` entirely and create no placeholder or missing-schema warning unless there is a material limitation
+- assess schema need for every new or changed item; create a grounded schema when it helps interpret composite values or property meanings, and omit it when unnecessary
+- represent composite values using Markdown subsections and property lists as specified by the workflow; keep leaves atomic and supplemental explanations in `Notes`
 - when `Schema` is defined, use only JSON Schema Draft 2020-12 with `$schema: https://json-schema.org/draft/2020-12/schema` and a knowledge-bound `$id`
 - for a defined or explicitly selected schema, validate the schema against its meta-schema, then validate the structured value; reject missing or unsupported dialect declarations before use
 - validate layout JSON against a defined applicable Schema when present, then verify actual paths, ids and links
 - set `access: free-of-charge`
 - use `Value`, `observed-at`, and `ttl` for both types; include `retrieval-method` only for a concrete revalidation need
 - never invent values or temporal metadata
-- describe material uncertainty and need for clarification in `Notes` only when needed
+- place supplemental explanations and material uncertainty in `Notes` when needed
 - integrate answers into the artifact and update `Notes`
 - validate allowed fields and sections against the template; keep version history in separate knowledge
 - prefer the minimum adequate structure

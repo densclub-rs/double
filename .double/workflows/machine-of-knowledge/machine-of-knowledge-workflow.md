@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-knowledge
 id: machine-of-knowledge-workflow
 kind: workflow
-status: stable
+status: release-candidate
 interaction-language: en
 artifact-language: en
 derived-from:
@@ -174,6 +174,33 @@ changes to Double Agent.
 
 ## Knowledge Schema Standard
 
+For every new or changed knowledge item, assess whether a schema is needed for
+unambiguous interpretation. Prefer a schema for composite values, nested
+sections, lists of properties, or identifiers whose meaning needs explanation.
+Propose and create one when it helps and its meaning is supported by the source.
+Clarify unsupported meanings rather than inventing them. A simple value whose
+meaning is clear from `Description` and the value itself need not have a schema.
+Assessment is required; a `Schema` section is not. Do not migrate existing
+schema-free artifacts solely because this guidance changed.
+
+For newly authored composite knowledge, represent the value under `Values` as
+nested Markdown subsections for groups and independent values. Represent a set
+of properties of one value as a Markdown list of atomic entries, not a section
+per property. Leaves contain atomic string representations, media links, or
+retrieval commands, without commentary. Put supplemental explanations, examples,
+exceptions and uncertainty in `Notes`; preserve conditions essential to applying
+the knowledge in the represented value or its schema. A schema describes both
+the structure and the meaning of its keys and list entries using `description`
+and, where useful, `title`, `const` and `oneOf`. Descriptions are annotations;
+schema validation alone cannot prove their semantic truth.
+
+JSON Schema validates JSON instances, not Markdown itself. Before validation,
+interpret the Markdown structure as the object or array described by the schema;
+check that headings, lists and atomic values map unambiguously to that instance.
+Do not guess conversions or execute a recorded command to validate its syntax or
+schema; resolve ambiguity and obtain authorization for retrieval. Existing
+`Value` artifacts and existing JSON descriptors remain valid without migration.
+
 When a knowledge artifact includes `Schema`, use **JSON Schema Draft 2020-12**
 exclusively. `Schema` is optional and may remain undefined, including for
 unstructured knowledge that does not currently need formalization.
@@ -181,7 +208,7 @@ unstructured knowledge that does not currently need formalization.
 - An absent or undefined schema is a valid state, not an artifact defect. Omit
   the entire `Schema` section when no schema is defined; do not add an empty
   block, `null`, an "undefined" marker or a permissive placeholder schema.
-- Do not invent a schema, request one as a mandatory prerequisite, restructure
+- Do not invent unsupported schema semantics, request a schema as a mandatory prerequisite, restructure
   existing knowledge or mark it draft merely because no schema is defined.
   The artifact may be complete with a free-form textual `Value`.
 - Record a missing schema in `Notes` only when it creates a material limitation
@@ -424,7 +451,8 @@ The step is complete when:
 
 - the artifact follows the knowledge template
 - all frontmatter fields and top-level sections are allowed by the template, required elements are present, and optional elements are justified
-- `Notes`, when needed, describes material gaps or uncertainty; omit it when there are none. Version knowledge contains no embedded changelog
+- `Notes`, when needed, contains supplemental context, examples, exceptions or material uncertainty; omit it when there are no additions. Version knowledge contains no embedded changelog
+- the need for a schema was assessed; a useful, source-grounded schema is provided where appropriate
 - its directory and filename follow the selected storage schema, or default Double naming when no schema applies
 - every included or selected schema declares JSON Schema Draft 2020-12 explicitly, has a knowledge-bound `$id`, and passes meta-schema validation
 - structured values and layout JSON satisfy any defined applicable schemas; schema absence or an undefined schema does not block completion

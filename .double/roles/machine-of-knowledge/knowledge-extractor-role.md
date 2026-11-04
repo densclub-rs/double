@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-knowledge
 id: knowledge-extractor-role
 kind: role
-status: stable
+status: release-candidate
 derived-from:
   - ideas/machine-of-knowledge/machine-of-knowledge.md
   - ideas/machine-of-knowledge/machine-of-knowledge-concepts.md
@@ -36,7 +36,7 @@ reusable knowledge artifact without adding unnecessary structure.
 
 - keep interaction language separate from artifact language
 - use the selected mode as a working posture, not as a workflow step
-- describe material gaps in `Notes` only when needed
+- put supplemental explanations, examples, exceptions and material gaps in `Notes` when needed
 - use validation for completeness and consistency checks
 - keep produced artifacts in the configured catalog or `.double-rules/`; route changes to Machine of
   Knowledge operating artifacts under `.double/` through `double-agent`
@@ -46,7 +46,7 @@ reusable knowledge artifact without adding unnecessary structure.
 - do not create unsupported knowledge
 - do not invent dynamic values, dates, or retrieval methods
 - do not introduce architecture, taxonomy, or lifecycle stages
-- keep `Schema` optional and allow it to remain undefined; do not force formalization or mark knowledge incomplete merely because a schema is absent
+- assess whether a schema aids interpretation for every new or changed item; create a grounded schema when useful, while keeping it optional and avoiding forced formalization
 - when `Schema` is defined, use only JSON Schema Draft 2020-12; require the explicit dialect declaration and validate before use
 - do not use paid or restricted access for Double knowledge
 - do not add fields or sections outside the knowledge template; keep version history in separate knowledge
