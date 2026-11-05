@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Release packaging verifies this value against the immutable release tag.
-installer_version='0.1.13-rc'
+installer_version='0.1.14-rc'
 
 # Git Bash needs LF jq output, literal JSON string values and explicit native
 # input filenames: MSYS conversion is unreliable for paths containing quotes.
@@ -319,6 +319,7 @@ dev
   Back up an existing payload before replacement; unregistered directories
   require adoption confirmation (or --yes). Preserve foreign skill directories.
   Agent selection and independent skill registration follow add semantics.
+  Project installations maintain a guarded AGENTS.md section and a CLAUDE.md import.
   update/update-all replace local development with a published stable or RC,
   preferring stable, regardless of its numeric version. With no eligible release
   keep the development copy. Published GitHub dev packages are ignored.
@@ -329,6 +330,7 @@ EOF
       cat <<'EOF'
 remove
   Remove registered machine files and update the registry, preserving unrelated files.
+  Project instruction sections are updated; user instructions and imports are preserved.
   Usage: double-installer.sh remove --project [DIR] --machine ID [--yes]
          double-installer.sh remove --global --machine ID [--agent codex|claude|antigravity] [--yes]
   Global removal with --agent detaches that agent; other connections retain the
@@ -721,6 +723,12 @@ cleanup() {
         n=$((n+1))
       done < "$transaction/external-paths"
     fi
+    if [ -f "$transaction/instructions-ready" ];then
+      for item in AGENTS CLAUDE;do
+        if [ -f "$transaction/instructions/$item.md" ];then cp -p "$transaction/instructions/$item.md" "$transaction_project/$item.md" || rollback_failed=1
+        else rm -f "$transaction_project/$item.md" || rollback_failed=1;fi
+      done
+    fi
     if [ -f "$transaction/registry-before.json" ];then
       cp -p "$transaction/registry-before.json" "$registry" || rollback_failed=1
     fi
@@ -924,6 +932,91 @@ project_init() {
   no_symlinks "$project/.double"
 }
 
+# Project instructions are a separately owned, checksummed section. Refuse
+# edited or malformed sections rather than guessing which user text to replace.
+instruction_checksum() {
+  if command -v sha256sum >/dev/null 2>&1;then sha256sum "$1" | awk '{print $1}'
+  else shasum -a 256 "$1" | awk '{print $1}';fi
+}
+
+project_instructions_prepare() {
+  local file name line terminated inside count checksum expected mode
+  for name in AGENTS CLAUDE;do
+    file="$project/$name.md";no_symlinks "$file"
+    [ ! -e "$file" ] || [ -f "$file" ] || fail "$file is not a regular file."
+    : > "$work_dir/$name.out"; : > "$work_dir/$name.body"
+    inside=false;count=0;checksum=''
+    if [ -f "$file" ];then
+      while :;do
+        line=''; if IFS= read -r line;then terminated=true;else terminated=false;[ -n "$line" ] || break;fi
+        case "$line" in
+          '<!-- Double project integration: begin -->')
+            [ "$inside" = false ] && [ "$count" -eq 0 ] || fail "Ambiguous Double section in $file; no instructions changed."
+            inside=true;count=1 ;;
+          '<!-- Double project integration: end '*' -->')
+            [ "$inside" = true ] || fail "Unexpected Double section end in $file."
+            checksum=${line#'<!-- Double project integration: end '};checksum=${checksum%' -->'}
+            [[ "$checksum" =~ ^[a-fA-F0-9]{64}$ ]] || fail "Invalid Double section checksum in $file."
+            expected=$(instruction_checksum "$work_dir/$name.body")
+            [ "$checksum" = "$expected" ] || fail "Modified Double section in $file; preserve and repair it manually."
+            inside=false ;;
+          *'<!-- Double project integration:'*) fail "Malformed Double section in $file; no instructions changed." ;;
+          *) if [ "$inside" = true ];then printf '%s\n' "$line" >> "$work_dir/$name.body";else printf '%s' "$line" >> "$work_dir/$name.out"; [ "$terminated" = false ] || printf '\n' >> "$work_dir/$name.out";fi ;;
+        esac
+      done < "$file"
+    fi
+    [ "$inside" = false ] || fail "Unclosed Double section in $file; no instructions changed."
+  done
+}
+
+project_instructions_sync() {
+  local name list checksum item
+  if jq -e --arg p "$project" --arg m "$machine" '.installations[] | select(.project==$p and .machine==$m and .scope=="global")' "$registry" >/dev/null;then return 0;fi
+  project_instructions_prepare
+  jq -r --arg p "$project" '.installations[] | select(.project==$p and (.scope // "project")=="project") | .machine' "$registry" | LC_ALL=C sort -u > "$work_dir/instruction-machines"
+  if [ -s "$work_dir/instruction-machines" ];then
+    cat > "$work_dir/AGENTS.body" <<'BODY'
+## Double workflows
+
+When working with an existing Double artifact, determine its provenance and state, load the corresponding installed skill below, and follow its workflow even if the user did not name the machine. If provenance becomes clear after choosing an approach, reconsider that choice before proposing next steps or changing the artifact.
+
+For new material, use the user's intent and project rules; an isolated word alone does not activate a machine. An explicit user request to work outside a workflow takes priority. Reading an artifact or answering a factual question about it does not itself advance the machine to another stage.
+
+Installed machines:
+BODY
+    while IFS= read -r item;do
+      [ -f "$project/.double/skills/$item/SKILL.md" ] || fail "Installed skill missing: $project/.double/skills/$item/SKILL.md"
+      printf -- '- %s: `.double/skills/%s/SKILL.md`\n' "$item" "$item" >> "$work_dir/AGENTS.body"
+    done < "$work_dir/instruction-machines"
+    # An existing user import belongs to the user and is never removed.
+    if [ -f "$project/CLAUDE.md" ] && awk '/^[[:space:]]*@(\.\/)?AGENTS\.md[[:space:]]*$/ {found=1} END {exit !found}' "$work_dir/CLAUDE.out";then
+      : > "$work_dir/CLAUDE.body"
+    else
+      printf '@AGENTS.md\n' > "$work_dir/CLAUDE.body"
+    fi
+    for name in AGENTS CLAUDE;do
+      [ -s "$work_dir/$name.body" ] || continue
+      if [ -s "$work_dir/$name.out" ] && [ "$(tail -c 1 "$work_dir/$name.out" | wc -l | tr -d ' ')" = 0 ];then printf '\n' >> "$work_dir/$name.out";fi
+      checksum=$(instruction_checksum "$work_dir/$name.body")
+      printf '<!-- Double project integration: begin -->\n' >> "$work_dir/$name.out"
+      cat "$work_dir/$name.body" >> "$work_dir/$name.out"
+      printf '<!-- Double project integration: end %s -->\n' "$checksum" >> "$work_dir/$name.out"
+    done
+  fi
+  if [ -n "$transaction" ];then
+    mkdir -p "$transaction/instructions"
+    for name in AGENTS CLAUDE;do
+      if [ -f "$project/$name.md" ];then cp -p "$project/$name.md" "$transaction/instructions/$name.md" || fail "Cannot snapshot $name.md.";fi
+    done
+    : > "$transaction/instructions-ready"
+  fi
+  for name in AGENTS CLAUDE;do
+    if [ -e "$project/$name.md" ] || [ -s "$work_dir/$name.out" ];then
+      cp "$work_dir/$name.out" "$project/$name.md" || fail "Cannot update $project/$name.md."
+    fi
+  done
+}
+
 inventory_check() {
   local file scope category owner rest
   while IFS= read -r file; do
@@ -940,6 +1033,7 @@ add_machine() {
   project_init
   state_init
   mutation_begin
+  [ "${integration_scope:-project}" = global ] || project_instructions_prepare
   row=$(jq --arg p "$project" --arg m "$machine" '.installations[]|select(.project==$p and .machine==$m)' "$registry")
   if [ -n "$row" ];then
     printf '%s' "$row" | jq -r '.files[]' > "$work_dir/files"
@@ -955,6 +1049,7 @@ add_machine() {
         return $?
       fi
     done < "$work_dir/files"
+    project_instructions_sync
     action_printf info 'Machine already installed: %s in %s; integrating selected agents only.\n' "$machine" "$project"
     integrate_selected_agents
     return $?
@@ -1053,6 +1148,7 @@ add_machine() {
     jq --arg p "$project" --arg m "$machine" '(.installations[]|select(.project==$p and .machine==$m)).scope="global"' "$registry" > "$state/registry.new" || fail 'Cannot stage registry update.'
     mv "$state/registry.new" "$registry" || fail 'Cannot commit registry update.'
   fi
+  project_instructions_sync
   local done_transaction="$transaction";transaction=''
   rm -rf -- "$done_transaction"
   action_printf success 'Installed %s in %s (%s)\n' "$machine" "$project" "$tag"
@@ -1135,6 +1231,7 @@ dev_machine() {
     printf 'complete\n' > "$backup/complete"
     action_printf info 'Machine directory backup: %s\n' "$backup"
   fi
+  project_instructions_prepare
   transaction=$(mktemp -d "$state/transactions/dev.XXXXXX")
   transaction_project="$project";transaction_kind=dev
   snapshot_directories "$project" "$work_dir/roots" "$transaction"
@@ -1166,6 +1263,7 @@ dev_machine() {
         source:{type:"development",path:$source},files:$f[0],directories:$d[0]}])
   ' "$registry" > "$state/registry.new" || fail 'Cannot stage development registration.'
   mv "$state/registry.new" "$registry" || fail 'Cannot commit development registration.'
+  project_instructions_sync
   transaction_done="$transaction";transaction='';rm -rf -- "$transaction_done"
   action_printf success 'Installed %s in %s (development from %s)\n' "$machine" "$project" "$source"
   offer_backup_cleanup "$backup"
@@ -1190,6 +1288,7 @@ remove_machine() {
     printf 'Continue? [y/N] '; read -r answer
     case "$answer" in y|Y|yes) ;; *) fail 'Removal cancelled.' ;; esac
   fi
+  [ "$(printf '%s' "$row" | jq -r '.scope // "project"')" = global ] || project_instructions_prepare
   # Detach each agent independently; keep payload if any detach needs a retry.
   if ! detach_registered_agents "$row";then return 1;fi
   mutation_begin
@@ -1202,10 +1301,12 @@ remove_machine() {
   machine_roots "$work_dir/files" > "$work_dir/roots"
   snapshot_directories "$project" "$work_dir/roots" "$backup"
   transaction="$backup";transaction_project="$project";transaction_kind=remove
+  cp -p "$registry" "$transaction/registry-before.json" || fail 'Cannot preserve installation registry.'
   remove_integrations "$row"
   while IFS= read -r file; do rm -f -- "$project/$file" || fail 'Removal failed.'; done < "$work_dir/files"
   jq --arg p "$project" --arg m "$machine" '.installations |= map(select(.project!=$p or .machine!=$m))' "$registry" > "$state/registry.new" || fail 'Cannot stage registry update.'
   mv "$state/registry.new" "$registry" || fail 'Cannot commit registry update.'
+  if [ "$(printf '%s' "$row" | jq -r '.scope // "project"')" != global ];then project_instructions_sync;fi
   local done_transaction="$transaction";transaction=''
   rm -rf -- "$done_transaction"
   printf '%s' "$row" | jq -r '.directories[]' | LC_ALL=C sort -r > "$work_dir/dirs"
@@ -1249,6 +1350,7 @@ update_machine() {
   project_init;state_init;mutation_begin
   installed=$(jq --arg p "$project" --arg m "$machine" '.installations[]|select(.project==$p and .machine==$m)' "$registry")
   [ -n "$installed" ] || fail 'Machine is not registered in this project.'
+  [ "$(printf '%s' "$installed" | jq -r '.scope // "project"')" = global ] || project_instructions_prepare
   integration_check "$installed"
   if printf '%s' "$installed" | jq -e '.source.type=="development"' >/dev/null;then development=true;fi
   if [ -z "$channel" ] && { [ "$development" = true ] || [ "$(printf '%s' "$installed" | jq -r .channel)" = dev ]; };then
@@ -1266,7 +1368,7 @@ update_machine() {
     release_catalog
     row=$(jq '.[0] // empty' "$work_dir/catalog.json")
   fi
-  [ -n "$row" ] || { [ "${repair_missing:-false}" != true ] || fail 'Cannot restore incomplete machine: no applicable published release.'; action_printf warning 'No applicable release: %s (%s) in %s\n' "$machine" "$channel" "$project"; return 0; }
+  [ -n "$row" ] || { [ "${repair_missing:-false}" != true ] || fail 'Cannot restore incomplete machine: no applicable published release.'; project_instructions_sync; action_printf warning 'No applicable release: %s (%s) in %s\n' "$machine" "$channel" "$project"; return 0; }
   if [ "$development" = false ] && ! jq -ne --arg a "$(printf '%s' "$row"|jq -r .version)" --arg b "$(printf '%s' "$installed"|jq -r .version)" \
     --arg old "$(printf '%s' "$installed"|jq -r '.tag|if endswith("-dev") then "dev" elif endswith("-rc") then "rc" else "stable" end')" --arg new "$channel" \
     '($a|split(".")|map(tonumber)) as $av | ($b|split(".")|map(tonumber)) as $bv |
@@ -1277,6 +1379,7 @@ update_machine() {
     jq --arg p "$project" --arg m "$machine" --arg c "$channel" \
       '(.installations[]|select(.project==$p and .machine==$m)).channel=$c' "$registry" > "$state/registry.new" || fail 'Cannot stage registry update.'
     mv "$state/registry.new" "$registry" || fail 'Cannot commit registry update.'
+    project_instructions_sync
     refresh_integrations
     action_printf success 'Already current: %s in %s\n' "$machine" "$project"; return 0
     fi
@@ -1343,6 +1446,7 @@ update_machine() {
     '(.installations[]|select(.project==$p and .machine==$m)) |= (del(.source)|.version=$v|.tag=$t|.channel=$c|.files=$f[0]|.directories=((.directories+$d[0])|unique))' \
     "$registry" > "$state/registry.new" || fail 'Cannot stage registry update.'
   mv "$state/registry.new" "$registry" || fail 'Cannot commit registry update.'
+  project_instructions_sync
   transaction_done="$transaction";transaction='';rm -rf -- "$transaction_done"
   refresh_integrations
   action_printf success 'Updated %s in %s to %s; backup: %s\n' "$machine" "$project" "$version" "$backup"
