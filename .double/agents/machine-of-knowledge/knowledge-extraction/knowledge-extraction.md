@@ -78,7 +78,7 @@ When justified by a concrete revalidation need:
 - integrate answers into the artifact; place supplemental context and material remaining gaps in `Notes`
 - enforce the template's allowed fields and sections; preserve version history as separate knowledge
 - assess the need for `Schema` for each new or changed item; create a grounded schema when it helps interpret composite values or property meanings, and omit it when unnecessary
-- follow the workflow's Markdown subsection and property-list representation for composite values
+- follow the workflow's Markdown Values Interpretation for composite values, media links and fenced commands; validate mapped data without executing commands
 - when `Schema` is defined, use only JSON Schema Draft 2020-12 with an explicit `$schema` and knowledge-bound `$id`; validate the schema and structured value
 - keep the artifact minimal and straightforward
 

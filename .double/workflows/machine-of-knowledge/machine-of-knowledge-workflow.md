@@ -201,6 +201,45 @@ Do not guess conversions or execute a recorded command to validate its syntax or
 schema; resolve ambiguity and obtain authorization for retrieval. Existing
 `Value` artifacts and existing JSON descriptors remain valid without migration.
 
+### Markdown Values Interpretation
+
+For the new `Values` representation use the following deterministic mapping:
+
+- The `## Values` section is a JSON object. Direct `###` headings are its
+  property names; a heading with child headings is an object whose properties
+  are the direct children. Heading text is the exact, case-sensitive key; do
+  not derive keys from Markdown anchors. Increase heading level by one per
+  nesting level, and use each key only once within its parent.
+- A leaf contains exactly one atomic value or one flat Markdown unordered list
+  of atomic values. A list maps to a JSON array in the same order. Do not mix
+  child headings, list entries, and a leaf value within one section, or use
+  nested lists. Empty sections and ambiguous structures require clarification.
+- A plain single-line leaf or list item maps to its text as a JSON string,
+  with surrounding whitespace removed. Preserve its spelling: `true`, `42`
+  and `null` are strings, not inferred Boolean, numeric or null values. Use
+  string constraints in the schema; do not coerce values from their appearance.
+- A Markdown link to media maps to its destination as a JSON string; the link
+  label is presentation only. Resolve relative destinations against the
+  knowledge artifact when checking the target. A media link must be the entire
+  leaf or list item; an ordinary path written as plain text stays plain text.
+- A command value is a fenced code block with a nonempty language identifier,
+  for example `sh`, as the entire leaf. Its JSON value is the exact code text
+  inside the fence, without the fence or its language identifier. Lists contain
+  only single-line atomic values and cannot contain command blocks. The schema
+  description identifies a command and its expected result; the fence identifies
+  the invocation language. Parsing or validating never runs the command.
+- Use schema `description` annotations to identify the semantic role of each
+  property and list item, including media references and commands. `oneOf`
+  with `const` can describe individual list entries. Schema validation checks
+  the mapped strings, arrays and objects; link existence, semantic correctness,
+  command safety and results require separate checks.
+
+An artifact may preserve both a command and a cached result as separate named
+values, without fabricating the result. Keep observation time and validity
+period for the cached value and follow the existing retrieval authorization
+and temporal rules. Existing `Command` sections and retrieval metadata remain
+valid; do not silently replace or execute them during interpretation.
+
 When a knowledge artifact includes `Schema`, use **JSON Schema Draft 2020-12**
 exclusively. `Schema` is optional and may remain undefined, including for
 unstructured knowledge that does not currently need formalization.

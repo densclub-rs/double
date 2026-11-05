@@ -27,7 +27,7 @@ Required behavior:
 - resolve the applicable storage schema and derive the concrete path inside the selected catalog
 - use the default per-artifact directory only when no schema applies; do not fall back past an invalid selected schema
 - assess schema need for every new or changed item; create a grounded schema when it helps interpret composite values or property meanings, and omit it when unnecessary
-- represent composite values using Markdown subsections and property lists as specified by the workflow; keep leaves atomic and supplemental explanations in `Notes`
+- represent composite values using Markdown subsections and property lists as specified by the workflow; map leaves without type inference or command execution and keep supplemental explanations in `Notes`
 - when `Schema` is defined, use only JSON Schema Draft 2020-12 with `$schema: https://json-schema.org/draft/2020-12/schema` and a knowledge-bound `$id`
 - for a defined or explicitly selected schema, validate the schema against its meta-schema, then validate the structured value; reject missing or unsupported dialect declarations before use
 - validate layout JSON against a defined applicable Schema when present, then verify actual paths, ids and links

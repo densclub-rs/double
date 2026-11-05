@@ -80,7 +80,9 @@ belongs in a separate knowledge artifact.
 For newly authored composite knowledge, use `Values` instead of `Value` with
 nested Markdown subsections for independent values and groups, and lists for
 properties of one value. Keep leaves atomic and put supplemental explanations
-in `Notes`. Follow the workflow for interpretation and validation.
+in `Notes`. A plain leaf is a string, a media link maps to its destination, and
+a fenced command maps to its code text without execution. Follow the workflow's
+Markdown Values Interpretation for nesting, lists and validation.
 
 Always assess the need for `Schema`: prefer it when composite structure or
 property semantics need interpretation, and create a grounded schema when it
