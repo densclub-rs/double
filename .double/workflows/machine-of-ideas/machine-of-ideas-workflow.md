@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: machine-of-ideas-workflow
 kind: workflow
-status: stable
+status: release-candidate
 interaction-language: en
 artifact-language: en
 derived-from:
@@ -305,9 +305,9 @@ The agent should actively help the user keep the idea-machine flow moving.
 At the end of each meaningful interaction or artifact update, the agent should inspect the active artifact and relevant input artifacts, then recommend one next action:
 
 - if unresolved open questions exist, offer to work through those questions with the user
-- if a question has just been answered, integrate the answer, close the item in its original question section, and then check whether more open questions remain
-- for concept artifacts, treat unanswered items in each concept's `Questions` subsection as the open questions; after integrating an answer, close the item in the corresponding concept's `Questions` subsection
-- for principle artifacts, treat unanswered items in each principle's `Questions` subsection as the open questions; after integrating an answer, close the item in the corresponding principle's `Questions` subsection
+- if a question has just been answered, integrate the answer, remove the item from its original question section, and then check whether more open questions remain
+- for concept artifacts, treat unanswered items in each concept's `Questions` subsection as the open questions; after integrating an answer, remove the item from the corresponding concept's `Questions` subsection
+- for principle artifacts, treat unanswered items in each principle's `Questions` subsection as the open questions; after integrating an answer, remove the item from the corresponding principle's `Questions` subsection
 - if no unresolved open questions remain and the current artifact meets the step contract, suggest moving to the next workflow step
 - if the artifact is incomplete but no direct question is needed, suggest the mode that best fits the next pass, such as `editor` for cleanup, `validation` for checking, `strict-research` for rigorous extraction or synthesis, `brainstorm` for expansion, or `explain` for understanding the process
 
@@ -325,12 +325,12 @@ The loop works as follows:
 4. Ask the user the smallest useful set of questions for the current step.
 5. Treat the user's answers as source material for the active artifact.
 6. Update the active artifact by integrating the answer into the relevant section, not only by appending chat history.
-7. Mark answered questions as done or remove them from the same question section after their resolution is integrated into the artifact.
+7. Remove answered questions from the same question section after their resolution is integrated into the artifact.
 8. Keep unresolved questions visible if they remain meaningful material for later work.
 
-Question sections are status ledgers for questions, not storage places for answers.
+Question sections contain unresolved questions, not answers or resolved questions.
 When a question is answered, the agent must refine the appropriate main sections
-of the active artifact and then mark the question as done or remove it from the question section. The agent must not add
+of the active artifact and then remove the answered question from the question section. The agent must not add
 answers, explanations, consequences, or resolved-question records under the
 question itself. The agent must not create a separate `Resolved Questions`
 section for normal artifact questions.

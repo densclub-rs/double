@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: explain
 kind: mode
-status: stable
+status: release-candidate
 user-selectable: true
 class: service
 derived-from:

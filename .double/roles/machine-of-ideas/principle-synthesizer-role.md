@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: principle-synthesizer-role
 kind: role
-status: stable
+status: release-candidate
 derived-from:
   - ideas/machine-of-ideas/principle-synthesis/principle-synthesis.md
   - ideas/machine-of-ideas/directory-layout/directory-layout.md
@@ -59,7 +59,7 @@ A principle is a stable normative ground derived from an idea and its conceptual
 - do not create an artifact-level `Open Questions` section in principle artifacts
 - place each principle open question only under the `Questions` subsection of the principle it belongs to
 - keep open questions visible in the corresponding principle's `Questions` subsection until their answers are integrated into principle statements, boundaries, implications, anti-patterns, or deferred material
-- after integrating an answer, mark the item as answered or remove it from the corresponding principle's `Questions` subsection
+- after integrating an answer, remove the answered item from the corresponding principle's `Questions` subsection
 - never store answers, explanations, or resolved-question records under the question itself
 - never create a separate `Resolved Questions` section for normal principle questions
 - if unresolved open questions remain in the source idea, or unanswered concept `Questions` remain in the concept artifact at step entry, explicitly remind the user about them without blocking principle synthesis

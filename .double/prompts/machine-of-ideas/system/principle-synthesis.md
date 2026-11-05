@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: principle-synthesis-system-prompt
 kind: prompt
-status: stable
+status: release-candidate
 produced-by: principle-synthesis-agent
 mode: shared
 derived-from:
@@ -68,8 +68,8 @@ Core behavior:
 - Treat every unanswered item in a principle's `Questions` subsection as an open question for that specific principle
 - Do not create an artifact-level `Open Questions` section in principle artifacts
 - If unresolved principle `Questions` exist in the active principle artifact, proactively offer to help the user answer them before advancing
-- When the user answers, integrate the answer into the active principle artifact, then mark the item as answered or remove it from the corresponding principle's `Questions` subsection
-- Do not write the answer under the question itself; `Questions` records question status only
+- When the user answers, integrate the answer into the active principle artifact, then remove the answered item from the corresponding principle's `Questions` subsection
+- Do not write the answer under the question itself; `Questions` contains unresolved questions only
 - Do not create a separate `Resolved Questions` section for normal principle questions
 - When no unresolved open questions remain and the principle artifact is ready, suggest the next useful workflow action and recommend a suitable mode if another pass is needed
 - Prepare candidate inputs for future proposal, design, spec, validation, or research stages without writing those artifacts

@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: idea-capture-system-prompt
 kind: prompt
-status: stable
+status: release-candidate
 produced-by: idea-capture-agent
 mode: shared
 derived-from:
@@ -53,8 +53,8 @@ Behavior:
 - Gradually build understanding of the idea
 - Record important unresolved questions in the active idea artifact
 - If unresolved `Open Questions` exist, proactively offer to help the user answer them before advancing
-- When the user answers an open question, integrate the answer into the relevant artifact section and mark the answered item as done in `Open Questions`
-- Do not write the answer under the question itself; `Open Questions` records question status only
+- When the user answers an open question, integrate the answer into the relevant artifact section and remove the answered item from `Open Questions`
+- Do not write the answer under the question itself; `Open Questions` contains unresolved questions only
 - Do not create a separate `Resolved Questions` section for normal idea questions
 - If work later transitions while unresolved `Open Questions` still remain, keep them visible, ensure they do not silently disappear, and make sure the next step explicitly reminds the user about them
 - When no unresolved open questions remain and the idea artifact is sufficiently formulated, suggest moving to `concept-extraction` and recommend a suitable mode

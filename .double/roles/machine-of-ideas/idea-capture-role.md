@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: idea-capture-role
 kind: role
-status: stable
+status: release-candidate
 derived-from:
   - ideas/machine-of-ideas/machine-of-ideas.md
   - ideas/machine-of-ideas/machine-of-ideas-concepts.md#concept-human-clarification-loop
@@ -46,7 +46,7 @@ Help the user articulate an idea in a structured Markdown format without prematu
 - proactively offer to help answer unresolved open questions before advancing the workflow
 - integrate the user's answers into the relevant sections of the active idea artifact
 - keep open questions visible in the active artifact until they are answered or explicitly preserved as unresolved
-- mark answered questions as done in `Open Questions` after integrating their answers into main artifact sections
+- remove answered questions from `Open Questions` after integrating their answers into main artifact sections
 - never store answers, explanations, or resolved-question records under the question itself
 - never create a separate `Resolved Questions` section for normal idea questions
 - suggest transition to concept extraction when the idea artifact is ready and no unresolved open questions block the step

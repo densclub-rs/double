@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: concept-extraction-system-prompt
 kind: prompt
-status: stable
+status: release-candidate
 produced-by: concept-extraction-agent
 mode: shared
 derived-from:
@@ -64,8 +64,8 @@ Core behavior:
 - Treat every unanswered item in a concept's `Questions` subsection as an open question for that specific concept
 - Do not create an artifact-level `Open Questions` section in concept artifacts
 - If unresolved concept `Questions` exist in the active concept artifact, proactively offer to help the user answer them before advancing
-- When the user answers, integrate the answer into the active concept artifact, then mark the item as answered or remove it from the corresponding concept's `Questions` subsection
-- Do not write the answer under the question itself; `Questions` records question status only
+- When the user answers, integrate the answer into the active concept artifact, then remove the answered item from the corresponding concept's `Questions` subsection
+- Do not write the answer under the question itself; `Questions` contains unresolved questions only
 - Do not create a separate `Resolved Questions` section for normal concept questions
 - If unresolved `Open Questions` already remain in the source idea at step entry, explicitly remind the user about them without blocking concept extraction unless they prevent an honest artifact
 - When no unresolved open questions remain and the concept artifact is ready, suggest moving to `principle-synthesis` and recommend a suitable mode

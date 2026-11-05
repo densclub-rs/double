@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: concept-template
 kind: template
-status: stable
+status: release-candidate
 workflow-stage: concept-extraction
 interaction-language: en
 artifact-language: en
@@ -13,7 +13,7 @@ derived-from:
   - ideas/machine-of-ideas/machine-of-ideas-principles.md#principle-ask-and-integrate-open-questions
 ---
 
-# Template: Concept Artifact
+# Template: Concepts
 
 ```md
 ---
@@ -29,7 +29,7 @@ derived-from:
   - <optional-relevant-sub-idea-artifact-id>
 ---
 
-# Concept Artifact: <Title>
+# <Idea title>: Concepts
 
 Idea: [<Root Idea Title>](./<root-idea-id>.md#<root-idea-id>)
 
@@ -84,7 +84,7 @@ A concise definition of the concept in this idea.
 
 - Unanswered questions that remain unclear about this concept.
 - Each unanswered item in this subsection is an open question for this specific concept.
-- When a question is answered, integrate the answer into this concept's definition, boundaries, relationships, or source grounding, then mark the item as answered or remove it from this subsection.
+- When a question is answered, integrate the answer into this concept's definition, boundaries, relationships, or source grounding, then remove the answered item from this subsection.
 
 ## 4. Terms and Non-Concepts
 
