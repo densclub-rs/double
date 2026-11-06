@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: concept-extractor-role
 kind: role
-status: release-candidate
+status: stable
 derived-from:
   - ideas/machine-of-ideas/concept-extraction/concept-extraction.md
   - ideas/machine-of-ideas/directory-layout/directory-layout.md

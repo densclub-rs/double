@@ -26,6 +26,13 @@ Changes recorded for the `machine-of-ideas` module.
 
 ## Value
 
+### 0.2.8 — 2026-11-05
+
+- Name generated idea documents by their idea title.
+- Use `<Idea title>: Concepts` and `<Idea title>: Principles` for derived documents.
+- Remove “Artifact” from the leading template and generated-document headings.
+- Remove answered questions from question sections after integrating their answers.
+
 ### 0.2.8-rc — 2026-11-05
 
 - Name generated idea documents by their idea title.

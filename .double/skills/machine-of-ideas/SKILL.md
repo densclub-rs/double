@@ -1,6 +1,6 @@
 ---
 name: machine-of-ideas
-status: release-candidate
+status: stable
 description: >
   Use this skill when the user clearly wants to capture, develop, inspect, continue, or advance an idea through the Machine of Ideas. Trigger on direct
   requests such as "I have an idea", "let's work on an idea", "run machine of ideas", "I've catch it, let's go", or when the user

@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: brainstorm
 kind: mode
-status: release-candidate
+status: stable
 user-selectable: true
 class: cognitive
 derived-from:

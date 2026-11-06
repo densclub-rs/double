@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: idea-capture-role
 kind: role
-status: release-candidate
+status: stable
 derived-from:
   - ideas/machine-of-ideas/machine-of-ideas.md
   - ideas/machine-of-ideas/machine-of-ideas-concepts.md#concept-human-clarification-loop
