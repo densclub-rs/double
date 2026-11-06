@@ -55,24 +55,15 @@ outputs and their stable template identifiers.
   contents, path/entry and boundaries. Keep the computed digest internal, not
   in the question, title, choices or normal summary. A deferred start leaves
   only the model; any edit requires renewed review of the linked contents.
-- Authorized manual step-05 start: freeze `_realizations/<start>/plan-v1.md` from
-  `plan-template` with `kind: plan-artifact`, `plan-version: 1` and approved
-  source provenance. Rebase links without changing approved transition content.
-- Create `realization.md` in that directory after the plan, recording its exact
-  digest and the approved source digest separately. Stage records link the local
-  frozen plan; progress, evidence and actual results stay in these records.
-  Render each State cell with only an emoji, explained by the canonical
-  legend above the map; do not repeat state words or add a duplicate status
-  column. 🟠 means awaiting verification; ✅ requires
-  accepted output conditions. Preserve textual metadata and keep both plans
-  free of mutable execution progress.
-- Request documentary evidence first; explicit user statements are an identified
-  fallback. Verify input before action and output before completion. The model
-  and frozen plan contain no execution progress.
-- A source edit stops further planned action, requires renewed review and an
-  authorized successor. Preserve the old plan and facts; validate already
-  observed outputs against that unchanged plan. Inherited results retain origin
-  and require an applicability check.
+- Authorized manual step-05 start creates `realization.md` linked to the
+  approved main plan, without a local copy. Preserve the approval digest.
+- Before stage/substage composition or numbering changes, ask whether to
+  preserve affected realizations. If yes, copy the old plan as local `plan.md`
+  and update links before editing. If no, offer deletion only with separate
+  explicit consent. New realizations link the changed main plan.
+- Capture conditions/actions before acting; validate observed output against
+  captured conditions. Changed content requires renewed approval. Keep progress
+  and evidence in realization/stage records, with the canonical emoji legend.
 - No separate decision, registration wrapper, execution index, evidence manifest or
   validation document is required on the manual/interactive route. Omit unused
   optional fields/sections and never link nonexistent execution files.

@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-knowledge
 id: knowledge-template
 kind: template
-status: stable
+status: release-candidate
 workflow-stage: knowledge-extraction
 interaction-language: en
 artifact-language: en
@@ -45,7 +45,7 @@ derived-from: <optional-list-of-sources>
 
 ## Notes (Optional)
 
-<assessment-of-completeness-and-material-uncertainty-and-whether-clarification-is-needed>
+<supplemental-context-examples-exceptions-or-material-uncertainty>
 
 ## Schema (Optional)
 
@@ -70,20 +70,30 @@ derived-from: <optional-list-of-sources>
 
 The frontmatter fields and sections above define the artifact contract. Omit
 `retrieval-method` and `derived-from` when not applicable; omit `Notes` when
-there are no material gaps or uncertainties, omit `Schema` when
+there are no supplemental notes, omit `Schema` when
 unnecessary and `Command` unless a retrieval method or binary value requires
 it. Do not add other fields or top-level sections. Ask clarification questions
 in conversation and capture material gaps in `Notes`, not a questions list.
 For version knowledge, `Value` contains the current version; version history
 belongs in a separate knowledge artifact.
 
-`Schema` may be undefined. For unstructured knowledge or whenever no schema is
+For newly authored composite knowledge, use `Values` instead of `Value` with
+nested Markdown subsections for independent values and groups, and lists for
+properties of one value. Keep leaves atomic and put supplemental explanations
+in `Notes`. A plain leaf is a string, a media link maps to its destination, and
+a fenced command maps to its code text without execution. Follow the workflow's
+Markdown Values Interpretation for nesting, lists and validation.
+
+Always assess the need for `Schema`: prefer it when composite structure or
+property semantics need interpretation, and create a grounded schema when it
+helps. Use schema descriptions for the meaning of keys and list items; never
+invent meanings. `Schema` may be undefined. For simple knowledge or whenever no schema is
 needed, omit this optional section entirely. Do not create an empty schema,
 `null`, an "undefined" marker or a placeholder, and do not treat its absence
 as incomplete knowledge. Existing artifacts without schemas remain valid.
 
 When present, `Schema` uses only JSON Schema Draft 2020-12 to describe the
-structured `Value`. Its root `$schema` must equal
+structured `Value` or `Values`. Its root `$schema` must equal
 `https://json-schema.org/draft/2020-12/schema`, and its stable `$id` identifies
 the knowledge artifact. Validate the schema and value with this explicit dialect;
 do not silently accept a missing declaration or another schema language. For

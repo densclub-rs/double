@@ -84,7 +84,7 @@ If the mini-idea significantly stops matching the meaning of the main idea, stop
 - Is there low semantic closeness between the mini-idea and main idea artifacts?
 - Does the mini-idea have more open or unresolved questions than the main idea?
 - Is the user having difficulty answering mini-idea questions?
-- When an answer has been supplied, first integrate it into the relevant mini-idea or parent sections, then mark the question as done here.
+- When an answer has been supplied, first integrate it into the relevant mini-idea or parent sections, then remove the answered question from this section.
 - Do not store answers, consequences, or resolved-question notes under the question itself.
 
 ## 8. Boundaries / Non-Goals

@@ -14,12 +14,23 @@ git config user.email fixture@example.invalid
 git config user.name Fixture
 git add scripts
 git commit -qm fixture
-commit=$(git rev-parse HEAD)
 # Tags are created only inside this disposable local fixture repository.
-for tag in double-installer-0.1.0 double-installer-0.1.0-rc double-installer-0.1.0-dev; do
+for tag in double-installer-0.1.0-dev double-installer-0.1.0 double-installer-0.1.0-rc; do
+  python3 - "$tag" <<'PY'
+from pathlib import Path
+import re, sys
+path = Path('scripts/double-installer.sh')
+text = path.read_text()
+text, count = re.subn(r"^installer_version='[^']+'$", "installer_version='" + sys.argv[1].removeprefix('double-installer-') + "'", text, flags=re.M)
+assert count == 1
+path.write_text(text, newline='\n')
+PY
+  git add scripts/double-installer.sh
+  git commit -qm "fixture $tag"
   git tag -a "$tag" -m "Double Installer fixture release"
   bash scripts/double-installer-release.sh package --tag "$tag"
   cmp scripts/double-installer.sh "dist/$tag/double-installer.sh"
+  test "$(bash "dist/$tag/double-installer.sh" --version)" = "double-installer ${tag#double-installer-}"
   test ! -e "dist/$tag/INSTALL.md"
   bash "dist/$tag/double-installer.sh" --help > "$fixture/help.txt"
   grep -F 'https://github.com/densclub-rs/double/blob/' "$fixture/help.txt" >/dev/null
@@ -27,6 +38,13 @@ for tag in double-installer-0.1.0 double-installer-0.1.0-rc double-installer-0.1
   test "$(find "dist/$tag" -type f | wc -l | tr -d ' ')" = 2
   (cd "dist/$tag"; if command -v sha256sum >/dev/null; then sha256sum -c SHA256SUMS.txt; else shasum -a 256 -c SHA256SUMS.txt; fi)
 done
+commit=$(git rev-parse HEAD)
+# An incorrect version must not be packaged under a misleading tag.
+git tag -a double-installer-9.9.8 -m 'Mismatched fixture'
+if bash scripts/double-installer-release.sh package --tag double-installer-9.9.8 > "$fixture/mismatch.log" 2>&1; then
+  echo 'Expected version mismatch failure' >&2; exit 1
+fi
+grep -F 'Installer version does not match release tag' "$fixture/mismatch.log" >/dev/null
 # Uncommitted source cannot leak into an exact-tag package.
 printf '\n# uncommitted change\n' >> scripts/double-installer.sh
 bash scripts/double-installer-release.sh package --tag double-installer-0.1.0-rc
@@ -82,7 +100,9 @@ grep -Fx -- --verify-tag "$FAKE_GH_LOG"
 grep -Fx -- --latest=false "$FAKE_GH_LOG"
 if grep -F 'INSTALL.md' "$FAKE_GH_LOG"; then exit 1; fi
 grep -F "blob/$commit/knowledge/double-installer/double-installer.md" dist/release-notes.md
-bash scripts/double-installer-release.sh publish --tag double-installer-0.1.0
+git show "$commit:scripts/double-installer.sh" > scripts/double-installer.sh
+git checkout -q --detach double-installer-0.1.0
+VALIDATED_COMMIT=$(git rev-parse HEAD) bash scripts/double-installer-release.sh publish --tag double-installer-0.1.0
 if grep -Fx -- --prerelease "$FAKE_GH_LOG"; then exit 1; fi
 # API-only auth adapter: fake token and fake curl, no external requests.
 cat > "$fixture/bin/curl" <<'CURL'

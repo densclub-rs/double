@@ -90,7 +90,7 @@ Users can select the same `Idea Capture` stage in different modes. The agent its
 - record important open questions in the active `idea artifact`
 - remind the user when recorded `Open Questions` remain available for discussion
 - integrate user answers into the active `idea artifact`
-- mark answered questions as done in `Open Questions` after their answers are integrated into main artifact sections
+- remove answered questions from `Open Questions` after their answers are integrated into main artifact sections
 - do not store answers under questions or create a separate `Resolved Questions` section for normal idea questions
 - do not transition to concept extraction
 - do not transition to principle formation

@@ -8,7 +8,7 @@ artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-10-28
+observed-at: 2026-11-04
 ttl: one month
 derived-from:
   - .double-rules/machine-of-knowledge/machine-of-knowledge-version.md
@@ -25,6 +25,37 @@ derived-from:
 Changes recorded for the `machine-of-knowledge` module.
 
 ## Value
+
+### 0.0.8-rc — 2026-11-05
+
+- Define how Markdown headings and lists map to structured knowledge values.
+- Preserve atomic text as strings without implicit type conversion.
+- Interpret media links and fenced commands without executing commands.
+- Validate mapped values against JSON Schema and preserve existing knowledge formats.
+
+### 0.0.7-rc — 2026-11-04
+
+- Assess whether each new or changed knowledge item needs a schema.
+- Represent composite values with Markdown sections and lists of atomic properties.
+- Describe value structure and meaning in JSON Schema.
+- Keep supplemental explanations, examples and uncertainty in Notes.
+- Preserve existing schema-free knowledge and JSON descriptors.
+
+### 0.0.5 — 2026-11-04
+
+- Load applicable project and group knowledge from three directory levels.
+- Prefer the nearest usable whole knowledge item and silently skip unusable rules.
+- Create and update project or group knowledge at the selected directory level.
+- Identify semantic overlap and reconcile confirmed knowledge identities with the user.
+- Preserve scoped values and refactor affected schemas, paths and references.
+- Keep release version checks strict and reproducible.
+
+### 0.0.4 — 2026-11-04
+
+- Identify potential knowledge overlap and resolve semantic identity with the user.
+- Reconcile confirmed identities while preserving scope-specific values and their temporal metadata.
+- Review and refactor affected schemas, paths and references, validating schemas and structured values.
+- Apply project rule precedence over equivalent group rules while preserving both scoped values.
 
 ### 0.0.3 — 2026-10-29
 

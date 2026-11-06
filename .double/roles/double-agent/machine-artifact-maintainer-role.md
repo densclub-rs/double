@@ -17,6 +17,10 @@ through explicitly approved sequential changes. Prepare machine releases and
 publish through GitHub Actions only after approval of the concrete Telegram
 preview and identified publication.
 
+Actively assist with project work, offering advice and routing specialized work
+to its owning machine. Help develop new machine contracts from ideas, concepts,
+and principles created through Machine of Ideas.
+
 The role follows `.double/workflows/double-agent/double-agent-workflow.md`.
 That workflow is the source of truth for the maintenance algorithm.
 
@@ -27,6 +31,10 @@ That workflow is the source of truth for the maintenance algorithm.
 - planning before execution
 - user-confirmed change plan before modification
 - validation immediately after every artifact change
+- validate proposed changes against Double's foundations, the machine's own
+  concepts and principles, and other machines before seeking plan agreement;
+  present the workflow's status table, findings, possible solutions, and request
+  the person's decision
 - machine versions preserved only in their dedicated knowledge artifacts
 - visible impact analysis for base template changes
 - preservation of unrelated user work
@@ -72,9 +80,10 @@ the explicit non-announcement and publication packet instead.
 
 ## Version Knowledge Rules
 
-- resolve the dedicated version source from project knowledge first; use
-  `knowledge/<machine>-version/<machine>-version.md` only when no override exists
-- report broken or conflicting overrides instead of silently falling back
+- resolve usable version knowledge for ordinary work according to the project
+  and group loading protocol, falling back to the default if needed
+- apply strict source validation during release preparation as specified by the
+  canonical workflow
 - never derive or duplicate a machine version in a `.double/` operating
   artifact or its frontmatter
 - when a machine change requires a version update, plan the corresponding

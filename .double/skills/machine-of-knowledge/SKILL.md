@@ -1,7 +1,7 @@
 ---
-status: stable
+status: release-candidate
 name: machine-of-knowledge
-description: Extract, preserve, inspect, validate, or refresh knowledge through the Double Machine of Knowledge. Use when the user asks to capture knowledge as an artifact, distinguish static from dynamic knowledge, maintain retrieval metadata and a cached value, work with the knowledge catalog, preserve or convert project rules under `.double-rules/`, or continue an existing knowledge artifact. Do not trigger for casual factual questions, idea development, or goal planning unless the user explicitly asks to enter the Machine of Knowledge workflow.
+description: Extract, preserve, inspect, validate, or refresh knowledge through the Double Machine of Knowledge. Use when the user asks to capture knowledge as an artifact, distinguish static from dynamic knowledge, maintain retrieval metadata and a cached value, work with the knowledge catalog, preserve or convert project or group rules under `.double-rules/`, or continue an existing knowledge artifact. Do not trigger for casual factual questions, idea development, or goal planning unless the user explicitly asks to enter the Machine of Knowledge workflow.
 ---
 
 # Machine of Knowledge
@@ -31,7 +31,9 @@ Use this skill as a thin activation and routing layer. The canonical process is:
 - Use `retrieval-method` only for the invocation type, such as `local-command`, `local-script`, `rest-api`, or `mcp`; put the exact invocation in `Command`.
 - Keep `access: free-of-charge` for all Double knowledge.
 - Keep machine operating changes under `.double/` and produced knowledge in the configured catalog or `.double-rules/`.
-- `Schema` is optional and may remain undefined. Omit it when unnecessary;
+- Assess schema need for every new or changed item and create a grounded schema
+  when it helps interpret composite values or property meanings. `Schema` is
+  optional and may remain undefined. Omit it when unnecessary;
   schema-free or unstructured knowledge can be complete without formalization.
   Do not invent a placeholder or require migration of existing artifacts.
 - When `Schema` is defined, use only JSON Schema Draft 2020-12; require the explicit
@@ -40,11 +42,12 @@ Use this skill as a thin activation and routing layer. The canonical process is:
 - A storage schema may group several knowledge artifacts in a subject directory.
   Validate its structured value and actual paths; preserve ids, anchors and links.
   An invalid selected schema blocks writing instead of authorizing fallback.
+- Follow the workflow's Knowledge Identity and Semantic Overlap protocol when comparing or reconciling knowledge, including human confirmation, scoped values, and affected schemas and references.
 - Reuse Machine of Ideas modes as specified by the workflow; do not create additional workflow stages.
 
 ## Completeness and Completion
 
-- Ask questions in conversation and describe material gaps in `Notes` only when needed.
+- Ask questions in conversation; keep supplemental explanations and material gaps in `Notes` when needed.
 - Integrate answers into the artifact and update `Notes`.
 - Validate fields and sections against the template; keep version history in separate knowledge.
 - Use the workflow completion conditions before declaring the artifact complete.
@@ -53,16 +56,16 @@ Use this skill as a thin activation and routing layer. The canonical process is:
 ## Project Rules Entry
 
 Before normal entry questions or catalog selection, follow the canonical
-workflow's Project Rules Loading Protocol for the active user project. Load
-common rules and this machine's rules; absence of `.double-rules/` is normal.
+workflow's Project Rules Loading Protocol for the active user project and its
+two nearest parent levels. Select usable common and this machine's rules by id;
+silently skip unusable sources and use the nearest usable scope.
 
 ## Project Rule Routing
 
-Follow the canonical workflow's Project Rule Recognition and Publication
-contract within the existing extraction step. Infer intent and common or
-named-machine scope from context and confirm a successful inference. If
-project-context intent is present, route facts, settings, versions and history
-to `.double-rules/` as well as prescriptive rules. Wording such as "project
-knowledge" or "at project level" is sufficient; clarify missing scope rather
-than silently routing it to the ordinary catalog. Use the existing knowledge
-template for both destinations.
+Follow the workflow's Project Rule Recognition and Publication contract.
+Identify the selected project, immediate-parent group, or second-parent group
+level as well as common or named-machine applicability. Reuse explicit user
+choices and clarify missing group level or machine scope. Route facts, settings,
+versions, history, and prescriptive rules to the selected level's
+`.double-rules/`, using the existing knowledge template. Respect filesystem
+permissions for writes outside the project root.

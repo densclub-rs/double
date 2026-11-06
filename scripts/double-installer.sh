@@ -3,6 +3,9 @@
 # Goal (archived): https://github.com/densclub-rs/double/blob/double-installer-0.1.5-rc/goals/double-installer/double-installer.md
 set -euo pipefail
 
+# Release packaging verifies this value against the immutable release tag.
+installer_version='0.1.14-rc'
+
 # Git Bash needs LF jq output, literal JSON string values and explicit native
 # input filenames: MSYS conversion is unreliable for paths containing quotes.
 case "${OSTYPE:-}" in
@@ -56,6 +59,7 @@ usage() {
   cat <<'EOF'
 Double Installer
 
+  double-installer.sh --version
   double-installer.sh help
   double-installer.sh explain
   double-installer.sh doctor
@@ -63,30 +67,34 @@ Double Installer
   double-installer.sh download --machine ID [--version VERSION] [--channel CHANNEL]
   double-installer.sh download [--all]   (all machines: stable -> rc)
   double-installer.sh install ...   (alias of download)
-  double-installer.sh add --project DIR --machine ID [--agent codex|claude] [--version VERSION] [--channel CHANNEL] [--yes]
-  double-installer.sh dev --source DOUBLE_DIR --project DIR --machine ID [--agent codex|claude] [--yes]
-  double-installer.sh remove --project DIR --machine ID [--yes]
-  double-installer.sh status [--json]
-  double-installer.sh update --project DIR --machine ID [--channel CHANNEL] [--non-interactive]
-  double-installer.sh add --global [--agent codex|claude] [--machine ID] [--channel CHANNEL] [--yes]
-  double-installer.sh update --global [--agent codex|claude] [--machine ID] [--channel CHANNEL]
-  double-installer.sh remove --global --machine ID [--agent codex|claude] [--yes]
-  double-installer.sh update-all [--channel CHANNEL] [--non-interactive]
-  double-installer.sh backups-clean [--project DIR] [--machine ID] [--yes]
+  double-installer.sh add --project [DIR] --machine ID [--agent codex|claude] [--version VERSION] [--channel CHANNEL] [--yes]
+  double-installer.sh add --project [DIR] [--all] [--agent codex|claude] [--channel CHANNEL] [--yes]
+  double-installer.sh dev --source DOUBLE_DIR --project [DIR] --machine ID [--agent codex|claude] [--yes]
+  double-installer.sh remove --project [DIR] --machine ID [--yes]
+  double-installer.sh status [--project [DIR]] [--json]
+  double-installer.sh update --project [DIR] --machine ID [--channel CHANNEL] [--non-interactive]
+  double-installer.sh update --project [DIR] [--all] [--channel CHANNEL] [--non-interactive]
+  double-installer.sh update [--all] [--channel CHANNEL] [--non-interactive]
+  double-installer.sh add --global [--agent codex|claude|antigravity] [--machine ID] [--channel CHANNEL] [--yes]
+  double-installer.sh update --global [--agent codex|claude|antigravity] [--machine ID] [--channel CHANNEL]
+  double-installer.sh remove --global --machine ID [--agent codex|claude|antigravity] [--yes]
+  double-installer.sh update-all [--channel CHANNEL] [--non-interactive] [--backup-policy keep|delete|ask]
+  double-installer.sh backups-clean [--project [DIR]] [--machine ID] [--yes]
   double-installer.sh cron-add --schedule 'CRON EXPRESSION'
   double-installer.sh cron-remove
   double-installer.sh uninstall-all [--yes]
 
 Use COMMAND --help or COMMAND --explain for detailed command guidance.
 Bulk selection: one latest version per machine, stable then rc.
-add lists detected agents and asks to integrate all; decline keeps shared skills only.
+add lists detected agents and offers applicable dedicated integrations; decline keeps shared skills only.
 Non-terminal input defaults to shared skills; --agent selects an explicit adapter.
 add --global installs globally; update --global updates registered machines.
 Download/install only cache packages; add integrates projects or global agents.
 add automatically downloads missing releases; a separate download is optional.
 Minimal flow: [doctor] -> releases -> add.
 Local development: dev copies working machine directories without GitHub access.
-Agent skills: ~/.agents/skills (Codex), ~/.claude/skills (Claude Code).
+Agent skills: ~/.agents/skills (shared), ~/.claude/skills (Claude Code),
+~/.gemini/config/skills (global Antigravity).
 CLAUDE_CONFIG_DIR overrides the Claude directory; foreign skills are preserved.
 
 Default state root: ~/.local/state/double
@@ -94,6 +102,17 @@ DOUBLE_STATE_DIR overrides the state root for isolated tests.
 Implemented: all listed commands.
 Installation and usage instructions:
 https://github.com/densclub-rs/double/blob/066bd419c649ca0fa20bc77d11fb21a54f35af97/knowledge/double-installer/double-installer.md
+Project selection:
+  --project [DIR]          Omit DIR to use the current directory.
+
+Common automation options:
+  --non-interactive         Never prompt; required consent needs --yes.
+  --yes                    Approve consent for add/dev/remove/backups-clean/uninstall-all.
+  --backup-policy POLICY   add/dev/update/update-all: keep, delete, or ask (default).
+                           Non-interactive defaults to keep; ask is incompatible.
+                           --yes suppresses optional prompts and retains backups
+                           unless --backup-policy delete is specified.
+
 EOF
   machine_aliases
 }
@@ -250,8 +269,9 @@ EOF
       cat <<'EOF'
 add
   Install machine files and register skills with selected AI agents.
-  Usage: double-installer.sh add --project DIR --machine ID [--agent codex|claude] [--version VERSION] [--channel stable|rc] [--yes]
-         double-installer.sh add --global [--agent codex|claude] [--machine ID] [--channel stable|rc] [--yes]
+  Usage: double-installer.sh add --project [DIR] --machine ID [--agent codex|claude] [--version VERSION] [--channel stable|rc] [--yes]
+         double-installer.sh add --project [DIR] [--all] [--agent codex|claude] [--channel stable|rc] [--yes]
+         double-installer.sh add --global [--agent codex|claude|antigravity] [--machine ID] [--channel stable|rc] [--yes]
   Prefer stable, then rc; newest numeric version within that channel.
   --channel restricts selection; --version accepts an exact numeric version.
   Prerelease installation requires confirmation, even with explicit --channel.
@@ -264,18 +284,19 @@ add
   verified mechanism as download, or reuses and revalidates a cached archive.
   Minimal flow: [doctor] -> releases -> add. releases helps choose the machine;
   add refreshes release selection itself and checks dependencies automatically.
-  Without --agent, list detected agents and ask whether to integrate all of them.
+  Without --agent, list detected agents and show the shared integration path.
+  When dedicated integrations are available, ask whether to add the listed paths.
   No (the default) writes only DIR/.agents/skills or ~/.agents/skills globally.
-  Yes reuses that shared skill for compatible agents and adds dedicated roots
-  where required (currently Claude Code's .claude/skills). Each operation is
+  Yes also adds detected Claude Code and global Antigravity dedicated roots. Each operation is
   independent. No agents or non-terminal input selects shared skills only;
   --agent selects an explicit adapter without this list or prompt.
   --agent codex uses the same standard shared root; --agent claude explicitly
   creates DIR/.claude/skills or the global Claude skills root. Claude Code is not
-  assumed to discover the shared root automatically. Omitted global --machine
-  selects all machines, preferring stable, then rc. Global skills live
-  in ~/.agents/skills and ~/.claude/skills (CLAUDE_CONFIG_DIR overrides Claude).
-  Repeating global add may attach/repair skills; existing payloads are not upgraded.
+  assumed to discover the shared root automatically. Omitted --machine (or
+  --all) selects all available machines, preferring stable, then rc. Global skills live
+  in ~/.agents/skills, ~/.claude/skills (CLAUDE_CONFIG_DIR overrides Claude),
+  and ~/.gemini/config/skills for Antigravity. --agent antigravity is global only.
+  Repeating add may attach/repair skills; existing payloads are not upgraded.
   Use update for upgrades. Download and verify packages; track payload and skills
   in the registry. Refuse foreign skill collisions. Agent operations are independent:
   failures roll back only that agent; retain payload and successful registrations,
@@ -287,7 +308,7 @@ EOF
       cat <<'EOF'
 dev
   Copy a machine from a local Double working directory into a test project.
-  Usage: double-installer.sh dev --source DOUBLE_DIR --project DIR --machine ID [--agent codex|claude] [--yes]
+  Usage: double-installer.sh dev --source DOUBLE_DIR --project [DIR] --machine ID [--agent codex|claude] [--yes]
   Copy all regular files under .double/<category>/<machine>/, including skills
   and support files, regardless of status or Git tracking. Other machines and
   user ideas/goals/knowledge are excluded. Source and project must be separate,
@@ -298,6 +319,7 @@ dev
   Back up an existing payload before replacement; unregistered directories
   require adoption confirmation (or --yes). Preserve foreign skill directories.
   Agent selection and independent skill registration follow add semantics.
+  Project installations maintain a guarded AGENTS.md section and a CLAUDE.md import.
   update/update-all replace local development with a published stable or RC,
   preferring stable, regardless of its numeric version. With no eligible release
   keep the development copy. Published GitHub dev packages are ignored.
@@ -308,8 +330,9 @@ EOF
       cat <<'EOF'
 remove
   Remove registered machine files and update the registry, preserving unrelated files.
-  Usage: double-installer.sh remove --project DIR --machine ID [--yes]
-         double-installer.sh remove --global --machine ID [--agent codex|claude] [--yes]
+  Project instruction sections are updated; user instructions and imports are preserved.
+  Usage: double-installer.sh remove --project [DIR] --machine ID [--yes]
+         double-installer.sh remove --global --machine ID [--agent codex|claude|antigravity] [--yes]
   Global removal with --agent detaches that agent; other connections retain the
   shared payload. Removing all connections also removes the global payload.
   Destructive removal requires confirmation or --yes. Cache and existing backups
@@ -320,11 +343,14 @@ EOF
       cat <<'EOF'
 status
   Show downloaded machine archives and all registered local/global installations.
-  Usage: double-installer.sh status [--json]
+  Usage: double-installer.sh status [--project [DIR]] [--json]
   Default output includes an archive table followed by projects with nested
   machine/version/channel lists, colored in terminals. NO_COLOR or TERM=dumb disables colors; redirected output is plain.
   --json emits one object: archives and installations arrays, with no headings
   or ANSI colors. Archive records contain machine, version, channel and archive.
+  --project [DIR] shows only that project's registered installations, omitting
+  the shared archive catalog. Omit DIR to use the current directory. In JSON
+  project mode, archives is empty and installations is filtered to the project.
   Reads local state only; it neither queries GitHub nor rechecks archive hashes.
 EOF
       ;;
@@ -332,20 +358,27 @@ EOF
       cat <<'EOF'
 update
   Update registered project or global machines; use add for initial installation.
-  Usage: double-installer.sh update --project DIR --machine ID [--channel stable|rc] [--non-interactive]
-         double-installer.sh update --global [--agent codex|claude] [--machine ID] [--channel stable|rc] [--non-interactive]
+  Usage: double-installer.sh update --project [DIR] --machine ID [--channel stable|rc] [--non-interactive]
+         double-installer.sh update --project [DIR] [--all] [--channel stable|rc] [--non-interactive]
+         double-installer.sh update [--all] [--channel stable|rc] [--non-interactive]
+         double-installer.sh update --global [--agent codex|claude|antigravity] [--machine ID] [--channel stable|rc] [--non-interactive]
   Project updates retain the recorded channel unless explicitly overridden.
+  Without --machine, or with --all, update every registered machine in the
+  project and list available machines that can be added separately.
+  Without --project or --global, update all registered project and global installations.
   Global selection defaults to stable, then rc. Only registered global
   machines are updated; --agent filters by an existing agent connection. It never
   discovers or registers new agents. Use add --global for new connections.
   Global payload lives in installer state; tracked skill entry points connect
-  ~/.agents/skills (Codex) and ~/.claude/skills (Claude Code). CLAUDE_CONFIG_DIR
+  ~/.agents/skills (shared), ~/.claude/skills (Claude Code), and
+  ~/.gemini/config/skills (Antigravity). CLAUDE_CONFIG_DIR
   overrides the Claude root. Foreign skills are preserved; collisions are refused.
   Download/verify newer packages, back up replaced files, then update the registry.
   Local development installations instead select stable, then RC by default,
   regardless of numeric version; no eligible release leaves the local copy intact.
   Published installations do not downgrade versions. Interactive updates offer backup cleanup;
-  --non-interactive retains backups. Does not upgrade this installer script.
+  --non-interactive retains backups by default. --backup-policy delete removes
+  newly created backups without prompting; keep retains them. Does not upgrade this installer script.
 EOF
       ;;
     update-all)
@@ -362,14 +395,16 @@ update-all
   Continue across entries;
   any failed update causes a nonzero final exit.
   Does not update cache-only machines, add new machines/agents or upgrade the
-  installer itself. --non-interactive keeps backups and suppresses cleanup prompts.
+  installer itself. --non-interactive keeps backups by default and never prompts.
+  Use --backup-policy delete to delete newly created backups automatically,
+  or --backup-policy keep to retain them. ask is interactive only.
 EOF
       ;;
     backups-clean)
       cat <<'EOF'
 backups-clean
   Delete saved installer backups, optionally limited to one project or machine.
-  Usage: double-installer.sh backups-clean [--project DIR] [--machine ID] [--yes]
+  Usage: double-installer.sh backups-clean [--project [DIR]] [--machine ID] [--yes]
   With no filters, select all owned backups. Show selected backups and require
   confirmation or --yes. Does not uninstall machines or clear downloaded archives.
 EOF
@@ -491,6 +526,9 @@ doctor_agents() {
   done
   doctor_agent copilot 'GitHub Copilot' 'copilot' "${COPILOT_HOME:-$HOME/.copilot}" "${copilot_extensions[@]}"
   doctor_agent gemini 'Gemini CLI' 'gemini' "$HOME/.gemini"
+  doctor_agent antigravity 'Google Antigravity' 'agy antigravity' "$HOME/.gemini/antigravity" \
+    "${app_root:+$app_root/Antigravity.app}" "${user_apps:+$user_apps/Antigravity.app}" \
+    "${win_apps:+$win_apps/Antigravity/Antigravity.exe}" "config:$HOME/.gemini/antigravity-cli"
   doctor_agent opencode 'OpenCode' 'opencode' "${XDG_CONFIG_HOME:-$HOME/.config}/opencode"
   doctor_agent cascade 'Cascade / Windsurf' 'windsurf devin' "$HOME/.codeium/windsurf" \
     "${app_root:+$app_root/Windsurf.app}" "${user_apps:+$user_apps/Windsurf.app}" \
@@ -501,7 +539,7 @@ doctor_agents() {
   printf 'Detection uses executable paths and existing directories/files; agents are never launched.\n'
   printf 'Config alone may be stale; NOT FOUND means no known local evidence, not confirmed absence.\n'
   printf 'Detection does not verify login, versions, skill support or skill loading.\n'
-  printf 'Agent detection is independent of add adapters (currently codex/claude; shared by default).\n'
+  printf 'Agent detection is independent of explicit adapters; shared integration is selected by default.\n'
   fi
 }
 
@@ -593,6 +631,7 @@ update_all() {
       args=(update --project "$project_path" --machine "$machine_name")
       [ -z "$channel" ] || args+=(--channel "$channel")
       [ "$non_interactive" = false ] || args+=(--non-interactive)
+      [ "${backup_policy:-ask}" = ask ] || args+=(--backup-policy "$backup_policy")
       checked=$((checked + 1))
       if DOUBLE_INSTALLER_NESTED_UPDATE=1 bash "$script_path" "${args[@]}";then
         succeeded=$((succeeded + 1))
@@ -655,6 +694,7 @@ installation_consent() {
   local answer
   action_printf warning '%s\n' "$1"
   [ "${yes:-false}" = true ] && return 0
+  [ "${non_interactive:-false}" = false ] || fail "Confirmation required; use --yes."
   [ -t 0 ] || fail "Installation requires confirmation; rerun interactively or use $command_name --yes."
   action_printf warning 'Continue? [y/N] '
   read -r answer || answer=''
@@ -682,6 +722,12 @@ cleanup() {
         fi
         n=$((n+1))
       done < "$transaction/external-paths"
+    fi
+    if [ -f "$transaction/instructions-ready" ];then
+      for item in AGENTS CLAUDE;do
+        if [ -f "$transaction/instructions/$item.md" ];then cp -p "$transaction/instructions/$item.md" "$transaction_project/$item.md" || rollback_failed=1
+        else rm -f "$transaction_project/$item.md" || rollback_failed=1;fi
+      done
     fi
     if [ -f "$transaction/registry-before.json" ];then
       cp -p "$transaction/registry-before.json" "$registry" || rollback_failed=1
@@ -850,11 +896,13 @@ registry_check() {
        .version=="development" and .tag=="local-development" and .channel=="dev")) and
     all(.installations[]; . as $r | (.integrations // []) as $i |
       ($i|type)=="array" and all($i[];
-        (.agent=="shared" or .agent=="codex" or .agent=="claude") and
+        (.agent=="shared" or .agent=="codex" or .agent=="claude" or .agent=="antigravity") and
         (.root|type)=="string" and (.root|startswith("/")) and .root!="/" and
+        (if .agent=="antigravity" then ($r.scope=="global" and (.root|endswith("/config"))) else true end) and
         (.root|explode|all(.>=32)) and .file==("skills/"+$r.machine+"/SKILL.md") and
         (.directories|type)=="array" and (. as $a | all(.directories[];
-          .==$a.root or .==($a.root+"/skills") or .==($a.root+"/skills/"+$r.machine)))) and
+          .==$a.root or .==($a.root+"/skills") or .==($a.root+"/skills/"+$r.machine) or
+          ($a.agent=="antigravity" and ($a.root|endswith("/config")) and .==($a.root|rtrimstr("/config")))))) and
       ([$i[].agent]|length)==([$i[].agent]|unique|length)) and
     ([.installations[]|[.project,.machine]]|length) ==
     ([.installations[]|[.project,.machine]]|unique|length)
@@ -884,6 +932,91 @@ project_init() {
   no_symlinks "$project/.double"
 }
 
+# Project instructions are a separately owned, checksummed section. Refuse
+# edited or malformed sections rather than guessing which user text to replace.
+instruction_checksum() {
+  if command -v sha256sum >/dev/null 2>&1;then sha256sum "$1" | awk '{print $1}'
+  else shasum -a 256 "$1" | awk '{print $1}';fi
+}
+
+project_instructions_prepare() {
+  local file name line terminated inside count checksum expected mode
+  for name in AGENTS CLAUDE;do
+    file="$project/$name.md";no_symlinks "$file"
+    [ ! -e "$file" ] || [ -f "$file" ] || fail "$file is not a regular file."
+    : > "$work_dir/$name.out"; : > "$work_dir/$name.body"
+    inside=false;count=0;checksum=''
+    if [ -f "$file" ];then
+      while :;do
+        line=''; if IFS= read -r line;then terminated=true;else terminated=false;[ -n "$line" ] || break;fi
+        case "$line" in
+          '<!-- Double project integration: begin -->')
+            [ "$inside" = false ] && [ "$count" -eq 0 ] || fail "Ambiguous Double section in $file; no instructions changed."
+            inside=true;count=1 ;;
+          '<!-- Double project integration: end '*' -->')
+            [ "$inside" = true ] || fail "Unexpected Double section end in $file."
+            checksum=${line#'<!-- Double project integration: end '};checksum=${checksum%' -->'}
+            [[ "$checksum" =~ ^[a-fA-F0-9]{64}$ ]] || fail "Invalid Double section checksum in $file."
+            expected=$(instruction_checksum "$work_dir/$name.body")
+            [ "$checksum" = "$expected" ] || fail "Modified Double section in $file; preserve and repair it manually."
+            inside=false ;;
+          *'<!-- Double project integration:'*) fail "Malformed Double section in $file; no instructions changed." ;;
+          *) if [ "$inside" = true ];then printf '%s\n' "$line" >> "$work_dir/$name.body";else printf '%s' "$line" >> "$work_dir/$name.out"; [ "$terminated" = false ] || printf '\n' >> "$work_dir/$name.out";fi ;;
+        esac
+      done < "$file"
+    fi
+    [ "$inside" = false ] || fail "Unclosed Double section in $file; no instructions changed."
+  done
+}
+
+project_instructions_sync() {
+  local name list checksum item
+  if jq -e --arg p "$project" --arg m "$machine" '.installations[] | select(.project==$p and .machine==$m and .scope=="global")' "$registry" >/dev/null;then return 0;fi
+  project_instructions_prepare
+  jq -r --arg p "$project" '.installations[] | select(.project==$p and (.scope // "project")=="project") | .machine' "$registry" | LC_ALL=C sort -u > "$work_dir/instruction-machines"
+  if [ -s "$work_dir/instruction-machines" ];then
+    cat > "$work_dir/AGENTS.body" <<'BODY'
+## Double workflows
+
+When working with an existing Double artifact, determine its provenance and state, load the corresponding installed skill below, and follow its workflow even if the user did not name the machine. If provenance becomes clear after choosing an approach, reconsider that choice before proposing next steps or changing the artifact.
+
+For new material, use the user's intent and project rules; an isolated word alone does not activate a machine. An explicit user request to work outside a workflow takes priority. Reading an artifact or answering a factual question about it does not itself advance the machine to another stage.
+
+Installed machines:
+BODY
+    while IFS= read -r item;do
+      [ -f "$project/.double/skills/$item/SKILL.md" ] || fail "Installed skill missing: $project/.double/skills/$item/SKILL.md"
+      printf -- '- %s: `.double/skills/%s/SKILL.md`\n' "$item" "$item" >> "$work_dir/AGENTS.body"
+    done < "$work_dir/instruction-machines"
+    # An existing user import belongs to the user and is never removed.
+    if [ -f "$project/CLAUDE.md" ] && awk '/^[[:space:]]*@(\.\/)?AGENTS\.md[[:space:]]*$/ {found=1} END {exit !found}' "$work_dir/CLAUDE.out";then
+      : > "$work_dir/CLAUDE.body"
+    else
+      printf '@AGENTS.md\n' > "$work_dir/CLAUDE.body"
+    fi
+    for name in AGENTS CLAUDE;do
+      [ -s "$work_dir/$name.body" ] || continue
+      if [ -s "$work_dir/$name.out" ] && [ "$(tail -c 1 "$work_dir/$name.out" | wc -l | tr -d ' ')" = 0 ];then printf '\n' >> "$work_dir/$name.out";fi
+      checksum=$(instruction_checksum "$work_dir/$name.body")
+      printf '<!-- Double project integration: begin -->\n' >> "$work_dir/$name.out"
+      cat "$work_dir/$name.body" >> "$work_dir/$name.out"
+      printf '<!-- Double project integration: end %s -->\n' "$checksum" >> "$work_dir/$name.out"
+    done
+  fi
+  if [ -n "$transaction" ];then
+    mkdir -p "$transaction/instructions"
+    for name in AGENTS CLAUDE;do
+      if [ -f "$project/$name.md" ];then cp -p "$project/$name.md" "$transaction/instructions/$name.md" || fail "Cannot snapshot $name.md.";fi
+    done
+    : > "$transaction/instructions-ready"
+  fi
+  for name in AGENTS CLAUDE;do
+    if [ -e "$project/$name.md" ] || [ -s "$work_dir/$name.out" ];then
+      cp "$work_dir/$name.out" "$project/$name.md" || fail "Cannot update $project/$name.md."
+    fi
+  done
+}
+
 inventory_check() {
   local file scope category owner rest
   while IFS= read -r file; do
@@ -900,8 +1033,23 @@ add_machine() {
   project_init
   state_init
   mutation_begin
+  [ "${integration_scope:-project}" = global ] || project_instructions_prepare
   row=$(jq --arg p "$project" --arg m "$machine" '.installations[]|select(.project==$p and .machine==$m)' "$registry")
   if [ -n "$row" ];then
+    printf '%s' "$row" | jq -r '.files[]' > "$work_dir/files"
+    inventory_check
+    while IFS= read -r file;do
+      if [ ! -f "$project/$file" ];then
+        if printf '%s' "$row" | jq -e '.source.type=="development"' >/dev/null;then
+          fail 'Registered development machine is incomplete; run dev again with its source to restore it.'
+        fi
+        action_printf warning 'Registered machine is incomplete; restoring its published files: %s in %s\n' "$machine" "$project"
+        repair_missing=true update_machine
+        integrate_selected_agents
+        return $?
+      fi
+    done < "$work_dir/files"
+    project_instructions_sync
     action_printf info 'Machine already installed: %s in %s; integrating selected agents only.\n' "$machine" "$project"
     integrate_selected_agents
     return $?
@@ -1000,6 +1148,7 @@ add_machine() {
     jq --arg p "$project" --arg m "$machine" '(.installations[]|select(.project==$p and .machine==$m)).scope="global"' "$registry" > "$state/registry.new" || fail 'Cannot stage registry update.'
     mv "$state/registry.new" "$registry" || fail 'Cannot commit registry update.'
   fi
+  project_instructions_sync
   local done_transaction="$transaction";transaction=''
   rm -rf -- "$done_transaction"
   action_printf success 'Installed %s in %s (%s)\n' "$machine" "$project" "$tag"
@@ -1082,6 +1231,7 @@ dev_machine() {
     printf 'complete\n' > "$backup/complete"
     action_printf info 'Machine directory backup: %s\n' "$backup"
   fi
+  project_instructions_prepare
   transaction=$(mktemp -d "$state/transactions/dev.XXXXXX")
   transaction_project="$project";transaction_kind=dev
   snapshot_directories "$project" "$work_dir/roots" "$transaction"
@@ -1113,6 +1263,7 @@ dev_machine() {
         source:{type:"development",path:$source},files:$f[0],directories:$d[0]}])
   ' "$registry" > "$state/registry.new" || fail 'Cannot stage development registration.'
   mv "$state/registry.new" "$registry" || fail 'Cannot commit development registration.'
+  project_instructions_sync
   transaction_done="$transaction";transaction='';rm -rf -- "$transaction_done"
   action_printf success 'Installed %s in %s (development from %s)\n' "$machine" "$project" "$source"
   offer_backup_cleanup "$backup"
@@ -1132,10 +1283,12 @@ remove_machine() {
   printf 'Remove %s from %s\n' "$machine" "$project"
   if [ "$yes" != true ]; then
     local answer
+    [ "${non_interactive:-false}" = false ] || fail 'Removal requires confirmation; use --yes.'
     [ -t 0 ] || fail 'Removal requires confirmation; use --yes.'
     printf 'Continue? [y/N] '; read -r answer
     case "$answer" in y|Y|yes) ;; *) fail 'Removal cancelled.' ;; esac
   fi
+  [ "$(printf '%s' "$row" | jq -r '.scope // "project"')" = global ] || project_instructions_prepare
   # Detach each agent independently; keep payload if any detach needs a retry.
   if ! detach_registered_agents "$row";then return 1;fi
   mutation_begin
@@ -1148,10 +1301,12 @@ remove_machine() {
   machine_roots "$work_dir/files" > "$work_dir/roots"
   snapshot_directories "$project" "$work_dir/roots" "$backup"
   transaction="$backup";transaction_project="$project";transaction_kind=remove
+  cp -p "$registry" "$transaction/registry-before.json" || fail 'Cannot preserve installation registry.'
   remove_integrations "$row"
   while IFS= read -r file; do rm -f -- "$project/$file" || fail 'Removal failed.'; done < "$work_dir/files"
   jq --arg p "$project" --arg m "$machine" '.installations |= map(select(.project!=$p or .machine!=$m))' "$registry" > "$state/registry.new" || fail 'Cannot stage registry update.'
   mv "$state/registry.new" "$registry" || fail 'Cannot commit registry update.'
+  if [ "$(printf '%s' "$row" | jq -r '.scope // "project"')" != global ];then project_instructions_sync;fi
   local done_transaction="$transaction";transaction=''
   rm -rf -- "$done_transaction"
   printf '%s' "$row" | jq -r '.directories[]' | LC_ALL=C sort -r > "$work_dir/dirs"
@@ -1169,7 +1324,11 @@ remove_machine() {
 offer_backup_cleanup() {
   local backup="$1" answer
   [ -n "$backup" ] || return 0
-  if [ "${non_interactive:-false}" = false ] && [ -t 0 ];then
+  case "${backup_policy:-ask}" in
+    delete) rm -rf -- "$backup" || fail 'Backup cleanup failed.';return 0 ;;
+    keep) return 0 ;;
+  esac
+  if [ "${non_interactive:-false}" = false ] && [ "${yes:-false}" = false ] && [ -t 0 ];then
     action_printf warning 'Delete this backup? [y/N] '
     read -r answer || answer=''
     case "$answer" in y|Y|yes) rm -rf -- "$backup" ;; esac
@@ -1180,6 +1339,7 @@ offer_backup_cleanup() {
 confirm_action() {
   local answer
   [ "$yes" = true ] && return 0
+  [ "${non_interactive:-false}" = false ] || fail "Confirmation required; use --yes."
   [ -t 0 ] || fail 'Confirmation required; use --yes.'
   printf 'Continue? [y/N] '; read -r answer
   case "$answer" in y|Y|yes) ;; *) fail 'Cancelled.' ;; esac
@@ -1190,6 +1350,7 @@ update_machine() {
   project_init;state_init;mutation_begin
   installed=$(jq --arg p "$project" --arg m "$machine" '.installations[]|select(.project==$p and .machine==$m)' "$registry")
   [ -n "$installed" ] || fail 'Machine is not registered in this project.'
+  [ "$(printf '%s' "$installed" | jq -r '.scope // "project"')" = global ] || project_instructions_prepare
   integration_check "$installed"
   if printf '%s' "$installed" | jq -e '.source.type=="development"' >/dev/null;then development=true;fi
   if [ -z "$channel" ] && { [ "$development" = true ] || [ "$(printf '%s' "$installed" | jq -r .channel)" = dev ]; };then
@@ -1207,16 +1368,21 @@ update_machine() {
     release_catalog
     row=$(jq '.[0] // empty' "$work_dir/catalog.json")
   fi
-  [ -n "$row" ] || { action_printf warning 'No applicable release: %s (%s) in %s\n' "$machine" "$channel" "$project"; return 0; }
+  [ -n "$row" ] || { [ "${repair_missing:-false}" != true ] || fail 'Cannot restore incomplete machine: no applicable published release.'; project_instructions_sync; action_printf warning 'No applicable release: %s (%s) in %s\n' "$machine" "$channel" "$project"; return 0; }
   if [ "$development" = false ] && ! jq -ne --arg a "$(printf '%s' "$row"|jq -r .version)" --arg b "$(printf '%s' "$installed"|jq -r .version)" \
     --arg old "$(printf '%s' "$installed"|jq -r '.tag|if endswith("-dev") then "dev" elif endswith("-rc") then "rc" else "stable" end')" --arg new "$channel" \
     '($a|split(".")|map(tonumber)) as $av | ($b|split(".")|map(tonumber)) as $bv |
       {dev:0,rc:1,stable:2} as $rank | ($av > $bv) or ($av == $bv and $rank[$new] > $rank[$old])' >/dev/null; then
+    if [ "${repair_missing:-false}" = true ];then
+      [ "$(printf '%s' "$row" | jq -r .tag)" = "$(printf '%s' "$installed" | jq -r .tag)" ] || fail 'Cannot restore incomplete machine without downgrading its registered release.'
+    else
     jq --arg p "$project" --arg m "$machine" --arg c "$channel" \
       '(.installations[]|select(.project==$p and .machine==$m)).channel=$c' "$registry" > "$state/registry.new" || fail 'Cannot stage registry update.'
     mv "$state/registry.new" "$registry" || fail 'Cannot commit registry update.'
+    project_instructions_sync
     refresh_integrations
     action_printf success 'Already current: %s in %s\n' "$machine" "$project"; return 0
+    fi
   fi
   version=$(printf '%s' "$row"|jq -r .version)
   tag=$(printf '%s' "$row" | jq -r '.tag')
@@ -1280,6 +1446,7 @@ update_machine() {
     '(.installations[]|select(.project==$p and .machine==$m)) |= (del(.source)|.version=$v|.tag=$t|.channel=$c|.files=$f[0]|.directories=((.directories+$d[0])|unique))' \
     "$registry" > "$state/registry.new" || fail 'Cannot stage registry update.'
   mv "$state/registry.new" "$registry" || fail 'Cannot commit registry update.'
+  project_instructions_sync
   transaction_done="$transaction";transaction='';rm -rf -- "$transaction_done"
   refresh_integrations
   action_printf success 'Updated %s in %s to %s; backup: %s\n' "$machine" "$project" "$version" "$backup"
@@ -1460,11 +1627,23 @@ download_all() {
 }
 
 select_agents() {
-  local agent_scan_mode=found detected_agents=('') detected answer=''
+  local agent_scan_mode=found detected_agents=('') detected answer='' claude_detected=false antigravity_detected=false shared_path claude_path antigravity_path scope_label
   local doctor_heading='' doctor_ok='' doctor_warning='' doctor_reset=''
   selected_agents=()
-  if [ -n "$agent" ];then selected_agents+=("$agent");return;fi
+  if [ "${integration_scope:-project}" = global ];then
+    scope_label='Global';shared_path="$HOME/.agents/skills";claude_path="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills";antigravity_path="$HOME/.gemini/config/skills"
+  else
+    scope_label="Project ($project)";shared_path="$project/.agents/skills";claude_path="$project/.claude/skills"
+  fi
+  action_printf info 'Integration scope: %s\n' "$scope_label"
+  if [ -n "$agent" ];then
+    selected_agents+=("$agent")
+    case "$agent" in claude) detected="$claude_path" ;; antigravity) detected="$antigravity_path" ;; *) detected="$shared_path" ;; esac
+    action_printf info 'Selected %s integration: %s\n' "$agent" "$detected"
+    return
+  fi
   selected_agents+=(shared)
+  action_printf info 'Shared integration will be installed at: %s\n' "$shared_path"
   if [ -t 1 ] && [ "${TERM:-}" != dumb ] && [ -z "${NO_COLOR+x}" ];then
     doctor_heading=$'\033[1;36m';doctor_ok=$'\033[32m';doctor_warning=$'\033[33m';doctor_reset=$'\033[0m'
   fi
@@ -1473,23 +1652,33 @@ select_agents() {
     action_printf warning 'No agents detected; installing shared .agents/skills only.\n';return
   fi
   action_printf warning 'Detection is based on local evidence; it does not verify agent login or skill loading.\n'
-  if [ ! -t 0 ];then
-    action_printf warning 'Non-interactive input; installing shared .agents/skills only. Use --agent for an explicit integration.\n';return
+  for detected in "${detected_agents[@]}";do
+    [ "$detected" != claude ] || claude_detected=true
+    if [ "$detected" = antigravity ] && [ "${integration_scope:-project}" = global ];then antigravity_detected=true;fi
+  done
+  if [ "$claude_detected" = false ] && [ "$antigravity_detected" = false ];then
+    action_printf info 'No detected agent requires an additional dedicated integration.\n';return
   fi
-  action_printf info 'Add integrations for all detected agents? [y/N] '
+  if [ "${non_interactive:-false}" = true ] || [ "${yes:-false}" = true ] || [ ! -t 0 ];then
+    action_printf warning 'Non-interactive input; dedicated integrations will not be added. Use --agent to select one explicitly.\n';return
+  fi
+  if [ "$claude_detected" = true ];then action_printf info 'Additional Claude Code integration: %s\n' "$claude_path";fi
+  if [ "$antigravity_detected" = true ];then action_printf info 'Additional Antigravity integration: %s\n' "$antigravity_path";fi
+  action_printf info 'Add the additional integrations listed above? [y/N] '
   if ! IFS= read -r answer;then answer='';fi
   case "$answer" in
     y|Y|yes|YES)
       for detected in "${detected_agents[@]}";do
         case "$detected" in
           claude) selected_agents+=(claude) ;;
+          antigravity) if [ "$antigravity_detected" = true ];then selected_agents+=(antigravity);fi ;;
           # These agents discover the common Agent Skills root; one copy is enough.
           ''|codex|cursor|copilot|gemini|opencode|cascade|pi) ;;
         esac
       done
-      action_printf info 'Selected: shared .agents/skills for compatible agents; dedicated roots where required.\n'
+      action_printf info 'Selected: shared and listed additional integrations.\n'
       ;;
-    *) action_printf info 'Selected: shared .agents/skills only.\n' ;;
+    *) action_printf info 'Selected: shared integration only.\n' ;;
   esac
 }
 
@@ -1528,13 +1717,14 @@ agent_root() {
   case "$1" in
     shared|codex) if [ "${integration_scope:-global}" = project ];then agent_dir="$project/.agents";else agent_dir="$HOME/.agents";fi ;;
     claude) if [ "${integration_scope:-global}" = project ];then agent_dir="$project/.claude";else agent_dir="${CLAUDE_CONFIG_DIR:-$HOME/.claude}";fi ;;
+    antigravity) [ "${integration_scope:-global}" = global ] || usage_error 'Antigravity has a dedicated integration only for global scope.';agent_dir="$HOME/.gemini/config" ;;
     *) usage_error 'Supported agents: codex, claude.' ;;
   esac
   agent_dir="${agent_dir%/}"
   case "$agent_dir" in /*) ;; *) usage_error 'Agent directory must be absolute (use a Git Bash path on Windows).' ;; esac
   case "$agent_dir" in *$'\n'*|*$'\r'*|*$'\t'*|*'<'*|*'>'*) usage_error 'Unsupported agent path characters.' ;; esac
   [ "$agent_dir" != / ] || usage_error 'Agent directory cannot be filesystem root.'
-  [ -d "$(dirname "$agent_dir")" ] || usage_error 'Agent directory parent must already exist.'
+  [ "$1" = antigravity ] || [ -d "$(dirname "$agent_dir")" ] || usage_error 'Agent directory parent must already exist.'
   no_symlinks "$agent_dir/skills/$machine/SKILL.md"
 }
 
@@ -1542,8 +1732,9 @@ integration_check() {
   # Existing external inventory has strict generated names and directory scopes.
   printf '%s' "$1" | jq -e '
     . as $r | (.integrations // []) as $i | ($i|type)=="array" and
-    all($i[]; (.agent=="shared" or .agent=="codex" or .agent=="claude") and
+    all($i[]; (.agent=="shared" or .agent=="codex" or .agent=="claude" or .agent=="antigravity") and
       (.root|type)=="string" and (.root|startswith("/")) and .root!="/" and
+      (if .agent=="antigravity" then ($r.scope=="global" and (.root|endswith("/config"))) else true end) and
       (.root|explode|all(.>=32)) and .file==("skills/"+$r.machine+"/SKILL.md") and
       (.directories|type)=="array" and all(.directories[]; type=="string")) and
     ([$i[].agent]|length)==([$i[].agent]|unique|length)
@@ -1552,7 +1743,7 @@ integration_check() {
   printf '%s' "$1"|jq -c '.integrations[]?' > "$work_dir/check-integrations"
   while IFS= read -r line; do
     target=$(printf '%s' "$line"|jq -r '.root+"/"+.file');no_symlinks "$target"
-    printf '%s' "$line" | jq -e '. as $i | all(.directories[]; .==$i.root or .==($i.root+"/skills") or .==($i.root+"/skills/"+($i.file|split("/")[1])))' >/dev/null || fail 'Invalid agent directory inventory.'
+    printf '%s' "$line" | jq -e '. as $i | all(.directories[]; .==$i.root or .==($i.root+"/skills") or .==($i.root+"/skills/"+($i.file|split("/")[1])) or ($i.agent=="antigravity" and ($i.root|endswith("/config")) and .==($i.root|rtrimstr("/config"))))' >/dev/null || fail 'Invalid agent directory inventory.'
   done < "$work_dir/check-integrations"
 }
 
@@ -1683,7 +1874,7 @@ EOF
   # Carry ownership of shared created directories to the last remaining skill.
   jq -Rn '[inputs]' < "$transaction/directories" > "$work_dir/agent-dirs.json"
   jq --arg p "$project" --arg m "$machine" --arg a "$agent" --arg root "$agent_dir" --arg file "skills/$machine/SKILL.md" --arg scope "$integration_scope" --slurpfile d "$work_dir/agent-dirs.json" '
-    . as $reg | ([$d[0][]] + [.installations[].integrations[]? | select(.root==$root) | .directories[] | select(.==$root or .==($root+"/skills") or .==($root+"/skills/"+$m))])|unique as $dirs |
+    . as $reg | ([$d[0][]] + [.installations[].integrations[]? | select(.root==$root) | .directories[] | select(.==$root or .==($root+"/skills") or .==($root+"/skills/"+$m) or ($a=="antigravity" and .==($root|rtrimstr("/config"))))])|unique as $dirs |
     $reg | (.installations[]|select(.project==$p and .machine==$m)) |=
       (.scope=$scope | .integrations=((.integrations // [] | map(select(.agent!=$a))) + [{agent:$a,root:$root,file:$file,directories:$dirs}]))
   ' "$registry" > "$state/registry.new" || fail 'Cannot stage registry update.'
@@ -1719,6 +1910,64 @@ global_add() {
   return "$result"
 }
 
+project_add_all() {
+  local policy="$channel" row result=0 count=0
+  channel="${policy:-all}";machine='';latest_machines
+  [ "$(jq 'length' "$work_dir/latest.json")" -gt 0 ] || fail 'No published machine packages available.'
+  jq -c '.[]' "$work_dir/latest.json" > "$work_dir/project-machines"
+  while IFS= read -r row <&3;do
+    count=$((count+1))
+    if ! (
+      work_dir=$(mktemp -d "${TMPDIR:-/tmp}/double-installer.XXXXXX")
+      mutation_lock='';transaction='';trap cleanup EXIT
+      machine=$(printf '%s' "$row"|jq -r .machine)
+      channel=$(printf '%s' "$row"|jq -r .channel);version=$(printf '%s' "$row"|jq -r .version)
+      add_machine
+    );then result=1;action_printf error 'Machine installation failed; continuing with the remaining machines.\n' >&2;fi
+  done 3< "$work_dir/project-machines"
+  action_printf info 'Processed %s available machines in %s.\n' "$count" "$project"
+  return "$result"
+}
+
+project_update_all() {
+  local row machine_name result=0 count=0 script_path
+  project_init;state_init;registry_check
+  if [ -f "$registry" ];then
+    jq -c --arg p "$project" '.installations[]|select(.project==$p and (.scope // "project")=="project")' "$registry" > "$work_dir/project-updates"
+  else : > "$work_dir/project-updates";fi
+  script_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)/$(basename "${BASH_SOURCE[0]}")"
+  while IFS= read -r row <&3;do
+    local args=(update --project "$project" --machine "$(printf '%s' "$row"|jq -r .machine)")
+    [ -z "$channel" ] || args+=(--channel "$channel")
+    [ "$non_interactive" = false ] || args+=(--non-interactive)
+    [ "${backup_policy:-ask}" = ask ] || args+=(--backup-policy "$backup_policy")
+    count=$((count+1))
+    if ! DOUBLE_INSTALLER_NESTED_UPDATE=1 bash "$script_path" "${args[@]}";then
+      result=1;action_printf error 'Update failed; continuing with other project machines.\n' >&2
+    fi
+  done 3< "$work_dir/project-updates"
+  action_printf info 'Checked %s registered machines in %s.\n' "$count" "$project"
+  if ! (channel=all;machine='';version='';latest_machines);then
+    action_printf warning 'Could not discover additional available machines.\n' >&2
+    return 1
+  fi
+  if [ -f "$registry" ];then
+    jq -r --arg p "$project" --slurpfile registry "$registry" '
+      .[] | . as $available | select(any($registry[0].installations[]; .project==$p and .machine==$available.machine) | not)
+      | "  - " + .machine + " " + .version + " (" + .channel + ")"' "$work_dir/latest.json" > "$work_dir/project-available"
+  else
+    jq -r '.[] | "  - " + .machine + " " + .version + " (" + .channel + ")"' "$work_dir/latest.json" > "$work_dir/project-available"
+  fi
+  if [ -s "$work_dir/project-available" ];then
+    action_printf info 'Additional machines available to add:\n'
+    cat "$work_dir/project-available"
+    action_printf info 'Run add --project [DIR] --machine ID, or add --project [DIR] --all.\n'
+  else
+    action_printf info 'No additional published machines available to add.\n'
+  fi
+  return "$result"
+}
+
 global_update() {
   local row result=0 script_path
   state_init;registry_check
@@ -1730,6 +1979,7 @@ global_update() {
     local args=(update --project "$(printf '%s' "$row"|jq -r .project)" --machine "$(printf '%s' "$row"|jq -r .machine)")
     [ -z "$channel" ] || args+=(--channel "$channel")
     [ "$non_interactive" = false ] || args+=(--non-interactive)
+    [ "${backup_policy:-ask}" = ask ] || args+=(--backup-policy "$backup_policy")
     if ! bash "$script_path" "${args[@]}";then result=1;fi
   done < "$work_dir/global-updates"
   return "$result"
@@ -1759,7 +2009,35 @@ global_remove() {
   remove_machine
 }
 
+# Common automation options are accepted by every command, including read-only
+# commands. Keep explicit consent separate from the promise never to read stdin.
+non_interactive=false
+backup_policy=ask
+backup_policy_explicit=false
+filtered_args=()
+while [ "$#" -gt 0 ];do
+  case "$1" in
+    --non-interactive) non_interactive=true;shift ;;
+    --backup-policy)
+      [ "$#" -ge 2 ] || usage_error 'Missing value for --backup-policy'
+      case "$2" in keep|delete|ask) ;; *) usage_error 'Backup policy must be keep, delete or ask.' ;; esac
+      backup_policy="$2";backup_policy_explicit=true;shift 2 ;;
+    *) filtered_args+=("$1");shift ;;
+  esac
+done
+set -- ${filtered_args[@]+"${filtered_args[@]}"}
+if [ "$backup_policy_explicit" = true ];then
+  case "${1:-help}" in add|dev|update|update-all) ;;
+    *) usage_error '--backup-policy requires add, dev, update or update-all.' ;;
+  esac
+  [ "$non_interactive" = false ] || [ "$backup_policy" != ask ] || usage_error '--backup-policy ask conflicts with --non-interactive.'
+fi
 command_name="${1:-help}"
+if [ "$command_name" = --version ];then
+  [ "$#" -eq 1 ] || { printf 'Error: --version accepts no arguments.\n' >&2;exit 2; }
+  printf 'double-installer %s\n' "$installer_version"
+  exit 0
+fi
 # Help is dispatched before dependencies, network access or state mutation.
 for argument in "${@:2}"; do
   case "$argument" in --help|--explain|-h) explain_command "$command_name" | format_explanation true; exit 0 ;; esac
@@ -1821,10 +2099,15 @@ case "$command_name" in
     ;;
   dev)
     shift
-    project='' machine='' source='' agent='' yes=false non_interactive=false
+    project='' machine='' source='' agent='' yes=false
     integration_scope=project;add_agents=();selected_agents=()
     while [ "$#" -gt 0 ];do
       if [ "$1" = --yes ];then yes=true;shift;continue;fi
+      # A bare --project selects the current directory; do not consume the
+      # following option as a directory name.
+      if [ "$1" = --project ] && { [ "$#" -eq 1 ] || [[ "$2" == -* ]]; };then
+        project="$PWD";shift;continue
+      fi
       [ "$#" -ge 2 ] || usage_error "Missing value for $1"
       case "$1" in
         --source) source="$2" ;; --project) project="$2" ;;
@@ -1844,12 +2127,18 @@ case "$command_name" in
     ;;
   add|remove)
     shift
-    project='' machine='' version='' channel='' yes=false global=false agent='' non_interactive=false
+    project='' machine='' version='' channel='' yes=false global=false agent='' all=false
     integration_scope=project;add_agents=();selected_agents=()
     while [ "$#" -gt 0 ]; do
       if [ "$1" = --global ];then global=true;shift;continue;fi
+      if [ "$1" = --all ];then [ "$command_name" = add ] || usage_error '--all is only for add';all=true;shift;continue;fi
       if [ "$1" = --yes ]; then
         yes=true;shift;continue
+      fi
+      # A bare --project selects the current directory; do not consume the
+      # following option as a directory name.
+      if [ "$1" = --project ] && { [ "$#" -eq 1 ] || [[ "$2" == -* ]]; };then
+        project="$PWD";shift;continue
       fi
       [ "$#" -ge 2 ] || usage_error "Missing value for $1"
       case "$1" in
@@ -1862,13 +2151,15 @@ case "$command_name" in
       shift 2
     done
     [ "$global" = true ] || [ -n "$project" ] || usage_error "Provide --project or --global."
-    if [ "$global" != true ] || [ "$command_name" = remove ];then [ -n "$machine" ] || usage_error 'Provide --machine.';fi
+    if [ "$command_name" = remove ];then [ -n "$machine" ] || usage_error 'Provide --machine.';fi
+    [ "$all" = false ] || [ -z "$machine" ] || usage_error '--all conflicts with --machine.'
+    if [ "$command_name" = add ] && [ -z "$machine" ];then [ -z "$version" ] || usage_error '--version requires --machine.';fi
     [ -z "$machine" ] || [[ "$machine" =~ ^[a-z0-9][a-z0-9-]*$ ]] || usage_error 'Invalid machine.'
     case "$channel" in ''|stable|rc) ;; *) usage_error 'Published channel must be stable or rc; use dev --source DIR for local development.' ;; esac
     [ -z "$version" ] || [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || usage_error 'Invalid version.'
     doctor >/dev/null || fail 'Missing dependencies.'
     work_dir=$(mktemp -d "${TMPDIR:-/tmp}/double-installer.XXXXXX")
-    [ -z "$agent" ] || [ "$agent" = codex ] || [ "$agent" = claude ] || usage_error 'Supported agents: codex, claude.'
+    case "$agent" in ''|codex|claude) ;; antigravity) [ "$global" = true ] || usage_error '--agent antigravity requires --global; project skills use the shared root.' ;; *) usage_error 'Supported agents: codex, claude, antigravity.' ;; esac
     if [ "$global" = true ];then
       [ -z "$project" ] || usage_error '--global conflicts with --project'
       [ -z "$version" ] || usage_error '--version is currently supported only for project add.'
@@ -1876,16 +2167,24 @@ case "$command_name" in
     elif [ "$command_name" = add ];then
       project_init
       select_agents;add_agents=("${selected_agents[@]}")
-      add_machine
+      if [ -n "$machine" ];then add_machine;else project_add_all;fi
     else
       [ -z "$agent" ] || usage_error '--agent on remove requires --global; project remove detaches all registered agents.'
       remove_machine
     fi
     ;;
   status)
-    status_json=false
-    if [ "$#" -eq 2 ] && [ "$2" = --json ]; then status_json=true
-    elif [ "$#" -ne 1 ]; then usage_error 'Usage: status [--json]'; fi
+    shift;status_json=false;project=''
+    while [ "$#" -gt 0 ];do
+      case "$1" in
+        --json) [ "$status_json" = false ] || usage_error 'Duplicate --json';status_json=true;shift ;;
+        --project)
+          if [ "$#" -eq 1 ] || [[ "$2" == -* ]];then project="$PWD";shift
+          else project="$2";[ -n "$project" ] || usage_error 'Project must be an existing directory.';shift 2;fi ;;
+        *) usage_error 'Usage: status [--project [DIR]] [--json]' ;;
+      esac
+    done
+    [ -z "$project" ] || project_init
     type -P jq >/dev/null 2>&1 || fail 'Install jq to read local status.'
     state_init;registry_check
     no_symlinks "$state/releases"
@@ -1894,9 +2193,10 @@ case "$command_name" in
       color_reset=$'\033[0m';color_heading=$'\033[1;36m'
       color_stable=$'\033[32m';color_rc=$'\033[33m';color_dev=$'\033[35m';color_muted=$'\033[2m'
     fi
-    if [ "$status_json" = false ]; then printf '%sDownloaded machine archives:%s\n' "$color_heading" "$color_reset"; fi
+    if [ "$status_json" = false ] && [ -z "$project" ]; then printf '%sDownloaded machine archives:%s\n' "$color_heading" "$color_reset"; fi
     archive_count=0;archive_json='';archive_separator=''
     for cached in "$state/releases/"*; do
+      [ -z "$project" ] || break
       [ -d "$cached" ] && [ ! -L "$cached" ] || continue
       tag=${cached##*/}
       [[ "$tag" =~ ^(machine-[a-z0-9-]+)-([0-9]+\.[0-9]+\.[0-9]+)(-(rc|dev))?$ ]] || continue
@@ -1920,20 +2220,21 @@ case "$command_name" in
     if [ "$status_json" = true ]; then
       if [ -f "$registry" ]; then
         # Bash opens Unicode paths; native Windows jq --slurpfile does not.
-        jq -M --argjson archives "[$archive_json]" \
-          '{archives:$archives,installations:.installations}' < "$registry"
+        jq -M --arg project "$project" --argjson archives "[$archive_json]" \
+          '{archives:$archives,installations:[.installations[] | select($project=="" or ((.scope // "project")=="project" and .project==$project))]}' < "$registry"
       else
         jq -Mn --argjson archives "[$archive_json]" '{archives:$archives,installations:[]}'
       fi
     else
-      [ "$archive_count" -gt 0 ] || printf '%sNo downloaded machine archives.%s\n' "$color_muted" "$color_reset"
+      [ -n "$project" ] || [ "$archive_count" -gt 0 ] || printf '%sNo downloaded machine archives.%s\n' "$color_muted" "$color_reset"
+      if [ -n "$project" ];then printf '%sProject: %s%s\n' "$color_heading" "$project" "$color_reset";fi
       printf '\n%sRegistered installations:%s\n' "$color_heading" "$color_reset"
-      if [ ! -f "$registry" ] || [ "$(jq '.installations | length' "$registry")" -eq 0 ];then
+      if [ ! -f "$registry" ] || [ "$(jq --arg project "$project" '[.installations[] | select($project=="" or ((.scope // "project")=="project" and .project==$project))] | length' "$registry")" -eq 0 ];then
         printf '%sNo registered installations.%s\n' "$color_muted" "$color_reset"
       else
-        jq -r --arg heading "$color_heading" --arg reset "$color_reset" \
+        jq -r --arg project "$project" --arg heading "$color_heading" --arg reset "$color_reset" \
           --arg stable "$color_stable" --arg rc "$color_rc" --arg dev "$color_dev" '
-          .installations | group_by(.project) | .[] |
+          [.installations[] | select($project=="" or ((.scope // "project")=="project" and .project==$project))] | group_by(.project) | .[] |
           ("  " + $heading + .[0].project + $reset),
           (sort_by(.machine)[] | "    - " + .machine + "  " + .version + "  (" +
             ({stable:$stable,rc:$rc,dev:$dev}[.channel]) + .channel + $reset + ")" +
@@ -1943,13 +2244,19 @@ case "$command_name" in
     fi
     ;;
   update|update-all|backups-clean)
-    shift;project='' machine='' channel='' version='' yes=false non_interactive=false global=false agent=''
+    shift;project='' machine='' channel='' version='' yes=false global=false agent='' all=false
     while [ "$#" -gt 0 ]; do
       case "$1" in
         --global) [ "$command_name" = update ] || usage_error '--global is for update';global=true;shift;continue ;;
+        --all) [ "$command_name" = update ] || usage_error '--all is for update';all=true;shift;continue ;;
         --yes) [ "$command_name" = backups-clean ] || usage_error '--yes is for backup cleanup';yes=true;shift;continue ;;
-        --non-interactive) [ "$command_name" != backups-clean ] || usage_error 'Use --yes for cleanup';non_interactive=true;shift;continue ;;
       esac
+      # A bare --project selects the current directory; do not consume the
+      # following option as a directory name.
+      if [ "$1" = --project ] && { [ "$#" -eq 1 ] || [[ "$2" == -* ]]; };then
+        [ "$command_name" != update-all ] || usage_error 'update-all does not accept --project'
+        project="$PWD";shift;continue
+      fi
       [ "$#" -ge 2 ] || usage_error "Missing value for $1"
       case "$1" in
         --agent) agent="$2" ;;
@@ -1960,6 +2267,7 @@ case "$command_name" in
       esac;shift 2
     done
     [ -z "$machine" ] || [[ "$machine" =~ ^[a-z0-9][a-z0-9-]*$ ]] || usage_error 'Invalid machine identifier.'
+    [ "$all" = false ] || [ -z "$machine" ] || usage_error '--all conflicts with --machine.'
     case "$channel" in ''|stable|rc) ;; *) usage_error 'Published channel must be stable or rc; use dev --source DIR for local development.' ;; esac
     doctor >/dev/null || fail 'Missing dependencies.'
     work_dir=$(mktemp -d "${TMPDIR:-/tmp}/double-installer.XXXXXX")
@@ -1967,13 +2275,13 @@ case "$command_name" in
     if [ "$global" = true ];then
       [ -z "$project" ] || usage_error '--global conflicts with --project'
       global_update
-    elif [ "$command_name" = update ]; then
-      [ -n "$project" ] && [ -n "$machine" ] || usage_error 'update requires --project and --machine.'
-      update_machine
+    elif [ "$command_name" = update ] && [ -n "$project" ]; then
+      if [ -n "$machine" ];then update_machine;else project_update_all;fi
     elif [ "$command_name" = backups-clean ]; then
       [ -z "$project" ] || project_init
       clean_backups
     else
+      [ -z "$machine" ] || usage_error '--machine requires --project or --global.'
       state_init;registry_check
       [ -f "$registry" ] || { action_printf warning 'No registered installations.\n';exit 0; }
       script_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)/$(basename "${BASH_SOURCE[0]}")"

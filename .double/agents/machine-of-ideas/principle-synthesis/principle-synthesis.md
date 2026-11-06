@@ -110,7 +110,7 @@ Optional source material:
 - record an open question only in the `Questions` section of the corresponding principle
 - remind the user if individual principles still have questions in `Questions` that are available for discussion
 - integrate the user's answers into the active `principle artifact`
-- mark answered questions as done or remove them from the corresponding principle's `Questions` after integrating the answer into the artifact's main sections
+- remove answered questions from the corresponding principle's `Questions` after integrating the answer into the artifact's main sections
 - do not create a general `Open Questions` section in the principle artifact
 - do not store answers under questions and do not create a separate `Resolved Questions` section for ordinary principle questions
 - prepare candidate inputs for future stages without premature specification

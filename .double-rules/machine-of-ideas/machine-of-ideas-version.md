@@ -8,9 +8,10 @@ artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-10-28
+observed-at: 2026-11-04
 ttl: one month
 derived-from:
+  - user-approved group rule and machine contract updates on 2026-11-04
   - knowledge/double-main-modules/double-main-modules.md
   - user-provided project versioning decision
   - user-approved structured-choice interface update on 2026-10-14
@@ -27,4 +28,4 @@ project.
 
 ## Value
 
-`0.2.6`
+`0.2.8`

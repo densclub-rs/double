@@ -8,7 +8,7 @@ artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-10-28
+observed-at: 2026-11-04
 ttl: one month
 derived-from:
   - .double-rules/machine-of-ideas/machine-of-ideas-version.md
@@ -25,6 +25,26 @@ derived-from:
 Changes recorded for the `machine-of-ideas` module.
 
 ## Value
+
+### 0.2.8 — 2026-11-05
+
+- Name generated idea documents by their idea title.
+- Use `<Idea title>: Concepts` and `<Idea title>: Principles` for derived documents.
+- Remove “Artifact” from the leading template and generated-document headings.
+- Remove answered questions from question sections after integrating their answers.
+
+### 0.2.8-rc — 2026-11-05
+
+- Name generated idea documents by their idea title.
+- Use `<Idea title>: Concepts` and `<Idea title>: Principles` for derived documents.
+- Remove “Artifact” from the leading template and generated-document headings.
+- Remove answered questions from question sections after integrating their answers.
+
+### 0.2.7 — 2026-11-04
+
+- Load applicable project and group knowledge from three directory levels.
+- Prefer the nearest usable whole knowledge item and silently skip unusable rules.
+- Keep release version checks strict and reproducible.
 
 ### 0.2.6 — 2026-10-29
 

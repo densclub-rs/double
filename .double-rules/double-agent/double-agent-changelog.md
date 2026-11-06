@@ -8,7 +8,7 @@ artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-10-28
+observed-at: 2026-11-04
 ttl: one month
 derived-from:
   - .double-rules/double-agent/double-agent-version.md
@@ -25,6 +25,15 @@ derived-from:
 Changes recorded for the `double-agent` module.
 
 ## Value
+
+### 0.0.12 — 2026-11-04
+
+- Assist with project work and route specialized tasks to the appropriate Double machine.
+- Help create machine contracts from ideas, concepts and principles developed with Machine of Ideas.
+- Review proposed machine changes against Double's foundations, the machine's own principles and other machines before plan approval.
+- Present validation results with status indicators, findings and possible resolutions.
+- Load applicable project and group knowledge from three directory levels.
+- Prefer the nearest usable whole knowledge item and silently skip unusable rules.
 
 ### 0.0.11 — 2026-10-29
 

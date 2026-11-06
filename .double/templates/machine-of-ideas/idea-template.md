@@ -14,7 +14,7 @@ derived-from:
   - ideas/machine-of-ideas/machine-of-ideas-principles.md#principle-ask-and-integrate-open-questions
 ---
 
-# Template: Idea Artifact
+# Template: Idea
 
 ```md
 ---
@@ -30,7 +30,7 @@ derived-from:
 
 <a id="<idea-artifact-id>"></a>
 
-# Idea: <Short title>
+# <Idea title>
 
 ## 1. Summary
 
@@ -77,7 +77,7 @@ Write freely, without unnecessary constraints.
 - What is still unclear?
 - Where does uncertainty remain?
 - Which questions should be asked to the human before this idea can mature?
-- When an answer has been supplied, first integrate it into the relevant main sections, then mark the question as done here.
+- When an answer has been supplied, first integrate it into the relevant main sections, then remove the answered question from this section.
 - Do not store answers, consequences, or resolved-question notes under the question itself.
 - Do not create a separate `Resolved Questions` section for normal idea questions.
 

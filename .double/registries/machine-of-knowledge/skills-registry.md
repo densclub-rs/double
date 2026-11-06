@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-knowledge
 id: skills-registry
 kind: registry
-status: stable
+status: release-candidate
 ---
 
 # Skills Registry

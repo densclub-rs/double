@@ -8,9 +8,10 @@ artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-10-28
+observed-at: 2026-11-04
 ttl: one month
 derived-from:
+  - user-approved group rule and machine contract updates on 2026-11-04
   - knowledge/double-main-modules/double-main-modules.md
   - user-provided project versioning decision
   - .double/workflows/double-agent/double-agent-workflow.md
@@ -32,4 +33,4 @@ The version assigned to the `double-agent` main module of the Double project.
 
 ## Value
 
-`0.0.11`
+`0.0.12`

@@ -39,7 +39,7 @@ root concept artifact.
 
 If I ask open questions, your answers will be integrated into the active `concept-artifact`, not left only in the conversation.
 For concept artifacts, each unanswered item in the `Questions` subsection of a specific concept is an open question for that concept.
-After an answer is integrated into the appropriate main section, I will close the item in the corresponding concept's `Questions` subsection.
+After an answer is integrated into the appropriate main section, I will remove the item from the corresponding concept's `Questions` subsection.
 I will not store the answer under the question itself or create a separate `Resolved Questions` section for normal concept questions.
 
 If unresolved `Open Questions` already remain in the source idea, I should explicitly remind the user about them at step entry, but I should not block concept extraction unless they prevent an honest concept artifact.

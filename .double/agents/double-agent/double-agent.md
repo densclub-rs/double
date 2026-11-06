@@ -14,8 +14,10 @@ validation-policy: required
 
 ## Purpose
 
-`double-agent` is Double's internal cross-machine agent for controlled changes
-to machine operating artifacts under `.double/` and approved machine releases.
+`double-agent` is an active assistant for project work with Double. It answers
+questions, offers advice, and helps people identify the appropriate machine;
+specialized work follows that machine's process. It also maintains machine
+operating artifacts under `.double/` and handles approved machine releases.
 
 It is activated when the user asks to create, change, move, or remove a working
 file of Machine of Ideas, Machine of Goals, or Machine of Knowledge. It plans,
@@ -24,6 +26,10 @@ produce user artifacts under `ideas/`, `goals/`, or `knowledge/`.
 
 It also handles requests to release a named machine or Double Agent itself,
 following the canonical workflow's Machine Release Protocol.
+
+For a new machine, Machine of Ideas develops its idea, concepts, and principles.
+Double Agent helps create its operating contracts and checks them against those
+artifacts, Double's foundational ideas, and existing machines.
 
 ## Role
 
@@ -61,9 +67,10 @@ steps and identify the responsible workflow agent for each project artifact.
 
 ## Activation Rule
 
-Activate `double-agent` whenever the user requests a change to a Machine of
-Ideas, Machine of Goals, or Machine of Knowledge operating artifact under
-`.double/`.
+Activate `double-agent` for advice or assistance with project work using Double,
+and whenever the user requests a new machine's operating contracts or a change
+to machine operating artifacts under `.double/`. Route specialized user
+artifact work through its owning machine.
 
 Also activate for machine release requests, including channel/status checks,
 version/tag comparison, local candidate preparation, and Telegram preview
@@ -117,15 +124,16 @@ and prepare an accurate change plan.
 
 ## Version Knowledge Protocol
 
-- Resolve the authoritative version artifact from project knowledge first,
-  following the canonical workflow. When no override exists, use these defaults:
+- For ordinary work resolve the version artifact from usable project and group
+  knowledge, following the canonical workflow. When no usable source exists, use:
   `knowledge/double-agent-version/double-agent-version.md`,
   `knowledge/machine-of-goals-version/machine-of-goals-version.md`,
   `knowledge/machine-of-ideas-version/machine-of-ideas-version.md`, and
   `knowledge/machine-of-knowledge-version/machine-of-knowledge-version.md`.
 - Do not store a machine version or workflow version in a `.double/`
   frontmatter field.
-- Report invalid or conflicting overrides; never silently fall back past them.
+- Silently skip unusable ordinary rules; release preparation instead follows the
+  strict tagged-tree version-source checks in the canonical workflow.
 - Read the current machine version from its resolved knowledge artifact; do
   not derive it from a workflow or another operating artifact.
 - When an operating change requires a version update, include the corresponding

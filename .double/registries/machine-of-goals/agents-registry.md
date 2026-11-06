@@ -45,14 +45,14 @@ there is no alternate registration or execution-log shape.
 | Agent | Input | Output | Templates |
 | --- | --- | --- | --- |
 | `plan-synthesis-agent` | Goal, paths, selected editable plan(s) under the filename rule, exact content approval | `plan-model`; approved selection in conversation | `plan-model-template` |
-| `plan-realization-agent` | Approved model/digest and authorized start, or existing frozen plan/current stage | immutable `plan-artifact`, `realization-artifact`, `stage-realization`, evidence | `plan-template`, `realization-template`, `stage-realization-template` |
+| `plan-realization-agent` | Approved model/digest and authorized start, or existing linked plan/current stage | `realization-artifact`, `stage-realization`, evidence | `plan-template`, `realization-template`, `stage-realization-template` |
 | `plan-validation-agent` | Captured conditions, actual outputs, evidence/statements, goal criteria | Updated `stage-realization` and `realization-artifact` | `stage-realization-template`, `realization-template` |
 
 Review links the actual current plan file and asks the user to approve its
 contents, selection and boundaries. Digests are internal verification evidence;
 never include them in approval questions, titles, choices or normal summaries.
 Steps 03–04 never produce executor files, even after model approval. Only the
-authorized start of step 05 materializes the frozen plan and realization.
+authorized start of step 05 creates the realization linked to the main plan without a local copy.
 The main realization map owns current-stage/progress. Its State cells use only
 emoji, explained by the legend above; do not repeat state names in cells or add
 a duplicate status column. User progress handoffs may add prose labels under the
@@ -60,8 +60,7 @@ canonical [progress rule](../../workflows/machine-of-goals/machine-of-goals-work
 Use 🟠 after action and ✅ only after output acceptance.
 Input checks precede
 action; output checks precede completion. Documentary evidence is offered with
-an explicit user-statement fallback. A changed model ends the realization and
-requires an authorized successor with applicability-checked inherited facts.
+an explicit user-statement fallback. A changed model requires renewed review before further action; preserve structural history as the workflow specifies and check inherited facts for applicability.
 No separate decision, registration wrapper, execution index or validation artifact
 is required. Common consent, language, and routing boundaries remain binding.
 
@@ -84,11 +83,11 @@ is required. Common consent, language, and routing boundaries remain binding.
 - id: `plan-realization-agent`
 - role: `plan-realization-role`
 - stage: `05-plan-realization`
-- input: `plan-model`, `approved-model-selection`, `authorized-start`, `path-options`, `selected-plan-stage`, `working-context`; existing frozen plan/realization when resuming
+- input: `plan-model`, `approved-model-selection`, `authorized-start`, `path-options`, `selected-plan-stage`, `working-context`; existing linked plan/realization when resuming
 - optional-input: `plan-stop-points`
-- output: immutable `plan-artifact`, `realization-artifact`, `stage-realization` and directly linked evidence for documented manual execution; mechanism result only for a collapsed invocation
+- output: `realization-artifact`, `stage-realization` and directly linked evidence for documented manual execution; mechanism result only for a collapsed invocation
 - optional-output: `implementation-artifact`, `handoff-artifact`, `blocker-or-revision-note`
-- execution-contract: recheck exact approval at authorized start, freeze plan before action, capture stage contracts from the pinned plan; changed content returns to review
+- execution-contract: recheck exact approval at authorized start, link the main plan, capture stage contracts before action; changed content returns to review
 - supported-modes: `execution`, `explain`, `dry-run`, `planning`
 - templates: `.double/templates/machine-of-goals/plan-template.md`, `.double/templates/machine-of-goals/realization-template.md`, `.double/templates/machine-of-goals/stage-realization-template.md`
 - system-prompt: `.double/prompts/machine-of-goals/system/plan-realization.md`
@@ -100,7 +99,7 @@ is required. Common consent, language, and routing boundaries remain binding.
 - id: `plan-validation-agent`
 - role: `plan-validation-role`
 - stage: `06-plan-validation`
-- input: `realization-artifact`, `stage-realization`, `stage-validation-criteria`, `goal-artifact`, frozen `plan-artifact`, `execution-evidence`; or the collapsed mechanism and its actual result
+- input: `realization-artifact`, `stage-realization`, `stage-validation-criteria`, `goal-artifact`, linked plan and captured conditions, `execution-evidence`; or the collapsed mechanism and its actual result
 - output: updated `stage-realization` and `realization-artifact`, `revision-or-continuation-decision`; for collapsed invocation, validation outcome without new execution files
 - optional-output: `model-review-request`, `goal-closure-signal`; validation creates no snapshot and writes no progress into the model
 - validation-contract: validate against the attempt's captured criteria and evidence; preserve applicable prior acceptance and record any revalidation or rework

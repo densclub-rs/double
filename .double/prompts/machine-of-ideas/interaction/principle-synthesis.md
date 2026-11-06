@@ -42,7 +42,7 @@ principle artifact.
 
 If I ask open questions, your answers will be integrated into the active `principle-artifact`, not left only in the conversation.
 For principle artifacts, each unanswered item in the `Questions` subsection of a specific principle is an open question for that principle.
-After an answer is integrated into the appropriate main section, I will close the item in the corresponding principle's `Questions` subsection.
+After an answer is integrated into the appropriate main section, I will remove the item from the corresponding principle's `Questions` subsection.
 I will not store the answer under the question itself or create a separate `Resolved Questions` section for normal principle questions.
 
 If unresolved `Open Questions` already remain in the source idea, or unanswered concept `Questions` remain in the concept artifact, I should explicitly remind the user about them at step entry, but I should not block principle synthesis unless they prevent an honest principle artifact.

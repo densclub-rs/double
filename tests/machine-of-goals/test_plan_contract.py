@@ -41,7 +41,6 @@ def outputs(step):
 
 @pytest.mark.parametrize(('template', 'stage', 'artifact_kind', 'producer'), [
     ('plan-model-template.md', 'plan-synthesis', 'plan-model', 'plan-synthesis-agent'),
-    ('plan-template.md', 'plan-realization', 'plan-artifact', 'plan-realization-agent'),
     ('realization-template.md', 'plan-realization', 'realization-artifact', 'plan-realization-agent'),
     ('stage-realization-template.md', 'plan-realization', 'stage-realization', 'plan-realization-agent'),
 ])
@@ -92,49 +91,37 @@ def test_deferred_review_has_no_executor_output():
     assert 'start deferred' in WORKFLOW.read_text()
     assert re.search(r'only when start is authorized', step)
     # Content review alone creates no execution material.
-    assert all(name in step for name in ['`plan-v1.md`', 'snapshot', 'realization', 'decision file'])
+    assert all(name in step for name in ['realization', 'decision file'])
 
 
-def test_start_produces_frozen_plan_and_realization_before_action():
+def test_start_links_approved_plan_without_local_copy():
     workflow = WORKFLOW.read_text()
-    step = section(workflow, '### 05. Plan Realization')
-    manual = section(step, '#### Manual and Interactive Execution')
-    assert len(outputs(manual)) == 1
-    assert '`plan-artifact`' in outputs(manual)[0]
+    manual = section(section(workflow, '### 05. Plan Realization'), '#### Manual and Interactive Execution')
     assert '`realization-artifact`' in outputs(manual)[0]
-    automatic = section(step, '#### Collapsed Automatic Execution')
-    assert 'no Machine of Goals execution artifact is created' in automatic
-    assert '`plan-artifact`' not in '\n'.join(outputs(automatic))
+    assert '`plan-artifact`' not in outputs(manual)[0]
     start = section(workflow, '### Start and Resume')
-    assert start.index('freeze the approved model content') < start.index('then create `realization.md`')
-    assert start.index('recheck the current model') < start.index('Create a new `_realizations/')
-    assert 'mismatch returns to\n  review without creating execution artifacts' in start
-    frozen = shapes('plan-template.md')[0]
-    assert frozen['plan-version'] == 1
-    assert frozen['plan-model-artifact'] == '../../plan.md'
-    assert 'approved-model-content-hash' in frozen
+    assert 'recheck the exact approved source digest' in start
+    assert 'do not create a' in start and 'local plan copy at start' in start
+    assert 'Link the actual main plan' in start
+    assert 'no Machine of Goals execution artifact is created' in section(section(workflow, '### 05. Plan Realization'), '#### Collapsed Automatic Execution')
 
 
-def test_source_and_frozen_content_digests_are_separate():
+def test_realization_records_approved_source_and_links_main_plan():
     realization = shapes('realization-template.md')[0]
-    assert realization['plan-artifact'] == './plan-v1.md'
-    assert realization['plan-model-artifact'] == '../../plan.md'
-    assert realization['plan-content-hash'] != realization['approved-model-content-hash']
-    assert 'frozen-plan-file-digest' in realization['plan-content-hash']
+    assert realization['plan-artifact'] == '../../plan.md'
     assert 'approved-source-file-digest' in realization['approved-model-content-hash']
-    assert realization['branch'] == shapes('plan-template.md')[0]['branch']
     assert realization['plan-revision'] == '<approved-plan-revision>'
-    assert shapes('plan-template.md')[0]['plan-revision'] == realization['plan-revision']
+    assert 'plan-content-hash' not in realization
+    assert 'plan-version' not in realization
 
 
-def test_stage_contracts_reference_the_realizations_local_frozen_plan():
+def test_stage_contracts_reference_linked_main_plan_and_capture_conditions():
     stage = shapes('stage-realization-template.md')[0]
-    assert stage['plan-artifact'] == './plan-v1.md'
-    assert stage['plan-version'] == 1
+    assert stage['plan-artifact'] == '../../plan.md'
     text = (TEMPLATES / 'stage-realization-template.md').read_text()
-    assert '](./plan-v1.md#stage-' in text
-    assert 'Preserve each condition ID from the frozen plan' in text
-    assert 'do not renumber' in text
+    assert '](../../plan.md#stage-' in text
+    assert 'Preserve each condition ID' in text and 'do not renumber' in text
+    assert 'Capture effective conditions' in text
     assert 'Input State' in text and 'Output State' in text
 
 
@@ -165,23 +152,22 @@ def test_emoji_rendering_preserves_metadata_and_plan_immutability():
     realization = shapes('realization-template.md')[0]
     assert realization['status'] == '<in-progress|completed|blocked|cancelled|model-changed>'
     assert realization['current-stage'] == '<stage-id-or-null>'
-    for name in ['plan-model-template.md', 'plan-template.md']:
+    for name in ['plan-model-template.md']:
         generated = re.search(r'^````md\n(.*?)^````$', (TEMPLATES / name).read_text(), re.M | re.S).group(1)
         assert not any(emoji in generated for emoji in ['⚪', '🔄', '🟠', '✅', '🟡', '⛔', '❌', '🛠️', '➖'])
 
 
-def test_edited_model_requires_review_and_preserves_historical_plan():
+def test_structural_change_requires_explicit_preservation_or_deletion_decision():
     workflow = WORKFLOW.read_text()
     review = section(workflow, '### Model and Selection')
     assert 'Any model edit invalidates that approval' in review
-    assert 'same filename/revision' in review
     change = section(workflow, '### Model Change and Succession')
-    assert 'already frozen plan remains unchanged' in change
-    assert 'Validate observed outputs against that plan' in change
-    assert 'approval of the exact new model content' in change
-    validation_outputs = '\n'.join(outputs(section(workflow, '### 06. Plan Validation')))
-    assert '`plan-revision-snapshot`' not in validation_outputs
-    assert '`plan-artifact`' not in validation_outputs
+    for text in ['stage and substage composition', 'numbering', 'ask explicitly',
+                 'before editing the main plan', 'separate explicit consent',
+                 'do not delete or apply the structural change', 'nonstructural edit needs no local plan copy',
+                 'conditions captured when that stage was performed', 'newly started']:
+        assert text in ' '.join(change.split()), text
+    assert change.index('preserve the actual old plan') < change.index('After preservation or')
 
 
 def test_agent_registry_assigns_execution_to_executor_only():
@@ -193,7 +179,7 @@ def test_agent_registry_assigns_execution_to_executor_only():
     assert '`realization-artifact' not in synth_outputs
     executor = section(registry, '## Plan Realization Agent')
     exec_outputs = re.search(r'^- output: (.*)$', executor, re.M).group(1)
-    assert '`plan-artifact`' in exec_outputs
+    assert '`plan-artifact`' not in exec_outputs
     assert '`realization-artifact`' in exec_outputs
 
 
@@ -288,25 +274,17 @@ def test_generated_plan_id_combines_subject_meaning_and_goal_in_one_word():
         assert 'single word' in normalized, relative
 
 
-def test_frozen_plans_preserve_source_id_and_other_artifacts_reference_it():
+def test_preserved_copies_keep_source_identity_and_realizations_reference_it():
     model = shapes('plan-model-template.md')[0]
-    frozen = shapes('plan-template.md')[0]
     realization = shapes('realization-template.md')[0]
-    assert model['id'] == frozen['id'] == '<id>'
+    assert model['id'] == '<id>' and realization['plan-id'] == '<plan-id>'
     assert realization['id'] != model['id']
-    assert realization['plan-id'] == '<plan-id>'
-    contract = section((TEMPLATES / 'plan-template.md').read_text(), '## Frozen Plan Contract')
-    assert "source model's generated ID unchanged" in contract
-    assert 'root anchor' in contract and 'path, version and digest' in contract
-    reference_contract = section((TEMPLATES / 'realization-template.md').read_text(), '## Realization Contract')
-    assert "realization's `plan-id` to the source model's `id`" in reference_contract
+    contract = (TEMPLATES / 'plan-template.md').read_text()
+    assert 'Preserve its original id, metadata' in contract
+    assert 'stage and condition identifiers and anchors' in contract
+    assert 'rebase' in contract.lower() and 'without\noverwriting existing files' in contract
     for name in ['goal-template.md', 'realization-template.md']:
-        text = (TEMPLATES / name).read_text()
-        assert 'plan-v1.md#<plan-id>' in text
-    for name in ['realization-template.md', 'exported-plan-package-template.md']:
-        for shape in shapes(name):
-            assert shape['plan-id'] == '<plan-id>'
-            assert shape['id'] != shape['plan-id']
+        assert 'plan.md#<plan-id>' in (TEMPLATES / name).read_text()
 
 
 @pytest.mark.parametrize('relative', [
@@ -350,19 +328,15 @@ def test_discovery_can_identify_parallel_variants_without_creating_plans():
         assert 'step-03' in text or 'synthesis' in text
 
 
-def test_named_variant_provenance_uses_selected_source_without_renaming_frozen_plan():
-    for name in ['plan-template.md', 'realization-template.md']:
-        text = (TEMPLATES / name).read_text()
-        assert '`plan-<id>.md`' in text and '`plan<owner_id>.md`' in text
-        assert 'never\nfall back to `plan.md` for a named variant' in text
-        assert '`plan-model-artifact`' in text
-        assert '`derived-from`' in text
-        assert 'Frozen execution filenames remain unchanged' in text
+def test_named_variant_uses_actual_source_and_historical_copy_name():
+    text = (TEMPLATES / 'realization-template.md').read_text()
+    assert '`plan-<id>.md`' in text and '`plan<owner_id>.md`' in text
+    assert 'never\nfall back to `plan.md` for a named variant' in text
     start = section(WORKFLOW.read_text(), '### Start and Resume')
-    assert 'as `plan-v1.md`' in start
-    assert 'then create `realization.md`' in start
-    boundary = section(WORKFLOW.read_text(), '## Plan Model and Execution Plan Boundary')
-    assert '`plan-<id>.md`' in boundary and '`plan<owner_id>.md`' in boundary
+    assert 'Named plan variants keep their actual paths' in start
+    change = section(WORKFLOW.read_text(), '### Model Change and Succession')
+    normalized = ' '.join(change.split())
+    assert 'old plan as `plan.md`' in normalized and 'Never overwrite an existing' in normalized
 
 
 def operating_files():
@@ -430,7 +404,7 @@ def test_every_plan_shape_has_no_runtime_state_or_progress():
                         'last-run', 'last-result', 'plan-execution-style',
                         'plan-revision-artifact', 'readiness', 'alignment'}
     # Frozen provenance names its realization; this is identity, not progress.
-    for name in ['plan-model-template.md', 'plan-template.md']:
+    for name in ['plan-model-template.md']:
         generated = re.findall(r'^(`{3,4})md\n(.*?)^\1$',
                                (TEMPLATES / name).read_text(), re.M | re.S)
         assert len(generated) == 1

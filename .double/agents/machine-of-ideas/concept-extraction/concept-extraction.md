@@ -104,7 +104,7 @@ Optional source material:
 - record each concept-level open question under the `Questions` subsection of the concept it belongs to
 - remind the user when unanswered concept `Questions` remain available for discussion
 - integrate user answers into the active `concept artifact`
-- after integrating an answer, mark the item as answered or remove it from the corresponding concept's `Questions` subsection
+- after integrating an answer, remove the answered item from the corresponding concept's `Questions` subsection
 - do not create an artifact-level `Open Questions` section in concept artifacts
 - do not store answers under questions or create a separate `Resolved Questions` section for normal concept questions
 - prepare candidate inputs for the next step `principle-synthesis`

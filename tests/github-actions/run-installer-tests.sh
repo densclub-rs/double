@@ -24,8 +24,11 @@ case "$(uname -s)" in
   MINGW*|MSYS*|CYGWIN*) test_bash=$(cygpath -m "$BASH") ;;
 esac
 DOUBLE_TEST_BASH="$test_bash" python3 tests/github-actions/test-update-all-output.py
+DOUBLE_TEST_BASH="$test_bash" python3 tests/github-actions/test-installer-non-interactive.py
 test_log "START platform checks"
 bash tests/github-actions/test-double-installer-platform.sh
+test_log "START project instruction checks"
+bash tests/github-actions/test-project-instructions.sh
 test_log "START local development checks"
 bash tests/github-actions/test-double-installer-dev.sh
 if [ "$quick" = true ];then

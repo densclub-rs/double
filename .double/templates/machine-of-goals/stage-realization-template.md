@@ -18,7 +18,7 @@ derived-from:
 
 ## Scope
 
-One short Markdown document records the passage through one frozen plan stage.
+One short Markdown document records the passage through one linked plan stage.
 Its filename is `<stage-id-lowercase>-<short-english-stage-slug>.md` inside
 the timestamped realization directory. Use exactly three main parts: input
 state, actions, and output state. Evidence is linked where it supports a fact;
@@ -26,18 +26,14 @@ it does not require a separate evidence or validation artifact.
 
 ## Stage Contract
 
-- Bind the record to its realization, stable stage ID and local immutable
-  `plan-v1.md`. Capture effective conditions and intended action from that plan
-  before action. Retain this content and the originating plan when inherited.
-- Preserve each condition ID from the frozen plan, including its stage prefix:
-  `<stage-id>-I<condition-number>` for inputs and
-  `<stage-id>-O<condition-number>` for outputs, such as `S02-I01`, `S02-O01`.
-  Use these exact IDs in evidence and validation references; do not renumber
-  captured or inherited conditions.
-- Verify frozen plan integrity before action and output acceptance. A source
-  model edit requires renewed review and a successor before further planned
-  action, preserving the frozen plan and all earlier facts. Validate observed
-  output against the original plan; never rewrite it from the edited model.
+- Bind the record to its realization, stable stage ID and actual linked plan.
+  Capture effective conditions and intended actions before action. Preserve
+  the captured content and origin when inherited.
+- Preserve each condition ID, including stage prefix, in evidence and validation
+  references; do not renumber captured or inherited conditions.
+- Review changed plan content before future action. Validate observed outputs
+  against conditions captured before action and preserve all earlier facts.
+  Follow the workflow's preservation decision before structural plan changes.
 - Verify input conditions before action. Verify output conditions before
   marking the stage completed in the realization map. An unresolved or failed
   input blocks action; an unresolved output remains awaiting verification or
@@ -89,9 +85,8 @@ artifact-language: <artifact-language>
 realization-id: <owning-realization-id>
 stage-id: <stable-stage-id>
 branch: <source-branch>
-plan-version: 1
-plan-artifact: ./plan-v1.md
-source-plan-artifact: <originating-frozen-plan-path-when-inherited>
+plan-artifact: ../../plan.md
+source-plan-artifact: <originating-plan-path-when-inherited>
 inherited-from: <originating-realization-id-or-null>
 ---
 
@@ -99,7 +94,7 @@ inherited-from: <originating-realization-id-or-null>
 
 # <Stage ID>: <Short English Name>
 
-Plan stage: [<stage-id>](./plan-v1.md#stage-<stage-id-lowercase>)
+Plan stage: [<stage-id>](../../plan.md#stage-<stage-id-lowercase>)
 
 ## Input State
 
@@ -111,7 +106,7 @@ Documentary evidence requested: <what-was-requested-and-whether-it-was-available
 
 ## Actions
 
-Intended action: <captured-action-from-the-frozen-plan>
+Intended action: <captured-action-from-the-linked-plan>
 
 <actual-actions-in-order-with-relevant-commands-results-and-deviations>
 

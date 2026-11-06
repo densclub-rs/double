@@ -8,7 +8,7 @@ artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-10-28
+observed-at: 2026-11-04
 ttl: one month
 derived-from:
   - .double-rules/machine-of-goals/machine-of-goals-version.md
@@ -25,6 +25,19 @@ derived-from:
 Changes recorded for the `machine-of-goals` module.
 
 ## Value
+
+### 0.0.18-rc — 2026-11-04
+
+- Load applicable project and group knowledge from three directory levels.
+- Prefer the nearest usable whole knowledge item and silently skip unusable rules.
+- Keep release version checks strict and reproducible.
+
+### 0.0.17-rc — 2026-11-03
+
+- Structure plan conditions and stage actions as sections and lists.
+- Link new realizations to the approved main plan without creating a local copy.
+- Preserve previous realization plans before structural changes when requested, or offer their deletion with separate consent.
+- Keep captured stage conditions and evidence available for validation after plan edits.
 
 ### 0.0.15-rc — 2026-10-29
 

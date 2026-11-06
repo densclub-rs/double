@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-knowledge
 id: knowledge-extraction-agent
 kind: agent
-status: stable
+status: release-candidate
 role: knowledge-extractor-role
 workflow: machine-of-knowledge-workflow
 interaction-language: en
@@ -56,7 +56,7 @@ When justified by a concrete revalidation need:
 ## Output
 
 - `knowledge-artifact`
-- location: the ordinary catalog or accepted project-rule path selected by the workflow
+- location: the ordinary catalog or accepted project/group-rule path selected by the workflow
 
 ## Responsibilities
 
@@ -64,6 +64,7 @@ When justified by a concrete revalidation need:
 - confirm interaction and artifact languages separately
 - classify the knowledge as static or dynamic
 - propose a `kebab-case` knowledge id
+- follow the workflow's Knowledge Identity and Semantic Overlap protocol: inspect relevant knowledge, clarify possible equivalence with the user, and reconcile confirmed identity and affected schemas without losing scope-specific values
 - resolve the applicable storage schema before choosing paths; use the default layout only when no schema applies
 - support several independent artifact files in a schema-defined subject directory and register their actual links
 - ground claims and values in source material or user input
@@ -74,9 +75,10 @@ When justified by a concrete revalidation need:
 - use `retrieval-method` for the invocation type and preserve the exact invocation in the `Command` section
 - invent no value, observation time, validity period, or retrieval method
 - keep `access: free-of-charge`
-- integrate answers into the artifact and describe material remaining gaps in `Notes` only when needed
+- integrate answers into the artifact; place supplemental context and material remaining gaps in `Notes`
 - enforce the template's allowed fields and sections; preserve version history as separate knowledge
-- allow `Schema` to remain undefined; omit it for unstructured knowledge when no schema is needed, without blocking completion or inventing a placeholder
+- assess the need for `Schema` for each new or changed item; create a grounded schema when it helps interpret composite values or property meanings, and omit it when unnecessary
+- follow the workflow's Markdown Values Interpretation for composite values, media links and fenced commands; validate mapped data without executing commands
 - when `Schema` is defined, use only JSON Schema Draft 2020-12 with an explicit `$schema` and knowledge-bound `$id`; validate the schema and structured value
 - keep the artifact minimal and straightforward
 
@@ -113,11 +115,10 @@ knowledge item.
 
 ## Project Rule Routing
 
-Follow the canonical workflow's Project Rule Recognition and Publication
-contract within the existing extraction step. Infer intent and common or
-named-machine scope from context and confirm a successful inference. If
-project-context intent is present, route facts, settings, versions and history
-to `.double-rules/` as well as prescriptive rules. Wording such as "project
-knowledge" or "at project level" is sufficient; clarify missing scope rather
-than silently routing it to the ordinary catalog. Use the existing knowledge
-template for both destinations.
+Follow the workflow's Project Rule Recognition and Publication contract.
+Identify the selected project, immediate-parent group, or second-parent group
+level as well as common or named-machine applicability. Reuse explicit user
+choices and clarify missing group level or machine scope. Route facts, settings,
+versions, history, and prescriptive rules to the selected level's
+`.double-rules/`, using the existing knowledge template. Respect filesystem
+permissions for writes outside the project root.

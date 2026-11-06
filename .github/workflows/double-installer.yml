@@ -50,7 +50,7 @@ jobs:
     needs: candidate
     name: Installer / ${{ matrix.os }} / ${{ matrix.arch }}
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 10
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
@@ -59,8 +59,8 @@ jobs:
           - {os: linux, arch: arm64, runner: ubuntu-24.04-arm}
           - {os: macos, arch: x64, runner: macos-15-intel}
           - {os: macos, arch: arm64, runner: macos-15}
-          # - {os: windows, arch: x64, runner: windows-2025}
-          # - {os: windows, arch: arm64, runner: windows-11-arm}
+          - {os: windows, arch: x64, runner: windows-2025}
+          - {os: windows, arch: arm64, runner: windows-11-arm}
     defaults:
       run:
         shell: bash
@@ -83,6 +83,23 @@ jobs:
           bash tests/github-actions/installer-ci-environment.sh 2>&1 | tee test-results/environment.log
       - name: Run quick installer checks
         run: bash tests/github-actions/run-installer-tests.sh --quick 2>&1 | tee test-results/installer.log
+      - name: Check system bootstrap
+        run: |
+          case "$(uname -s)" in
+            MINGW*|MSYS*|CYGWIN*)
+              export DOUBLE_TEST_BASH="$(cygpath -w "$BASH")"
+              export DOUBLE_TEST_CYGPATH="$(cygpath -w "$(command -v cygpath)")"
+              ;;
+          esac
+          python3 tests/github-actions/test-system-installer.py 2>&1 | tee test-results/system-installer.log
+      - name: Check Windows bootstrap in Git Bash
+        if: ${{ runner.os == 'Windows' }}
+        run: |
+          target="$(cygpath -u "$RUNNER_TEMP")/double-bootstrap-bin"
+          mkdir -p "$target"
+          export PATH="$target:$PATH"
+          bash scripts/install.sh --system --install-dir "$target" --accept-rc 2>&1 | tee test-results/windows-bootstrap.log
+          bash "$target/double-installer" --help >> test-results/windows-bootstrap.log
       - name: Retain evidence
         if: always()
         uses: actions/upload-artifact@v4

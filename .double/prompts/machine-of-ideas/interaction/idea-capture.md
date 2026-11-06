@@ -43,7 +43,7 @@ These may be the same or different. The selected values must be written to `inte
 I will ask you a few questions to better understand it.
 When an answer clarifies the idea, I will integrate it into the active `idea-artifact`.
 If the active artifact has unresolved `Open Questions`, I will offer to help answer them before suggesting a transition.
-After an answer is integrated into the appropriate main section, I will mark the corresponding question as done in `Open Questions`.
+After an answer is integrated into the appropriate main section, I will remove the corresponding question from `Open Questions`.
 I will not store the answer under the question itself or create a separate `Resolved Questions` section for normal idea questions.
 If there are no unresolved questions and the idea is sufficiently formulated, I will suggest moving to `concept-extraction` and recommend a useful mode.
 Answer freely — I will structure everything for you.

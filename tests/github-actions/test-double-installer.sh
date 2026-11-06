@@ -44,13 +44,13 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
 ''', encoding="utf-8", newline="\n");fake.chmod(0o755);native_python_shim(fake)
  env=dict(os.environ,PATH=str(bindir)+os.pathsep+os.environ['PATH'],FIXTURE=tmp,DOUBLE_STATE_DIR=posix_path(root/'state'))
  case_number=0
- def run(*args,code=0,extra=None):
+ def run(*args,code=0,extra=None,cwd=None):
   global case_number
   case_number+=1
   stamp=lambda: datetime.now(timezone.utc).isoformat(timespec='seconds').replace('+00:00','Z')
   started=time.monotonic()
   print(f'[{stamp()}] START fixture {case_number}: {args[0]} expected_exit={code}',flush=True)
-  r=subprocess.run([bash_exe,script,*args],env=dict(env,**(extra or {})),capture_output=True,text=True,encoding='utf-8',timeout=180)
+  r=subprocess.run([bash_exe,script,*args],env=dict(env,**(extra or {})),capture_output=True,text=True,encoding='utf-8',timeout=180,cwd=cwd)
   print(f'[{stamp()}] END fixture {case_number}: {args[0]} exit={r.returncode} elapsed={time.monotonic()-started:.3f}s',flush=True)
   if r.returncode!=code:
    inventory=root/'state/installer/registry.json'
@@ -94,6 +94,9 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
   digest=hashlib.sha256((assets/name).read_bytes()).hexdigest()
   (assets/'SHA256SUMS.txt').write_text(f'{digest}  {name}\n', encoding="utf-8", newline="\n")
  # Informational requests must not invoke network/state-changing command bodies.
+ import re
+ assert re.fullmatch(r'double-installer \d+\.\d+\.\d+(?:-(?:rc|dev))?',run('--version',extra={'HTTP_FAIL':'1'}).strip())
+ run('--version','unexpected',code=2)
  commands=('help','explain','doctor','releases','download','install','add','dev','remove','status','update','update-all','backups-clean','cron-add','cron-remove','uninstall-all')
  guide=run('explain',extra={'HTTP_FAIL':'1'})
  assert 'Double Installer — detailed guide' in guide
@@ -164,10 +167,42 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
 
  # S03: actual file and registry lifecycle in two isolated projects.
  pages([stable]);package(stable)
+ # Bare --project uses cwd at the end or before another option.
+ current=root/'current project тест';current.mkdir()
+ run('add','--machine','m-o-i','--project',cwd=current)
+ assert (current/'.double/templates/machine-of-ideas/example.md').exists()
+ run('add','--project','--machine','m-o-i',cwd=current)
+ run('update','--project','--machine','m-o-i','--non-interactive',cwd=current)
+ run('backups-clean','--yes','--project',cwd=current)
+ run('add','--global','--machine','m-o-i','--project',cwd=current,code=2)
+ run('update-all','--project',cwd=current,code=2)
+ run('remove','--machine','m-o-i','--yes','--project',cwd=current)
+ assert not (current/'.double/templates/machine-of-ideas/example.md').exists()
  project1=root/'project one';project2=root/'проект два'
  project1.mkdir();project2.mkdir()
  run('add','--project',posix_path(project1),'--machine','machine-of-ideas')
  run('add','--project',posix_path(project2),'--machine','machine-of-ideas')
+ # Status targets only the selected project and defaults a bare flag to cwd.
+ for args,cwd in [
+  (('status','--project'),project1),
+  (('status','--project',posix_path(project1)),None),
+ ]:
+  out=run(*args,cwd=cwd)
+  assert posix_path(project1) in out and posix_path(project2) not in out
+  assert 'Downloaded machine archives:' not in out
+ for args,cwd in [
+  (('status','--project','--json'),project1),
+  (('status','--json','--project'),project1),
+  (('status','--project',posix_path(project1),'--json'),None),
+ ]:
+  snapshot=json.loads(run(*args,cwd=cwd))
+  assert snapshot['archives']==[] and len(snapshot['installations'])==1
+  assert snapshot['installations'][0]['project']==posix_path(project1)
+ empty_project=root/'empty project';empty_project.mkdir()
+ assert json.loads(run('status','--project','--json',cwd=empty_project))=={'archives':[],'installations':[]}
+ assert 'No registered installations.' in run('status','--project',cwd=empty_project)
+ run('status','--project',posix_path(root/'missing project'),code=2)
+ run('status','--project','',code=2)
  installed=project1/'.double/templates/machine-of-ideas/example.md'
  assert installed.read_bytes()==b'machine content'
  registry=root/'state/installer/registry.json'
@@ -253,12 +288,21 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
  # A failed replacement rolls back while bulk update still updates an independent project.
  cp.write_text('#!/bin/sh\ncase "$*" in *unpacked*"update A"*) exit 1;; esac\nexec /bin/cp "$@"\n', encoding="utf-8", newline="\n");cp.chmod(0o755)
  # Explicit stable override lets B leave its selected rc policy only because version is newer.
- run('update-all','--channel','stable','--non-interactive',code=1)
+ run('update','--all','--channel','stable','--non-interactive',code=1)
  assert (a/'.double/templates/machine-of-ideas/new.md').exists()
  assert not (a/'.double/templates/machine-of-ideas/newer.md').exists()
  assert next(x for x in json.loads(registry.read_text())['installations'] if x['project']==posix_path(a))['version']=='1.11.0'
  assert next(x for x in json.loads(registry.read_text())['installations'] if x['project']==posix_path(b))['version']=='3.0.0'
  cp.unlink()
+ # Scripted bulk updates can explicitly delete only their newly created backups.
+ before_backups=set(backups.glob('backup.*'))
+ newer=release('1.12.0');pages([newer]);package(newer)
+ out=run('update-all','--non-interactive','--backup-policy','delete')
+ assert 'Delete this backup?' not in out
+ assert set(backups.glob('backup.*'))==before_backups
+ run('update-all','--non-interactive','--backup-policy','ask',code=2)
+ run('update-all','--backup-policy','invalid',code=2)
+ run('status','--json','--non-interactive')
  # Explicit backup cleanup filters by canonical project and requires confirmation.
  run('backups-clean','--project',posix_path(a),code=1)
  run('backups-clean','--project',posix_path(a),'--yes')
@@ -393,6 +437,49 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
  know=release('1.0.0','rc','machine-of-knowledge')
  installer=release('0.1.1','rc','double-installer');installer['assets'][0]['name']='double-installer.sh'
  fixtures([stable,older,rc,goals,goalsdev,know,installer])
+ bulk=root/'bulk project';bulk.mkdir()
+ other=root/'other bulk project';other.mkdir()
+ out=run('update','--project',posix_path(bulk),'--all')
+ assert 'Checked 0 registered machines' in out and 'machine-of-goals' in out and 'machine-of-ideas' in out
+ run('add','--project',posix_path(bulk),'--machine','machine-of-ideas','--yes')
+ run('add','--project',posix_path(other),'--machine','machine-of-knowledge','--yes')
+ out=run('update','--project',posix_path(bulk))
+ assert 'Checked 1 registered machines' in out and 'machine-of-goals' in out and 'machine-of-knowledge' in out
+ assert '  - machine-of-ideas ' not in out
+ run('add','--project',posix_path(bulk),'--all','--yes')
+ bulk_rows=[x for x in json.loads(registry.read_text())['installations'] if x['project']==posix_path(bulk)]
+ assert {x['machine'] for x in bulk_rows}=={'machine-of-ideas','machine-of-goals','machine-of-knowledge'}
+ assert {x['machine']:x['channel'] for x in bulk_rows}=={'machine-of-ideas':'stable','machine-of-goals':'rc','machine-of-knowledge':'rc'}
+ out=run('update','--project',posix_path(bulk),'--all')
+ assert 'Checked 3 registered machines' in out and 'No additional published machines' in out
+ for args in (('update',),('update','--all')):
+  out=run(*args,'--non-interactive')
+  assert '4 installations checked' in out and posix_path(bulk) in out and posix_path(other) in out
+ run('update','--machine','moi',code=2)
+ partial=root/'partial bulk project';partial.mkdir()
+ foreign=partial/'.agents/skills/machine-of-goals';foreign.mkdir(parents=True)
+ (foreign/'SKILL.md').write_text('foreign skill')
+ out=run('add','--project',posix_path(partial),'--yes',code=1)
+ assert 'continuing with the remaining machines' in out and (foreign/'SKILL.md').read_text()=='foreign skill'
+ partial_rows=[x for x in json.loads(registry.read_text())['installations'] if x['project']==posix_path(partial)]
+ assert {x['machine'] for x in partial_rows}=={'machine-of-ideas','machine-of-goals','machine-of-knowledge'}
+ for item in partial_rows: run('remove','--project',posix_path(partial),'--machine',item['machine'],'--yes')
+ filtered=root/'filtered bulk project';filtered.mkdir()
+ run('add','--project',posix_path(filtered),'--channel','stable','--yes')
+ filtered_rows=[x for x in json.loads(registry.read_text())['installations'] if x['project']==posix_path(filtered)]
+ assert [x['machine'] for x in filtered_rows]==['machine-of-ideas']
+ run('remove','--project',posix_path(filtered),'--machine','machine-of-ideas','--yes')
+ if os.name!='nt':
+  terminal_bulk=root/'terminal bulk project';terminal_bulk.mkdir()
+  run_tty('add','--project',posix_path(terminal_bulk),'--all','--agent','codex','--channel','rc',answer='y\ny\ny')
+  terminal_rows=[x for x in json.loads(registry.read_text())['installations'] if x['project']==posix_path(terminal_bulk)]
+  assert len(terminal_rows)==3
+  for item in terminal_rows: run('remove','--project',posix_path(terminal_bulk),'--machine',item['machine'],'--yes')
+ run('add','--project',posix_path(bulk),'--all','--machine','moi',code=2)
+ run('add','--project',posix_path(bulk),'--version','1.0.0',code=2)
+ run('update','--project',posix_path(bulk),'--all','--machine','moi',code=2)
+ for item in bulk_rows: run('remove','--project',posix_path(bulk),'--machine',item['machine'],'--yes')
+ run('remove','--project',posix_path(other),'--machine','machine-of-knowledge','--yes')
  run('install')
  run('download','--machine','machine-of-ideas',code=1)
  run('download');run('download','--all');run('install','--all')
@@ -410,7 +497,23 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
  run('download','--all',code=1);assert cached_archive.read_bytes()==b'corrupt'
  cached_archive.write_bytes(original_archive)
  cache=root/'state/installer/releases'
- assert {x.name for x in cache.iterdir()}=={stable['tag_name'],goals['tag_name'],know['tag_name']}
+ expected_cache={stable['tag_name'],goals['tag_name'],know['tag_name']}
+ if os.name!='nt': expected_cache.add(rc['tag_name'])
+ assert {x.name for x in cache.iterdir()}==expected_cache
+ # A registry entry alone does not mean the payload still exists. Restore it,
+ # including when just one managed file is missing, while keeping integrations.
+ repair=root/'repair project';repair.mkdir()
+ run('add','--project',posix_path(repair),'--machine','machine-of-ideas','--yes')
+ repair_entry=repair/'.double/skills/machine-of-ideas/SKILL.md'
+ repair_entry.unlink()
+ output=run('add','--project',posix_path(repair),'--machine','machine-of-ideas','--yes')
+ assert 'incomplete' in output and repair_entry.is_file()
+ repair_row=next(x for x in json.loads(registry.read_text())['installations'] if x['project']==posix_path(repair))
+ assert [x['agent'] for x in repair_row['integrations']]==['shared']
+ shutil.rmtree(repair/'.double')
+ run('add','--project',posix_path(repair),'--machine','machine-of-ideas','--yes')
+ assert repair_entry.is_file()
+ run('remove','--project',posix_path(repair),'--machine','machine-of-ideas','--yes')
  run('download','--all','--channel','rc',code=2)
  run('download','--all','--machine','machine-of-ideas',code=2)
  run('releases','--all',code=2)
@@ -425,12 +528,20 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
  commonrow=next(x for x in json.loads(registry.read_text())['installations'] if x['machine']=='machine-of-ideas')
  assert [i['agent'] for i in commonrow['integrations']]==['shared']
  run('uninstall-all','--yes')
+ # Global Antigravity is independent of the shared root and owns a new parent safely.
+ anti=home/'.gemini/config/skills/machine-of-ideas/SKILL.md'
+ run('add','--global','--machine','machine-of-ideas','--agent','antigravity','--yes')
+ assert anti.is_file() and not (home/'.agents/skills/machine-of-ideas/SKILL.md').exists()
+ run('update','--global','--machine','machine-of-ideas','--agent','antigravity','--non-interactive')
+ run('remove','--global','--machine','machine-of-ideas','--agent','antigravity','--yes')
+ assert not anti.exists() and not (home/'.gemini').exists()
  (home/'.codex').mkdir();(home/'.claude').mkdir()
  if os.name!='nt':
   # A real terminal input exercises consent instead of assuming piped text is consent.
   declined=root/'interactive declined';declined.mkdir()
   output=run_tty('add','--project',posix_path(declined),'--machine','machine-of-ideas',answer='n')
-  assert 'Add integrations for all detected agents?' in output and 'Claude Code' in output
+  assert 'Integration scope: Project (' in output and posix_path(declined/'.agents/skills') in output
+  assert 'Add the additional integrations listed above?' in output and posix_path(declined/'.claude/skills') in output
   assert (declined/'.agents/skills/machine-of-ideas/SKILL.md').exists() and not (declined/'.claude').exists()
   run('remove','--project',posix_path(declined),'--machine','machine-of-ideas','--yes')
   accepted=root/'interactive accepted';accepted.mkdir()
@@ -441,13 +552,17 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
   run('remove','--project',posix_path(accepted),'--machine','machine-of-ideas','--yes')
   explicit=root/'interactive explicit';explicit.mkdir()
   output=run_tty('add','--project',posix_path(explicit),'--machine','machine-of-ideas','--agent','claude')
-  assert 'Add integrations for all detected agents?' not in output
+  assert 'Add the additional integrations listed above?' not in output and posix_path(explicit/'.claude/skills') in output
   assert not (explicit/'.agents').exists() and (explicit/'.claude/skills/machine-of-ideas/SKILL.md').exists()
   run('remove','--project',posix_path(explicit),'--machine','machine-of-ideas','--yes')
+  (home/'.gemini/antigravity').mkdir(parents=True)
   output=run_tty('add','--global','--machine','machine-of-ideas')
-  assert output.count('Add integrations for all detected agents?')==1
+  assert output.count('Add the additional integrations listed above?')==1
+  assert 'Integration scope: Global' in output and posix_path(home/'.agents/skills') in output and posix_path(home/'.claude/skills') in output
+  assert posix_path(home/'.gemini/config/skills') in output and anti.is_file()
   assert (home/'.agents/skills/machine-of-ideas/SKILL.md').exists() and (home/'.claude/skills/machine-of-ideas/SKILL.md').exists()
   run('remove','--global','--machine','machine-of-ideas','--yes')
+  assert not anti.exists() and (home/'.gemini/antigravity').is_dir()
 
  # Project-local agent installation, explicit targeting and scope isolation.
  local1=root/'agent project one';local2=root/'agent project two'

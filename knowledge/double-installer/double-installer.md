@@ -73,6 +73,7 @@ See `scripts/double-installer.sh help` for syntax.
 
 | Command | Intended behavior |
 | --- | --- |
+| `--version` | Print the installed Double Installer version without network or state access |
 | `doctor` | Check dependencies and report evidence for eight supported detection candidates |
 | `explain` | Explain the installer and every command in detail |
 | `releases` | List published release packages; stable channel by default |
@@ -80,27 +81,70 @@ See `scripts/double-installer.sh help` for syntax.
 | `add` | Install machine files in a project and register the version |
 | `remove` | Remove owned machine files and its registry entry |
 | `status` | Show downloaded machine archives and registered installations |
-| `update` | Update one installation, backing up previous contents first |
+| `update` | Update registered machines across all installations, or restrict updates to a project or global scope |
 | `update-all` | Update registered installations and report per-installation results |
 | `backups-clean` | Delete selected installer backups after explicit confirmation |
 | `cron-add` | Create one marked update task with the specified schedule |
 | `cron-remove` | Remove only this installer's marked tasks |
 | `uninstall-all` | Remove all registered machines, cron tasks, and installer-owned state |
 
-`--project` must identify an existing project directory. `--machine` selects
+`--project [DIR]` selects an existing project directory. A bare `--project`
+uses the current working directory, including when followed by another option.
+For example, `double-installer add --machine m-o-k --project` targets the
+current directory. `double-installer status --project` shows installations
+registered in the current project; `status --project DIR` selects another
+project. Project status omits the shared download catalog; `--json` remains
+available, with an empty archives array and filtered installations. Omitting `--project` entirely preserves each command's
+existing scope rules (in particular, unscoped `update` updates all registered
+installations). `--machine` selects
 a published machine identifier; it is not a filesystem path. `--version`
 selects an exact version; absence means highest applicable numeric version.
-`--channel` is `stable`, `rc`, or `dev`. releases and explicit download
-default to stable. add defaults to stable → rc → dev, choosing the newest
+`--channel` is `stable` or `rc` for published releases. releases and explicit download
+default to stable. add defaults to stable → rc, choosing the newest
 numeric version in the first available channel. Prerelease installation requires
 affirmative terminal consent (also for explicit --channel), or add --yes.
 Updates do not downgrade; project updates retain the registered channel unless
 overridden. A bulk override applies explicitly to targeted installations.
 Ignore drafts and automatic repository source archives.
 
+The installer version is recorded in the script itself. Release packaging
+checks that it matches the release tag before producing a published asset.
+
+For a project, omit `--machine` or pass `--all` to `add` to install all
+available published machines. The preferred release is stable, then RC; an
+explicit `--channel` restricts the selection. Agent selection happens once,
+and each machine is installed independently. Existing installations retain
+their versions unless an incomplete installation needs restoring. Omit
+`--machine` or pass `--all` to `update` to update all registered machines in
+that project. It also lists published machines not yet registered there, without
+installing them. Both bulk operations continue after individual failures and
+return a nonzero status if an operation fails. `update` without `--project` or
+`--global` updates all registered project and global installations; `--all` is
+optional. `update-all` remains an equivalent command for that scope.
+
 Interactive destructive commands show their scope and ask confirmation;
 `--yes` confirms that displayed scope without prompting. Unattended updates
-use `--non-interactive`, never prompt, and retain backups. Interactive updates
+use `--non-interactive`, never prompt, and retain backups by default.
+All commands accept `--non-interactive`, including commands without prompts.
+Required consent must still be supplied with `--yes`; otherwise the command
+fails without reading stdin, even in a terminal. `add --yes` and `dev --yes`
+also suppress optional prompts; use `--agent` for a dedicated integration.
+
+`add`, `dev`, `update`, and `update-all` accept `--backup-policy keep|delete|ask`.
+`keep` retains newly created backups without asking; `delete` explicitly
+approves their deletion after successful installation or update. Existing
+backups are unaffected. The default `ask` offers cleanup only interactively;
+`--non-interactive` or `--yes` retains backups unless `delete` is specified.
+Explicit `--backup-policy ask --non-interactive` is a usage error.
+For example:
+
+```bash
+bash scripts/double-installer.sh update-all --non-interactive --backup-policy delete
+bash scripts/double-installer.sh add --project DIR --machine machine-of-goals --non-interactive --yes --backup-policy keep
+bash scripts/double-installer.sh backups-clean --non-interactive --yes
+```
+
+Interactive updates
 offer backup deletion afterward. Full uninstall deletes backups as requested,
 without preserving them as an exception to cleanup.
 
@@ -238,7 +282,9 @@ from dev to rc or rc to stable is allowed when that channel is explicitly select
 
 `update-all` reports each installation independently and returns failure if any
 fails. Each child operation holds the shared mutation lock. A terminal update
-asks whether to delete its new backup; `--non-interactive` retains it.
+asks whether to delete its new backup; `--non-interactive` retains it by
+default. `--backup-policy delete` removes the new backup without prompting,
+including when invoked through bulk or global update commands.
 `backups-clean` optionally filters by canonical project and machine, lists the
 matching copies, and requires confirmation or `--yes`. It does not delete
 release downloads or project files.
@@ -266,6 +312,9 @@ bash scripts/double-installer.sh doctor
 bash scripts/double-installer.sh releases
 bash scripts/double-installer.sh releases --channel rc
 bash scripts/double-installer.sh add --project /path/to/project --machine machine-of-ideas --channel rc
+bash scripts/double-installer.sh add --project /path/to/project --all
+bash scripts/double-installer.sh update --project /path/to/project --all
+bash scripts/double-installer.sh update
 bash scripts/double-installer.sh status
 bash scripts/double-installer.sh update-all --non-interactive
 bash scripts/double-installer.sh backups-clean --project /path/to/project
@@ -366,10 +415,14 @@ cannot combine with --machine, --version or --channel; choose a single-machine
 command for explicit channel/version. Repeated bulk downloads verify/reuse cache;
 corrupt cached entries are reported, never silently replaced.
 
-Global add lists detected agents and, with terminal input, asks whether to
-integrate all. It always selects one shared skill; consent additionally selects
-Claude's dedicated root if detected. No/empty/non-terminal input keeps shared-only.
-Explicit --agent codex/claude requests that adapter without the list/question.
+Global add lists detected agents and displays the global integration paths. It
+selects one shared skill and, if a dedicated agent is detected and input is a terminal,
+asks whether to add detected dedicated integrations: Claude's root and
+Antigravity's `~/.gemini/config/skills`. No/empty/non-terminal input keeps shared-only.
+`--agent antigravity` selects that global integration explicitly. Project
+Antigravity and Gemini CLI skills use the shared `.agents/skills` root; Gemini
+CLI also discovers `~/.agents/skills` globally.
+Explicit --agent codex/claude/antigravity requests that adapter without the list/question.
 Shared-root support for Claude is not assumed.
 
 Global machine payloads live at ~/.local/state/double/installer/global/.double
@@ -383,6 +436,7 @@ Generated regular SKILL.md entry points are placed at:
 
 - Codex: ~/.agents/skills/<machine>/SKILL.md.
 - Claude Code: ${CLAUDE_CONFIG_DIR:-~/.claude}/skills/<machine>/SKILL.md.
+- Antigravity: ~/.gemini/config/skills/<machine>/SKILL.md.
 
 The parent of a custom agent directory must already exist. The wrapper has
 name/description metadata and points to the canonical published machine skill
@@ -463,9 +517,9 @@ its own rollback. If one fails, retain the installed payload and successful
 connections, continue remaining agents and return nonzero with per-agent results.
 Repeat add to retry/repair skills without reinstalling or upgrading the payload.
 
-`add --global [--agent codex|claude] [--machine ID] [--channel stable|rc|dev]`
+`add --global [--agent codex|claude|antigravity] [--machine ID] [--channel stable|rc]`
 installs globally into the shared skills root by default. Without --machine it selects all available machines; the
-channel fallback is stable, then rc, then dev.
+channel fallback is stable, then rc.
 repeated global add may attach or repair selected skills but does not upgrade
 an existing payload. Global exact --version selection is not supported.
 
@@ -523,7 +577,7 @@ GitHub Copilot extension directories also count as extension evidence.
 This is heuristic discovery: config may be stale, installations outside known
 locations may be missed, and no version/login/skill loading is verified. Missing
 agents do not fail doctor; missing required tools retain the nonzero exit.
-Detection is independent of shared add and existing --agent codex/claude adapters.
+Detection is independent of shared add and explicit agent adapters.
 
 Primary references for directory/command conventions:
 - https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference
@@ -541,13 +595,15 @@ detection semantics are unchanged.
 
 ## Add Agent Discovery and Consent — 2026-10-17
 
-Without --agent, add now displays found agents using doctor evidence. In a
-terminal it asks whether to integrate all of them, default No. Yes selects one
-shared .agents/skills entry for compatible Codex/Cursor/Copilot/Gemini/OpenCode/
-Cascade/Pi and an additional .claude/skills entry if Claude Code was detected.
+Without --agent, add displays found agents using doctor evidence, the installation
+scope, and the shared integration path. It selects one shared .agents/skills
+entry for compatible Codex/Cursor/Copilot/Gemini/OpenCode/Cascade/Pi. If Claude
+Code or global Antigravity is detected and input is a terminal, it displays the
+applicable dedicated paths and asks whether to add them, default No.
 Decline, empty answer or EOF selects only the common root. No detected agents
 or non-terminal stdin also uses common-only without waiting for input. Explicit
---agent codex/claude skips the list/question and selects that adapter directly.
+--agent codex/claude/antigravity skips the list/question, displays the selected path, and
+selects that adapter directly.
 
 Selection happens once for project or global add, including a bulk global add.
 Discovery is a heuristic; it does not prove login/version/actual skill loading.

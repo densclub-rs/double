@@ -13,7 +13,7 @@ derived-from:
   - ideas/machine-of-ideas/machine-of-ideas-principles.md#principle-ask-and-integrate-open-questions
 ---
 
-# Template: Principle Artifact
+# Template: Principles
 
 ```md
 ---
@@ -30,7 +30,7 @@ derived-from:
   - <optional-relevant-sub-idea-artifact-id>
 ---
 
-# Principle Artifact: <Title>
+# <Idea title>: Principles
 
 Idea: [<Root Idea Title>](./<root-idea-id>.md#<root-idea-id>)
 
@@ -89,7 +89,7 @@ Why this principle follows from the source idea and concept artifact.
 
 - Unanswered questions that remain unclear or contested about this principle.
 - Each unanswered item in this subsection is an open question for this specific principle.
-- When a question is answered, integrate the answer into this principle's statement, source grounding, rationale, implications, boundaries, anti-patterns, or related artifact sections, then mark the item as answered or remove it from this subsection.
+- When a question is answered, integrate the answer into this principle's statement, source grounding, rationale, implications, boundaries, anti-patterns, or related artifact sections, then remove the answered item from this subsection.
 
 ## 4. Trade-offs and Tensions
 

@@ -8,9 +8,10 @@ artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-10-29
+observed-at: 2026-11-02
 ttl: one month
 derived-from:
+  - user instruction on 2026-11-02 to preserve approved tag messages exactly
   - .double/agents/double-agent/double-agent.md
   - user instruction to preserve separate machine changelogs on 2026-10-28
   - user-requested version, date and concise changelog format on 2026-10-28
@@ -18,6 +19,7 @@ derived-from:
   - user-approved project version source precedence and unchanged version values on 2026-10-28
   - user-approved schema-based storage and grouping artifacts by machine on 2026-10-28
   - user-required version and changelog components in the schema on 2026-10-29
+  - user-approved ordinary rule fallback and strict release version checking on 2026-11-04
 ---
 
 <a id="machine-version-and-changelog-locations"></a>
@@ -35,16 +37,18 @@ Applied for every module identifier `<machine>`.
 
 ### Version
 
-Resolve the current machine's version source from applicable project knowledge
-in `.double-rules/` first. Use a directly indexed `<machine>-version` artifact
-or a link to that artifact in an indexed knowledge item's `Value`. Read the
-`Common Rules`, `double-agent` and selected machine's index headings.
+For ordinary work resolve the current machine's version using applicable usable
+project and group knowledge, following the machines' rule loading protocol.
+Use a directly indexed `<machine>-version` artifact or a link to it in an
+indexed knowledge item's `Value`. For version lookup include `Common Rules`,
+`double-agent`, and the selected machine's headings. Silently skip unusable or
+conflicting rules and use the next usable scope or the default
+`knowledge/<machine>-version/<machine>-version.md`.
 
-When no project source is established, use
-`knowledge/<machine>-version/<machine>-version.md` as the default. A broken,
-conflicting or invalid project source blocks dependent work instead of
-triggering fallback. Local reads and updates use the resolved source; tagged
-packaging resolves the index and source from the exact tagged tree.
+Release preparation and tagged packaging use a separate strict check: resolve
+the source from the exact candidate or tagged tree, report broken, conflicting,
+or invalid sources, and block an ambiguous or non-reproducible release. An
+external group source cannot by itself establish the tagged version.
 
 ### Storage Layout
 
@@ -130,6 +134,18 @@ Use a version heading with a date, followed by a concise list of changes:
   approval.
 - Use the complete approved entry as the annotated tag message and GitHub
   release text. Telegram may shorten the message and link to the full release.
+
+### Annotated Tag Message Preservation
+
+- Create an annotated release tag with `git tag -a --cleanup=verbatim -F
+  <approved-message-file> <tag>` so Git retains the complete approved message,
+  including Markdown headings beginning with `#`.
+- Before creating the tag, verify that the message file contains the exact
+  approved changelog entry. After creation, read the tag object and compare its
+  complete annotation with the approved entry and changelog, including the
+  version and date heading. Do not publish if any content differs.
+- Follow Double Agent's existing tag and release recovery rules if the check
+  fails; this rule does not authorize overwriting or moving an existing tag.
 
 ## Notes
 

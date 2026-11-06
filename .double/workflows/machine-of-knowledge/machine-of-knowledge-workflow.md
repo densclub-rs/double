@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-knowledge
 id: machine-of-knowledge-workflow
 kind: workflow
-status: stable
+status: release-candidate
 interaction-language: en
 artifact-language: en
 derived-from:
@@ -17,55 +17,54 @@ derived-from:
 
 ## Project Rules Loading Protocol
 
-Here, project rules means project knowledge broadly: facts, settings,
-conventions, constraints, version knowledge and change history. A request about
-something at project level normally belongs in `.double-rules/`; it need not
-use the word "rule" or prescribe behavior. Preserve the directory and existing
-index headings as the discovery interface.
+Project and group rules are ordinary project knowledge, including facts,
+settings, conventions, constraints, versions, and change history. Before
+selecting a catalog, planning, or writing, resolve the applicable knowledge
+for the active user project. This protocol is packaged with each machine.
 
-Before selecting a catalog, planning, or writing, load the current project's
-rules. This protocol belongs to this machine and is included in its package.
+1. Establish the active project root from the request and context, not the
+   installation directory. If it is ambiguous, clarify it before writing.
+2. Examine at most three distinct directories: the project root, its immediate
+   parent, and that parent's parent. These represent project, nearest group,
+   and outer group. Each level is optional; stop at the filesystem root without
+   inspecting a directory twice. In each directory use `.double-rules/` and
+   its Markdown index `.double-rules/double-rules.md` if usable.
+3. For this machine select links under `Common Rules` and its machine-id
+   heading at each usable index. Resolve links relative to the index, artifact
+   links relative to their containing documents, and catalog settings relative
+   to the active project root unless explicitly absolute. Repeated links to
+   the same resolved artifact at one level are read once. Missing headings
+   contribute no rules. Use existing Machine of Knowledge artifacts and their
+   metadata; do not introduce a separate rule template or configuration.
+4. Silently skip absent, inaccessible, malformed, broken, draft, expired, or
+   otherwise unusable indexes, links, and artifacts. An unusable entry never
+   blocks ordinary work or renews a knowledge validity period. At one level,
+   if distinct usable artifacts have the same `id`, silently exclude all of
+   those conflicting artifacts for that id at that level. A broken entry does
+   not invalidate other usable links in an otherwise usable index.
+5. For each id select the nearest usable, non-conflicting whole knowledge
+   artifact: project, immediate parent, then second parent. Do not merge fields
+   or values. If a closer candidate is unusable or conflicting, try the next
+   level. Distinct ids remain distinct knowledge. If no usable rule applies,
+   use the machine defaults. Semantic overlap of distinct ids is handled by
+   Machine of Knowledge, not silently assumed during rule loading.
+6. Rules cannot bypass higher-priority instructions, required approvals, or
+   validation. Common and machine-specific headings have no inherent priority
+   within a level. Release preparation separately performs strict reproducible
+   version-source checks on the candidate tree; silent ordinary loading does
+   not authorize an ambiguous or external release version source.
+7. Rules are user-owned knowledge outside installer-managed `.double/`; preserve
+   each level during installation, updates, and removal. Package each machine's
+   loading protocol, never a publishing project's or group's actual rules.
+   Changes to this protocol require affected machine version updates; editing
+   knowledge alone does not require machine releases.
 
-1. Establish the active user project root from the request and available project
-   context. Do not substitute the installation directory of a globally installed
-   machine. If the root is ambiguous, clarify it before writing.
-2. Look for `.double-rules/` at that root. Its absence is normal: use this
-   workflow's defaults without creating a rules directory or asking the user
-   to configure one.
-3. When present, read `.double-rules/double-rules.md`. It is a Markdown index
-   with `Common Rules` and machine-id headings. Common rules apply to every
-   machine, including Double Agent, on every invocation regardless of task.
-   Read every linked common rule, then every rule under this machine's heading
-   (`machine-of-knowledge`). A rule may be linked under several machine headings; read it once.
-4. The links identify ordinary Machine of Knowledge artifacts, not a separate
-   rule template. Resolve index links relative to the index and artifact links
-   relative to their documents. Catalog settings in rule values are relative
-   to the active project root unless explicitly absolute. Use the existing
-   knowledge template and metadata; introduce no YAML configuration, additional
-   rule metadata, or mandatory rule-specific artifact sections.
-5. Missing machine headings mean no additional machine rules. An existing
-   directory with a missing index, a broken required link, an expired or draft
-   rule, or conflicting rules must be reported and resolved before dependent
-   work. Never silently ignore a rule or fall back past an unresolved conflict.
-   A rule's presence does not renew its knowledge validity period.
-6. Rules configure documented project settings and add project constraints;
-   they cannot bypass required approvals, validation, or higher-priority
-   instructions. Do not infer that machine-specific rules override common rules.
-   State material conflicts and ask for resolution before dependent actions.
-7. Keep `.double-rules/` in the project's version control. It is project-owned
-   knowledge, outside the installer-managed `.double/` tree. Package the loading
-   protocol with each machine, never the publishing project's actual rules.
-   Installation, update, and removal must preserve the user's rules. A repository
-   release tag records its project's rules in Git without shipping them to other
-   projects in a machine archive. Changes to this protocol require affected
-   machine version updates; project-rule edits alone do not require machine releases.
-
-The index is navigation, not a second copy of each knowledge value. Machine of
-Knowledge creates it only when the first project rule is accepted. It uses
-Markdown headings `Common Rules`, `double-agent`, `machine-of-knowledge`,
-`machine-of-ideas`, and `machine-of-goals`, with ordinary relative links under
-applicable headings; unused headings may be omitted. No agent-specific entry
-files are required by this protocol.
+At each level the index is navigation, not a copy of knowledge values. Machine
+of Knowledge creates it when the first rule at that level is accepted. It uses
+`Common Rules`, `double-agent`, `machine-of-knowledge`, `machine-of-ideas`,
+and `machine-of-goals` headings with ordinary relative links; other machine-id
+headings may be used and unused headings omitted. No agent-specific entry files
+are required.
 
 ## Purpose
 
@@ -91,12 +90,13 @@ This workflow is the canonical source for knowledge-specific behavior.
 
 ## Version Knowledge Rule
 
-The version source is resolved from applicable project knowledge first, using
-the Version Knowledge Resolution protocol in the Double Agent workflow. If no
-project source is established, use
+For ordinary work resolve the version source from usable project and group
+knowledge using the Project Rules Loading Protocol. If no usable source is
+established, use
 `knowledge/machine-of-knowledge-version/machine-of-knowledge-version.md` as the default.
-An invalid or conflicting project source blocks dependent work; it does not
-authorize fallback to the default.
+Ordinary work silently skips invalid or conflicting rule sources and uses the
+next usable scope or default. Release preparation uses the strict tagged-tree
+version resolution in the Double Agent workflow.
 Changes to the workflow, artifact contract, agent role, or transition
 conditions require the version knowledge to be updated through the Double Agent
 Skill.
@@ -121,10 +121,10 @@ Machine of Knowledge remains responsible for knowledge artifacts in the selected
 - The catalog note is `<knowledge-catalog>/<catalog-name>.md`.
 - Resolve an applicable storage schema before choosing the artifact path.
 - Without a storage schema, ordinary items default to
-  `<knowledge-catalog>/<knowledge-id>/<knowledge-id>.md`, and project items to
-  `.double-rules/<knowledge-id>/<knowledge-id>.md`.
-- Accepted project knowledge is linked from `.double-rules/double-rules.md`
-  regardless of the selected internal layout.
+  `<knowledge-catalog>/<knowledge-id>/<knowledge-id>.md`. Project or group
+  items default to `<selected-level>/.double-rules/<knowledge-id>/<knowledge-id>.md`.
+- Accepted scoped knowledge is linked from the selected level's
+  `.double-rules/double-rules.md` regardless of its selected internal layout.
 - Ids and filenames use `kebab-case`. The default layout uses matching directory
   and filename stems; a storage schema may group distinct artifact files in one
   subject directory while preserving each artifact's id and root anchor.
@@ -133,7 +133,112 @@ Machine of Knowledge remains responsible for knowledge artifacts in the selected
 If the selected ordinary knowledge catalog does not yet exist, the first knowledge run may create the
 catalog and its `knowledge.md` note before publishing the first item.
 
+## Knowledge Identity and Semantic Overlap
+
+Within knowledge extraction, review, or an authorized refactoring, inspect the
+relevant available knowledge in the affected catalogs and scopes for possible
+overlap before creating or reconciling an item. Compare the subject, scope,
+meaning, and applicable values; do not infer equivalence from similar wording
+alone. A matching `id` is a candidate for the same knowledge, not proof that
+independently created artifacts have the same meaning. Report a same-id
+collision with different meanings and resolve it with the user before dependent
+work; do not silently overwrite or apply precedence to unrelated knowledge.
+
+When different ids may describe the same knowledge, present the evidence and
+differences to the user. Ask whether the meanings and scopes actually overlap;
+do not silently merge them. After confirmation and authorization of the concrete
+refactoring, agree on one canonical knowledge id and reconcile the artifacts.
+Preserve meaning, provenance, and the distinct scope-specific values and their
+temporal metadata. A shared identity across group and project scopes does not
+mean collapsing their values into one artifact. For confirmed equivalent
+project and group rules, the nearest usable scope supplies the whole value in
+that project, as described by the Project Rules Loading Protocol.
+
+Review any value or storage schemas that describe the affected knowledge,
+including schema identifiers, references, descriptors, and dependent paths.
+If schemas differ or the refactoring changes their meaning, show the differences,
+propose a consistent schema, and obtain the user's decision on its meaning.
+After approval, refactor applicable schemas, identifiers, anchors, paths,
+indexes, and incoming and outgoing links as needed. Preserve schema-free
+knowledge when a schema is unnecessary. Validate each defined schema using the
+Knowledge Schema Standard, validate every applicable structured value and
+descriptor, and check actual paths, links, identities, scopes, and preserved
+values. Do not remove an independent scope-specific value as a duplicate.
+Resolve ambiguity, broken dependencies, or an invalid schema before dependent
+changes; do not invent meanings or silently fall back.
+
+This protocol does not authorize rewriting artifacts outside the user's agreed
+scope, change the project rules loading protocol, or introduce new mandatory
+metadata. Use the existing artifact template and route operating-artifact
+changes to Double Agent.
+
 ## Knowledge Schema Standard
+
+For every new or changed knowledge item, assess whether a schema is needed for
+unambiguous interpretation. Prefer a schema for composite values, nested
+sections, lists of properties, or identifiers whose meaning needs explanation.
+Propose and create one when it helps and its meaning is supported by the source.
+Clarify unsupported meanings rather than inventing them. A simple value whose
+meaning is clear from `Description` and the value itself need not have a schema.
+Assessment is required; a `Schema` section is not. Do not migrate existing
+schema-free artifacts solely because this guidance changed.
+
+For newly authored composite knowledge, represent the value under `Values` as
+nested Markdown subsections for groups and independent values. Represent a set
+of properties of one value as a Markdown list of atomic entries, not a section
+per property. Leaves contain atomic string representations, media links, or
+retrieval commands, without commentary. Put supplemental explanations, examples,
+exceptions and uncertainty in `Notes`; preserve conditions essential to applying
+the knowledge in the represented value or its schema. A schema describes both
+the structure and the meaning of its keys and list entries using `description`
+and, where useful, `title`, `const` and `oneOf`. Descriptions are annotations;
+schema validation alone cannot prove their semantic truth.
+
+JSON Schema validates JSON instances, not Markdown itself. Before validation,
+interpret the Markdown structure as the object or array described by the schema;
+check that headings, lists and atomic values map unambiguously to that instance.
+Do not guess conversions or execute a recorded command to validate its syntax or
+schema; resolve ambiguity and obtain authorization for retrieval. Existing
+`Value` artifacts and existing JSON descriptors remain valid without migration.
+
+### Markdown Values Interpretation
+
+For the new `Values` representation use the following deterministic mapping:
+
+- The `## Values` section is a JSON object. Direct `###` headings are its
+  property names; a heading with child headings is an object whose properties
+  are the direct children. Heading text is the exact, case-sensitive key; do
+  not derive keys from Markdown anchors. Increase heading level by one per
+  nesting level, and use each key only once within its parent.
+- A leaf contains exactly one atomic value or one flat Markdown unordered list
+  of atomic values. A list maps to a JSON array in the same order. Do not mix
+  child headings, list entries, and a leaf value within one section, or use
+  nested lists. Empty sections and ambiguous structures require clarification.
+- A plain single-line leaf or list item maps to its text as a JSON string,
+  with surrounding whitespace removed. Preserve its spelling: `true`, `42`
+  and `null` are strings, not inferred Boolean, numeric or null values. Use
+  string constraints in the schema; do not coerce values from their appearance.
+- A Markdown link to media maps to its destination as a JSON string; the link
+  label is presentation only. Resolve relative destinations against the
+  knowledge artifact when checking the target. A media link must be the entire
+  leaf or list item; an ordinary path written as plain text stays plain text.
+- A command value is a fenced code block with a nonempty language identifier,
+  for example `sh`, as the entire leaf. Its JSON value is the exact code text
+  inside the fence, without the fence or its language identifier. Lists contain
+  only single-line atomic values and cannot contain command blocks. The schema
+  description identifies a command and its expected result; the fence identifies
+  the invocation language. Parsing or validating never runs the command.
+- Use schema `description` annotations to identify the semantic role of each
+  property and list item, including media references and commands. `oneOf`
+  with `const` can describe individual list entries. Schema validation checks
+  the mapped strings, arrays and objects; link existence, semantic correctness,
+  command safety and results require separate checks.
+
+An artifact may preserve both a command and a cached result as separate named
+values, without fabricating the result. Keep observation time and validity
+period for the cached value and follow the existing retrieval authorization
+and temporal rules. Existing `Command` sections and retrieval metadata remain
+valid; do not silently replace or execute them during interpretation.
 
 When a knowledge artifact includes `Schema`, use **JSON Schema Draft 2020-12**
 exclusively. `Schema` is optional and may remain undefined, including for
@@ -142,7 +247,7 @@ unstructured knowledge that does not currently need formalization.
 - An absent or undefined schema is a valid state, not an artifact defect. Omit
   the entire `Schema` section when no schema is defined; do not add an empty
   block, `null`, an "undefined" marker or a permissive placeholder schema.
-- Do not invent a schema, request one as a mandatory prerequisite, restructure
+- Do not invent unsupported schema semantics, request a schema as a mandatory prerequisite, restructure
   existing knowledge or mark it draft merely because no schema is defined.
   The artifact may be complete with a free-form textual `Value`.
 - Record a missing schema in `Notes` only when it creates a material limitation
@@ -274,6 +379,14 @@ the current project through Double. Separately infer its scope: common to all
 machines, or one or more named machine ids (including `double-agent`). Project-level knowledge includes facts, versions and change history as well
 as instructions; do not require imperative wording or an explicit "rule" label.
 
+Also identify the requested scope in the directory hierarchy:
+project root, its immediate parent (nearest group), or its second parent (outer
+group). A request for group rules requires the person to identify the intended
+level if context does not already establish it. Reuse an explicit choice; do
+not infer the group level merely from a default. Resolve the selected level's
+`.double-rules/` as the destination root. Working outside the writable project
+requires the applicable filesystem authorization; never bypass it.
+
 - When both project-rule intent and scope can be identified, state the inferred
   classification and scope and ask the user to confirm before publication. Reuse
   explicit confirmation already given; never infer approval from silence.
@@ -282,7 +395,7 @@ as instructions; do not require imperative wording or an explicit "rule" label.
   reuse existing authorization. If project intent is clear but scope is not,
   clarify scope instead of silently publishing in the ordinary catalog. Use
   ordinary knowledge only when project-context intent is absent.
-- When the user explicitly requests a project rule, including conversion of an
+- When the user explicitly requests a project or group rule, including conversion of an
   existing item, scope is required. Ask whether it is common or which machines
   it applies to if that scope has not been supplied or confirmed. Do not silently
   save it as ordinary knowledge or assume every machine is an addressee.
@@ -290,7 +403,7 @@ as instructions; do not require imperative wording or an explicit "rule" label.
   existing grounding, access and temporal requirements. Do not create a new
   rule artifact type, metadata schema, or mandatory content sections. A rule
   awaiting confirmation must not be registered as active.
-- Publish under `.double-rules/` at the path resolved by Storage Schema
+- Publish under the selected level's `.double-rules/` at the path resolved by Storage Schema
   Resolution; the per-artifact directory is the default when no schema applies.
   Create the Markdown index if necessary and add its relative link under
   `Common Rules` or each confirmed machine-id heading. Common rules are loaded
@@ -313,7 +426,7 @@ Before extraction, the agent must confirm:
 5. whether the knowledge is `static` or `dynamic`
 6. the proposed `<knowledge-id>`, applicable storage schema and resolved publication path
 7. the selected mode
-8. ordinary knowledge or confirmed project rule, with common or named-machine scope
+8. ordinary knowledge or confirmed project/group rule, its selected hierarchy level, and common or named-machine scope
 
 The agent may infer a proposed target, type, or id from explicit context, but
 must state the inference before using it when uncertainty could change the
@@ -377,7 +490,8 @@ The step is complete when:
 
 - the artifact follows the knowledge template
 - all frontmatter fields and top-level sections are allowed by the template, required elements are present, and optional elements are justified
-- `Notes`, when needed, describes material gaps or uncertainty; omit it when there are none. Version knowledge contains no embedded changelog
+- `Notes`, when needed, contains supplemental context, examples, exceptions or material uncertainty; omit it when there are no additions. Version knowledge contains no embedded changelog
+- the need for a schema was assessed; a useful, source-grounded schema is provided where appropriate
 - its directory and filename follow the selected storage schema, or default Double naming when no schema applies
 - every included or selected schema declares JSON Schema Draft 2020-12 explicitly, has a knowledge-bound `$id`, and passes meta-schema validation
 - structured values and layout JSON satisfy any defined applicable schemas; schema absence or an undefined schema does not block completion

@@ -63,21 +63,24 @@ derived-from:
   Do not add a checksum file or self-referential approval hash to this model.
 - Every model edit invalidates its previous approval for future action. Review
   the new content before executing it. Approval alone creates no execution files.
-- Only the authorized start of step 05 freezes the approved model using
-  `plan-template` as `_realizations/<start>/plan-v1.md` and creates its realization.
-  Never create these files or their directory during synthesis or review.
+- At authorized step 05 start, create the realization linked to the approved
+  main plan; do not create a local copy. Before any change to stage/substage
+  composition or numbering, follow the workflow's preservation decision rule.
 - Stages have stable IDs (`S01`), anchors (`stage-s01`) and short English slugs.
   Identify each input/output condition as `<stage-id>-I<condition-number>` or
   `<stage-id>-O<condition-number>`, for example `S01-I01`, `S01-I02`, `S01-O01`
   and `S02-I01`, `S02-O01`. Number inputs and outputs independently within
-  each stage, starting at `01` with at least two digits, and explain checks.
-  Keep these IDs when freezing the plan and recording or validating conditions.
+  each stage, starting at `01` with at least two digits. Give each condition
+  its own subsection under Input Conditions or Output Conditions, with its ID
+  and a short name in the heading; describe it and its checks in a list, with
+  nested items when needed.
+  Keep these IDs in linked plans and when recording or validating conditions.
   Exit conditions cover the goal's target and success criteria. Offer documentary
   evidence first, with explicit user statements as an identified fallback.
 - Every plan model contains expected transitions only: no execution
   checkboxes, progress, acceptance, execution registry, index or computed automation style.
-  Facts and acceptance belong to realization/stage records. Preserve frozen plans
-  unchanged when editing the model; changed execution needs an approved successor.
+  Facts and acceptance belong to realization/stage records. Preserve historical
+  copies and follow the workflow before structural changes.
 - Omit unused optional fields and sections. Keep metadata in frontmatter.
 
 ## Model Shape
@@ -104,11 +107,19 @@ derived-from:
 
 Goal: [<goal-title>](./<goal-id>.md#<goal-id>)
 
-## Model
+## Conditions
 
-- Initial state: <expected-starting-state>
-- Target state: <desired-result>
-- Success criteria: <what-establishes-goal-achievement>
+### Initial State
+
+- <expected-starting-state>
+
+### Target State
+
+- <desired-result>
+
+### Success Criteria
+
+- <what-establishes-goal-achievement>
 
 ## Selection and Control Boundaries
 
@@ -131,22 +142,29 @@ Stage slug: `<short-english-kebab-case-name>`
 
 ### Input Conditions
 
-- <stage-id>-I01: <condition-and-how-it-can-be-established>
+#### <stage-id>-I01: <condition-name>
+
+- <condition-and-how-it-can-be-established>
+  - <optional-detail>
 
 ### Actions
 
-<the-intended-action-dependencies-and-stop-points>
+- <intended-action-with-dependencies-and-stop-points>
+  - <optional-detail-or-subaction>
 
 ### Output Conditions
 
-- <stage-id>-O01: <condition-and-how-it-can-be-established>
+#### <stage-id>-O01: <condition-name>
+
+- <condition-and-how-it-can-be-established>
+  - <optional-detail>
 ````
 
 The shape above is the default `plan.md`. For `plan-<id>.md` or
 `plan<owner_id>.md`, use the plan's generated `id` as its root anchor and
 adapt optional `owner-id` and actual goal-table links under the contract above.
 Retain the same `id` and logical branch across revisions. Every review,
-frozen-plan provenance and realization source link identifies the actual
+realization plan reference identifies the actual
 selected file and anchor, rather than assuming every variant uses `plan.md`.
 
 Repeat stage blocks for actual stages with matching IDs, anchors and slugs.
