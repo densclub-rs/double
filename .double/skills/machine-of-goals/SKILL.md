@@ -176,7 +176,7 @@ registration row or separate decision file during steps 03 or 04.
 
 Only at authorized manual step-05 start, recheck exact approval and create the
 realization linked to the main plan. Do not create a local plan copy at start.
-Before structural edits, follow the workflow's preservation decision: preserve
+Before incompatible edits, follow the workflow's preservation decision: preserve
 old plans as local `plan.md` and update links if chosen; otherwise offer deletion
 only with separate explicit consent. New realizations link the new main plan.
 A collapsed skill/action creates no Machine of Goals execution record when
@@ -284,8 +284,8 @@ validation flow.
   🛠️ needs revision, ➖ not selected. Only verified/accepted outputs permit ✅;
   keep textual metadata unchanged and never project progress into either plan.
 - Capture effective stage conditions and actions before acting; verify observed
-  outputs against captured conditions. Preserve facts and evidence. Before a
-  structural edit follow the explicit preservation decision; a nonstructural
+  outputs against captured conditions. Preserve facts and evidence. Before an
+  incompatible edit follow the explicit preservation decision; a compatible
   edit requires renewed approval but no local plan copy.
 - A collapsed realization is a skill or automated action, not a wrapper around
   another execution journal. Invocation creates no Machine of Goals directory,

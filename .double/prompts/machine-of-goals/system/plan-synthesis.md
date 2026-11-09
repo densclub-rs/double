@@ -96,10 +96,9 @@ Planning/review never owns execution-plan or realization creation.
 
 ## Model Changes and History
 
-Before changing stage or substage composition or numbering, follow the workflow's
-preservation decision: ask whether to preserve affected realizations; if yes,
-copy the old plan as `plan.md` and update links before the edit; if no, offer
-deletion only with separate explicit consent. Nonstructural edits need no copy.
+For compatible evolution, update the main plan and current realization map without
+a local copy. For incompatible changes, follow the workflow's preservation
+decision; deletion requires separate explicit consent.
 Every changed plan requires renewed approval before future action. Preserve
 captured conditions and earlier facts; validate observed outputs against them.
 

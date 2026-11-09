@@ -64,11 +64,15 @@ derived-from:
 - Every model edit invalidates its previous approval for future action. Review
   the new content before executing it. Approval alone creates no execution files.
 - At authorized step 05 start, create the realization linked to the approved
-  main plan; do not create a local copy. Before any change to stage/substage
-  composition or numbering, follow the workflow's preservation decision rule.
+  main plan; do not create a local copy. Before an incompatible change, follow the workflow's preservation decision rule.
 - Stages have stable IDs (`S01`), anchors (`stage-s01`) and short English names.
   Immediately after each stage heading, provide a short description of its
   purpose and intended result, without a separate heading or technical slug.
+- Infer each stage's type from its purpose and expected transitions: `1️⃣` for
+  one execution per realization, `🔁` when a stage may be revisited. Present
+  types and transitions for user correction during plan review. Repeatability
+  is independent of automation. Explain conditional transitions and stop points
+  in each stage; a return to a previously performed stage requires `🔁`.
   Identify each input/output condition as `<stage-id>-I<condition-number>` or
   `<stage-id>-O<condition-number>`, for example `S01-I01`, `S01-I02`, `S01-O01`
   and `S02-I01`, `S02-O01`. Number inputs and outputs independently within
@@ -82,7 +86,7 @@ derived-from:
 - Every plan model contains expected transitions only: no execution
   checkboxes, progress, acceptance, execution registry, index or computed automation style.
   Facts and acceptance belong to realization/stage records. Preserve historical
-  copies and follow the workflow before structural changes.
+  copies and follow the workflow before incompatible changes.
 - Omit unused optional fields and sections. Keep metadata in frontmatter.
 
 ## Model Shape
@@ -131,10 +135,12 @@ Goal: [<goal-title>](./<goal-id>.md#<goal-id>)
 
 ## Stages
 
-| Stage | Input | Output | Next |
-| --- | --- | --- | --- |
-| [S01: Prepare Documents](#stage-s01) | <required-state> | <expected-state> | [S02](#stage-s02) |
-| [S02: Submit Application](#stage-s02) | <required-state> | <expected-state> | <stage-link-or-end> |
+Legend: 1️⃣ once per realization; 🔁 repeatable.
+
+| Stage | Type | Input | Output | Next |
+| --- | --- | --- | --- | --- |
+| [S01: Prepare Documents](#stage-s01) | 1️⃣ | <required-state> | <expected-state> | [S02](#stage-s02) |
+| [S02: Submit Application](#stage-s02) | 🔁 | <required-state> | <expected-state> | <stage-link-or-end> |
 
 <a id="stage-<stage-id-lowercase>"></a>
 
@@ -160,6 +166,10 @@ Goal: [<goal-title>](./<goal-id>.md#<goal-id>)
 
 - <condition-and-how-it-can-be-established>
   - <optional-detail>
+
+### Transitions
+
+- <condition-and-next-stage-or-stop>
 ````
 
 The shape above is the default `plan.md`. For `plan-<id>.md` or

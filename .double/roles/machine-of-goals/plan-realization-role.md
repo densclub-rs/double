@@ -42,7 +42,7 @@ structured-choice, stop-point, and continuation rules remain binding.
 - Show the linked plan stage and capture its conditions, actions, checks and
   dependencies before acting. Recheck approval before future actions. Validate
   observed results against captured conditions, preserving factual history.
-- Before structural plan edits follow the workflow's preservation decision;
+- Before incompatible plan edits follow the workflow's preservation decision;
   preserve the old plan locally and update links if chosen, or offer deletion
   only with separate explicit consent. New realizations link the new main plan.
 - Offer appropriate documentary confirmation of inputs. Inspect what it

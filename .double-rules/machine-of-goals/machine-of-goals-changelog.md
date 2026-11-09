@@ -26,6 +26,13 @@ Changes recorded for the `machine-of-goals` module.
 
 ## Value
 
+### 0.0.20-rc — 2026-11-09
+
+- Continue compatible plan evolution within the existing realization and preserve unaffected stage results.
+- Track stage dependencies, partial progress and repeated passages without losing earlier evidence.
+- Mark dependent stages for review when an upstream result changes.
+- Check sharing materials for personal data and ask how to handle findings before committing.
+
 ### 0.0.19-rc — 2026-11-09
 
 - Describe each stage's purpose and intended result directly below its heading.

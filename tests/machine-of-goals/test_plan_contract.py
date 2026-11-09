@@ -137,11 +137,11 @@ def test_manual_realization_renders_emoji_states_and_legend():
     for emoji, state in states.items():
         assert f'{emoji} {state}' in current_shape
         assert f'| {state} | {emoji} |' in canonical
-    initial_states = re.findall(r'^\| \[S0[12]:[^\n]+?\| ([^|]+)\|', current_shape, re.M)
+    initial_states = re.findall(r'^\| \[S0[12]:[^\n]+?\| [^|]+\| ([^|]+)\|', current_shape, re.M)
     assert len(initial_states) == 2
     assert all(value.strip() == '⚪' for value in initial_states)
     assert all(value.strip() in states for value in initial_states)
-    assert current_shape.index('Legend:') < current_shape.index('| Stage | State | Record | Result |')
+    assert current_shape.index('Legend:') < current_shape.index('| Stage | Type | State | Record | Result |')
     assert '| Progress |' not in current_shape
     validation = section(WORKFLOW.read_text(), '### Input, Action, and Output')
     assert 'showing `🟠` in the realization map' in validation
@@ -157,14 +157,14 @@ def test_emoji_rendering_preserves_metadata_and_plan_immutability():
         assert not any(emoji in generated for emoji in ['⚪', '🔄', '🟠', '✅', '🟡', '⛔', '❌', '🛠️', '➖'])
 
 
-def test_structural_change_requires_explicit_preservation_or_deletion_decision():
+def test_compatible_evolution_and_incompatible_preservation():
     workflow = WORKFLOW.read_text()
     review = section(workflow, '### Model and Selection')
     assert 'Any model edit invalidates that approval' in review
     change = section(workflow, '### Model Change and Succession')
-    for text in ['stage and substage composition', 'numbering', 'ask explicitly',
+    for text in ['assess compatibility', 'Continue the same realization', 'ask explicitly',
                  'before editing the main plan', 'separate explicit consent',
-                 'do not delete or apply the structural change', 'nonstructural edit needs no local plan copy',
+                 'do not delete or apply the incompatible change', 'compatible edit needs no local plan copy',
                  'conditions captured when that stage was performed', 'newly started']:
         assert text in ' '.join(change.split()), text
     assert change.index('preserve the actual old plan') < change.index('After preservation or')
@@ -427,7 +427,7 @@ def test_manual_progress_has_one_home_and_a_goal_navigation_path():
     assert realization[0]['started-at'] == '<actual-ISO8601-time-with-offset>'
     text = (TEMPLATES / 'realization-template.md').read_text()
     assert '_realizations/<YYYY-MM-DDTHH-mm-ss>/realization.md' in text
-    assert '| Stage | State | Record | Result |' in text
+    assert '| Stage | Type | State | Record | Result |' in text
     goal = (TEMPLATES / 'goal-template.md').read_text()
     assert './_realizations/<YYYY-MM-DDTHH-mm-ss>/realization.md#<realization-id>' in goal
     assert 'not merely the latest timestamp' in goal
@@ -467,3 +467,20 @@ def test_exchange_preserves_selected_walkthroughs_without_execution_bookkeeping(
         assert 'goal and model alone or selected/all documented realizations' in mode
         assert 'Imported experience remains source history' in mode
         assert 'never executes a packaged mechanism as a side effect' in mode
+
+
+def test_evolution_dependency_and_sharing_contracts():
+    workflow = ' '.join(WORKFLOW.read_text().split())
+    for requirement in (
+        'without a plan copy or successor',
+        'do not ask to reconfirm them',
+        'direct and transitive dependent stages',
+        'independent stages keep their status',
+        'Continuing a partial passage',
+        'remove, retain or mask',
+        'before committing',
+    ):
+        assert requirement in workflow
+    stage = (TEMPLATES / 'stage-realization-template.md').read_text()
+    assert 'unique record id and anchor' in stage
+    assert 'Continue a partial passage in its existing record' in stage

@@ -488,6 +488,22 @@ anchor; never fall back to `plan.md` for a named variant.
 
 ### Start and Resume
 
+Plan synthesis infers each stage type from its purpose and transitions: `1️⃣`
+means once within a realization and `🔁` permits repeated passage. Put the type
+in the plan's stage table, describe conditional transitions and stop points in
+the stage, and present both for user correction during review. Never infer type
+from automation. A transition returning to an already performed stage requires
+that stage to be repeatable. If an actual return to a once-only stage becomes
+necessary, pause and propose a plan revision for user review before acting.
+
+The realization Stage Map copies approved types into an emoji-only Type column
+and extends its existing legend. A repeated passage stays in the same realization:
+create a distinct stage record with suffix `-02`, `-03`, etc. after the original
+slug, retain and link earlier records, and capture and verify fresh input and
+output conditions for each passage. The map reflects the current passage; prior
+results, decisions and evidence remain intact. Follow the existing validation
+and continuation handoff on every passage.
+
 - At authorized step-05 start recheck the exact approved source digest, path,
   selection and boundaries. A mismatch returns to review before any action.
 - Create `_realizations/<YYYY-MM-DDTHH-mm-ss>/realization.md`, recording the
@@ -582,13 +598,36 @@ and stage records; never add it to the main plan or preserved historical copy.
 
 ### Model Change and Succession
 
-Before changing a plan, compare stage and substage composition, identities and
-numbering, including nested stages. A change to any of these is structural.
-Find all previous realizations referencing that exact plan, including completed
-ones, and inspect their existing links and plan copies. Do not assume a
-realization needs conversion merely because it predates this contract.
+Before editing, assess compatibility with each affected realization using stable
+stage identities, meanings, captured conditions, dependencies, evidence and
+completed results. Adding stages, substages or transitions can be compatible;
+a new prerequisite can nevertheless make previous results inapplicable.
+For compatible evolution, increment plan-revision and update the same main plan;
+review and approve its changed contents before further action. Continue the same
+realization, linked to the main plan, without a plan copy or successor. Add new
+stages and substages to its map, retain accepted completion and evidence for
+unaffected stages, and do not ask to reconfirm them. Reassess only affected
+results and new obligations; preserve the earlier completion as historical fact.
 
-Before applying a structural change, ask explicitly whether to preserve the
+For a changed stage result, mark all previously performed direct and transitive
+dependent stages `🛠️` (needs revision); independent stages keep their status.
+Follow the approved transitions and dependencies to repeat and validate affected
+stages, retaining earlier facts. A partial stage permits transition only where
+its outputs and the plan explicitly allow it. Continuing a partial passage closes
+remaining substages and/or records the person's explicit account of further work;
+verify the applicable output conditions, retaining `🟡` until all are accepted.
+This continues its existing stage record. Repeat a completed repeatable stage in
+a distinct record and retain its earlier passages. Each passage receives a unique
+stage-record id and anchor by appending its ordinal (`-02`, `-03`, etc.) to the
+first record id; link all passages and indicate the current one in the map.
+
+Before an incompatible change, find affected realizations referencing the exact
+plan, including completed ones, and inspect their links and existing copies.
+A change is incompatible when retained stage identity, meaning or execution
+context can no longer be understood or correctly mapped; do not infer it merely
+from an added stage. Do not silently convert historical artifacts.
+
+Before applying an incompatible change, ask explicitly whether to preserve the
 integrity of the affected previous realizations. While the decision is pending,
 do not change the plan. If yes, preserve the actual old plan as `plan.md` in
 each affected realization before editing the main plan. Preserve content,
@@ -602,14 +641,14 @@ sufficient; do not rewrite facts or silently migrate legacy artifacts.
 
 If the user declines preservation, offer deletion of the affected realizations,
 identifying the exact directories. Deletion requires separate explicit consent;
-if declined or pending, do not delete or apply the structural change. After
+if declined or pending, do not delete or apply the incompatible change. After
 authorized deletion, remove only the corresponding obsolete navigation rows;
-if deletion fails, do not apply the structural change. Never infer deletion
+if deletion fails, do not apply the incompatible change. Never infer deletion
 consent from the decision not to preserve. After preservation or
 separately authorized deletion, edit and review the main plan. A newly started
 realization links the updated main plan, not a local copy.
 
-A nonstructural edit needs no local plan copy. It invalidates prior approval for
+A compatible edit needs no local plan copy. It invalidates prior approval for
 future actions; review the changed content again. Preserve recorded stage
 conditions, actions, results and acceptance and validate observed output against
 the conditions captured when that stage was performed. Do not retroactively
@@ -645,7 +684,7 @@ validating a stage never modifies the plan to reflect progress.
 
 Approval of model content and permission to start remain distinct. Steps 03
 and 04 create no execution artifacts. Any model edit requires renewed review
-before future planned action. Apply the structural-change preservation decision before editing stage topology; preserve earlier facts.
+before future planned action. Apply the incompatible-change preservation decision before an incompatible edit; preserve earlier facts.
 
 To inspect progress, use the goal's existing Machine of Goals Artifacts section
 to open the applicable realization. Read its status, current-stage and Stage
@@ -794,7 +833,7 @@ packaged.
 
 Editable revisions retain the same file, id and branch and increment the review
 revision. Renew approval before future action. Follow Model Change and Succession
-before any structural edit; ordinary edits do not create a local copy. At start,
+before any incompatible edit; compatible edits do not create a local copy. At start,
 a realization links the actual approved main plan. Its captured stage facts
 preserve the original conditions used for observed actions and validation.
 
@@ -1019,7 +1058,7 @@ sequence authorization. The authoritative details are in the
   requires explicit start authorization, including already supplied exact consent.
 - next-step: `05-plan-realization` only when start is authorized, or remain at
   this completed review with the model only when start is deferred.
-- Any model edit requires renewed review. Do not create a realization, registration or separate decision file at review. Structural edits follow the preservation decision before the edit.
+- Any model edit requires renewed review. Do not create a realization, registration or separate decision file at review. Incompatible edits follow the preservation decision before the edit.
 
 ### 05. Plan Realization
 
@@ -1073,7 +1112,7 @@ sequence authorization. The authoritative details are in the
 - next-step:
   - `05-plan-realization` for an eligible next stage within continuation consent
   - `04-plan-review-and-decision` for another model/branch or changed boundaries
-  - `03-plan-synthesis` for a changed model, applying the structural-change rule first
+  - `03-plan-synthesis` for a changed model, applying the incompatible-change rule first
   - `01-goal-formulation` when the goal must be reformulated
   - `<end>` when the goal is validated and the user closes or pauses here
 - a successor inherits only applicable results and keeps their original facts.
@@ -1089,6 +1128,14 @@ sequence authorization. The authoritative details are in the
   missing confirmation or blocker. Never infer success from invocation alone.
 - next-step: finish, pause, or request model/mechanism review as appropriate;
   never synthesize an execution-history layer as a side effect.
+
+### Personal Data in Sharing Materials
+
+Before committing materials prepared for sharing or publication, inspect the
+selected text and attachments for personal data. If found, describe the findings
+to the user before committing and ask whether to remove, retain or mask them;
+apply the user's explicit decision to the sharing material. Preserve the private
+originals. Do not claim the check guarantees detection of every personal datum.
 
 ### 07. Plan Packaging / Export
 

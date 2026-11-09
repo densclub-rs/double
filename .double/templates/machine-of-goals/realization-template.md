@@ -34,13 +34,13 @@ creates none of these Machine of Goals execution records when invoked. See the
   Retain the approved revision and digest as evidence of the decision.
 - Set `plan-id` to the selected main plan's `id`. The realization has its own
   separate identity. Named plan variants use their actual paths.
-- Before a structural edit to the main plan, apply the workflow's explicit
+- Before an incompatible edit to the main plan, apply the workflow's explicit
   preservation decision. When preservation is chosen, copy the old plan to
   `./plan.md` and update this realization and stage references before the edit.
   Do not overwrite an existing file. A new realization links the new main plan.
 - Any changed plan content needs renewed approval before future action. Validate
   observed results against the conditions captured in stage records and preserve
-  earlier facts, even after nonstructural edits.
+  earlier facts, even after compatible edits.
 - `current-stage` identifies the stage being worked on or awaiting validation.
   The map links its linked plan anchor and stage record directly. Render every
   State cell with only its required emoji; the legend above the map explains
@@ -48,6 +48,12 @@ creates none of these Machine of Goals execution records when invoked. See the
   Progress handoffs may use emoji with short prose labels. Keep frontmatter
   status values textual and synchronize their meaning with the body. Do not
   project progress into the editable model or frozen plan.
+- Copy approved stage types into a Type column containing only `1️⃣` or `🔁`;
+  extend the existing legend. For a return to a repeatable stage, show its
+  current passage state and retain links to every prior passage and its evidence.
+- Compatible plan evolution updates this same map; add new stages, retain unaffected
+  completed states and mark performed transitive dependents of changed results 🛠️.
+  Review the changed plan before action; never reconfirm unaffected past work.
 - A stage can start only after its input conditions are accepted. It is
   completed only after its output conditions are accepted. Merely taking an
   action, attaching a file, or stating an expected outcome is not acceptance.
@@ -112,11 +118,12 @@ Current stage: [<stage-id>: <stage-name>](./<stage-id-lowercase>-<stage-slug>.md
 
 Legend: ⚪ pending; 🔄 in progress; 🟠 awaiting verification; ✅ completed;
 🟡 partial; ⛔ blocked; ❌ failed; 🛠️ needs revision; ➖ not selected.
+Type: 1️⃣ once per realization; 🔁 repeatable.
 
-| Stage | State | Record | Result |
-| --- | --- | --- | --- |
-| [S01: Prepare Documents](../../plan.md#stage-s01) | ⚪ | <record-link-when-created> | <result-and-confirmation-basis> |
-| [S02: Submit Application](../../plan.md#stage-s02) | ⚪ | <record-link-when-created> | <result-and-confirmation-basis> |
+| Stage | Type | State | Record | Result |
+| --- | --- | --- | --- | --- |
+| [S01: Prepare Documents](../../plan.md#stage-s01) | 1️⃣ | ⚪ | <record-link-when-created> | <result-and-confirmation-basis> |
+| [S02: Submit Application](../../plan.md#stage-s02) | 🔁 | ⚪ | <record-link-when-created> | <result-and-confirmation-basis> |
 
 ## Result
 

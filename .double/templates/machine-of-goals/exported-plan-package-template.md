@@ -121,3 +121,5 @@ Portable sequence or package outline:
   execution in the receiving context. A requested new manual start links its
   own approved plan; invocation of a collapsed mechanism creates no execution record.
 ```
+
+Before committing sharing materials, inspect selected text and attachments for personal data. If found, tell the user and ask whether to remove, retain or mask it; follow the explicit decision and preserve private originals. This check cannot guarantee complete detection.

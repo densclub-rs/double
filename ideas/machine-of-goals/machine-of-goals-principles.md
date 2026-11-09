@@ -18,7 +18,7 @@ Idea: [Machine of Goals](./machine-of-goals.md#machine-of-goals)
 
 ## 1. Principle Synthesis Summary
 
-Machine of Goals connects a verifiable goal with an understandable model, user-selected execution, and retained evidence. Its principles distinguish independent plan branches from evolution within a branch, and expected model states from the facts of a concrete realization. A model change creates a successor execution with applicable inherited results rather than rewriting history.
+Machine of Goals connects a verifiable goal with an understandable model, user-selected execution, and retained evidence. Its principles distinguish independent plan branches from evolution within a branch, and expected model states from the facts of a concrete realization. Compatible model evolution can continue in the same realization without rewriting history; incompatible changes require explicit preservation decisions.
 
 Manual walkthroughs already provide documentation and can be reused independently of automation. Optional collapsing, preparation of sharing copies, comparison of later experience, and requested branch cleanup preserve that value while keeping control, personal data, and factual context understandable.
 
@@ -132,7 +132,7 @@ A file numbered Plan 2 does not explain whether it replaces an earlier model or 
 #### Implications Without Implementation
 
 - Keep branch identity stable through the evolution of its model.
-- Treat compatible MINOR and PATCH changes within the model file; preserve a separate model for a MAJOR change.
+- Keep compatible changes in the main model file; decide explicitly how to preserve affected realizations before incompatible changes.
 - Evaluate new prerequisites and dependencies for compatibility rather than classifying by edit size.
 - Select a current version within the chosen branch.
 
@@ -276,11 +276,11 @@ A stage account with input, actions, output, and supporting evidence lets anothe
 
 <a id="principle-model-changes-start-successor-realizations"></a>
 
-### principle-model-changes-start-successor-realizations: Model Changes Start Successor Realizations
+### principle-model-changes-start-successor-realizations: Preserve Continuity Through Plan Evolution
 
 #### Statement
 
-End the current realization when its model changes and continue in a linked successor, inheriting stage records and completed results only where they remain applicable.
+Continue a realization through compatible plan evolution, preserving its records and link to the main plan. For incompatible changes, decide explicitly how to preserve affected realizations before changing the plan.
 
 #### Derived From
 
@@ -291,12 +291,12 @@ End the current realization when its model changes and continue in a linked succ
 
 #### Rationale
 
-One realization should not silently change what model its actions are judged against. A successor preserves useful work while making the model boundary explicit. Applicability depends on inputs and dependencies as well as unchanged stage text.
+Stage records retain the actual conditions and evidence under which work was performed. Applicability depends on inputs and dependencies as well as unchanged stage text.
 
 #### Implications Without Implementation
 
-- Record the closure reason and predecessor-successor relationship in the main documents.
-- Identify the updated model in the successor even when it is a compatible update in the same file.
+- Record and review the updated model before further action; keep compatible work linked to the main plan.
+- Preserve the old plan and repair references when preservation is chosen for incompatible change; deletion requires separate consent.
 - Carry unchanged stage records and evidence forward; retain completed status after checking dependencies and current conditions.
 - Include inherited materials in a readable retained walkthrough.
 
@@ -308,7 +308,7 @@ One realization should not silently change what model its actions are judged aga
 
 #### Anti-Patterns
 
-- Changing the model identity of an existing realization in place.
+- Reinterpreting historical actions as if they had been performed under newly introduced conditions.
 - Marking an inherited stage complete after its required inputs changed without rechecking.
 - Requiring readers to traverse every predecessor to understand a retained example.
 
@@ -767,8 +767,8 @@ Plan comparison requires measurable grounds. Basic metrics - the number of succe
 
 ## 4. Trade-offs and Tensions
 
-- `Model improvement` vs `execution continuity`: changing the model ends one realization, while applicable stage results carry into a successor.
-- `Compatible updates` vs `exact historical text`: MINOR and PATCH updates avoid another model file, but a version label alone cannot reconstruct overwritten text; stage records preserve actual execution context.
+- `Model improvement` vs `execution continuity`: compatible changes retain the realization; incompatible changes require an explicit preservation decision.
+- `Compatible updates` vs `exact historical text`: Compatible updates avoid another model file, but a revision alone cannot reconstruct overwritten text; stage records preserve actual execution context.
 - `Parallel alternatives` vs `simple selection`: independent branches may coexist, so current-version selection is branch-local.
 - `Inheritance` vs `changed conditions`: carrying evidence forward avoids repeated work, but changed inputs may require another check.
 - `Readable documentation` vs `factual detail`: stage records retain actions and proof while the main document stays a compact map.
@@ -781,7 +781,7 @@ Plan comparison requires measurable grounds. Basic metrics - the number of succe
 ## 5. Candidate Inputs for Future Stages
 
 - A flow from goal and path discovery through the model, execution choice, concrete execution, and result validation.
-- Branch-local identity and model compatibility criteria, with major-version files and Markdown frontmatter.
+- Branch-local identity and model compatibility criteria, with revision provenance in Markdown frontmatter.
 - A realization start and model-change boundary, plus applicability checks for inherited results.
 - A compact stage map and three-part stage documents with directly associated evidence.
 - On-request collapsing into AI-agent skills, executable modules, and mixed forms that preserve model checks and links.
