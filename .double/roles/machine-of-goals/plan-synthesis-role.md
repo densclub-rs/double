@@ -50,8 +50,9 @@ Planning/review never owns execution-plan or realization creation.
   role, not its user-facing name. Keep the lifecycle distinction in metadata.
 - Model a verifiable transition from initial to target state, with goal success
   criteria. A task list alone is insufficient. Explain uncertainty explicitly.
-- Define stable stage IDs/anchors, short English names/slugs, required inputs,
-  intended actions, outputs, dependencies, resources, risks, checks and stop points.
+- Define stable stage IDs/anchors, short English names, brief purpose descriptions,
+  required inputs, intended actions, outputs, dependencies, resources, risks,
+  checks and stop points.
   Include detail proportionate to the goal, whether autonomous or a subgoal.
 - Distinguish independently developed parallel plans from selectable paths or
   subplans inside one plan, parallel stages, and logical revision lineage.

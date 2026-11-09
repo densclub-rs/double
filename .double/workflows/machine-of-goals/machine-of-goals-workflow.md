@@ -372,7 +372,9 @@ Existing user artifacts remain historical; do not silently convert them.
   The actual SHA-256 digest identifies the exact reviewed file content;
   a name or revision alone cannot.
 - Stages have stable IDs such as `S01`, anchors such as `stage-s01`, and short
-  English names/slugs. State required inputs, intended actions, expected
+  English names. Immediately below each stage heading, briefly describe its
+  purpose and intended result; omit technical slugs from the plan. State required
+  inputs, intended actions, expected
   outputs, dependencies and checks. Exit conditions cover goal success.
   The model never stores execution progress, checkboxes or a realization registry.
 - Give input/output conditions IDs formed from their stage ID and their own

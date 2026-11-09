@@ -8,7 +8,7 @@ artifact-language: en
 access: free-of-charge
 type: static
 value-type: text
-observed-at: 2026-11-04
+observed-at: 2026-11-09
 ttl: one month
 derived-from:
   - user-approved group rule and machine contract updates on 2026-11-04
@@ -63,4 +63,4 @@ project.
 
 ## Value
 
-`0.0.18`
+`0.0.19`

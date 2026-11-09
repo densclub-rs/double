@@ -66,7 +66,9 @@ derived-from:
 - At authorized step 05 start, create the realization linked to the approved
   main plan; do not create a local copy. Before any change to stage/substage
   composition or numbering, follow the workflow's preservation decision rule.
-- Stages have stable IDs (`S01`), anchors (`stage-s01`) and short English slugs.
+- Stages have stable IDs (`S01`), anchors (`stage-s01`) and short English names.
+  Immediately after each stage heading, provide a short description of its
+  purpose and intended result, without a separate heading or technical slug.
   Identify each input/output condition as `<stage-id>-I<condition-number>` or
   `<stage-id>-O<condition-number>`, for example `S01-I01`, `S01-I02`, `S01-O01`
   and `S02-I01`, `S02-O01`. Number inputs and outputs independently within
@@ -138,7 +140,7 @@ Goal: [<goal-title>](./<goal-id>.md#<goal-id>)
 
 ## <Stage ID>: <Short English Name>
 
-Stage slug: `<short-english-kebab-case-name>`
+<short-description-of-the-stage-purpose-and-intended-result>
 
 ### Input Conditions
 
@@ -167,6 +169,6 @@ Retain the same `id` and logical branch across revisions. Every review,
 realization plan reference identifies the actual
 selected file and anchor, rather than assuming every variant uses `plan.md`.
 
-Repeat stage blocks for actual stages with matching IDs, anchors and slugs.
+Repeat stage blocks for actual stages with matching IDs and anchors.
 The sample map rows are examples. Add path/subgoal links in context only when
 needed. A model change never rewrites a plan or facts of an earlier realization.

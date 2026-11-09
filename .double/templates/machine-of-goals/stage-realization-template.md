@@ -20,7 +20,9 @@ derived-from:
 
 One short Markdown document records the passage through one linked plan stage.
 Its filename is `<stage-id-lowercase>-<short-english-stage-slug>.md` inside
-the timestamped realization directory. Use exactly three main parts: input
+the timestamped realization directory. At creation, derive the short English
+kebab-case slug from the stage name. Keep the created filename and its links
+unchanged if the stage name later changes. Use exactly three main parts: input
 state, actions, and output state. Evidence is linked where it supports a fact;
 it does not require a separate evidence or validation artifact.
 
