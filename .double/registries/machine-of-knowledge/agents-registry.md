@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-knowledge
 id: agents-registry
 kind: registry
-status: release-candidate
+status: stable
 ---
 
 # Agents Registry
