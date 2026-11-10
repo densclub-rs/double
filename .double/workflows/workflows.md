@@ -7,6 +7,7 @@ mindmap-plugin: basic
 
 ## [Double Agent](./double-agent/double-agent.md)
 - [Double Agent Workflow](./double-agent/double-agent-workflow.md)
+- [Parallel Project Work](./double-agent/parallel-work-workflow.md)
 
 ## [Machine of Ideas](./machine-of-ideas/machine-of-ideas.md)
 - [Machine of Ideas Workflow](./machine-of-ideas/machine-of-ideas-workflow.md)

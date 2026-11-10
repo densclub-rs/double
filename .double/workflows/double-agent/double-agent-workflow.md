@@ -3,9 +3,13 @@ style: double
 submodule: double
 id: double-agent-workflow
 kind: workflow
-status: stable
+status: release-candidate
 interaction-language: en
 artifact-language: en
+derived-from:
+  - ideas/double-agent/double-agent.md#double-agent
+  - ideas/double-agent/double-agent-principles.md#principle-explicit-collaborative-entry
+  - ideas/double-agent/double-agent-principles.md#principle-integrate-checked-contributions
 ---
 
 # Workflow: Double Agent
@@ -133,6 +137,18 @@ its responsible machine workflow.
 
 Do not store or infer machine versions from `.double/` frontmatter. Dedicated
 version knowledge artifacts are the only source of machine versions.
+
+<a id="collaborative-project-work"></a>
+
+## Parallel Project Work
+
+Route explicit requests to inspect parallel work, start or continue local or
+collaborative work, or act on an existing work item or contribution to the
+[Parallel Project Work workflow](./parallel-work-workflow.md). It prepares
+the working copy before handing off to the machine responsible for the
+artifact. Use the ordinary machine entry for artifact work outside that route.
+Follow the applicable release process when the parallel-work workflow hands
+off a release request.
 
 ## Repository Tools
 

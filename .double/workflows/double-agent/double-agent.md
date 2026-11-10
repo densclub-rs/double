@@ -1,5 +1,5 @@
 ---
-status: stable
+status: release-candidate
 style: double
 submodule: double
 mindmap-plugin: basic
@@ -9,3 +9,4 @@ mindmap-plugin: basic
 
 ## [Workflows](../workflows.md)
 - [Double Agent Workflow](./double-agent-workflow.md)
+- [Parallel Project Work](./parallel-work-workflow.md)

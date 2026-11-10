@@ -1,9 +1,10 @@
 ---
-status: stable
+status: release-candidate
 name: double-agent
 description: >
-  Actively assist people with project work using Double, advise and route
-  specialized work to its owning machine, maintain machine operating artifacts
+  Actively assist people with project work using Double, coordinate local and
+  collaborative parallel work on ideas, goals, or knowledge, and route
+  specialized work to its owning machine. Maintain operating artifacts
   under .double/, and prepare or publish machine releases. Follow the canonical
   Double Agent workflow for inspection, planning, confirmation, sequential
   changes, and validation. Do not replace specialized user artifact workflows
@@ -23,6 +24,14 @@ The canonical operating contract is:
 - `.double/workflows/double-agent/double-agent-workflow.md`
 
 ## Activation Rule
+
+Use the canonical workflow's Parallel Project Work route when a participant
+explicitly asks to inspect parallel work, start or continue local or
+collaborative work on an idea, goal, or knowledge artifact, or act on an
+existing parallel work item or contribution. This includes requests to work
+on an artifact in a separate worktree. The route prepares the work before
+handing off to the owning machine. Use the ordinary machine entry for
+artifact work outside that route.
 
 Activate this skill for advice or assistance with project work using Double,
 for new machine operating contracts, and when the user requests creation,

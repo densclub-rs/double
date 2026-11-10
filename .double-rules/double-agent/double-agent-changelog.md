@@ -8,7 +8,7 @@ artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-11-04
+observed-at: 2026-11-10
 ttl: one month
 derived-from:
   - .double-rules/double-agent/double-agent-version.md
@@ -25,6 +25,12 @@ derived-from:
 Changes recorded for the `double-agent` module.
 
 ## Value
+
+### 0.0.13-rc — 2026-11-10
+
+- Add a Double Agent workflow for local and collaborative parallel work on ideas, goals, and knowledge.
+- Show worktree and session state, flag potential overlap before handoff, and offer actions based on the observed state.
+- Check and integrate selected contributions separately from pushing changes or preparing a release.
 
 ### 0.0.12 — 2026-11-04
 
