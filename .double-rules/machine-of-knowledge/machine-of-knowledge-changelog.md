@@ -26,6 +26,17 @@ Changes recorded for the `machine-of-knowledge` module.
 
 ## Value
 
+### 0.0.8 — 2026-11-09
+
+- Assess whether each new or changed knowledge item needs a schema.
+- Represent composite values with Markdown sections and lists of atomic properties.
+- Define how Markdown headings and lists map to structured knowledge values.
+- Preserve atomic text as strings without implicit type conversion.
+- Describe value structure and meaning in JSON Schema.
+- Interpret media links and fenced commands without executing commands.
+- Keep supplemental explanations, examples and uncertainty in Notes.
+- Validate mapped values against JSON Schema and preserve existing knowledge formats.
+
 ### 0.0.8-rc — 2026-11-05
 
 - Define how Markdown headings and lists map to structured knowledge values.

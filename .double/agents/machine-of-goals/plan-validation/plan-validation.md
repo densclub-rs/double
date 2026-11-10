@@ -48,7 +48,7 @@ structured-choice, stop-point, and continuation rules remain binding.
   in the editable model or frozen plan.
 - Validate observed outputs against the conditions captured before action.
   Renew approval before acting on changed plan content. Follow the workflow's
-  preservation decision before structural edits; never rewrite earlier facts.
+  preservation decision before incompatible edits; never rewrite earlier facts.
 - Compare actual outputs with the captured conditions. Offer relevant
   documentary evidence and inspect its applicability. When documents cannot
   be supplied, preserve the explicit user statement as the acceptance basis;

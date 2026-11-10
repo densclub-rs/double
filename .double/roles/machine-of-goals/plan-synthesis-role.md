@@ -50,8 +50,9 @@ Planning/review never owns execution-plan or realization creation.
   role, not its user-facing name. Keep the lifecycle distinction in metadata.
 - Model a verifiable transition from initial to target state, with goal success
   criteria. A task list alone is insufficient. Explain uncertainty explicitly.
-- Define stable stage IDs/anchors, short English names/slugs, required inputs,
-  intended actions, outputs, dependencies, resources, risks, checks and stop points.
+- Define stable stage IDs/anchors, short English names, brief purpose descriptions,
+  required inputs, intended actions, outputs, dependencies, resources, risks,
+  checks and stop points.
   Include detail proportionate to the goal, whether autonomous or a subgoal.
 - Distinguish independently developed parallel plans from selectable paths or
   subplans inside one plan, parallel stages, and logical revision lineage.
@@ -93,10 +94,9 @@ Planning/review never owns execution-plan or realization creation.
 
 ## Model Changes and History
 
-Before changing stage or substage composition or numbering, follow the workflow's
-preservation decision: ask whether to preserve affected realizations; if yes,
-copy the old plan as `plan.md` and update links before the edit; if no, offer
-deletion only with separate explicit consent. Nonstructural edits need no copy.
+For compatible evolution, update the main plan and current realization map without
+a local copy. For incompatible changes, follow the workflow's preservation
+decision; deletion requires separate explicit consent.
 Every changed plan requires renewed approval before future action. Preserve
 captured conditions and earlier facts; validate observed outputs against them.
 

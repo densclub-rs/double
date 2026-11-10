@@ -195,7 +195,7 @@ The model is the bridge from a verifiable goal to understandable action. Stable 
 
 - Understandability can be sufficient to begin even when later details remain open.
 - The model contains expected states and checks, not in-progress or completed markers.
-- Model changes during execution create a realization boundary; they do not rewrite what already happened.
+- Compatible model evolution can continue within the realization and does not rewrite what already happened.
 
 #### Questions
 
@@ -225,7 +225,7 @@ Branch identity makes it possible to maintain alternatives without confusing the
 
 #### Boundaries
 
-- Several retained major versions of one branch do not create several branches.
+- Several retained historical revisions of one branch do not create several branches.
 - A selectable route within one model need not become an independent branch.
 - A higher version in another branch does not supersede this branch.
 
@@ -239,7 +239,7 @@ Branch identity makes it possible to maintain alternatives without confusing the
 
 #### Definition
 
-A branch-local MAJOR.MINOR.PATCH identity for a state of the plan model. PATCH corrects wording without changing meaning; MINOR adds or refines compatible obligations; MAJOR introduces an incompatible model of achieving the goal. Compatibility concerns stage conditions, required results, and dependencies rather than the size of the edit.
+A monotonically increasing branch-local `plan-revision` identifies a state of the plan model. Compatibility is evaluated separately from the number, using stage conditions, required results and dependencies rather than the size of the edit.
 
 #### Source in Idea
 
@@ -247,7 +247,7 @@ A branch-local MAJOR.MINOR.PATCH identity for a state of the plan model. PATCH c
 
 #### Role in the Idea
 
-Versions connect executions to the model they used. MINOR and PATCH updates remain in the same Markdown file; a MAJOR change preserves the former model and creates another file, such as `plan-double-v2.md`. The current version is chosen within the selected branch.
+Revisions connect executions to the model they used. Compatible updates remain in the main plan file; incompatible changes require an explicit decision about preserving affected realizations and their prior model context.
 
 #### Related Concepts
 
@@ -257,7 +257,7 @@ Versions connect executions to the model they used. MINOR and PATCH updates rema
 
 #### Boundaries
 
-- A small new prerequisite may be incompatible and therefore major.
+- A small new prerequisite may be incompatible.
 - Changing execution from manual to a skill or script need not change the model.
 - A version label cannot reconstruct earlier text overwritten by a compatible update; retained stage records preserve actual execution context and checks.
 
@@ -292,7 +292,7 @@ The realization gives execution one understandable home. It records what happene
 - A concrete realization is distinct from a reusable skill or program that can guide or perform many executions.
 - A progress marker is not evidence of a verified result.
 - The creation timestamp stays fixed; subsequent updates do not rename the realization.
-- A change to the model ends the current realization and starts a linked successor.
+- Compatible evolution may continue in the same realization; incompatible change requires an explicit preservation decision.
 
 #### Questions
 
@@ -337,7 +337,7 @@ Stage records keep a walkthrough readable at human scale. The realization map op
 
 #### Definition
 
-The relationship between a realization that ends because its model changed and a successor started against the updated model. The successor carries forward unchanged stage records and evidence; completed status carries forward where dependencies, inputs, and results remain applicable.
+The optional relationship between a realization that ends at an execution boundary and a successor started against an updated model. The successor carries forward unchanged stage records and evidence; completed status carries forward where dependencies, inputs, and results remain applicable.
 
 #### Source in Idea
 
@@ -345,7 +345,7 @@ The relationship between a realization that ends because its model changed and a
 
 #### Role in the Idea
 
-Succession allows a model to improve without mixing different model states into one execution or repeating work whose results are still valid. Its predecessor relationship remains in the main realization documents, while inherited material is included in the successor so it can be read on its own.
+Succession allows a model to improve while preserving the model context of past work and avoiding repetition of results that remain valid. Its predecessor relationship remains in the main realization documents, while inherited material is included in the successor so it can be read on its own.
 
 #### Related Concepts
 
@@ -760,10 +760,42 @@ The goal context connects the intention, models, and actual experience. A main r
 
 - None.
 
+<a id="concept-compatible-plan-evolution"></a>
+
+### concept-compatible-plan-evolution: Compatible Plan Evolution
+
+#### Definition
+
+A plan can grow by adding stages, substages or transitions while retaining existing stage identities, meanings and applicable completed results. The ongoing realization follows the evolving main plan, records new work in its map and preserves prior conditions, actions and evidence.
+
+#### Source in Idea
+
+- Explicit in the root idea's plan evolution and documented walkthrough description.
+
+#### Role in the Idea
+
+Evolution supports learning during execution without creating a copy or new realization for every compatible addition. Review changed plans before further work and reassess dependencies and success criteria. A previous completion remains historical evidence, not proof of new obligations.
+
+#### Related Concepts
+
+- [Plan as Transition Model](#concept-plan-as-transition-model)
+- [Documented Plan Realization](#concept-documented-plan-realization)
+- [Realization Succession and Inheritance](#concept-realization-succession-and-inheritance)
+
+#### Boundaries
+
+- An added prerequisite can be incompatible despite being an addition.
+- Incompatible changes require an explicit decision on preserving affected realizations and their plan context; deletion needs separate consent.
+- Preserved stage evidence does not automatically establish current applicability.
+
+#### Questions
+
+- None.
+
 ## 4. Terms and Non-Concepts
 
 - `Goal Capture`, `Path Discovery`, `Plan Synthesis`, `Execution Variant Choice`, and `Result Validation`: flow labels that operationalize the concepts above.
-- `branch`, MAJOR.MINOR.PATCH, stage anchors such as `S01`, English stage names, and creation timestamps: identity and naming terms covered by branch, version, and realization concepts.
+- `branch`, `plan-revision`, stage anchors such as `S01`, English stage names, and creation timestamps: identity and naming terms covered by branch, version, and realization concepts.
 - `realization.md`, stage Markdown files, attachments, and frontmatter: supporting representations of the execution context, not independent concepts.
 - `skill`, `shell script`, `workflow`, `program`, and mixed modules: possible reusable forms; a skill need not be an executable program.
 - `SDD`: an external methodology with which generated material may be compatible, not an internal execution requirement.
@@ -777,7 +809,7 @@ The goal context connects the intention, models, and actual experience. A main r
 - Distinguish parallel branch identity from compatibility-based model evolution.
 - Record the beginning and model identity of a concrete realization in one readable context.
 - Preserve actual input, actions, output, and evidence as documentation of execution.
-- End a realization at a model change and carry applicable results into an intelligible successor.
+- Continue compatible evolution in the same realization, preserving evidence; handle incompatible changes explicitly.
 - Evaluate inheritance through dependencies and conditions rather than unchanged text alone.
 - Keep repeatability independent of automation and collapse only on request.
 - Preserve goal and model connections, state checks, and control boundaries in reusable forms.

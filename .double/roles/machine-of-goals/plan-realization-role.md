@@ -42,16 +42,18 @@ structured-choice, stop-point, and continuation rules remain binding.
 - Show the linked plan stage and capture its conditions, actions, checks and
   dependencies before acting. Recheck approval before future actions. Validate
   observed results against captured conditions, preserving factual history.
-- Before structural plan edits follow the workflow's preservation decision;
+- Before incompatible plan edits follow the workflow's preservation decision;
   preserve the old plan locally and update links if chosen, or offer deletion
   only with separate explicit consent. New realizations link the new main plan.
 - Offer appropriate documentary confirmation of inputs. Inspect what it
   establishes; when unavailable, an explicit condition-specific user statement
   can support acceptance, labeled as such. Silence and unrelated files
   do not confirm conditions. Do not act on unaccepted inputs.
-- Record actual actions and relevant safe commands/corrections in order inside
-  Actions. Do not invent evidence, timestamps, or command success, and remain
-  within existing approval boundaries and stop points.
+- Record actual actions and substantive stage and validation commands in order
+  inside Actions, following the workflow's command and output rule. Include
+  observed output and exit code, failures and corrections; link large output
+  files stored directly in the current realization directory. Do not invent
+  evidence, timestamps, or command success; respect approval boundaries.
 - After action, leave outputs awaiting verification and hand off to step 06.
   An existing stage awaiting validation must be checked, not blindly executed
   again on resume. Do not mark it completed from action success alone.

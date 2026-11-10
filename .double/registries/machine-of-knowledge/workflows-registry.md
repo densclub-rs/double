@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-knowledge
 id: workflows-registry
 kind: registry
-status: release-candidate
+status: stable
 ---
 
 # Workflows Registry

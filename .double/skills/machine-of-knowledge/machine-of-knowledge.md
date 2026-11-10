@@ -1,3 +1,3 @@
 ---
-status: release-candidate
+status: stable
 ---

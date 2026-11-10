@@ -20,9 +20,20 @@ derived-from:
 
 One short Markdown document records the passage through one linked plan stage.
 Its filename is `<stage-id-lowercase>-<short-english-stage-slug>.md` inside
-the timestamped realization directory. Use exactly three main parts: input
+the timestamped realization directory. At creation, derive the short English
+kebab-case slug from the stage name. Keep the created filename and its links
+unchanged if the stage name later changes. Use exactly three main parts: input
 state, actions, and output state. Evidence is linked where it supports a fact;
 it does not require a separate evidence or validation artifact.
+
+For a repeatable stage, keep each passage as a separate stage record in the
+same realization: retain the first filename and append `-02`, `-03`, etc. to
+the slug for later passages. Never overwrite an earlier record. Link all actual
+passages from the map and identify the current one. Capture and verify conditions
+again for each passage; retain prior decisions and evidence unchanged. Derive a
+unique record id and anchor for each later passage by appending its ordinal.
+Continue a partial passage in its existing record with accepted new substages
+or a clearly attributed user statement; keep 🟡 until all outputs are accepted.
 
 ## Stage Contract
 
@@ -33,7 +44,7 @@ it does not require a separate evidence or validation artifact.
   references; do not renumber captured or inherited conditions.
 - Review changed plan content before future action. Validate observed outputs
   against conditions captured before action and preserve all earlier facts.
-  Follow the workflow's preservation decision before structural plan changes.
+  Follow the workflow's preservation decision before incompatible plan changes.
 - Verify input conditions before action. Verify output conditions before
   marking the stage completed in the realization map. An unresolved or failed
   input blocks action; an unresolved output remains awaiting verification or
@@ -60,11 +71,14 @@ it does not require a separate evidence or validation artifact.
 - Keep the confirmation basis visible for each condition. A stage accepted
   on user statements is summarized as such in the realization map; do not hide
   the difference behind an unqualified completed marker.
-- Record actual actions, deviations, and relevant commands in order. Preserve
-  generated instructions before or when presented, including corrections;
-  record observed success and failures honestly. Keep useful working context
-  and results beside commands, with secrets replaced by protected references.
-  Omit irrelevant bookkeeping and empty command subsections.
+- Record actual actions and deviations in order. For each substantive command
+  used for the stage or its validation, follow the workflow's command and output
+  rule: a separate block with working directory, safe command, observed output
+  and exit code, including failures and corrections. Put long output in a
+  distinct linked file directly in the current realization directory. Preserve
+  earlier output files; identify unavailable, truncated, empty or redacted
+  output honestly. Preserve generated instructions before or when presented,
+  marking those not observed running. Omit incidental bookkeeping.
 - Inheritance preserves original facts, statements, evidence, and their source
   version. Record the originating realization when inherited; include useful
   materials locally so the retained record is understandable on its own.
@@ -109,6 +123,26 @@ Documentary evidence requested: <what-was-requested-and-whether-it-was-available
 Intended action: <captured-action-from-the-linked-plan>
 
 <actual-actions-in-order-with-relevant-commands-results-and-deviations>
+
+### <Command ordinal and purpose>
+
+Working directory: `<working-directory>`
+
+```sh
+<exact-safe-command>
+```
+
+Output:
+
+```text
+<observed-short-output-or-explicitly-no-output>
+```
+
+For long output, replace the text block with a link to a distinct output file
+directly in this realization directory, e.g. `[full output](./s02-command-01.log)`.
+Mark unavailable or truncated output and any redactions explicitly.
+
+Exit code: `<observed-code-or-unavailable>`
 
 ## Output State
 

@@ -65,11 +65,11 @@ After that, the system helps compose a plan for achieving the goal. The plan sho
 
 The plan is a model for future execution, comparable to an abstract class: it describes the structure of a transition, while a concrete execution supplies the actual conditions, actions, and results. Each stage explains its required input state, intended action, expected output state, and how that output can be checked. Stages have stable anchor IDs such as `S01` and short English names such as `Prepare Documents`, from which readable realization filenames such as `s01-prepare-documents.md` are formed. The model remains visible during execution; execution statuses belong to the realization, not to the model.
 
-The `branch` value identifies an independent line of plan development within a goal. For example, `double` may be the main branch and `lightweight` a parallel branch. A version change within `double` is evolution of that plan; creating `lightweight` establishes a separate plan with its own version history. Several retained major versions within one branch do not by themselves constitute parallel branches. A branch created from another branch may record its source branch and version.
+The `branch` value identifies an independent line of plan development within a goal. For example, `double` may be the main branch and `lightweight` a parallel branch. A version change within `double` is evolution of that plan; creating `lightweight` establishes a separate plan with its own version history. Retained historical revisions within one branch do not by themselves constitute parallel branches. A branch created from another branch may record its source branch and version.
 
-Plan versions use MAJOR.MINOR.PATCH to express the scale and compatibility of model changes. PATCH covers corrections that do not change the model's meaning. MINOR covers compatible additions or refinements, including stages or substages that preserve existing obligations. MAJOR covers changes that make the previous model incompatible with the new way of achieving the goal. Adding a prerequisite may be incompatible even if it is a small textual addition. Changing from manual guidance to a skill or script does not itself change the model version unless the model changes.
+Each model edit increases the branch-local `plan-revision` monotonically. Compatibility is assessed from its impact on stage identities, conditions, dependencies and recorded results, rather than from a semantic version number. Adding a prerequisite may be incompatible even when the textual change is small.
 
-MINOR and PATCH updates stay in the same Markdown model file. A MAJOR change preserves the previous model and creates another file, for example `plan-double-v1.md` at version `1.4.0` and `plan-double-v2.md` at version `2.0.0`. A parallel model may be `plan-lightweight-v1.md` at version `1.0.0`. The current version is selected within a branch, not globally across the goal. Branch and version metadata are stored in Markdown frontmatter; the model does not require separate YAML files or a separate catalog of plan releases. Version metadata alone does not reconstruct the exact earlier text overwritten by a MINOR or PATCH update; retained stage records preserve the actual execution context and checks.
+Compatible updates stay in the same main plan file and realization. For incompatible changes, the person chooses whether to preserve affected realizations with a local copy of their prior plan; deleting them requires separate consent. New realizations link the updated main plan. Branch and revision metadata identify provenance; retained stage records preserve the actual execution context and checks.
 
 A subgoal is a goal used within another goal's plan, not a separate goal type. Any goal may serve as a subgoal, and any subgoal may be pursued as an autonomous goal. The same goal may play both roles at once. These roles are determined by explicit relationships and plan integration boundaries, not by a `goal-scope` field. Workflow depth and plan detail depend on the goal's needs, not on its role.
 
@@ -87,7 +87,9 @@ The basic retained unit is one documented walkthrough, or concrete realization, 
 
 Each stage has its own Markdown document with three main parts: actual input state, performed actions, and observed output state. Checks, commands, deviations, decisions, and supporting evidence appear in the corresponding part. The main document opens these stage documents directly; additional indexes and repeated navigation are unnecessary. The walkthrough is both factual evidence of execution and readable documentation of how the result was obtained. Its main document can become an overview page and its stage documents a sequence of documentation pages without first reconstructing the experience from unrelated logs.
 
-The plan describes the transition model, while the walkthrough preserves the facts of a concrete execution. During a realization, the machine monitors whether its model has changed. If the model changes, the current realization ends with that reason recorded and a successor starts against the changed model. This also applies when a compatible model change updates the same file without creating another model file. The relationship between predecessor and successor is recorded in their main documents. The successor carries forward the records and evidence of unchanged stages; completed status is retained where the result remains applicable after checking dependencies and current conditions. A stage with unchanged text may still need rechecking if its inputs have changed. Inherited materials are included in the retained walkthrough so that a reader does not have to follow a chain of previous realizations to understand it.
+The plan describes expected transitions, while the walkthrough preserves facts. Compatible evolution can add stages, substages or transitions while keeping existing stage identities, meanings, applicable conditions and evidence intact. The realization continues against the evolving main plan without a local copy; add newly applicable stages to its map and review the changed plan before further action. Recheck dependencies and success criteria: a prior completion remains a historical fact, not automatic proof that newly added obligations are satisfied. Captured stage conditions and evidence preserve the basis of prior work.
+
+When a change is incompatible with existing records or identities, ask whether to preserve affected realizations. If preservation is chosen, retain the old plan locally and repair references before the change; otherwise offer deletion separately and delete only with explicit consent. Do not erase or reinterpret prior evidence. A successor realization may be used where appropriate, carrying results only after their applicability is checked. A new realization refers to the new main plan.
 
 Execution progress is visible in the realization's stage map, alongside the model, with the current stage, checked results, and remaining path clear. The model itself does not acquire `in progress` or `completed` markers. Documented walkthroughs and their evidence are retained for verification, documentation, and reuse. The main realization document, stage documents, and attachments provide this context without separate registration artifacts or a full plan snapshot for every clarification.
 
@@ -140,7 +142,7 @@ The idea of Machine of Goals is part of the Double ecosystem, just like the idea
 - achievement strategy
 - plan
 - independently evolving plan branches
-- branch-local model versions and major-version model files
+- branch-local model revisions and explicit preservation of incompatible prior contexts
 - explicit cleanup of obsolete branch versions and dependent artifacts
 - selectable path and subplan options
 - execution variants
@@ -150,7 +152,7 @@ The idea of Machine of Goals is part of the Double ecosystem, just like the idea
 - stable stage anchors and short English stage names
 - timestamp-named realization directories
 - realization stage map and separate three-part stage documents
-- successor realization and inherited stage results after a model change
+- optional successor realization and applicable inherited results after an execution boundary
 - visible progress of a concrete walkthrough
 - optional collapsing of manually demonstrated execution experience
 - AI-agent skill and automated-action forms
@@ -201,14 +203,14 @@ The idea of Machine of Goals is part of the Double ecosystem, just like the idea
 - One plan may contain several selectable paths or subplans with different costs and efficiencies.
 - Alternative achievement paths may remain options or subplans within a model, while independently maintained plans for the same goal have different `branch` values.
 - A version change within a branch is evolution; a new branch is a parallel plan with an independent version history.
-- MINOR and PATCH updates keep the model file; MAJOR changes preserve the previous model and create another branch-named model file.
-- The current version is chosen within a branch; earlier major versions in that branch do not by themselves represent parallel plans.
+- Compatible updates keep the main model file; incompatible changes require a preservation decision for affected realizations.
+- The current revision belongs to a branch; prior revisions do not by themselves represent parallel plans.
 - The plan is a model for execution; each stage connects an input state, action, expected output state, and check.
 - Stage anchor IDs remain stable and short English names produce readable stage filenames.
 - A documented walkthrough records concrete execution and simultaneously serves as evidence and readable documentation.
 - The machine includes an interactive manual execution flow for computer, social, and mixed environments.
 - Walkthrough evidence remains connected to the stages and results it substantiates.
-- A realization records its model file, branch, and starting version; a model change ends it and starts a linked successor while preserving the facts already recorded.
+- A realization records its model file, branch, and starting revision; compatible evolution can continue in the same realization while preserving recorded facts.
 - The successor inherits unchanged stage records and evidence, and retains completed status where inputs, dependencies, and results remain applicable.
 - Progress statuses belong to the realization's map, not to the plan model.
 - A realization uses a timestamp-named directory, a main Markdown document, separate stage documents with input state, actions, and output state, and supporting attachments.
@@ -287,9 +289,9 @@ Export and reuse variants:
 
 A branch evolution and cleanup example:
 
-- The goal has a `double` branch with model `plan-double-v1.md` at version `1.4.0`; a major redesign creates `plan-double-v2.md` at version `2.0.0` within the same branch.
-- A separately maintained alternative has branch `lightweight`, model `plan-lightweight-v1.md`, and its own version history.
-- A realization records the selected branch, model file, and version. If its model changes, a successor realization carries forward applicable stage results and records the remaining work against the changed model.
+- The goal has a main `double` plan; compatible additions update that same plan and retain the ongoing realization.
+- A separately maintained alternative has branch `lightweight` and its own revision history.
+- A realization records the selected branch, model file, and version. Compatible evolution continues the realization with applicable results preserved; incompatible changes require an explicit preservation decision.
 - For export, the user requests keeping the current `double` model and selected walkthroughs, including useful inherited evidence. Earlier models and dependent materials that are no longer needed are removed; a retained historical example keeps its required model context. The `lightweight` branch remains independent.
 
 ## 8. Signals of Value
@@ -351,10 +353,9 @@ double/
     my-first-goal/
       my-first-goal.md
       path-options.md
-      plan-double-v1.md
-      plan-double-v2.md
-      plan-lightweight-v1.md
-      realizations/
+      plan.md
+      plan-lightweight.md
+      _realizations/
         2026-10-21T14-30-25/
           realization.md
           s01-prepare-documents.md
@@ -362,10 +363,10 @@ double/
           attachments/
       my-first-subgoal/
         my-first-subgoal.md
-        plan-double-v1.md
+        plan.md
 ```
 
-The `double/goals` catalog is the root catalog of goals, and the `double/goals/goals.md` file describes this catalog. The `my-first-goal` catalog represents a separate goal, and its main artifact is `my-first-goal.md`. The nested `my-first-subgoal` catalog represents a subgoal, and its main artifact is `my-first-subgoal.md`. Separate Markdown model files distinguish branches and retained major versions; a subgoal can have its own models in its catalog. The example includes historical and parallel models to show the distinction, not to require several models for every goal. Files of Machine of Goals artifacts remain in the working context of the corresponding goal or subgoal.
+The `double/goals` catalog is the root catalog of goals, and the `double/goals/goals.md` file describes this catalog. The `my-first-goal` catalog represents a separate goal, and its main artifact is `my-first-goal.md`. The nested `my-first-subgoal` catalog represents a subgoal, and its main artifact is `my-first-subgoal.md`. Separate Markdown model files distinguish parallel plans; a subgoal can have its own models in its catalog. A realization normally links its main plan; a local historical copy is retained only when an incompatible change calls for preservation. Files of Machine of Goals artifacts remain in the working context of the corresponding goal or subgoal.
 
 `path-options.md` begins as the project artifact for discovering and comparing achievement paths, then remains their living catalog. The plan context identifies available execution variants and links the walkthroughs and supporting materials where they are relevant.
 
@@ -389,10 +390,10 @@ Concept artifact: [Machine of Goals Concepts](./machine-of-goals-concepts.md)
 | [Realization Path](./machine-of-goals-concepts.md#concept-realization-path) | A possible achievement strategy that may become a route within a model or a separate plan branch. |
 | [Plan as Transition Model](./machine-of-goals-concepts.md#concept-plan-as-transition-model) | A graph of expected states, actions, and checks, separate from concrete execution progress. |
 | [Plan Branch](./machine-of-goals-concepts.md#concept-plan-branch) | An independent plan lineage that distinguishes parallel alternatives from version evolution. |
-| [Plan Model Version](./machine-of-goals-concepts.md#concept-plan-model-version) | A compatibility-based model identity within a branch, with separate files for major changes. |
+| [Plan Model Version](./machine-of-goals-concepts.md#concept-plan-model-version) | A monotonically increasing revision within a branch; compatibility is evaluated separately. |
 | [Documented Plan Realization](./machine-of-goals-concepts.md#concept-documented-plan-realization) | One timestamped execution context with a stage map, model identity, and retained evidence. |
 | [Stage Execution Record](./machine-of-goals-concepts.md#concept-stage-execution-record) | A three-part input, actions, and output document with stage-linked checks and evidence. |
-| [Realization Succession and Inheritance](./machine-of-goals-concepts.md#concept-realization-succession-and-inheritance) | A linked successor preserves applicable results when a model change ends the current realization. |
+| [Realization Succession and Inheritance](./machine-of-goals-concepts.md#concept-realization-succession-and-inheritance) | An optional linked successor preserves applicable results when an execution boundary is needed. |
 | [Contextual Artifact Navigation](./machine-of-goals-concepts.md#concept-contextual-artifact-navigation) | Meaningful local links and a direct stage map, with provenance in Markdown frontmatter. |
 | [Subgoal and Partial Achievement](./machine-of-goals-concepts.md#concept-subgoal-and-partial-achievement) | A goal used within another goal, with its own verifiable context. |
 | [Plan Cost and Efficiency](./machine-of-goals-concepts.md#concept-plan-cost-and-efficiency) | Execution-based and domain-specific measures of cost and result. |
@@ -418,7 +419,7 @@ Principle artifact: [Machine of Goals Principles](./machine-of-goals-principles.
 | [Plan Is Project, Algorithm Is Realization](./machine-of-goals-principles.md#principle-plan-is-project-algorithm-is-realization) | Keep intended achievement distinct from its guided or executable embodiment. | [Plan as Transition Model](./machine-of-goals-concepts.md#concept-plan-as-transition-model), [Plan Algorithmization](./machine-of-goals-concepts.md#concept-plan-algorithmization), [Collapsed Plan Realization](./machine-of-goals-concepts.md#concept-collapsed-plan-realization) |
 | [Record a Realization at Its Start](./machine-of-goals-principles.md#principle-record-realization-at-start) | Create a timestamped, model-bound realization context when execution begins. | [Documented Plan Realization](./machine-of-goals-concepts.md#concept-documented-plan-realization), [Stage Execution Record](./machine-of-goals-concepts.md#concept-stage-execution-record), [Contextual Artifact Navigation](./machine-of-goals-concepts.md#concept-contextual-artifact-navigation) |
 | [Preserve Execution as Evidence and Documentation](./machine-of-goals-principles.md#principle-preserve-documented-execution) | Preserve actual input, actions, output, and evidence as reusable documentation. | [Stage Execution Record](./machine-of-goals-concepts.md#concept-stage-execution-record), [Documented Plan Realization](./machine-of-goals-concepts.md#concept-documented-plan-realization), [Success Criteria](./machine-of-goals-concepts.md#concept-success-criteria) |
-| [Model Changes Start Successor Realizations](./machine-of-goals-principles.md#principle-model-changes-start-successor-realizations) | Make model changes explicit execution boundaries and inherit results by applicability. | [Realization Succession and Inheritance](./machine-of-goals-concepts.md#concept-realization-succession-and-inheritance), [Plan Model Version](./machine-of-goals-concepts.md#concept-plan-model-version), [Stage Execution Record](./machine-of-goals-concepts.md#concept-stage-execution-record) |
+| [Preserve Continuity Through Plan Evolution](./machine-of-goals-principles.md#principle-model-changes-start-successor-realizations) | Continue compatible evolution while preserving facts; handle incompatible change explicitly. | [Realization Succession and Inheritance](./machine-of-goals-concepts.md#concept-realization-succession-and-inheritance), [Plan Model Version](./machine-of-goals-concepts.md#concept-plan-model-version), [Stage Execution Record](./machine-of-goals-concepts.md#concept-stage-execution-record) |
 | [Repeatability Is Independent of Automation](./machine-of-goals-principles.md#principle-repeatability-independent-of-automation) | Allow repeated manual use without deriving lifecycle from automation registration. | [Interactive and Automatic Execution](./machine-of-goals-concepts.md#concept-interactive-and-automatic-execution), [Documented Plan Realization](./machine-of-goals-concepts.md#concept-documented-plan-realization), [Plan Exchange](./machine-of-goals-concepts.md#concept-plan-exchange) |
 | [Automation Under User Control](./machine-of-goals-principles.md#principle-automation-under-user-control) | Choose execution and optional collapsing under user-selected control boundaries. | [Interactive and Automatic Execution](./machine-of-goals-concepts.md#concept-interactive-and-automatic-execution), [Collapsed Plan Realization](./machine-of-goals-concepts.md#concept-collapsed-plan-realization), [Plan Explanation and Control](./machine-of-goals-concepts.md#concept-plan-explanation-and-control) |
 | [Explanation Before Execution](./machine-of-goals-principles.md#principle-explanation-before-execution) | Explain stage inputs, actions, expected outputs, and checks before acting. | [Plan Explanation and Control](./machine-of-goals-concepts.md#concept-plan-explanation-and-control), [Plan as Transition Model](./machine-of-goals-concepts.md#concept-plan-as-transition-model), [Stage Execution Record](./machine-of-goals-concepts.md#concept-stage-execution-record) |

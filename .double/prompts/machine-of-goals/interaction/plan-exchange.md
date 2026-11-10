@@ -65,3 +65,5 @@ Collapsing a method into a new skill/action requires a separate user request
 and its applicable creation contract; exchange does not invent that procedure.
 
 Canonical workflow: [Machine of Goals](../../../workflows/machine-of-goals/machine-of-goals-workflow.md).
+
+Before committing sharing materials, inspect selected text and attachments for personal data. If found, tell the user and ask whether to remove, retain or mask it; follow the explicit decision and preserve private originals. This check cannot guarantee complete detection.

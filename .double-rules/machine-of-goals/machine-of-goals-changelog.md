@@ -8,7 +8,7 @@ artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-11-04
+observed-at: 2026-11-10
 ttl: one month
 derived-from:
   - .double-rules/machine-of-goals/machine-of-goals-version.md
@@ -25,6 +25,24 @@ derived-from:
 Changes recorded for the `machine-of-goals` module.
 
 ## Value
+
+### 0.0.21-rc — 2026-11-10
+
+- Record stage and validation commands with their observed output and exit status.
+- Preserve failed attempts and corrections; link large output files stored in the realization directory.
+
+### 0.0.20-rc — 2026-11-09
+
+- Continue compatible plan evolution within the existing realization and preserve unaffected stage results.
+- Track stage dependencies, partial progress and repeated passages without losing earlier evidence.
+- Mark dependent stages for review when an upstream result changes.
+- Check sharing materials for personal data and ask how to handle findings before committing.
+
+### 0.0.19-rc — 2026-11-09
+
+- Describe each stage's purpose and intended result directly below its heading.
+- Derive stage-record filenames from stage names without exposing slugs in plans.
+- Preserve existing stage-record filenames and links when stage names change.
 
 ### 0.0.18-rc — 2026-11-04
 

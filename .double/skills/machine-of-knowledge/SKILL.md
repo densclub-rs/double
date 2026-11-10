@@ -1,5 +1,5 @@
 ---
-status: release-candidate
+status: stable
 name: machine-of-knowledge
 description: Extract, preserve, inspect, validate, or refresh knowledge through the Double Machine of Knowledge. Use when the user asks to capture knowledge as an artifact, distinguish static from dynamic knowledge, maintain retrieval metadata and a cached value, work with the knowledge catalog, preserve or convert project or group rules under `.double-rules/`, or continue an existing knowledge artifact. Do not trigger for casual factual questions, idea development, or goal planning unless the user explicitly asks to enter the Machine of Knowledge workflow.
 ---
