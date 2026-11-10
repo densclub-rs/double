@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Release packaging verifies this value against the immutable release tag.
-installer_version='0.1.14-rc'
+installer_version='0.1.15-rc'
 
 # Git Bash needs LF jq output, literal JSON string values and explicit native
 # input filenames: MSYS conversion is unreliable for paths containing quotes.
@@ -691,13 +691,18 @@ restore_directories() {
 }
 
 installation_consent() {
-  local answer
+  local default_answer="${2:-N}" answer
   action_printf warning '%s\n' "$1"
   [ "${yes:-false}" = true ] && return 0
   [ "${non_interactive:-false}" = false ] || fail "Confirmation required; use --yes."
   [ -t 0 ] || fail "Installation requires confirmation; rerun interactively or use $command_name --yes."
-  action_printf warning 'Continue? [y/N] '
-  read -r answer || answer=''
+  if [ "$default_answer" = Y ];then
+    action_printf warning 'Continue? [Y/n] '
+  else
+    action_printf warning 'Continue? [y/N] '
+  fi
+  read -r answer || fail 'Installation cancelled.'
+  answer="${answer:-$default_answer}"
   case "$answer" in y|Y|yes) ;; *) fail 'Installation cancelled.' ;; esac
 }
 
@@ -1101,7 +1106,7 @@ add_machine() {
   LC_ALL=C sort -u "$work_dir/roots" > "$work_dir/roots.sorted"
   mv "$work_dir/roots.sorted" "$work_dir/roots"
   if [ "$manual" = true ];then
-    installation_consent "Unregistered machine found: $machine in $project. Back up and replace its directories?"
+    installation_consent "Unregistered machine found: $machine in $project. Back up and replace its directories?" Y
     no_symlinks "$state/backups";mkdir -p "$state/backups"
     backup=$(mktemp -d "$state/backups/backup.XXXXXX")
     jq -n --arg p "$project" --arg m "$machine" '{project:$p,machine:$m,source:"manual"}' > "$backup/installation.json"
@@ -1217,7 +1222,7 @@ dev_machine() {
       manual=true
     done
     if [ "$manual" = true ];then
-      installation_consent "Unregistered machine found: $machine in $project. Back up and replace its directories?"
+      installation_consent "Unregistered machine found: $machine in $project. Back up and replace its directories?" Y
     fi
   fi
   LC_ALL=C sort -u "$work_dir/roots" > "$work_dir/roots.sorted"
@@ -1329,9 +1334,10 @@ offer_backup_cleanup() {
     keep) return 0 ;;
   esac
   if [ "${non_interactive:-false}" = false ] && [ "${yes:-false}" = false ] && [ -t 0 ];then
-    action_printf warning 'Delete this backup? [y/N] '
-    read -r answer || answer=''
-    case "$answer" in y|Y|yes) rm -rf -- "$backup" ;; esac
+    action_printf warning 'Delete this backup? [Y/n] '
+    if read -r answer;then
+      case "$answer" in ''|y|Y|yes) rm -rf -- "$backup" ;; esac
+    fi
   fi
   return 0
 }

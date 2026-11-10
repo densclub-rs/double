@@ -734,7 +734,8 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
   assert 'Selected prerelease:' in output and manualfile.exists()
   output=run_tty('add','--project',posix_path(manual),'--machine','machine-of-goals','--agent','codex',answer='y\nn',code=1)
   assert 'Unregistered machine found:' in output and manualfile.exists()
-  output=run_tty('add','--project',posix_path(manual),'--machine','machine-of-goals','--agent','codex',answer='y\ny\nn')
+  output=run_tty('add','--project',posix_path(manual),'--machine','machine-of-goals','--agent','codex',answer='y\n\nn')
+  assert 'Continue? [Y/n]' in output and 'Delete this backup? [Y/n]' in output
  else:
   output=run('add','--project',posix_path(manual),'--machine','machine-of-goals','--agent','codex','--yes')
  assert not manualfile.exists() and not obsolete.exists() and other.read_text()=='keep other'
@@ -743,6 +744,13 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
  adoptedbackup=next(x for x in backups.glob('backup.*') if json.loads((x/'installation.json').read_text()).get('source')=='manual')
  assert (adoptedbackup/'old/.double/templates/machine-of-goals/custom/nested.txt').read_text()=='manual nested'
  assert (adoptedbackup/'old/.double/obsolete/machine-of-goals/extra.txt').read_text()=='obsolete manual'
+ if os.name!='nt':
+  default_cleanup=root/'manual default cleanup';default_cleanup.mkdir()
+  original=default_cleanup/'.double/skills/machine-of-goals/local.txt'
+  original.parent.mkdir(parents=True);original.write_text('replace and delete backup')
+  prior_backups=set(backups.glob('backup.*'))
+  run_tty('add','--project',posix_path(default_cleanup),'--machine','machine-of-goals','--agent','codex',answer='y\n\n')
+  assert not original.exists() and set(backups.glob('backup.*'))==prior_backups
  # Rollback after a replacement copy fails restores complete manual directories.
  failed=root/'manual failed';failed.mkdir()
  original=failed/'.double/skills/machine-of-goals/local/nested.txt';original.parent.mkdir(parents=True);original.write_text('restore all')
