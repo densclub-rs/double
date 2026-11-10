@@ -855,10 +855,30 @@ also checks the applicable goal criteria; historical stage acceptance alone
 does not establish current goal achievement.
 
 <a id="successful-command-reuse-rule"></a>
+<a id="successful-commands-for-reuse-and-automation"></a>
 
-### Successful Commands for Reuse and Automation
+### Commands and Output in Documented Realizations
 
-Preserve useful commands in the Actions part of the manual stage document.
+Record each substantive command used for stage actions or their validation in
+execution order in the Actions part of the manual stage document, including
+failed attempts and corrections. Ordinary exploratory reading and incidental
+bookkeeping do not require a full tool trace. Give each command a separate
+block with its purpose, working directory, exact safe command, observed output,
+and exit code when available. Explicitly distinguish no output, unavailable
+output or exit code, and a command proposed to a person but not yet observed
+running; never invent a result. Preserve stdout and stderr as observed, and
+identify their streams when known. Do not infer a command's success from a
+different command's exit code.
+
+Put short output in a fenced text block next to its command. For voluminous
+output, save the observed output as a file directly in the current realization
+directory and link it from the command block. Use a distinct, descriptive filename
+identifying the stage and command or attempt; never overwrite prior output on
+repeated execution. Do not substitute a summary for the observed output. Protect
+secrets in commands and output, including output files, and indicate redactions.
+Record only output actually captured; explicitly mark truncation or unavailable
+portions rather than presenting them as complete.
+
 Append every instruction generated for human execution before or when presented,
 including corrections and superseded instructions, without overwriting history.
 Record successful plan-action and validation commands after observed success
@@ -867,9 +887,7 @@ context, exact safe command, result and replay constraints. Use protected-input
 references instead of secrets and known times only.
 
 Check each retained command's actual result; a group's last exit code does not
-prove earlier success or fulfillment of a condition. Failed attempts and
-incidental bookkeeping need not form a full tool trace, but preserve relevant
-failures and blockers honestly. Recording a command does not authorize replay,
+prove earlier success or fulfillment of a condition. Recording a command does not authorize replay,
 automation or collapsing. Automatic invocations have no required Machine of
 Goals command journal. Their mechanism's checks and result remain authoritative.
 

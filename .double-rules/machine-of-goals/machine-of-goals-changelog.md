@@ -8,7 +8,7 @@ artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-11-09
+observed-at: 2026-11-10
 ttl: one month
 derived-from:
   - .double-rules/machine-of-goals/machine-of-goals-version.md
@@ -25,6 +25,11 @@ derived-from:
 Changes recorded for the `machine-of-goals` module.
 
 ## Value
+
+### 0.0.21-rc — 2026-11-10
+
+- Record stage and validation commands with their observed output and exit status.
+- Preserve failed attempts and corrections; link large output files stored in the realization directory.
 
 ### 0.0.20-rc — 2026-11-09
 

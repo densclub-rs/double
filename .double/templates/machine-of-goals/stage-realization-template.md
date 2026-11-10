@@ -71,11 +71,14 @@ or a clearly attributed user statement; keep 🟡 until all outputs are accepted
 - Keep the confirmation basis visible for each condition. A stage accepted
   on user statements is summarized as such in the realization map; do not hide
   the difference behind an unqualified completed marker.
-- Record actual actions, deviations, and relevant commands in order. Preserve
-  generated instructions before or when presented, including corrections;
-  record observed success and failures honestly. Keep useful working context
-  and results beside commands, with secrets replaced by protected references.
-  Omit irrelevant bookkeeping and empty command subsections.
+- Record actual actions and deviations in order. For each substantive command
+  used for the stage or its validation, follow the workflow's command and output
+  rule: a separate block with working directory, safe command, observed output
+  and exit code, including failures and corrections. Put long output in a
+  distinct linked file directly in the current realization directory. Preserve
+  earlier output files; identify unavailable, truncated, empty or redacted
+  output honestly. Preserve generated instructions before or when presented,
+  marking those not observed running. Omit incidental bookkeeping.
 - Inheritance preserves original facts, statements, evidence, and their source
   version. Record the originating realization when inherited; include useful
   materials locally so the retained record is understandable on its own.
@@ -120,6 +123,26 @@ Documentary evidence requested: <what-was-requested-and-whether-it-was-available
 Intended action: <captured-action-from-the-linked-plan>
 
 <actual-actions-in-order-with-relevant-commands-results-and-deviations>
+
+### <Command ordinal and purpose>
+
+Working directory: `<working-directory>`
+
+```sh
+<exact-safe-command>
+```
+
+Output:
+
+```text
+<observed-short-output-or-explicitly-no-output>
+```
+
+For long output, replace the text block with a link to a distinct output file
+directly in this realization directory, e.g. `[full output](./s02-command-01.log)`.
+Mark unavailable or truncated output and any redactions explicitly.
+
+Exit code: `<observed-code-or-unavailable>`
 
 ## Output State
 
