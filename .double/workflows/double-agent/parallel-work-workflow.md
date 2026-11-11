@@ -31,6 +31,29 @@ Resolve ambiguous work items, branches, or destinations with the participant
 before changing them. The owning machine governs artifact creation and editing
 after the working copy is ready.
 
+## Configure Git Work
+
+Before preparing or resuming a working copy, load the project's default Git
+settings and any settings for the selected work item. Store both as project
+knowledge and route changes through the Machine of Knowledge. Apply explicit
+work-item settings first and project defaults for settings the work item
+leaves unspecified. Show the effective settings before handing off.
+
+- For local work, select the work branch and working copy.
+- For collaborative work, select a synchronization branch and choose between
+  participant branches (the default) and one shared branch. Resolve the
+  remote from Git configuration in the current clone, using the relevant
+  branch configuration or the sole remote when unambiguous. Resolve any
+  remaining ambiguity before remote operations.
+- Configure commit, push, and pull independently as manual (the default),
+  reminder, or automatic. Set an interval or time without edits for each
+  scheduled action. Enable automatic commits explicitly and select the
+  paths they may include.
+
+Keep machine-specific state, such as worktree paths, activity observations,
+and execution history, in the local session record. Remote configuration
+belongs to the Git clone.
+
 ## Inspect Work and Offer Actions
 
 Inspection is read-only. Use the repository and the project's configured
@@ -76,6 +99,9 @@ Use the observed state and project policy to offer available actions:
 
 ## Start or Continue Collaborative Work
 
+Use Git by default. Use another mechanism when the project's rules
+explicitly select one.
+
 1. Look up shared work for the project and artifact using the configured
    mechanism. Distinguish no match from an unavailable lookup. On start,
    establish shared work if none exists. If related work exists, offer to
@@ -90,6 +116,31 @@ Use the observed state and project policy to offer available actions:
    Announce the session through the configured mechanism and report the
    result. If required lookup, preparation, or announcement is unavailable,
    identify the missing capability before treating the session as ready.
+
+### Git Coordination
+
+- Use the current repository for participants who share it. For separate
+  clones, use the remote resolved in Configure Git Work.
+  Check the shared refs before concluding that no work exists.
+  If the remote cannot be queried, report its state as unknown.
+- Store coordination records on dedicated Git branches under
+  `refs/heads/double/work/<work-id>` and
+  `refs/heads/double/session/<work-id>/<session-id>`. Use a
+  `record.json` file at the root of each record branch. The work record
+  identifies the artifact type and ID, integration branch, and base
+  commit. The session record identifies the participant, area of work,
+  base commit, and its work branch, which may be shared. Read records from Git
+  without checking out their branches.
+- Create or update the relevant record refs to announce work and sessions.
+  In separate clones, publish only the selected coordination refs under
+  project policy and verify their visibility on the shared remote. If a
+  concurrent update rejects the push, refresh the record and reconcile
+  before retrying. Keep record branches out of contribution candidates
+  and keep working-copy paths and unpublished artifact content local.
+- Compare visible session records to detect possible overlap. A record
+  shows the last published session state. When work pauses or ends, update
+  its session record so other participants can distinguish open and closed
+  sessions. Publish contribution branches separately under project policy.
 
 ## Hand Off to the Owning Machine
 
@@ -108,6 +159,45 @@ Git operations first. If an update could disturb existing changes, pause
 for a preservation or recovery decision. Apply the project's update
 policy when authorized. Report the resulting revision or the conflict
 requiring resolution before further work.
+
+## Synchronize Collaborative Branches
+
+- With participant branches, bring changes from the selected synchronization
+  branch into the participant's branch. Push committed changes to the
+  participant's remote branch. Submit ready contributions through a pull
+  request targeting the synchronization branch and apply the project's
+  integration checks before accepting them.
+- With a shared branch, each participant works from their local copy of
+  that branch. Refresh the remote revision before pushing. Automatic pushes
+  must be ordinary fast-forward updates that pass project checks. If a push
+  is rejected because the branch advanced, refresh the state and report any
+  divergence for review. Preserve both histories.
+
+## Run Scheduled Actions
+
+Use an available, authorized background executor to evaluate the configured
+schedule for each working copy. Reload effective settings and inspect the
+working copy and branch before acting. Serialize scheduled actions for the
+same working copy. For a due reminder, report the action without running it.
+Execute due actions only in automatic mode. Calculate inactivity from observed edits. When inactivity
+cannot be established, report it as unknown and offer a manual action.
+
+- **Commit.** Commit only the selected paths. Preserve unrelated staged and
+  unstaged changes. Pause when the staged state or an unfinished Git
+  operation makes the selected commit ambiguous.
+- **Push.** Send committed changes only to the destination for the selected
+  branch mode. Apply the synchronization rules above and the project's
+  permissions. A scheduled push leaves contribution acceptance and release
+  decisions to their respective workflows.
+- **Pull.** Check the configured synchronization branch or selected local
+  source. Apply incoming changes automatically only by fast-forward in a
+  clean working copy. If the worktree has uncommitted changes, an unfinished
+  operation, or divergent history, report what blocks the update.
+
+Record the last check, last successful action, and any block or failure in
+the local session record. Recheck state before a retry. Show whether the
+schedule is active when resuming work. Without an executor, check for due
+actions on entry and show reminders.
 
 ## Review and Integrate Selected Contributions
 
@@ -133,7 +223,8 @@ requiring resolution before further work.
 Local integration leaves remote branches untouched. On request, preview
 outgoing changes for the selected local branch and remote destination,
 including the remote revision used for comparison. Refresh remote state
-only as a separate authorized action. Treat a push as a separate decision
-under project policy. For a release, pass the selected revision and
+as authorized by the participant or the configured schedule. Treat a push
+as authorized by an explicit request or the configured automatic policy.
+For a release, pass the selected revision and
 release target to the applicable release process. Use Double Agent's
 Machine Release Protocol for releases of Double machines.

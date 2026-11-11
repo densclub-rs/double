@@ -8,7 +8,7 @@ artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-11-10
+observed-at: 2026-11-11
 ttl: one month
 derived-from:
   - collaborative work entry and integration contract update on 2026-11-10
@@ -34,4 +34,4 @@ The version assigned to the `double-agent` main module of the Double project.
 
 ## Value
 
-`0.0.13`
+`0.0.14`

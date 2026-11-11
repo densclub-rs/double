@@ -8,7 +8,7 @@ artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-11-10
+observed-at: 2026-11-11
 ttl: one month
 derived-from:
   - .double-rules/double-agent/double-agent-version.md
@@ -25,6 +25,12 @@ derived-from:
 Changes recorded for the `double-agent` module.
 
 ## Value
+
+### 0.0.14-rc — 2026-11-11
+
+- Use Git by default for collaborative work and resolve the remote from the current clone.
+- Store Git work settings as project knowledge and support participant branches or one shared synchronization branch.
+- Define independent commit, push, and pull schedules, with reminders when a background executor is unavailable.
 
 ### 0.0.13-rc — 2026-11-10
 
