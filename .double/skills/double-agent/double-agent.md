@@ -1,5 +1,5 @@
 ---
-status: stable
+status: release-candidate
 style: double
 submodule: double
 mindmap-plugin: basic

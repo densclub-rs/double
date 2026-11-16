@@ -18,7 +18,7 @@ Idea: [Double Agent](./double-agent.md#double-agent)
 
 ## 1. Principle Synthesis Summary
 
-Double Agent's active assistance is guided by human direction, informed analysis of machine development, and attention to the different contexts of local work and public contribution. Project and group rules are knowledge associated with the work they inform. The principles below leave their implementation open.
+Double Agent's active assistance is guided by human direction, informed analysis of machine development, and attention to the different contexts of local work and public contribution. Project and group rules are knowledge associated with the work they inform. Parallel work begins at a participant’s explicit request. Double Agent offers actions based on the observed work state, makes collaborative overlap visible before handoff, and separates local integration from publication and release decisions.
 
 ## 2. Working Definition of Principle
 
@@ -240,6 +240,155 @@ Each level uses `.double-rules/` and its index. Strict reproducible release-vers
 
 None identified at the principle level.
 
+<a id="principle-explicit-collaborative-entry"></a>
+### principle-explicit-collaborative-entry: Enter Collaborative Work Explicitly
+
+#### Statement
+
+Start or continue collaborative work at a participant's explicit request. Make relevant overlap visible before handing off to the owning machine.
+
+#### Derived From
+
+- [Collaborative Work](./double-agent-concepts.md#concept-collaborative-work)
+- [Work Session](./double-agent-concepts.md#concept-work-session)
+- [Human Direction](./double-agent-concepts.md#concept-human-direction)
+- Idea section 4.1 and the collaborative goal example in section 7.
+
+#### Rationale
+
+Participants need to know when they are coordinating shared work and which parts may already be in progress.
+
+#### Implications Without Implementation
+
+- Distinguish starting shared work, joining it, and resuming one's own session.
+- Identify the project and artifact before preparing a session. Resolve ambiguous matches with the participant.
+- Describe known overlap to participants allowed to see it. An unavailable activity record leaves the state unknown.
+- Hand off artifact work to its owning machine with the prepared session context.
+
+#### Boundaries
+
+An overlap can prompt a conversation. Any restriction on proceeding comes from project policy.
+
+#### Anti-Patterns
+
+- Starting a shared session from an ordinary request to work on an artifact.
+- Treating the absence of a visible announcement as proof that nobody else is working.
+
+#### Questions
+
+None identified at the principle level.
+
+<a id="principle-integrate-checked-contributions"></a>
+### principle-integrate-checked-contributions: Integrate Checked Contributions
+
+#### Statement
+
+Check the selected contributions together against the current integration target. Preserve each contribution when there is a conflict and route unresolved decisions to the appropriate people under project policy.
+
+#### Derived From
+
+- [Contribution](./double-agent-concepts.md#concept-contribution)
+- [Parallel Project Work](./double-agent-concepts.md#concept-parallel-project-work)
+- [Human Direction](./double-agent-concepts.md#concept-human-direction)
+- Idea section 4.1 and the goal evidence example in section 7.
+
+#### Rationale
+
+Changes can combine cleanly at the file level while invalidating an assumption, dependency, or criterion elsewhere.
+
+#### Implications Without Implementation
+
+- Use the owning machines to check the meaning and consistency of affected artifacts.
+- Integrate only the selected contributions, after the required checks pass and under the applicable project authority.
+- If the integration target changes before acceptance, check the revised candidate before updating it.
+- Give the decision maker the competing changes and the reason a decision is needed.
+
+#### Boundaries
+
+Double Agent coordinates integration. Specialized machines apply the checks for their artifacts, and project policy governs acceptance.
+
+#### Anti-Patterns
+
+- Treating a clean file merge as sufficient evidence of artifact consistency.
+- Discarding a participant's changes when another contribution arrives first.
+
+#### Questions
+
+None identified at the principle level.
+
+<a id="principle-guide-parallel-work-from-state"></a>
+### principle-guide-parallel-work-from-state: Guide Parallel Work From Its State
+
+#### Statement
+
+Enter local parallel work on explicit request. Inspect the current state and offer the actions that are available for the selected work.
+
+#### Derived From
+
+- [Parallel Project Work](./double-agent-concepts.md#concept-parallel-project-work)
+- [Work Session](./double-agent-concepts.md#concept-work-session)
+- Idea section 4.1 and the two parallel-work examples in section 7.
+
+#### Rationale
+
+A participant needs different actions when starting a work item, continuing with local edits, reviewing an update, or integrating a ready contribution.
+
+#### Implications Without Implementation
+
+- Offer inspection as a read-only action that shows known work, its working copies, and its integration state. Mark unavailable information as unknown.
+- Prepare or resume isolated work before handing off to the owning machine.
+- Identify the source for an update and the destination for integration. Explain blockers and preserve uncommitted work before changing a working copy.
+
+#### Boundaries
+
+The same coordination lifecycle supports both modes. Collaborative entry also applies the rules for joining shared work and showing visible overlap.
+
+#### Anti-Patterns
+
+- Starting a parallel session just because an artifact was opened.
+- Treating a status request as permission to update branches.
+
+#### Questions
+
+None identified at the principle level.
+
+<a id="principle-separate-integration-and-publication"></a>
+### principle-separate-integration-and-publication: Separate Integration and Publication Decisions
+
+#### Statement
+
+Keep contribution selection, local integration, remote publication, and release decisions distinct.
+
+#### Derived From
+
+- [Parallel Project Work](./double-agent-concepts.md#concept-parallel-project-work)
+- [Contribution](./double-agent-concepts.md#concept-contribution)
+- [Human Direction](./double-agent-concepts.md#concept-human-direction)
+- Idea section 4.1 and the selective local integration example in section 7.
+
+#### Rationale
+
+A person can accept one ready contribution locally while other work continues and decide separately what to share or release.
+
+#### Implications Without Implementation
+
+- Show the selected contributions and destination before integrating.
+- Base the remote preview on the selected branch and show the outgoing changes before publication.
+- Hand off release requests with the selected revision to the applicable release workflow.
+
+#### Boundaries
+
+Project policy governs the authority for each action. A release has its own contract and decision points.
+
+#### Anti-Patterns
+
+- Pushing to a remote as a consequence of accepting local integration.
+- Including other ready or open work merely because it is available.
+
+#### Questions
+
+None identified at the principle level.
+
 ## 4. Trade-offs and Tensions
 
 - Active assistance and human direction need to remain complementary when the assistant identifies a problem.
@@ -248,6 +397,7 @@ None identified at the principle level.
 
 ## 5. Candidate Inputs for Future Stages
 
+- Define a dedicated Double Agent parallel-work workflow with local and collaborative entry, inspection and state-based actions, session handoff, selective integration, and publication and release handoffs.
 - Validate these principles against the machines' group-rule loading contracts.
 - Use the existing project-rule loading protocol as evidence for future design across machines.
 - Consider validation and contribution workflows in later work, preserving the boundaries above.

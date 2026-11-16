@@ -1,296 +1,341 @@
 ---
-id: github-actions-maintenance-plan
-kind: plan-artifact
-template-id: plan-template
+id: releaseguard
+kind: plan-model
+template-id: plan-model-template
 project-id: double
 produced-by: machine-of-goals/plan-synthesis-agent
 interaction-language: ru
 artifact-language: en
 goal-id: github-actions-maintenance
-goal-artifact: ./github-actions-maintenance.md
-path-options-artifact: ./path-options.md
-plan-artifact: ./plan.md
-goal-scope: subgoal
-plan-execution-style: single-pass
-parent-goal-id: double-github-integration
-parent-plan-artifact: ../plan.md
-plan-revision: null
-plan-revision-artifact: null
-created-at: 2026-07-22T14:16:01Z
-updated-at: 2026-09-28T00:00:00Z
+branch: release-maintenance
+plan-revision: 4
 derived-from:
   - ./github-actions-maintenance.md
   - ./path-options.md
 ---
 
-<a id="github-actions-maintenance-plan"></a>
+<a id="releaseguard"></a>
 
-# Plan: GitHub Actions Maintenance
+# Plan: GitHub Actions Maintenance / release-maintenance
 
-## 1. Plan Summary
+Goal: [GitHub Actions Maintenance](./github-actions-maintenance.md#github-actions-maintenance)
 
-This plan defines one transition model for implementing and maintaining
-Double's GitHub Actions release workflow and its supporting scripts. It uses
-the shell-script/workflow-adapter path included in the plan and keeps local
-packaging separate from GitHub publication.
+## Conditions
 
-- Source goal: [GitHub Actions Maintenance](./github-actions-maintenance.md#github-actions-maintenance)
-- Source paths: [Path catalog](./path-options.md#github-actions-maintenance-path-options)
-- Included path: [Shell Script with Thin Workflow Adapter](./path-options.md#shell-script-workflow-adapter)
-- Parent plan: [Double GitHub Integration](../plan.md#double-github-integration-plan)
+### Initial State
 
-### Current State
-
-The parent plan provides the `.github/workflows/` and `scripts/` directories
-required for this subgoal.
+- The parent supplies workflow and scripts directories with existing contents preserved.
+- Python release tooling, pytest coverage and a workflow adapter are available
+  for inspection and maintenance; their presence does not establish acceptance.
 
 ### Target State
 
-- The YAML file `.github/workflows/release.yml` defines the GitHub Actions
-  rules for the release workflow.
-- The shell script `scripts/double-release.sh` can be executed locally and in
-  GitHub Actions.
+- One shared release contract supports local packaging and controlled GitHub
+  publication with exact candidate identity, verified version sources, approved
+  notes, checksums and retained evidence.
 
 ### Success Criteria
 
-Local packaging and the hosted workflow produce the declared release behavior;
-the package contains only eligible files, checksums match, and publication is
-restricted to GitHub Actions.
+- S01 establishes a complete contract; S02 checks local behavior; S03 checks
+  the workflow adapter; S04 verifies hosted behavior against the same contract.
+- Warning/no-match outcomes are distinguished from verified publication.
+- Installer releases and optional notification delivery remain separate.
 
-## 2. State Validation Contract
+## Selection and Control Boundaries
 
-- Initial state checks: confirm that `.github/workflows/` and `scripts/` exist
-  as the directories provided by the parent plan.
-- Required intermediate state checks: the S01 contract is explicit; S02 local
-  packaging satisfies it; S03 invokes the same interface from GitHub Actions.
-- Final state checks: hosted workflow behavior agrees with the local contract
-  for representative stable, `rc`, `dev`, no-match, and mismatch cases.
-- Evidence requirements: local test output, package and checksum inspection,
-  workflow configuration, and authorized hosted-run evidence. The repository
-  owner reviews the S01 contract and local-test specification; shell tests and
-  hosted checks validate later stages.
-- Stop when validation cannot be completed: do not publish when the package,
-  status filter, version check, checksum, or publication boundary diverges.
+- Included path: [Shared release program](./path-options.md#shared-script-workflow-adapter).
+  Embedded workflow logic remains an unselected alternative; a composite action
+  is deferred. The shared program favors local tests and one contract over
+  workflow-only convenience. Python is the current implementation language.
+- Entry: [S01](#stage-s01). Parent context: [parent S03](../plan.md#stage-s03).
+  Return after S04 with contract, local checks and hosted evidence; the parent
+  then validates its S03 and completes its branch.
+- Explain each stage and obtain the required start approval. Local parsing,
+  packaging and tests are within an authorized stage; publication, repository
+  settings, workflow-rule changes and external notifications require approval.
+- Never publish through `package`, expose secrets, delete existing tooling or
+  published assets, or replay publication/notification merely to gather evidence.
+- Use hosted `validation_only=true` before publication after adapter changes.
+  A published workflow may run autonomously under its separately approved triggers.
+- Prefer documentary evidence; an explicit user confirmation is an identified
+  fallback, not a substitute silently inferred from source code.
+- Revise affected conditions when evidence exposes a mismatch; revise this plan
+  when the shared contract or parent interface changes. Reformulate the goal if
+  releases no longer map a tag to a machine and maturity class.
 
-## 3. Plan Map
 
-- Displayed run: none
-- Displayed plan revision: none
-- Progress synchronized at: never
+## Ongoing Functional Evolution
 
-`⚪` is the neutral marker while no run is displayed; it does not assess
-existing repository behavior. Future progress is derived only from a run
-whose pinned revision and stage topology match this plan.
+[S05](#stage-s05) is the persistent entry for user-requested extensions after
+the initial release baseline. It is dormant without a concrete request, not
+an endless execution. Each return adds only requested substages under S05;
+keep their stable IDs and condition IDs and preserve earlier work/evidence.
+Do not prepopulate speculative functionality. A completed extension returns to
+maintenance; it does not exhaust the goal or authorize another extension.
 
-| Progress | Stage | Kind | Inputs | Outputs | Possible Next Stages | Required Validation |
-| --- | --- | --- | --- | --- | --- | --- |
-| ⚪ | [S01: Specify the Release Contract](#stage-s01) | stage | goal, path-options, workflow, version knowledge | release-script contract | [S02](#stage-s02) | contract covers local execution, CLI archive creation, tag, status, version, package, warning, and publication rules |
-| ⚪ | [S02: Implement and Validate Local Packaging](#stage-s02) | stage | [S01](#stage-s01) | validated local package and checksum behavior | [S03](#stage-s03) | local tests satisfy the S01 contract |
-| ⚪ | [S03: Adapt and Validate the GitHub Workflow](#stage-s03) | stage | [S01](#stage-s01), [S02](#stage-s02) | thin autonomous workflow adapter | [S04](#stage-s04) | workflow invokes the final script interface |
-| ⚪ | [S04: Validate the Hosted Release Operation](#stage-s04) | validation | [S02](#stage-s02), [S03](#stage-s03) | hosted validation evidence | none | hosted behavior agrees with the accepted contract |
+## Stages
 
-## 4. Stage Details
+| Stage | Input | Output | Next |
+| --- | --- | --- | --- |
+| [S01: Specify Release Contract](#stage-s01) | S01-I01, S01-I02 | S01-O01 | [S02](#stage-s02) |
+| [S02: Validate Local Packaging](#stage-s02) | S02-I01, S02-I02 | S02-O01, S02-O02 | [S03](#stage-s03) |
+| [S03: Validate Workflow Adapter](#stage-s03) | S03-I01, S03-I02 | S03-O01 | [S04](#stage-s04) |
+| [S04: Validate Hosted Operation](#stage-s04) | S04-I01, S04-I02 | S04-O01, S04-O02 | End baseline; [S05](#stage-s05) on a new request |
+| [S05: Evolve Release Functionality](#stage-s05) | S05-I01, S05-I02 | S05-O01, S05-O02 | Return to maintenance; re-enter S05 on a new request |
 
 <a id="stage-s01"></a>
 
-### Stage: Specify the Release Contract
+## S01: Specify Release Contract
 
-- Stage id: `S01`
-- Kind: stage
-- Purpose: define one executable contract for
-  `scripts/double-release.sh`.
-- Input state: goal and path contract, current workflow, and selected
-  machine-version knowledge.
-- Output state: an approved local shell-script contract that builds a release
-  archive from command-line arguments, with separate publication behavior for
-  GitHub Actions.
-- Preconditions: tag grammar, status classes, version knowledge, and the
-  local-publication boundary are identified.
-- Actions:
-  - define local execution of `scripts/double-release.sh`;
-  - define command-line arguments for archive creation, including
-    `package --tag <tag>`;
-  - define `<machine>-<major>.<minor>.<patch>[-dev|-rc]` parsing and matching
-    machine/status selection;
-  - obtain the selected machine version from
-    `knowledge/<machine>-version/<machine>-version.md` in the tagged tree;
-  - make a tag/knowledge mismatch the sole contract-level failure and report
-    other specified non-success conditions as warnings;
-  - inject the verified version only into distribution copies;
-  - define checksums, no-match behavior, prerelease behavior, and the boundary
-    that only GitHub Actions may publish.
-- Required resources: goal artifact, path-options, current workflow, and
-  machine-version knowledge artifacts.
-- Possible input stages: none.
-- Possible output stages: [S02: Implement and Validate Local Packaging](#stage-s02).
-- Related path: [Shell Script with Thin Workflow Adapter](./path-options.md#shell-script-workflow-adapter).
-- Validation criteria: the contract explicitly covers local execution,
-  command-line archive creation, tag, status, version, package, warning,
-  checksum, prerelease, and publication rules.
-- Evidence expected: reviewed contract consistent with the goal and path
-  options.
-- Risks: an incomplete contract can make local and hosted behavior diverge.
-- Stop points: stop if the contract conflicts with the goal's release classes
-  or publication boundary.
+Define a reviewable contract for local packaging and GitHub publication,
+including version provenance, validation requirements and control boundaries.
+
+The contract is expressed in the [goal requirements](./github-actions-maintenance.md#github-actions-maintenance),
+the CLI in [`double-release.py`](../../../scripts/double-release/double-release.py),
+the shared tag/version rules in [`release_common.py`](../../../scripts/double-release/release_common.py),
+and the [release validation instructions](../../../tests/double-release/README.md).
+
+### Input Conditions
+
+#### S01-I01: Goal and Tooling Available
+
+- Read the [goal](./github-actions-maintenance.md#github-actions-maintenance),
+  [release program](../../../scripts/double-release/double-release.py),
+  [shared rules](../../../scripts/double-release/release_common.py),
+  [notes generator](../../../scripts/double-release/double-release-notes.py), and
+  [workflow](../../../.github/workflows/release.yml).
+
+#### S01-I02: Version Sources Identified
+
+- Inspect the [version/changelog storage contract](../../../knowledge/machine-version-and-changelog-locations/machine-version-and-changelog-locations.md#machine-version-and-changelog-locations)
+  and the candidate tree sources. Reject ambiguous or unreproducible sources.
+
+### Actions
+
+- Specify `list-machines`, local `package --machine`, tagged `package --tag`
+  and Actions-only `publish --tag` for the Python entry point.
+- Define tag grammar, status classes, machine ownership, exact-tree packaging,
+  source-version validation, export-only version injection and SHA-256 outputs.
+- Distinguish fatal version/source/identity/test failures from warning/no-match
+  and publication-skipped outcomes; do not retain the obsolete sole-failure rule.
+- Specify approved notes, prerelease classification, permissions, evidence
+  retention, validation-only behavior and optional announcement gating.
+- Keep installer releases independent. Stop if the proposed interface conflicts
+  with the goal or permits local publication.
+
+### Output Conditions
+
+#### S01-O01: Contract Reviewable
+
+- The goal requirements are mapped to the CLI, workflow and local/hosted checks.
+- Obtain repository-owner review of the contract and test specification before S02.
+- Include stable, rc, dev, no-match, invalid-source and version-mismatch cases.
 
 <a id="stage-s02"></a>
 
-### Stage: Implement and Validate Local Packaging
+## S02: Validate Local Packaging
 
-- Stage id: `S02`
-- Kind: stage
-- Purpose: implement the reusable packager and prove its local behavior.
-- Input state: accepted S01 contract.
-- Output state: `package --tag <tag>` writes the selected package and checksum,
-  warns without an empty package, or fails on tag/knowledge mismatch.
-- Preconditions: the release script interface is fixed by S01.
-- Actions:
-  - implement tag parsing, machine/status selection, version-knowledge lookup,
-    generated archive versions, archive creation, and checksums;
-  - keep `package` incapable of GitHub publication;
-  - test stable, `rc`, and `dev` tags, warning paths, no-match behavior,
-    version mismatch, generated archive content, and unchanged source files.
-- Required resources: S01 contract, shell utilities, Git, fixture repository,
-  and release scripts.
-- Possible input stages: [S01: Specify the Release Contract](#stage-s01).
-- Possible output stages: [S03: Adapt and Validate the GitHub Workflow](#stage-s03).
-- Related path: [Shell Script with Thin Workflow Adapter](./path-options.md#shell-script-workflow-adapter).
-- Validation criteria: local tests prove selection, version injection,
-  warnings, no-match behavior, checksums, and non-publication.
-- Evidence expected: passing local test output and inspected archive contents.
-- Risks: nondeterministic archives or an accidental local publication path.
-- Stop points: stop if `package` can publish or if a non-version condition
-  fails instead of warning.
+Verify the shared release program locally and inspect an exact candidate
+package, establishing its contents, checksum and nonpublishing behavior.
+
+The existing deliverables are the packaging/publication program
+[`double-release.py`](../../../scripts/double-release/double-release.py),
+its shared rules [`release_common.py`](../../../scripts/double-release/release_common.py),
+and the [packaging](../../../tests/double-release/test_package.py) and
+[publication](../../../tests/double-release/test_publication.py) tests.
+Package outputs are a machine archive and `SHA256SUMS.txt` under `dist/`.
+
+### Input Conditions
+
+#### S02-I01: Contract Available
+
+- Establish S01-O01 and identify the candidate under test.
+
+#### S02-I02: Local Test Environment
+
+- Provide Python 3.11+, Git and dependencies from
+  [test requirements](../../../tests/double-release/requirements.txt).
+- Use disposable fixtures for mutation and mocked GitHub responses.
+
+### Actions
+
+- Maintain the shared tooling as needed within the reviewed contract.
+- Follow the [pytest instructions](../../../tests/double-release/README.md),
+  running the local suite without publication or notification.
+- Test tagged status/ownership filtering, grouped/default version sources,
+  invalid/conflicting sources, no-match, checksum, export versions and unchanged sources.
+- Test local all-status working/untracked-file packaging separately from tags.
+- Check approved-note handling and publication gates with mocks.
+- For an authorized existing candidate tag, run the documented candidate check
+  and inspect the resulting archive/checksum. Stop on unexplained failures.
+
+### Output Conditions
+
+#### S02-O01: Local Behavior Verified
+
+- Retain passing pytest output and any expected skips with reasons.
+- Confirm no local publication or external notifications occurred.
+
+#### S02-O02: Candidate Package Verified
+
+- Record candidate tag/commit, package membership and matching checksum.
+- Verify source files remain unchanged and invalid-source/mismatch/no-match
+  fixtures have the specified failure or warning outcomes.
 
 <a id="stage-s03"></a>
 
-### Stage: Adapt and Validate the GitHub Workflow
+## S03: Validate Workflow Adapter
 
-- Stage id: `S03`
-- Kind: stage
-- Purpose: make `.github/workflows/release.yml` a thin autonomous adapter for
-  the final script contract.
-- Input state: accepted S01 contract and validated S02 package behavior.
-- Output state: tag pushes and manual dispatch call
-  `scripts/double-release.sh publish --tag <tag>`.
-- Preconditions: the local package command and publication boundary are
-  validated.
-- Actions:
-  - forward the same approved tag grammar for push and manual dispatch;
-  - retain only `contents: write`, the automatic GitHub token, and the defined
-    prerelease behavior;
-  - keep 14-day retention for logs and temporary workflow artifacts without
-    deleting published release assets;
-  - verify the adapter matches the final machine-version contract.
-- Required resources: S01 contract, S02 implementation, workflow file, and
-  GitHub Actions configuration.
-- Possible input stages:
-  - [S01: Specify the Release Contract](#stage-s01)
-  - [S02: Implement and Validate Local Packaging](#stage-s02)
-- Possible output stages: [S04: Validate the Hosted Release Operation](#stage-s04).
-- Related path: [Shell Script with Thin Workflow Adapter](./path-options.md#shell-script-workflow-adapter).
-- Validation criteria: workflow triggers and manual dispatch pass the same tag
-  to the final publication interface with the declared permissions.
-- Evidence expected: reviewed workflow configuration and successful local
-  adapter checks.
-- Risks: workflow-only behavior could drift from the local implementation.
-- Stop points: stop before hosted publication if the adapter changes the
-  approved interface or permission boundary.
+Verify that GitHub Actions applies the reviewed release contract to the exact
+candidate and enforces publication, evidence and notification boundaries.
+
+The existing deliverables are the GitHub Actions adapter
+[`release.yml`](../../../.github/workflows/release.yml), the approved-note generator
+[`double-release-notes.py`](../../../scripts/double-release/double-release-notes.py),
+and the [workflow](../../../tests/double-release/test_workflow.py) and
+[release-note](../../../tests/double-release/test_notes.py) tests.
+
+### Input Conditions
+
+#### S03-I01: Local Contract Verified
+
+- Establish S01-O01, S02-O01 and S02-O02.
+
+#### S03-I02: Workflow Scope Approved
+
+- Inspect the current workflow and obtain approval for any rule or permission changes.
+
+### Actions
+
+- Verify supported tag push/manual-dispatch inputs and rejection of installer tags.
+- Check exact tag resolution, checkout identity, tooling checkout separation and
+  candidate pytest/package checks before notes or publication.
+- Check job-specific permissions, automatic GitHub token usage, approved-note
+  preparation and non-draft release URL verification.
+- Verify `validation_only` skips publication and notifications, and evidence
+  artifacts use 14-day retention even when validation fails.
+- Verify the optional Telegram job has no repository permissions, uses separate
+  configuration, requires eligible verified publication and tolerates delivery failure.
+- Stop before hosted effects if the interface, authorization or candidate identity diverges.
+
+### Output Conditions
+
+#### S03-O01: Adapter Contract Verified
+
+- Review the [workflow](../../../.github/workflows/release.yml) and
+  [workflow tests](../../../tests/double-release/test_workflow.py) against S01.
+- Establish that tag/manual dispatch share the checked candidate and contract.
+- Document rerun risks, especially duplicate notifications and asset replacement.
 
 <a id="stage-s04"></a>
 
-### Stage: Validate the Hosted Release Operation
+## S04: Validate Hosted Operation
 
-- Stage id: `S04`
-- Kind: validation
-- Purpose: collect authorized evidence that GitHub-hosted release behavior
-  agrees with the accepted local contract.
-- Input state: validated S02 package implementation and S03 workflow adapter.
-- Output state: hosted validation evidence and any required plan revision.
-- Preconditions: authorization exists to inspect representative workflow runs,
-  releases, and retention configuration.
-- Actions:
-  - inspect a representative GitHub Actions run, release assets, warnings,
-    checksum, prerelease classification, and retention configuration;
-  - compare hosted behavior with stable, `rc`, `dev`, no-match, and version
-    mismatch rules;
-  - record any needed plan revision.
-- Required resources: GitHub Actions, GitHub Releases, repository settings,
-  and authorized hosted evidence.
-- Possible input stages:
-  - [S02: Implement and Validate Local Packaging](#stage-s02)
-  - [S03: Adapt and Validate the GitHub Workflow](#stage-s03)
-- Possible output stages: none.
-- Related path: [Shell Script with Thin Workflow Adapter](./path-options.md#shell-script-workflow-adapter).
-- Validation criteria: hosted behavior matches the package, warning,
-  prerelease, checksum, permission, and retention contract.
-- Evidence expected: representative hosted run and release evidence, or an
-  explicit user confirmation accepted as hosted validation.
-- Risks: hosted settings or release behavior may differ from local tests.
-- Stop points: stop before changing repository settings or published assets
-  without explicit confirmation.
+Verify the candidate’s hosted behavior using attributable run and artifact
+evidence, then return the checked results and limitations to the parent plan.
 
-The maintained product artifacts are the [release program](../../../scripts/double-release.sh),
-[local validation script](../../../scripts/test-double-release.sh), and
-[workflow adapter](../../../.github/workflows/release.yml). S01 defines their
-contract, S02 checks local behavior, and S03–S04 check the adapter and hosted behavior.
+The concrete evidence artifacts are [hosted run 42243821307](https://github.com/densclub-rs/double/actions/runs/42243821307)
+and the [machine-of-ideas 0.2.8 release](https://github.com/densclub-rs/double/releases/tag/machine-of-ideas-0.2.8),
+including its archive and `SHA256SUMS.txt`. Their inspection and acceptance
+basis, retention and limitations are recorded in the
+[goal’s validation evidence](./github-actions-maintenance.md#release-validation-2026-11-06).
 
-## 5. Shared Dependencies
+### Input Conditions
 
-- Internal dependencies: the goal artifact, path-options, release scripts, and
-  `.github/workflows/release.yml`.
-- External dependencies: GitHub Actions, GitHub Releases, and the repository's
-  version knowledge artifacts.
-- Decision dependencies: user approval for repository settings and real release
-  publication.
+#### S04-I01: Local and Adapter Checks Available
 
-## 6. Shared Risks and Controls
+- Establish S02-O01, S02-O02 and S03-O01 for the candidate/tooling combination.
 
-- Risk: local and hosted release behavior diverges.
-- Impact: an incorrect or incomplete release may be published.
-- Mitigation: keep one script interface, validate locally, and compare hosted
-  evidence with the same contract.
-- Stop condition: package contents, status selection, version verification,
-  checksum, warning behavior, or publication boundary diverges.
+#### S04-I02: Hosted Scope Authorized
 
-## 7. Automation Boundaries
+- Identify accessible hosted evidence and authorization for any new dispatch.
+- A validation-only check does not authorize publication or settings changes.
 
-- Allowed automatic actions: local parsing, packaging, checksums, tests, and
-  warnings.
-- Actions requiring confirmation: starting each plan stage, changing workflow
-  rules or repository settings, creating or updating a real GitHub Release,
-  and altering published assets.
-- Actions not allowed: local `package` publication or use of repository secrets
-  beyond the automatic GitHub token; deleting existing workflow or script
-  content or published release assets.
-- Dry-run required before: the first real GitHub Release publication after
-  workflow-adapter changes.
-- Explanation required before execution: explain each plan stage before starting it.
+### Actions
 
-## 8. Revision and Alignment Conditions
+- Inspect or, when authorized, dispatch a representative validation-only run
+  for an existing machine tag using the documented workflow input.
+- Inspect checkout identity, pytest/JUnit, archive and checksum evidence.
+- Compare stable/rc/dev, no-match and mismatch behavior to the contract, using
+  fixture evidence for cases that must not create live releases.
+- Verify 14-day temporary-artifact retention and separately inspect repository
+  log retention; request correction only when authorized.
+- For separately authorized publication, inspect approved notes, release assets,
+  checksum, prerelease classification and verified non-draft URL. Inspect optional
+  notification gating without replaying delivery solely for validation.
+- State evidence gaps explicitly; neither source presence nor a green skipped
+  publication step proves that a release exists.
 
-- Revise a stage when: local or hosted evidence exposes a mismatch in its
-  contract, implementation, or validation.
-- Revise the plan when: the shell-script adapter cannot satisfy both local
-  testing and autonomous GitHub Actions publication.
-- Reformulate the goal when: releases no longer map one tag to one machine and
-  maturity class.
+### Output Conditions
 
-## 9. Subgoal Integration Boundaries
+#### S04-O01: Hosted Behavior Verified
 
-No delegated child subgoals.
+- Link the actual hosted run and artifacts to the exact candidate/tooling identity.
+- Establish covered cases and identify fixture-only or user-confirmed evidence.
+- Distinguish validation-only success, verified publication and warning/no-match.
+- If required evidence or retention confirmation is unavailable, leave the
+  corresponding result unresolved rather than declaring completion.
 
-This plan receives the existing workflow and scripts directories from
-[parent S03](../plan.md#stage-s03), enters at [S01](#stage-s01), and returns
-accepted contract, local checks, and hosted evidence after [S04](#stage-s04).
-The parent resumes at S03 to validate that evidence and complete its plan.
+#### S04-O02: Parent Handoff Ready
 
-<a id="realization-registry"></a>
+- Return S01 contract, S02 local/package evidence, S03 adapter checks and
+  S04 hosted evidence to [parent S03](../plan.md#stage-s03).
+- Confirm the goal success criteria and any remaining limitations explicitly.
 
-## 10. Realization Registry
+<a id="stage-s05"></a>
 
-Empty.
+## S05: Evolve Release Functionality
 
-## 11. Open Questions
+Extend the existing release program in response to concrete user requests,
+evolving the goal, contract and tests together while preserving validated behavior.
 
-None currently.
+The extension baseline is the existing [release tooling](../../../scripts/double-release/),
+[test suite](../../../tests/double-release/) and [workflow](../../../.github/workflows/release.yml).
+Each requested substage will identify the specific files it changes or produces;
+no additional extension deliverables are claimed before that work occurs.
+
+### Input Conditions
+
+#### S05-I01: Extension Requested
+
+- Identify the requested capability, motivation, boundaries and success criteria.
+- Confirm it belongs to this goal; unrelated GitHub work requires its own subgoal.
+
+#### S05-I02: Baseline and Scope Established
+
+- Identify the existing program and applicable accepted validation evidence.
+- Inspect current dependencies and affected behavior before planning changes.
+- Preserve affected historical records under the workflow's structural-change
+  rule before adding substages; never rewrite earlier observed results.
+
+### Actions
+
+- Clarify the request and update the goal's target state and success criteria
+  when they change. Update path options only when architectural choices change.
+- Add concrete substages under S05 with stable IDs, purpose, input conditions,
+  actions, output conditions and checks. Preserve existing IDs and completed scope.
+- Increment the plan revision, synchronize the goal's plan table and review
+  the revised contents before execution. A request to plan an extension alone
+  does not authorize implementation or publication.
+- Implement the authorized extension in the existing Python program and adjust
+  tests, documentation and the workflow adapter where required.
+- Apply the relevant S01–S04 checks to the changed scope, including regression
+  coverage and hosted verification where local evidence is insufficient.
+- Validate the extension with the user, preserve evidence under the applicable
+  manual or automatic contract, and return the result to parent S03.
+- Return to maintenance after the requested scope is accepted; await a new request.
+
+### Output Conditions
+
+#### S05-O01: Extension Validated
+
+- The requested capability meets its explicit substage output conditions.
+- Applicable regression checks pass and compatibility changes are documented.
+- Publication and external effects remain subject to their separate boundaries.
+
+#### S05-O02: Goal and Program Synchronized
+
+- Goal requirements, plan, program interface, tests and documentation describe
+  the same resulting capability; actual results remain in their evidence context.
+- Parent S03 receives the validated extension and any changed integration boundary.
+- No further work is implied until the user requests another extension.

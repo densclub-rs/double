@@ -17,7 +17,7 @@ Idea: [Double Agent](./double-agent.md#double-agent)
 
 ## 1. Conceptual Summary
 
-The idea connects active assistance in project work with creating and developing machines. Formal analysis connects accumulated experience, three areas of consistency, and informed human decisions. Local use and public contribution provide distinct decision contexts. Project and group rules are knowledge associated with project work.
+The idea connects active assistance in project work with creating and developing machines. Formal analysis connects accumulated experience, three areas of consistency, and informed human decisions. Local use and public contribution provide distinct decision contexts. Project and group rules are knowledge associated with project work. In parallel work, isolated sessions give participants room to work independently and selected contributions bring their changes into integration review.
 
 ## 2. Working Definition of Concept
 
@@ -255,6 +255,121 @@ The concept does not itself prescribe storage or conflict handling. The subseque
 
 None at the conceptual level.
 
+<a id="concept-parallel-project-work"></a>
+### concept-parallel-project-work: Parallel Project Work
+
+#### Definition
+
+Coordination of work on project artifacts across isolated working copies. One person can advance independent work items locally, and several sessions can contribute to the same shared work.
+
+#### Source in Idea
+
+Section 4.1 describes the two modes, inspection of work state, and selection of contributions for integration. Section 7 illustrates collaborative work on a goal and selective integration of local ideas.
+
+#### Role in the Idea
+
+Provides a common lifecycle for preparing work, seeing available actions, updating from a base, and integrating selected contributions. The state of a work item includes its project and artifact identity, working context, and progress toward integration. A ready contribution, a locally integrated contribution, an outgoing change, and a release are distinct states or outcomes.
+
+#### Related Concepts
+
+- [Collaborative Work](#concept-collaborative-work) adds shared coordination and participant visibility.
+- [Work Session](#concept-work-session) relates a participant and their working copy to a work item.
+- [Contribution](#concept-contribution) identifies changes considered for a selected integration target.
+- [Human Direction](#concept-human-direction) governs decisions about selection, integration, and publication.
+
+#### Boundaries
+
+Double Agent coordinates work and integration. The owning machine governs the artifact, and the project determines the mechanisms and permissions for coordination.
+
+#### Questions
+
+None at the conceptual level.
+
+<a id="concept-collaborative-work"></a>
+### concept-collaborative-work: Collaborative Work
+
+#### Definition
+
+A shared undertaking associated with a project and an idea, goal, or knowledge artifact. It can have several work sessions and receive contributions from each.
+
+#### Source in Idea
+
+Section 4.1 and the example in section 7 describe starting and continuing shared work.
+
+#### Role in the Idea
+
+Gives participants a common reference when they coordinate work from different local or remote working copies.
+
+#### Related Concepts
+
+- [Active Assistance](#concept-active-assistance) includes preparing and coordinating this work.
+- [Work Session](#concept-work-session) connects a participant to the undertaking.
+
+#### Boundaries
+
+The project defines visibility and decision authority. The owning machine governs work on the artifact.
+
+#### Questions
+
+None at the conceptual level.
+
+<a id="concept-work-session"></a>
+### concept-work-session: Work Session
+
+#### Definition
+
+A participant's involvement in a local or collaborative work item, associated with their working copy, starting revision, and declared area of work.
+
+#### Source in Idea
+
+Section 4.1 distinguishes joining a shared undertaking from resuming one's own session.
+
+#### Role in the Idea
+
+Makes possible overlap visible early and lets participants work independently from a known starting state.
+
+#### Related Concepts
+
+- [Parallel Project Work](#concept-parallel-project-work) can have several independent local sessions.
+- [Collaborative Work](#concept-collaborative-work) may have several sessions for one shared work item.
+- A [Contribution](#concept-contribution) carries changes from a session into shared review.
+
+#### Boundaries
+
+An active session describes intended or ongoing work. A contribution represents changes submitted for integration.
+
+#### Questions
+
+None at the conceptual level.
+
+<a id="concept-contribution"></a>
+### concept-contribution: Contribution
+
+#### Definition
+
+Changes submitted from a work session for review and integration, with their origin and starting revision available for comparison.
+
+#### Source in Idea
+
+Section 4.1 and the goal example in section 7 connect independent work with shared review.
+
+#### Role in the Idea
+
+Lets Double Agent coordinate integration while preserving the participant's work if checks expose a conflict.
+
+#### Related Concepts
+
+- [Work Session](#concept-work-session) provides the context in which the changes were made.
+- [Parallel Project Work](#concept-parallel-project-work) identifies the work and integration context in which changes are evaluated.
+
+#### Boundaries
+
+Submission makes a contribution available for review. Acceptance depends on the applicable checks and project authority.
+
+#### Questions
+
+None at the conceptual level.
+
 ## 4. Terms and Non-Concepts
 
 - **Change plan** is the vehicle for proposed work and findings, rather than an independent conceptual relationship here.
@@ -265,6 +380,7 @@ None at the conceptual level.
 ## 5. Candidate Inputs for Principle Synthesis
 
 - The relationship between active assistance and human direction.
+- Explicit entry into parallel work, next actions based on observed state, and review of selected contributions against the current integration target.
 - Formalized analysis of foundational, machine-internal, and inter-machine consistency before agreement.
 - The different implications of findings for local work and public contribution.
 - Project and group rules as knowledge, including their organization and use across three scopes.

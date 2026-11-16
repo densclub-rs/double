@@ -4,11 +4,10 @@ kind: path-options
 template-id: path-options-template
 project-id: double
 produced-by: machine-of-goals/path-discovery-agent
-interaction-language: en
+interaction-language: ru
 artifact-language: en
 goal-id: double-github-integration
 goal-artifact: ./double-github-integration.md
-goal-scope: main-goal
 derived-from:
   - ./double-github-integration.md
   - ./github-actions-maintenance/path-options.md
@@ -21,7 +20,6 @@ derived-from:
 ## 1. Source Goal
 
 - Goal: [Double GitHub Integration](./double-github-integration.md#double-github-integration)
-- Scope: main goal
 - Current state: the repository has release infrastructure to preserve and maintain.
 - Target state: required directories exist and the maintenance subgoal satisfies its checks.
 - Success criteria: parent directory checks and the subgoal's S01–S04 criteria pass.
@@ -57,9 +55,9 @@ derived-from:
 - Reuse / import opportunity: reuse the local maintenance subplan.
 - Lifecycle: included-in-plan
 - Recommendation: include-in-plan
-- Plan element: [S03: Invoke GitHub Actions Maintenance](./plan.md#stage-s03)
+- Plan element: [S03: Validate Maintenance Subgoal](./plan.md#stage-s03)
 - Delegated subgoal: [GitHub Actions Maintenance](./github-actions-maintenance/github-actions-maintenance.md#github-actions-maintenance)
-- Delegated plan: [GitHub Actions Maintenance plan](./github-actions-maintenance/plan.md#github-actions-maintenance-plan)
+- Delegated plan: [GitHub Actions Maintenance plan](./github-actions-maintenance/plan.md#releaseguard)
 
 ## 4. Comparison
 

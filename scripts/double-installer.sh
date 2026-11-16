@@ -351,6 +351,8 @@ status
   --project [DIR] shows only that project's registered installations, omitting
   the shared archive catalog. Omit DIR to use the current directory. In JSON
   project mode, archives is empty and installations is filtered to the project.
+  Shows skill files hardlinked to .double/skills in the selected or current
+  project. JSON includes a hardlinked_skills array when matches are found.
   Reads local state only; it neither queries GitHub nor rechecks archive hashes.
 EOF
       ;;
@@ -691,13 +693,18 @@ restore_directories() {
 }
 
 installation_consent() {
-  local answer
+  local default_answer="${2:-N}" answer
   action_printf warning '%s\n' "$1"
   [ "${yes:-false}" = true ] && return 0
   [ "${non_interactive:-false}" = false ] || fail "Confirmation required; use --yes."
   [ -t 0 ] || fail "Installation requires confirmation; rerun interactively or use $command_name --yes."
-  action_printf warning 'Continue? [y/N] '
-  read -r answer || answer=''
+  if [ "$default_answer" = Y ];then
+    action_printf warning 'Continue? [Y/n] '
+  else
+    action_printf warning 'Continue? [y/N] '
+  fi
+  read -r answer || fail 'Installation cancelled.'
+  answer="${answer:-$default_answer}"
   case "$answer" in y|Y|yes) ;; *) fail 'Installation cancelled.' ;; esac
 }
 
@@ -932,6 +939,22 @@ project_init() {
   no_symlinks "$project/.double"
 }
 
+project_hardlinked_skills() {
+  local base="$1" source relative agent target
+  [ -d "$base/.double/skills" ] || return 0
+  (no_symlinks "$base/.double/skills") 2>/dev/null || return 0
+  while IFS= read -r -d '' source; do
+    relative=${source#"$base/.double/skills/"}
+    for agent in .agents .claude; do
+      target="$base/$agent/skills/$relative"
+      [ -f "$target" ] && [ "$source" -ef "$target" ] || continue
+      (no_symlinks "$target") 2>/dev/null || continue
+      jq -cn --arg project "$base" --arg source ".double/skills/$relative" \
+        --arg path "$agent/skills/$relative" '{project:$project,source:$source,path:$path}' || return
+    done
+  done < <(find "$base/.double/skills" -type f -links +1 -print0)
+}
+
 # Project instructions are a separately owned, checksummed section. Refuse
 # edited or malformed sections rather than guessing which user text to replace.
 instruction_checksum() {
@@ -1101,7 +1124,7 @@ add_machine() {
   LC_ALL=C sort -u "$work_dir/roots" > "$work_dir/roots.sorted"
   mv "$work_dir/roots.sorted" "$work_dir/roots"
   if [ "$manual" = true ];then
-    installation_consent "Unregistered machine found: $machine in $project. Back up and replace its directories?"
+    installation_consent "Unregistered machine found: $machine in $project. Back up and replace its directories?" Y
     no_symlinks "$state/backups";mkdir -p "$state/backups"
     backup=$(mktemp -d "$state/backups/backup.XXXXXX")
     jq -n --arg p "$project" --arg m "$machine" '{project:$p,machine:$m,source:"manual"}' > "$backup/installation.json"
@@ -1217,7 +1240,7 @@ dev_machine() {
       manual=true
     done
     if [ "$manual" = true ];then
-      installation_consent "Unregistered machine found: $machine in $project. Back up and replace its directories?"
+      installation_consent "Unregistered machine found: $machine in $project. Back up and replace its directories?" Y
     fi
   fi
   LC_ALL=C sort -u "$work_dir/roots" > "$work_dir/roots.sorted"
@@ -1329,9 +1352,10 @@ offer_backup_cleanup() {
     keep) return 0 ;;
   esac
   if [ "${non_interactive:-false}" = false ] && [ "${yes:-false}" = false ] && [ -t 0 ];then
-    action_printf warning 'Delete this backup? [y/N] '
-    read -r answer || answer=''
-    case "$answer" in y|Y|yes) rm -rf -- "$backup" ;; esac
+    action_printf warning 'Delete this backup? [Y/n] '
+    if read -r answer;then
+      case "$answer" in ''|y|Y|yes) rm -rf -- "$backup" ;; esac
+    fi
   fi
   return 0
 }
@@ -2188,6 +2212,8 @@ case "$command_name" in
     type -P jq >/dev/null 2>&1 || fail 'Install jq to read local status.'
     state_init;registry_check
     no_symlinks "$state/releases"
+    status_project=${project:-$(pwd -P)}
+    hardlinked_skills=$(project_hardlinked_skills "$status_project" | jq -cs 'sort_by(.path)')
     color_reset='' color_heading='' color_stable='' color_rc='' color_dev='' color_muted=''
     if [ "$status_json" = false ] && [ -t 1 ] && [ "${TERM:-}" != dumb ] && [ -z "${NO_COLOR+x}" ]; then
       color_reset=$'\033[0m';color_heading=$'\033[1;36m'
@@ -2220,10 +2246,12 @@ case "$command_name" in
     if [ "$status_json" = true ]; then
       if [ -f "$registry" ]; then
         # Bash opens Unicode paths; native Windows jq --slurpfile does not.
-        jq -M --arg project "$project" --argjson archives "[$archive_json]" \
-          '{archives:$archives,installations:[.installations[] | select($project=="" or ((.scope // "project")=="project" and .project==$project))]}' < "$registry"
+        jq -M --arg project "$project" --argjson archives "[$archive_json]" --argjson links "$hardlinked_skills" \
+          '{archives:$archives,installations:[.installations[] | select($project=="" or ((.scope // "project")=="project" and .project==$project))]}
+           + (if $links == [] then {} else {hardlinked_skills:$links} end)' < "$registry"
       else
-        jq -Mn --argjson archives "[$archive_json]" '{archives:$archives,installations:[]}'
+        jq -Mn --argjson archives "[$archive_json]" --argjson links "$hardlinked_skills" \
+          '{archives:$archives,installations:[]} + (if $links == [] then {} else {hardlinked_skills:$links} end)'
       fi
     else
       [ -n "$project" ] || [ "$archive_count" -gt 0 ] || printf '%sNo downloaded machine archives.%s\n' "$color_muted" "$color_reset"
@@ -2240,6 +2268,11 @@ case "$command_name" in
             ({stable:$stable,rc:$rc,dev:$dev}[.channel]) + .channel + $reset + ")" +
             (if .source.type=="development" then "  source: " + .source.path else "" end))
         ' "$registry"
+      fi
+      if [ "$hardlinked_skills" != '[]' ];then
+        printf '\n%sHardlinked project skills:%s\n' "$color_heading" "$color_reset"
+        printf '  %s\n' "$status_project"
+        printf '%s\n' "$hardlinked_skills" | jq -r '.[] | "    - " + .path + " -> " + .source'
       fi
     fi
     ;;

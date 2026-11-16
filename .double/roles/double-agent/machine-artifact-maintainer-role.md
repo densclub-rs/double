@@ -3,7 +3,7 @@ style: double
 submodule: double
 id: machine-artifact-maintainer-role
 kind: role
-status: stable
+status: release-candidate
 agent: double-agent
 scope: cross-machine
 ---

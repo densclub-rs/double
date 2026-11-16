@@ -5,12 +5,9 @@ template-id: goal-template
 project-id: double
 produced-by: machine-of-goals/goal-formulation-agent
 owner-id: densclub
-interaction-language: en
+interaction-language: ru
 artifact-language: en
-goal-scope: subgoal
 parent-goal-id: double-github-integration
-parent-goal-directory: ..
-subgoal-directory: .
 derived-from:
   - source conversation on 2026-07-19
   - ../../../.github/workflows/release.yml
@@ -45,153 +42,171 @@ and verifiable over time.
 
 ## 4. Current State
 
-The release lifecycle defined by this goal is implemented. The repository has
-a reusable release program at `scripts/double-release.sh`, local validation at
-`scripts/test-double-release.sh`, and a thin GitHub Actions adapter at
-`.github/workflows/release.yml`.
-
-A pushed tag or manual-dispatch input selects one Double machine and one
-maturity class. The same release contract is exercised locally and in GitHub
-Actions: the selected machine version is verified, matching working files are
-packaged from `.double/`, a checksum is generated, and publication remains
-restricted to GitHub Actions.
+The repository contains a Python release program, pytest coverage and a GitHub
+Actions adapter. On 2026-11-06, local tests and existing hosted release evidence
+were inspected. The user accepted the reported results as validation evidence
+for the existing automation, within the scope recorded below.
 
 ### Known facts
 
-- `scripts/double-release.sh` implements the shared `package --tag <tag>` and
-  `publish --tag <tag>` release interface.
-- `scripts/test-double-release.sh` validates representative local packaging
-  behavior and can additionally package a supplied release tag.
-- `.github/workflows/release.yml` tests the selected tag and then invokes the
-  release program as a thin publication adapter.
-- The workflow handles machine release tags matching `machine-*`; the release
-  program applies the accepted machine tag grammar below.
-- The workflow uses GitHub Actions checkout and the automatic repository GitHub
-  token to create or update releases.
-- This subgoal is an accepted subgoal of `double-github-integration`, and its
-  release behavior is the existing maintenance baseline.
-- Double has multiple machines, including Machine of Ideas and Machine of
-  Goals.
-- A machine tag, such as `machine-of-ideas` or `machine-of-goals`, identifies
-  the machine whose `.double/` working files are eligible for the release.
-- A selected machine's working files are Markdown files with frontmatter under
-  any `.double/` directory path containing that machine's name; the selection
-  pattern is `.double/**/<machine-name>/**/*.md`.
-- Every release tag includes a dot-separated numeric version without a `v`
-  prefix: `<machine>-<major>.<minor>.<patch>`.
-- The accepted tag forms are `<machine>-<major>.<minor>.<patch>-dev`,
-  `<machine>-<major>.<minor>.<patch>-rc`, and
-  `<machine>-<major>.<minor>.<patch>` for stable releases.
-- A `dev` suffix selects only files with `status: draft`.
-- An `rc` suffix selects only files with `status: release-candidate`.
-- No suffix selects only files with `status: stable`.
-- `dev` and `rc` tags create GitHub prereleases; a tag without either suffix
-  creates a normal GitHub release.
-- A release must include only the selected machine's matching-status working
-  files from `.double/`.
-- A selected machine file without the required release-class status, including
-  a file with no `status`, is excluded and reported as a workflow warning.
-- When no files match the selected machine and release-class status, the
-  workflow does not fail and creates neither a package nor a GitHub Release; it
-  prints a final warning that records this result.
-- Manual dispatch accepts a release-tag input using the same
-  `<machine>-<major>.<minor>.<patch>[-dev|-rc]` grammar and applies the same
-  machine, status, prerelease, package, and no-match rules as a tag-triggered
-  release.
-- The release workflow runs autonomously in GitHub Actions after a supported
-  tag trigger or manual dispatch. It has no separate manual review or
-  validation gate; its final workflow result, logs, warnings, and published
-  release artifacts are the validation evidence.
-- The workflow uses `contents: write` as its only GitHub Actions permission.
-- The workflow uses no repository secrets beyond the automatic GitHub token.
-- GitHub Actions logs and temporary workflow artifacts are retained for 14
-  days. Published GitHub Release assets remain available.
-- The repository Artifact and log retention setting is 14 days; any uploaded
-  temporary workflow artifact also specifies `retention-days: 14`.
-- The only release-failing condition is a mismatch between the version in the
-  release tag and the selected machine's version knowledge artifact at
-  `knowledge/<machine>-version/<machine>-version.md`. All other non-success
-  conditions defined by this goal are GitHub Actions warnings.
-- Working files do not need a frontmatter `version`. The packager adds the
-  verified tag version to each exported working-file copy in the distribution.
-- The repository owner owns ongoing release-workflow maintenance and reviews
-  release-workflow changes.
-- No fixed review or maintenance cadence is required for now; the repository
-  owner acts when a relevant release-workflow change arises.
+- [Release program](../../../scripts/double-release/double-release.py) provides
+  `list-machines`, `package --machine <machine>`, `package --tag <tag>` and
+  `publish --tag <tag>` through Python 3.11+.
+- [Shared rules](../../../scripts/double-release/release_common.py) resolve tag
+  classes, machine ownership and version/changelog sources.
+- [Release notes](../../../scripts/double-release/double-release-notes.py)
+  prepare approved release text; the [pytest suite](../../../tests/double-release/README.md)
+  covers packaging, publication, notes, storage and workflow behavior.
+- [Workflow](../../../.github/workflows/release.yml) accepts `machine-*` and
+  `double-agent-*` tags and manual dispatch. It resolves the exact tag commit,
+  checks out tooling separately, tests the candidate, and retains evidence.
+- `validation_only=true` skips notes, publication and announcements.
+- Python tooling replaced the former shell tooling in commit `bcc07d9`.
+  Installer releases remain an independent subsystem.
+
+<a id="release-validation-2026-11-06"></a>
+
+### Accepted Validation Evidence — 2026-11-06
+
+The user accepted the reported verification results with the statement:
+“давай так и сделаем, это и есть доказательство валидации”. This accepts the
+observed evidence below; it does not retrospectively assert that every plan
+stage was executed or every goal condition independently verified.
+
+- Local check, from the repository root:
+  `uv run --with-requirements tests/double-release/requirements.txt python -m pytest -c tests/double-release/pytest.ini tests/double-release`.
+  Observed result: **130 passed, 1 skipped in 13.37s**, Python 3.14.7,
+  pytest 8.3.5. The skipped check was `test_selected_release_tag`, because no
+  `--release-tag` was supplied. An initial `python3 -m pytest` attempt failed
+  because that interpreter had no pytest; the uv invocation supplied the test
+  dependencies. This is a recorded tool-output summary from the conversation,
+  not a separately retained local test log.
+- [Hosted run 42243821307](https://github.com/densclub-rs/double/actions/runs/42243821307)
+  ran on 2026-11-06 for `machine-of-ideas-0.2.8`, commit
+  `5a75319f6c8a68d243b8d0d4fa85aedf7535eb96`. The local tag resolves to that
+  commit. There was no diff in release tooling, tests or workflow against it.
+  The inspected job/step records show successful candidate identity checks,
+  tests, approved-note preparation, publication and the announcement step.
+- [Published stable release](https://github.com/densclub-rs/double/releases/tag/machine-of-ideas-0.2.8)
+  is neither draft nor prerelease. Assets inspected through GitHub API:
+  `double-machine-of-ideas-0.2.8.tar.gz` (29,766 bytes) and
+  `SHA256SUMS.txt` (103 bytes).
+  The downloaded checksum text names the archive with SHA-256
+  `7a8c82c2b936a476e0812cf0b50dca6b12297c3eea1a11cd6821216d6f26c5a4`,
+  matching GitHub's reported asset digest. The published archive itself was
+  not downloaded and independently hashed during this check.
+- The existing local archive contained 38 machine-of-ideas Markdown files,
+  all with `status: stable` and exported `version: 0.2.8`. Its byte hash was
+  `0c1b77da0f1680ff253a6ab884175e49de5caa889298c58a24ab9a0df0bd2c03`;
+  it was not the byte-identical published archive and is not evidence of
+  published archive membership. No new candidate package was generated.
+- The run's evidence artifact `machine-release-validation-42243821307-1`
+  was created at `2026-11-06T15:31:52Z` and expires at
+  `2026-11-20T15:31:51Z`, consistent with 14-day temporary-artifact retention.
+  Its contents/JUnit were not downloaded in this inspection.
+- Repository Actions artifact/log retention was independently read as **90
+  days** through `GET /repos/densclub-rs/double/actions/permissions/artifact-and-log-retention`.
+  This is distinct from the workflow artifact's 14-day override; no setting
+  was changed.
+
+Evidence applicability: the local suite covers packaging and workflow rules,
+with mocked publication/notification boundaries and fixture cases including
+stable, rc, dev, invalid-source, mismatch and no-match behavior. The inspected
+live release demonstrates one stable publication; a new validation-only run,
+all release classes on GitHub, and independent inspection of the full published
+archive were not performed. Acceptance does not imply that those additional
+checks occurred. No code change, dispatch, publication or notification was
+performed by this verification. Future candidates need their own applicability
+check; expiring hosted artifacts must not be assumed permanently available.
+
+### Closure Assessment — 2026-11-06
+
+The accepted evidence supports the goal's minimal-success criterion for the
+existing release automation. The user accepted this baseline as achieved on 2026-11-06; this is not
+a claim that the approved plan was executed again stage by stage.
+
+| Criterion | Evidence and assessment |
+| --- | --- |
+| Tag recognition, machine ownership and status filtering | Passing local fixture tests cover stable, rc, dev, mismatch and no-match cases; existing local archive inspection supports the selected-machine scope. |
+| Permissions and publication boundaries | Source review and passing workflow/publication tests cover job permissions, nonpublishing package operations and notification gates. |
+| Representative real operation | The linked stable hosted run and non-draft release establish actual publication; the published checksum matches GitHub asset metadata. |
+| Retention and maintainability | Temporary evidence retention is 14 days; repository retention is separately confirmed as 90 days. Tooling, tests and maintenance responsibilities are documented. |
+
+No observed result establishes the partial-success or failure criteria. The
+remaining evidence limitations above do not negate representative validation:
+all release classes need not be published live solely for this assessment.
+Independent download/hash/membership checks of the published archive would
+strengthen assurance but were not performed. Broader high-quality claims, such
+as ease of future maintenance, are not independently certified by this check.
+
+The user confirmed minimal success for the current release baseline. The goal
+remains open for ongoing functional evolution through [S05](./plan.md#stage-s05). New release candidates still need their normal
+checks; this assessment grants no publication or notification authority.
 
 ### Relevant environment
 
-The Double GitHub repository, GitHub Actions, GitHub Releases, repository
-secrets and permissions, and local contributor workspaces.
+Local Python 3.11+, Git and pytest; GitHub Actions, GitHub CLI and GitHub Releases;
+optional Telegram configuration for the separate announcement job.
 
 ### Existing related goals or subgoals
 
-- Parent goal: [Double GitHub Integration](../double-github-integration.md#double-github-integration).
-- No child goals are identified at this stage.
+- Parent: [Double GitHub Integration](../double-github-integration.md#double-github-integration).
+- No child goals are required for the current scope.
 
 ## 5. Target State
 
-Double has a maintained GitHub Actions release workflow that creates
-module-specific GitHub release packages safely and predictably. It selects the
-machine and maturity class from the release tag, packages only matching working
-files from `.double/`, and records its behavior and maintenance responsibilities
-in documentation supported by reproducible validation.
+Maintain one locally testable release contract and a GitHub Actions adapter
+that packages the intended machine, validates its version and publishes only
+with the required evidence and approved release text.
 
 - Required result:
-  - `scripts/` is the working directory for the release program
-  - `scripts/double-release.sh` is the release program in that directory
-  - `.github/workflows/` is the directory for GitHub Actions workflows
-  - `.github/workflows/release.yml` configures the release workflow rules
-  - `.github/workflows/release.yml` invokes special scripts to test, create
-    and publish releases
-  - `scripts/test-double-release.sh` validates the selected release tag before
-    publication; `.github/workflows/release.yml` invokes it as
-    `scripts/test-double-release.sh --tag "$RELEASE_TAG"`
-  - accepted tags use the form
-    `<machine>-<major>.<minor>.<patch>[-dev|-rc]`, where no suffix selects a
-    stable release
-  - a `dev` release includes only `status: draft` working files for the
-    selected machine from `.double/`
-  - an `rc` release includes only `status: release-candidate` working files for
-    the selected machine from `.double/`
-  - a stable release includes only `status: stable` working files for the
-    selected machine from `.double/`
-  - machine files are selected only from `.double/**/<machine-name>/**/*.md`
-  - excluded candidate files with a nonmatching or missing `status` produce
-    workflow warnings
-  - a no-match result succeeds without an empty package or GitHub Release and
-    prints a final workflow warning
-  - manual dispatch validates and applies the same release-tag grammar and
-    release rules as a pushed tag
-  - autonomous GitHub Actions runs record the final release result, logs,
-    warnings, and artifacts as validation evidence
-  - the workflow requests only the `contents: write` permission
-  - the workflow requires no repository secrets beyond the automatic GitHub
-    token
-  - GitHub Actions logs and temporary workflow artifacts have a 14-day
-    retention period; published GitHub Release assets remain available
-  - the repository Artifact and log retention setting and every uploaded
-    temporary workflow artifact use a 14-day retention period
-  - the release fails only when the tag version does not equal the selected
-    machine's version knowledge value at
-    `knowledge/<machine>-version/<machine>-version.md`
-  - working-file frontmatter does not require `version`; the verified tag
-    version is generated into each exported working-file copy
-  - all other non-success conditions produce GitHub Actions warnings
-  - the repository owner maintains and reviews release-workflow changes
-  - no fixed review or maintenance cadence is required for now
-  - `dev` and `rc` releases are marked as GitHub prereleases; stable releases
-    are not marked as prereleases
-  - the workflow creates the corresponding GitHub release package and checksum
-  - triggers, permissions, secrets, package contents, failure behavior, and
-    maintenance ownership are documented
-  - reproducible validation evidence exists for representative release runs
-- Optional quality improvements: workflow linting, reusable release components,
-  status reporting, and automated failure notifications.
-- Evidence that would show the target state exists: representative tagged
-  releases contain only the intended machine's files with the required status,
-  their checksums match the package, and GitHub Actions runs complete or fail as
-  the declared contract requires.
+  - Support periodic user-requested functional extensions through plan S05.
+    Each request adds concrete substages and evolves goal requirements, the
+    existing program and its tests together; no speculative backlog is implied.
+  - Keep release tooling in `scripts/double-release/`, tests in
+    `tests/double-release/`, and the workflow in `.github/workflows/release.yml`.
+  - Tagged packaging reads the exact tag tree. Tags use
+    `<machine>-<major>.<minor>.<patch>[-dev|-rc]`, without a `v` prefix.
+  - `dev`, `rc` and stable tags select `draft`, `release-candidate` and `stable`
+    Markdown files respectively, owned by the selected machine under `.double/`.
+  - Excluded files with missing or nonmatching status produce warnings; no-match
+    produces neither an empty package nor a release.
+  - Resolve version knowledge reproducibly inside the candidate tree using
+    indexed project rules, with the historical knowledge path only when allowed.
+    Follow the [version-source contract](../../../knowledge/machine-version-and-changelog-locations/machine-version-and-changelog-locations.md#machine-version-and-changelog-locations).
+    Reject missing, invalid, broken, conflicting or external-only sources and
+    tag/version mismatch. Version mismatch is no longer the only failure case.
+  - Add the verified version to distribution copies without modifying source
+    files; produce the archive and `dist/SHA256SUMS.txt` with matching SHA-256.
+  - Local `package --machine` uses current working files, including untracked
+    files and all statuses, and a valid local version. It is not tagged-release
+    evidence and must never publish.
+  - Tagged `package` is also nonpublishing. `publish` is restricted to GitHub
+    Actions and requires approved notes. Stable releases are normal releases;
+    `dev` and `rc` releases are prereleases.
+  - Verify the tag commit and checkout identity before candidate tests. Run
+    pytest and exact-tag packaging before publication. Test failures and failed
+    identity checks stop the workflow; a successful job alone is not publication proof.
+  - Preserve approved changelog/tag text as release notes. Verify a non-draft
+    release URL before reporting publication or allowing an announcement.
+  - Preserve `validation_only` as the hosted nonpublishing check. Retain JUnit,
+    archive and checksum evidence for 14 days; published assets are not subject
+    to that temporary-artifact policy. Verify repository log retention separately.
+  - Use job-specific permissions: candidate `contents: read`; release
+    `contents: write` and `pull-requests: read`; Telegram no repository permissions.
+    GitHub publication uses the automatic GitHub token.
+  - Optional Telegram delivery uses its separate secrets and topic variable,
+    runs only after verified eligible publication, and cannot fail the release.
+    Missing configuration skips delivery; reruns can duplicate notifications.
+  - Installer tags use the independent installer workflow. No machine packaging
+    change may absorb installer publication or delete published assets.
+  - The repository owner reviews maintenance changes when needed; no fixed
+    maintenance cadence is required.
+- Optional quality improvements: workflow linting, clearer diagnostics and
+  reusable components where they improve maintenance without duplicating logic.
+- Evidence: local pytest results, inspected package/checksum contents, exact
+  candidate identity, hosted validation artifacts and, when publication is
+  authorized, the resulting release URL and assets.
 
 ## 6. Success Criteria
 
@@ -208,7 +223,8 @@ in documentation supported by reproducible validation.
 - Failure / not achieved: a release includes files for the wrong machine or
   status; the tag version does not equal the selected machine's version
   knowledge value; required automation is absent or unreliable; or the workflow
-  reports success while failing to produce its declared package.
+  reports publication without verified assets. A declared warning/no-match
+  or validation-only outcome is not a publication claim.
 
 ## 7. Constraints
 
@@ -217,12 +233,11 @@ in documentation supported by reproducible validation.
   contract explicit before expanding automation.
 - Money: no budget specified; prefer GitHub-native capabilities and freely
   available tooling unless a later decision approves otherwise.
-- Technical constraints: package only Markdown working files with frontmatter
-  from `.double/**/<machine-name>/**/*.md`; filter package contents by the
-  release-class status and warn for each excluded nonmatching or missing-status
-  candidate; do not create an empty package or GitHub Release when no files
-  match; use least-privilege permissions; do not expose credentials, secrets,
-  or sensitive artifacts; keep automation reproducible.
+- Technical constraints: tagged releases include only machine-owned Markdown
+  files under `.double/` with the required frontmatter status. Local
+  `package --machine` intentionally includes all statuses and working files.
+  Warn on excluded tagged candidates; create no empty package or release.
+  Use least-privilege permissions, protect credentials and preserve source files.
 - Social / legal / ethical constraints: make consequential automation behavior
   transparent to maintainers and contributors.
 - Other: no workflow, repository setting, secret, permission, or release is
@@ -230,11 +245,13 @@ in documentation supported by reproducible validation.
 
 ## 8. Resources
 
-- Available resources: the Double repository, `.github/workflows/release.yml`,
+- Available resources: the Double repository, Python release tooling, pytest,
+  `.github/workflows/release.yml`,
   the `.double/` machine working files and their frontmatter statuses, GitHub
   Actions, GitHub Releases, repository documentation, and the parent goal.
-- Missing resources: none currently identified; future release-contract
-  changes may require fresh local and hosted validation evidence.
+- Missing resources: none blocking the current representative validation
+  assessment. Future candidates require applicable hosted evidence and settings
+  checks; the accepted evidence above is scoped to the inspected candidate.
 - Tools or systems: GitHub Actions, GitHub repository settings, Git, local
   validation tools, and any approved workflow-specific tooling.
 - People or organizations: the Double project community, maintainers, and
@@ -256,7 +273,8 @@ None currently.
 
 ## 11. Machine of Goals Artifacts
 
-- Possible achievement paths: [Path options](./path-options.md#github-actions-maintenance-path-options)
-- Plan: [Current plan](./plan.md#github-actions-maintenance-plan)
-- Plan registry: [Registry](./plan.md#realization-registry)
-- Computed plan style: `single-pass`
+Possible paths: [Path options](./path-options.md#github-actions-maintenance-path-options)
+
+| Branch | Review revision | Plan |
+| --- | --- | --- |
+| release-maintenance | 4 | [releaseguard](./plan.md#releaseguard) |

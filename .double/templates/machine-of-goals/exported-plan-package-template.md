@@ -17,8 +17,8 @@ derived-from:
 Keep editable models and historical execution plans distinct. Omit optional
 execution links when no realization has started. Import reusable content as a
 local model; no new local execution plan is created until authorized step 05.
-Package the goal/model alone or selected documented realizations with their
-frozen plans and evidence. A reusable skill/action is optional existing material;
+Package the goal/model alone or selected Sharing Realizations with their
+captured conditions, selected evidence and required files. A reusable skill/action is optional existing material;
 exporting or invoking it creates no Machine of Goals execution history.
 
 ```md
@@ -62,7 +62,7 @@ derived-from:
 - Constraints:
 - Resources:
 - Source model: [<model-title>](<plan-model-artifact-link>)
-- Historical frozen plan: [<plan-title>](<plan-artifact-link>) when one exists
+- Exported main plan: [<plan-title>](<plan-artifact-link>)
 - Selected paths and subplans: [<path-or-subplan-label>](<path-or-subplan-link>)
 - Supporting validation evidence:
 
@@ -112,7 +112,7 @@ Portable sequence or package outline:
 ## 9. Plan Export Notes
 
 - Exported editable plan: `plan.md` with its original stable plan ID and anchor
-- Exported frozen plans: <existing-plan-paths-and-source-identities-only>
+- Selected Sharing Realizations: <manual-and-automatic-variants>
 - Exported path-options artifact: `path-options.md`
 - Selected documented realizations and stage evidence:
 - Required validation contracts: initial, intermediate, and final state checks

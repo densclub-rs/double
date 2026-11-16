@@ -60,3 +60,11 @@ Changes recorded for the `double-agent` module.
 - Recommend release candidates and report readiness blockers through the responsible machine workflows.
 - Require approval of the English tag annotation and generated Telegram preview before publication.
 - Publish through GitHub Actions and verify release and Telegram delivery separately; development releases have no Telegram announcement.
+
+## Notes
+
+Pending changes for 0.0.13. The release date is pending.
+
+- Add a Double Agent workflow for local and collaborative parallel work on ideas, goals, and knowledge.
+- Show worktree and session state, surface possible overlap before handoff, and offer actions based on the observed state.
+- Define selective integration of checked contributions and separate it from remote publication and release.

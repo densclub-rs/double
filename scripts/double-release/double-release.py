@@ -12,6 +12,15 @@ import tarfile
 
 from release_common import MACHINES, STATUSES, owned, parse, version_knowledge_path
 
+EXCHANGE_WORKFLOW = '.double/workflows/double-agent/exchange-package-workflow.md'
+EXCHANGE_ASSETS = {
+    '.double/templates/double-agent/exchange-package-manifest.schema.json': 0o644,
+    '.double/tools/double-agent/exchange/double-exchange': 0o755,
+    '.double/tools/double-agent/exchange/double_exchange.py': 0o644,
+    '.double/tools/double-agent/exchange/goal_registry.py': 0o644,
+    '.double/tools/double-agent/exchange/validate_manifest.py': 0o644,
+}
+
 
 def warning(message):
     print(f'::warning::{message}', file=sys.stderr)
@@ -122,7 +131,13 @@ def package(tag, machine):
         if tag and status != STATUSES[kind]:
             warning(f"Excluded {path}: status '{status or 'missing'}' does not match '{STATUSES[kind]}'.")
             continue
-        selected.append((path, with_export_version(text, version).encode('utf-8')))
+        selected.append((path, with_export_version(text, version).encode('utf-8'), 0o644))
+    if machine == 'double-agent' and any(path == EXCHANGE_WORKFLOW for path, _, _ in selected):
+        for path, mode in EXCHANGE_ASSETS.items():
+            if not exists(path):
+                raise ValueError(f'Exchange workflow requires missing asset: {path}')
+            content = git('show', f'{commit}:{path}') if commit else Path(path).read_bytes()
+            selected.append((path, content, mode))
     if not selected:
         warning(f"No {STATUSES.get(kind, 'local')} files matched machine '{machine}'; no package or GitHub Release was created.")
         return None
@@ -130,10 +145,10 @@ def package(tag, machine):
     directory.mkdir(exist_ok=True)
     archive = directory / f'double-{tag or f"{machine}-{version}-local"}.tar.gz'
     with tarfile.open(archive, 'w:gz') as stream:
-        for path, content in selected:
+        for path, content, mode in selected:
             info = tarfile.TarInfo(path)
             info.size = len(content)
-            info.mode = 0o644
+            info.mode = mode
             stream.addfile(info, io.BytesIO(content))
     digest = hashlib.sha256(archive.read_bytes()).hexdigest()
     (directory / 'SHA256SUMS.txt').write_text(f'{digest}  {archive.name}\n', encoding='utf-8')

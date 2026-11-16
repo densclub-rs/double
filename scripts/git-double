@@ -1,14 +1,21 @@
 #!/usr/bin/env python3
-"""Opt-in, local Git exclusions for untracked Markdown drafts."""
+"""Local document exclusions and read-only Double machine inspection."""
 import argparse
+import base64
+import calendar
 import contextlib
+from datetime import date, timedelta
 import io
+import json
 import os
+import posixpath
 from pathlib import Path
 import re
 import subprocess
 import sys
+import tempfile
 import time
+from urllib.parse import unquote, urlsplit
 
 BEGIN = '# BEGIN git-double drafts\n'
 END = '# END git-double drafts\n'
@@ -132,8 +139,984 @@ def run(root, scopes, exclude, sync):
     return int(bool(mismatches))
 
 
+
+MACHINES = ('double-agent', 'machine-of-goals', 'machine-of-ideas', 'machine-of-knowledge')
+VERSION = re.compile(r'[0-9]+\.[0-9]+\.[0-9]+')
+RELEASE_TAG = re.compile(r'^([a-z0-9][a-z0-9-]*)-([0-9]+)\.([0-9]+)\.([0-9]+)(?:-(rc|dev))?$')
+
+
+def parse_release_tag(tag):
+    """Use the same tag grammar as double-release/release_common.py."""
+    match = RELEASE_TAG.fullmatch(tag)
+    if not match:
+        raise ValueError('Invalid release tag')
+    return match[1], tuple(map(int, match.group(2, 3, 4))), match[5] or 'stable'
+
+
+def inspect_git(root, *args, allowed=(0,)):
+    result = subprocess.run(['git', '--no-optional-locks', '-C', str(root), *args],
+                            capture_output=True, timeout=30)
+    if result.returncode not in allowed:
+        # Do not echo Git/config/URL diagnostics which can contain credentials.
+        raise ValueError('Git read failed: ' + args[0])
+    return result.stdout.decode('utf-8')
+
+
+def frontmatter(text):
+    lines = text.lstrip('\ufeff').splitlines()
+    if not lines or lines[0].strip() != '---':
+        raise ValueError('Opening frontmatter is missing')
+    fields = {}
+    for line in lines[1:]:
+        if line.strip() in ('---', '...'):
+            return fields
+        match = re.fullmatch(r'([a-z][a-z-]*):[ \t]*(.*)', line)
+        if match:
+            key, value = match.groups()
+            if key in fields:
+                raise ValueError('Duplicate frontmatter field: ' + key)
+            scalar = re.fullmatch(r'''(?:"([^"\n]*)"|'([^'\n]*)'|([^#\n]*?))[ \t]*(?:#.*)?''', value)
+            fields[key] = (next(v for v in scalar.groups() if v is not None).strip()
+                           if scalar else '')
+    raise ValueError('Frontmatter is not closed')
+
+
+def value_section(text):
+    parts = re.split(r'^## Value[ \t]*$', text, flags=re.M)
+    if len(parts) != 2:
+        raise ValueError('Expected exactly one Value section')
+    return re.split(r'^## (?!#)', parts[1], maxsplit=1, flags=re.M)[0].strip()
+
+
+def numeric_version(text):
+    value = value_section(text).strip('`')
+    if not VERSION.fullmatch(value):
+        raise ValueError('Expected numeric X.Y.Z version knowledge')
+    return value
+
+
+def usable(fields, today=None):
+    if fields.get('status') not in ('stable', 'release-candidate'):
+        return False
+    # Knowledge validity is checked without renewing it or refreshing artifacts.
+    if fields.get('kind') != 'knowledge-artifact':
+        return False
+    try:
+        observed = date.fromisoformat(fields['observed-at'])
+        today = today or date.today()
+        if observed > today:
+            return False
+        ttl = fields['ttl'].lower()
+        match = re.fullmatch(r'(one|two|three|\d+)\s+(day|week|month|year)s?', ttl)
+        if not match:
+            return False
+        raw, unit = match.groups()
+        amount = {'one': 1, 'two': 2, 'three': 3}.get(raw)
+        amount = int(raw) if amount is None else amount
+        if amount <= 0:
+            return False
+        if unit in ('day', 'week'):
+            expiry = observed + timedelta(days=amount * (7 if unit == 'week' else 1))
+        else:
+            months = observed.year * 12 + observed.month - 1 + amount * (12 if unit == 'year' else 1)
+            year, month = divmod(months, 12)
+            month += 1
+            expiry = date(year, month, min(observed.day, calendar.monthrange(year, month)[1]))
+        return today < expiry
+    except (KeyError, ValueError, OverflowError):
+        return False
+
+
+def read_file(path):
+    path = Path(path)
+    if any(part.is_symlink() for part in (path, *path.parents)):
+        raise ValueError('Symlink knowledge sources are unsupported')
+    return path.read_text(encoding='utf-8-sig')
+
+
+def links(text, origin):
+    clean = re.sub(r'(?ms)^```.*?^```[^\n]*', '', text)
+    for match in re.finditer(r'(?<!!)\[[^\]]*\]\(\s*(<[^>]+>|[^\s)]+)(?:\s+"[^"]*")?\s*\)', clean):
+        target = urlsplit(match[1].strip('<>'))
+        if not target.scheme and not target.netloc and target.path:
+            yield Path(origin).parent / unquote(target.path)
+
+
+def selected_rules(text, machine):
+    active = False
+    chosen = []
+    clean = re.sub(r'(?ms)^```.*?^```[^\n]*', '', text)
+    for line in clean.splitlines():
+        heading = re.match(r'^#{1,2}\s+(.+?)\s*#*$', line)
+        if heading:
+            active = heading[1] in ('Common Rules', 'double-agent', machine)
+        elif active:
+            chosen.append(line)
+    return '\n'.join(chosen)
+
+
+def usable_artifacts(paths, version_id):
+    """Read candidate knowledge, silently skipping unusable project rules."""
+    artifacts = {}
+    for path in paths:
+        try:
+            text = read_file(path)
+            fields = frontmatter(text)
+            if not fields.get('id') or not usable(fields):
+                continue
+            if fields['id'] == version_id:
+                numeric_version(text)
+            artifacts[path.resolve()] = (text, fields)
+        except (OSError, ValueError, UnicodeError):
+            continue
+    return artifacts
+
+
+def artifacts_by_id(artifacts):
+    grouped = {}
+    for path, (text, fields) in artifacts.items():
+        grouped.setdefault(fields['id'], []).append((path, text))
+    return grouped
+
+
+def scope_version_sources(scope, machine):
+    """Read direct rules and one Value indirection in a single rule scope."""
+    index = scope / '.double-rules/double-rules.md'
+    wanted = machine + '-version'
+    try:
+        paths = links(selected_rules(read_file(index), machine), index)
+        direct = usable_artifacts(paths, wanted)
+    except (OSError, ValueError, UnicodeError):
+        return []
+    grouped = artifacts_by_id(direct)
+    if len(grouped.get(wanted, [])) > 1:
+        return grouped[wanted]
+    combined = dict(direct)
+    for path, (text, fields) in direct.items():
+        if fields['id'] == wanted or len(grouped[fields['id']]) != 1:
+            continue
+        try:
+            combined.update(usable_artifacts(links(value_section(text), path), wanted))
+        except ValueError:
+            continue
+    return artifacts_by_id(combined).get(wanted, [])
+
+
+def version_observation(path, text, scope, diagnostics):
+    return {'value': numeric_version(text), 'path': str(path),
+            'rule_scope': str(scope), 'source_mode': 'working-tree',
+            'diagnostics': diagnostics}
+
+
+def ordinary_version(root, machine):
+    """Select nearest usable whole knowledge, then the historical default."""
+    wanted = machine + '-version'
+    diagnostics = []
+    for scope in (root, *list(root.parents)[:2]):
+        candidates = scope_version_sources(scope, machine)
+        if len(candidates) > 1:
+            diagnostics.append('Conflicting ' + wanted + ' sources skipped at ' + str(scope))
+        elif candidates:
+            path, text = candidates[0]
+            return version_observation(path, text, scope, diagnostics)
+    default = root / f'knowledge/{wanted}/{wanted}.md'
+    text = read_file(default)
+    fields = frontmatter(text)
+    if fields.get('id') != wanted or not usable(fields):
+        raise ValueError('Usable version knowledge is missing: ' + wanted)
+    return version_observation(default, text, root, diagnostics)
+
+
+class TaggedTree:
+    """Callbacks used by the existing strict release source resolver."""
+    def __init__(self, root, commit):
+        self.root, self.commit = root, commit
+
+    def entry(self, path):
+        if (Path(path).is_absolute() or '..' in Path(path).parts or
+                '\n' in path or '\r' in path):
+            raise ValueError('Tagged knowledge must be inside the tagged tree')
+        # literal pathspec prevents metacharacters selecting other paths.
+        return inspect_git(self.root, 'ls-tree', '-z', self.commit, '--', ':(literal)' + path)
+
+    def exists(self, path):
+        return bool(self.entry(path))
+
+    def read(self, path):
+        entry = self.entry(path)
+        if not entry or entry.split(' ', 1)[0] not in ('100644', '100755'):
+            raise ValueError('Tagged knowledge is missing or not a regular file: ' + path)
+        return inspect_git(self.root, 'show', self.commit + ':' + path)
+
+
+def problem(machine, tag, message, code='invalid-local-tag'):
+    sources = {'invalid-local-tag': ['local_tags'],
+               'version-mismatch': ['versions', 'remote_tags'],
+               'version-tag-missing': ['versions', 'local_tags', 'remote_tags'],
+               'working-version-differs': ['versions', 'head_versions']}
+    if code.startswith('release-'):
+        evidence = ['remote_tags', 'releases']
+    else:
+        evidence = sources.get(code, ['local_tags', 'remote_tags'])
+    return {'code': code, 'machine': machine, 'tag': tag,
+            'message': message, 'source_refs': evidence}
+
+
+def tag_annotation(root, oid):
+    raw = inspect_git(root, 'cat-file', 'tag', oid)
+    annotation = raw.partition('\n\n')[2]
+    return re.split(r'(?m)^-----BEGIN (?:PGP SIGNATURE|SSH SIGNATURE)-----', annotation)[0].strip()
+
+
+def tagged_knowledge(tree, machine, kind):
+    path = strict_knowledge_path(machine, kind, tree.read, tree.exists)
+    text = tree.read(path)
+    fields = frontmatter(text)
+    if fields.get('id') != machine + '-' + kind or fields.get('status') not in ('stable', 'release-candidate'):
+        raise ValueError('Tagged ' + kind + ' identity or readiness is invalid')
+    return path, text
+
+
+def changelog_entry(text, full_version):
+    """Match the exact version/channel entry using the existing release contract."""
+    value = value_section(text)
+    pattern = r'^### ([0-9]+\.[0-9]+\.[0-9]+(?:-(?:rc|dev))?) — ([0-9]{4}-[0-9]{2}-[0-9]{2})[ \t]*$'
+    matching = [heading for heading in re.finditer(pattern, value, re.M)
+                if heading[1] == full_version]
+    if len(matching) != 1:
+        raise ValueError('Expected exactly one full-version changelog entry')
+    heading = matching[0]
+    date.fromisoformat(heading[2])
+    body = re.split(r'^### ', value[heading.end():], maxsplit=1, flags=re.M)[0].strip()
+    if not re.search(r'^- \S', body, re.M):
+        raise ValueError('Changelog entry has no change bullets')
+    return heading[0].strip() + '\n\n' + body
+
+
+def validate_tag_version(tree, machine, item):
+    try:
+        path, text = tagged_knowledge(tree, machine, 'version')
+        item['knowledge_path'] = path
+        if numeric_version(text) != item['version']:
+            raise ValueError('Tag numeric version disagrees with tagged knowledge')
+    except ValueError as error:
+        item['issues'].append(problem(machine, item['name'], str(error)))
+
+
+def validate_tag_changelog(tree, machine, item):
+    try:
+        path, text = tagged_knowledge(tree, machine, 'changelog')
+        item['changelog_path'] = path
+        full_version = item['name'][len(machine) + 1:]
+        if item['annotation'] != changelog_entry(text, full_version):
+            raise ValueError('Tag annotation disagrees with tagged changelog')
+    except ValueError as error:
+        item['issues'].append(problem(machine, item['name'], str(error)))
+
+
+def inspect_tag(root, name, oid, object_type):
+    """Resolve one tag, then check its captured tree version and changelog."""
+    machine, _, channel = parse_release_tag(name)
+    numeric = name[len(machine) + 1:].removesuffix('-rc').removesuffix('-dev')
+    item = {'name': name, 'ref': 'refs/tags/' + name, 'oid': oid,
+            'tag_object_oid': oid if object_type == 'tag' else None,
+            'object_type': object_type, 'commit': None, 'annotation': None,
+            'version': numeric, 'channel': channel, 'knowledge_path': None,
+            'changelog_path': None, 'source_mode': 'commit', 'issues': []}
+    if object_type == 'tag':
+        item['annotation'] = tag_annotation(root, oid)
+    else:
+        item['issues'].append(problem(machine, name, 'Release tag is not annotated'))
+    try:
+        item['commit'] = inspect_git(root, 'rev-parse', '--verify', oid + '^{commit}').strip()
+    except ValueError:
+        item['issues'].append(problem(machine, name, 'Tag does not resolve to a commit'))
+        return item
+    tree = TaggedTree(root, item['commit'])
+    validate_tag_version(tree, machine, item)
+    validate_tag_changelog(tree, machine, item)
+    return item
+
+
+def local_tags(root, machines):
+    result = {machine: [] for machine in machines}
+    ignored = 0
+    refs = inspect_git(root, 'for-each-ref', '--format=%(refname:strip=2) %(objectname) %(objecttype)', 'refs/tags/')
+    for line in refs.splitlines():
+        name, oid, kind = line.split()
+        try:
+            machine, _, _ = parse_release_tag(name)
+        except ValueError:
+            ignored += 1
+            continue
+        if machine not in MACHINES:
+            ignored += 1
+            continue
+        if machine in machines:
+            result[machine].append(inspect_tag(root, name, oid, kind))
+    for items in result.values():
+        items.sort(key=lambda item: (*parse_release_tag(item['name'])[1:], item['name']))
+    return result, ignored
+
+
+def require_double(root):
+    # Existing source-project knowledge and layout, not a new marker or remote
+    # heuristic. An installed .double payload alone is insufficient.
+    fields = frontmatter(read_file(root / 'knowledge/double-project/double-project.md'))
+    if (fields.get('id') != 'double-project' or not usable(fields) or
+            not (root / '.double/agents').is_dir() or
+            not (root / 'scripts/double-release/release_common.py').is_file()):
+        raise ValueError('versions requires the Double source project or a fork')
+
+
+class SourceError(ValueError):
+    """A stable error code and a message safe to include in a report."""
+    def __init__(self, code, message):
+        super().__init__(message)
+        self.code = code
+
+
+def repository_name(value):
+    """Validate an explicit GitHub.com OWNER/REPO without interpreting a URL."""
+    if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9-]*/[A-Za-z0-9_][A-Za-z0-9_.-]*', value):
+        raise SourceError('repository-selection', 'Expected GitHub OWNER/REPO')
+    return value
+
+
+def remote_address(root, name):
+    """Read exactly one configured fetch URL as data, not a Git transport."""
+    if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_./-]*', name):
+        raise SourceError('remote-selection', 'Invalid configured remote name')
+    raw = inspect_git(root, 'config', '--local', '--null', '--get-all',
+                      'remote.' + name + '.url', allowed=(0, 1))
+    urls = [value for value in raw.split('\0') if value]
+    if len(urls) != 1:
+        raise SourceError('remote-selection', 'Selected remote needs exactly one fetch URL')
+    return normalized_remote(urls[0])
+
+
+def normalized_remote(value):
+    """Allow HTTPS reads; translate only ordinary GitHub SSH repository URLs."""
+    scp = re.fullmatch(r'(?:git@)?github\.com:([^\s]+)', value)
+    if scp:
+        value = 'https://github.com/' + scp[1]
+    parsed = urlsplit(value)
+    if parsed.scheme == 'ssh' and parsed.hostname == 'github.com' and parsed.username == 'git':
+        if parsed.password or parsed.port not in (None, 22):
+            raise SourceError('remote-selection', 'Unsupported SSH repository address')
+        value = 'https://github.com' + parsed.path
+        parsed = urlsplit(value)
+    if (parsed.scheme != 'https' or not parsed.hostname or parsed.username or parsed.password
+            or parsed.query or parsed.fragment or parsed.port not in (None, 443)
+            or any(c.isspace() or ord(c) < 32 for c in value)):
+        raise SourceError('remote-selection', 'Only credential-free HTTPS repository addresses are supported')
+    path = parsed.path.rstrip('/')
+    if parsed.hostname.lower() == 'github.com':
+        path = '/' + repository_name(path.lstrip('/').removesuffix('.git'))
+    return 'https://' + parsed.hostname.lower() + path
+
+
+def github_repository(url):
+    parsed = urlsplit(url)
+    if parsed.hostname != 'github.com':
+        raise SourceError('repository-selection', 'Release inspection requires GitHub.com')
+    return repository_name(parsed.path.lstrip('/').removesuffix('.git'))
+
+
+def release_repository(root, explicit, remote='origin'):
+    return repository_name(explicit) if explicit else github_repository(remote_address(root, remote))
+
+
+def remote_environment():
+    """Ignore Git transport rewrites, aliases, credential helpers and tracing."""
+    env = {key: value for key, value in os.environ.items()
+           if not key.startswith(('GIT_', 'GCM_', 'GH_DEBUG'))}
+    env.update({'GIT_CONFIG_NOSYSTEM': '1', 'GIT_CONFIG_GLOBAL': os.devnull,
+                'GIT_CONFIG_SYSTEM': os.devnull, 'GIT_TERMINAL_PROMPT': '0',
+                'GIT_ASKPASS': '', 'GH_PROMPT_DISABLED': '1', 'GH_HOST': 'github.com',
+                'GH_PAGER': 'cat', 'GH_NO_UPDATE_NOTIFIER': '1',
+                'GH_NO_EXTENSION_UPDATE_NOTIFIER': '1', 'NO_COLOR': '1'})
+    return env
+
+
+def remote_failure(stderr):
+    """Classify errors without echoing possibly credential-bearing diagnostics."""
+    text = stderr.lower()
+    if 'could not resolve' in text or 'name resolution' in text:
+        return SourceError('network-dns', 'Remote host could not be resolved')
+    if 'ssl' in text or 'certificate' in text:
+        return SourceError('network-tls', 'Remote TLS connection failed')
+    if 'rate limit' in text or '429' in text:
+        return SourceError('rate-limit', 'Remote rate limit exceeded')
+    if any(word in text for word in ('401', '403', 'authentication', 'credentials', 'login')):
+        return SourceError('authentication', 'Remote authentication or authorization failed')
+    if '404' in text or 'not found' in text:
+        return SourceError('unavailable', 'Remote repository is absent or inaccessible')
+    return SourceError('unavailable', 'Remote read failed')
+
+
+def run_remote_read(argv, env=None, timeout=30):
+    """Run a fixed read in an empty temporary directory, outside repository config."""
+    try:
+        with tempfile.TemporaryDirectory(prefix='git-double-read-') as directory:
+            environment = remote_environment() if env is None else dict(env)
+            environment['GIT_CEILING_DIRECTORIES'] = directory
+            result = subprocess.run(argv, cwd=directory, env=environment, capture_output=True,
+                                    text=True, timeout=max(0.01, timeout))
+    except FileNotFoundError:
+        raise SourceError('dependency', 'Required Git or GitHub CLI executable is missing') from None
+    except subprocess.TimeoutExpired:
+        raise SourceError('timeout', 'Remote read timed out') from None
+    if result.returncode:
+        raise remote_failure(result.stderr)
+    return result.stdout
+
+
+def github_token():
+    """Read existing credentials privately; never install or print them."""
+    token = os.environ.get('GH_TOKEN') or os.environ.get('GITHUB_TOKEN')
+    if not token:
+        try:
+            token = run_remote_read(['gh', 'auth', 'token', '--hostname', 'github.com']).strip()
+        except SourceError as error:
+            if error.code not in ('authentication', 'dependency', 'unavailable'):
+                raise
+            return None
+    if not token or any(char.isspace() for char in token):
+        raise SourceError('authentication', 'Existing GitHub credential is invalid')
+    return token
+
+
+def parse_remote_tags(text):
+    """Retain advertised direct and peeled identities without fetching objects."""
+    refs = {}
+    for line in text.splitlines():
+        fields = line.split('\t')
+        if len(fields) != 2 or not re.fullmatch(r'[0-9a-f]{40}|[0-9a-f]{64}', fields[0]):
+            raise SourceError('malformed-response', 'Invalid remote tag advertisement')
+        oid, ref = fields
+        if not ref.startswith('refs/tags/'):
+            raise SourceError('malformed-response', 'Unexpected advertised ref')
+        if ref in refs and refs[ref] != oid:
+            raise SourceError('malformed-response', 'Conflicting remote ref advertisement')
+        refs[ref] = oid
+    tags = []
+    for ref, oid in refs.items():
+        if ref.endswith('^{}'):
+            if ref[:-3] not in refs:
+                raise SourceError('malformed-response', 'Peeled tag has no direct ref')
+            continue
+        name = ref[len('refs/tags/'):]
+        try:
+            machine, _, channel = parse_release_tag(name)
+        except ValueError:
+            continue
+        if machine in MACHINES:
+            tags.append({'name': name, 'ref': ref, 'machine': machine, 'oid': oid,
+                         'commit': refs.get(ref + '^{}'), 'annotation': None,
+                         'version': name[len(machine) + 1:].removesuffix('-rc').removesuffix('-dev'),
+                         'channel': channel})
+    return sorted(tags, key=lambda tag: (*parse_release_tag(tag['name'])[1:], tag['name']))
+
+
+def read_remote_tags(url):
+    env = remote_environment()
+    settings = [('protocol.allow', 'never'), ('protocol.https.allow', 'always'),
+                ('credential.helper', ''), ('http.followRedirects', 'false')]
+    if urlsplit(url).hostname == 'github.com':
+        token = github_token()
+        if token:
+            credential = base64.b64encode(('x-access-token:' + token).encode()).decode('ascii')
+            settings.append(('http.https://github.com/.extraheader', 'Authorization: Basic ' + credential))
+    env['GIT_CONFIG_COUNT'] = str(len(settings))
+    for number, (key, value) in enumerate(settings):
+        env[f'GIT_CONFIG_KEY_{number}'] = key
+        env[f'GIT_CONFIG_VALUE_{number}'] = value
+    text = run_remote_read(['git', '--no-optional-locks', 'ls-remote', '--tags', '--', url], env)
+    return parse_remote_tags(text)
+
+
+def release_page(repo, page, timeout):
+    endpoint = f'repos/{repository_name(repo)}/releases?per_page=100&page={page}'
+    raw = run_remote_read(['gh', 'api', '--method', 'GET', '--hostname', 'github.com', endpoint],
+                          timeout=timeout)
+    try:
+        data = json.loads(raw)
+    except ValueError:
+        raise SourceError('malformed-response', 'GitHub Releases response is not JSON') from None
+    if not isinstance(data, list):
+        raise SourceError('malformed-response', 'GitHub Releases response is not a list')
+    return data
+
+
+def release_record(data):
+    """Keep the release inventory distinct from Git tag identity."""
+    if (not isinstance(data, dict) or type(data.get('id')) is not int
+            or data['id'] <= 0 or not isinstance(data.get('tag_name'), str) or not data['tag_name']
+            or not isinstance(data.get('draft'), bool) or not isinstance(data.get('prerelease'), bool)
+            or not isinstance(data.get('assets'), list)
+            or not isinstance(data.get('html_url'), str)
+            or (data.get('name') is not None and not isinstance(data['name'], str))
+            or (data.get('published_at') is not None and not isinstance(data['published_at'], str))):
+        raise SourceError('malformed-response', 'Invalid GitHub Release record')
+    assets = []
+    for asset in data['assets']:
+        if (not isinstance(asset, dict) or not isinstance(asset.get('name'), str)
+                or type(asset.get('size')) is not int or asset['size'] < 0
+                or not isinstance(asset.get('browser_download_url'), str)):
+            raise SourceError('malformed-response', 'Invalid GitHub Release asset')
+        assets.append({'name': asset['name'], 'size': asset['size'],
+                       'url': asset['browser_download_url']})
+    return {'id': data.get('id'), 'name': data.get('name'), 'tag': data['tag_name'],
+            'draft': data['draft'], 'prerelease': data['prerelease'],
+            'url': data.get('html_url'), 'published_at': data.get('published_at'), 'assets': assets}
+
+
+def read_releases(repo):
+    """Bound each request and the whole paginated source; preserve partial data."""
+    items, seen = [], set()
+    state = {'state': 'ok', 'errors': [], 'draft_visibility': 'unknown'}
+    deadline = time.monotonic() + 120
+    try:
+        for page in range(1, 101):
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                raise SourceError('timeout', 'GitHub Releases inventory deadline exceeded')
+            data = release_page(repo, page, min(30, remaining))
+            for raw in data:
+                item = release_record(raw)
+                key = (item['id'], item['tag'])
+                if key in seen:
+                    raise SourceError('incomplete', 'Release inventory changed or repeated during pagination')
+                seen.add(key)
+                try:
+                    machine, _, _ = parse_release_tag(item['tag'])
+                except ValueError:
+                    continue
+                if machine in MACHINES:
+                    item['machine'] = machine
+                    items.append(item)
+            if len(data) < 100:
+                return items, state
+        raise SourceError('incomplete', 'GitHub Releases inventory exceeded the page budget')
+    except (SourceError, OSError, UnicodeError) as error:
+        state['state'] = 'incomplete' if items else 'unavailable'
+        state['errors'].append({'code': getattr(error, 'code', 'unavailable'),
+                                'message': str(error) if isinstance(error, SourceError) else 'Remote read failed'})
+        return items, state
+
+
+def latest_channel(tags, channel):
+    eligible = [tag for tag in tags if tag['channel'] == channel]
+    if not eligible:
+        return None
+    maximum = max(parse_release_tag(tag['name'])[1] for tag in eligible)
+    latest = [tag for tag in eligible if parse_release_tag(tag['name'])[1] == maximum]
+    if len(latest) != 1:
+        raise SourceError('ambiguous-version', 'Multiple tag spellings describe the latest channel version')
+    return latest[0]
+
+
+def version_summary(tags):
+    stable, rc = latest_channel(tags, 'stable'), latest_channel(tags, 'rc')
+    if stable and rc and parse_release_tag(rc['name'])[1] <= parse_release_tag(stable['name'])[1]:
+        rc = None
+    return {'stable': stable, 'rc': rc}
+
+
+def print_version_summary(item, remote_state):
+    local = item['local']
+    print('  local: ' + (local['value'] if local else 'unknown'))
+    if local:
+        print('    knowledge: ' + local['path'])
+    print('  remote: ' + remote_state)
+    if remote_state == 'ok':
+        for channel, tag in item['remote'].items():
+            print('    ' + channel + ': ' + (tag['name'] if tag else 'absent'))
+
+
+def print_local_tag(item):
+    print('  ' + item['name'] + ' [' + item['channel'] + ']')
+    print('    object: ' + item['oid'])
+    print('    commit: ' + (item['commit'] or 'unknown'))
+    print('    annotation: ' + ('present' if item['annotation'] else 'missing'))
+    if item['annotation']:
+        for line in item['annotation'].splitlines():
+            print('      ' + line)
+    if item['knowledge_path']:
+        print('    version source: ' + item['knowledge_path'])
+    if item['changelog_path']:
+        print('    changelog source: ' + item['changelog_path'])
+    if not item['issues']:
+        print('    version/changelog: agree')
+
+
+def print_release(item):
+    state = 'draft' if item['draft'] else ('published' if item['published_at'] else 'unpublished')
+    channel = 'prerelease' if item['prerelease'] else 'stable'
+    print('  ' + item['tag'] + ': ' + str(item['name'] or '') + ' [' + state + ', ' + channel + ']')
+    print('    published: ' + str(item['published_at'] or 'unknown'))
+    print('    URL: ' + str(item['url'] or 'unknown'))
+    for asset in item['assets']:
+        print('    asset: ' + asset['name'] + ' (' + str(asset['size']) + ' bytes) ' + asset['url'])
+
+
+def emit(report, as_json):
+    if as_json:
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        return report['exit_code']
+    for item in report['machines']:
+        print(item['machine'])
+        if report['command'] in ('versions', 'compare'):
+            print_version_summary(item, report['sources']['remote_tags']['state'])
+        if report['command'] == 'tags':
+            for tag in item['local_tags']:
+                print_local_tag(tag)
+        if report['command'] == 'remote-tags':
+            for tag in item['remote_tags']:
+                print('  ' + tag['name'] + ' [' + tag['channel'] + ']')
+                print('    object: ' + tag['oid'])
+                print('    commit: ' + (tag['commit'] or 'unknown (not advertised)'))
+        if report['command'] in ('releases', 'compare'):
+            for release in item['releases']:
+                print_release(release)
+        for issue in item['issues']:
+            print('  ' + issue['code'] + ': ' + (issue['tag'] or '') + ' ' + issue['message'])
+        if item['unknown_checks']:
+            print('  unknown: ' + ', '.join(item['unknown_checks']))
+    for source, state in report['sources'].items():
+        print(source + ': ' + state['state'])
+        if 'draft_visibility' in state:
+            print('  draft visibility: ' + state['draft_visibility'])
+        for error in state['errors']:
+            print('  ' + error['code'] + ': ' + error['message'])
+    return report['exit_code']
+
+
+def inspection_arguments(argv):
+    parser = argparse.ArgumentParser(description='Read-only Double versions, tags and releases.')
+    subcommands = parser.add_subparsers(dest='command', required=True)
+    for command in ('versions', 'tags', 'remote-tags', 'releases', 'compare'):
+        command_parser = subcommands.add_parser(command)
+        command_parser.add_argument('--machine', choices=MACHINES)
+        command_parser.add_argument('--json', action='store_true')
+        if command in ('versions', 'remote-tags', 'compare'):
+            command_parser.add_argument('--remote', default='origin')
+        if command in ('releases', 'compare'):
+            command_parser.add_argument('--repo', help='GitHub OWNER/REPO')
+    return parser.parse_args(argv)
+
+
+def new_inspection_report(command):
+    sources = {'versions': ('versions', 'remote_tags'), 'tags': ('local_tags',),
+               'remote-tags': ('remote_tags',), 'releases': ('releases',),
+               'compare': ('versions', 'head_versions', 'local_tags', 'remote_tags', 'releases')}
+    return {'schema_version': 1, 'command': command, 'repository': {'root': None},
+            'sources': {name: {'state': 'ok', 'errors': []} for name in sources[command]},
+            'machines': [], 'exit_code': 0}
+
+
+def record_source_error(report, source, code, message, machine=None):
+    error = {'code': code, 'message': message}
+    if machine:
+        error['machine'] = machine
+    state = report['sources'][source]
+    state['state'] = 'incomplete' if machine else 'unavailable'
+    state['errors'].append(error)
+    report['exit_code'] = 2
+
+
+def collect_source(report, source, reader):
+    """One source failure must not discard independent successful observations."""
+    try:
+        return reader()
+    except (OSError, ValueError, UnicodeError, subprocess.SubprocessError) as error:
+        record_source_error(report, source, getattr(error, 'code', 'inspection-error'),
+                            str(error) if isinstance(error, SourceError) else 'Source read failed')
+        return None
+
+
+def machine_report(machine):
+    return {'machine': machine, 'local': None, 'remote': {'stable': None, 'rc': None},
+            'local_tags': [], 'remote_tags': [], 'releases': [], 'issues': [], 'unknown_checks': []}
+
+
+def collect_versions(root, machines, report):
+    require_double(root)
+    for item in report['machines']:
+        machine = item['machine']
+        try:
+            item['local'] = ordinary_version(root, machine)
+        except (OSError, ValueError, UnicodeError):
+            record_source_error(report, 'versions', 'knowledge-unavailable',
+                                'Usable version knowledge unavailable', machine)
+            item['unknown_checks'].append('local-version')
+
+
+def collect_local_tags(root, machines, report):
+    tags, ignored = local_tags(root, machines)
+    report['sources']['local_tags']['unrecognized_tags'] = ignored
+    for item in report['machines']:
+        item['local_tags'] = tags[item['machine']]
+        item['issues'].extend(issue for tag in item['local_tags'] for issue in tag['issues'])
+
+
+def collect_remote_tags(root, remote, report):
+    url = remote_address(root, remote)
+    report['repository'].update({'remote': remote, 'remote_url': url})
+    tags = read_remote_tags(url)
+    for item in report['machines']:
+        item['remote_tags'] = [tag for tag in tags if tag['machine'] == item['machine']]
+        if report['command'] in ('versions', 'compare'):
+            try:
+                item['remote'] = version_summary(item['remote_tags'])
+            except SourceError as error:
+                record_source_error(report, 'remote_tags', error.code, str(error), item['machine'])
+    return url
+
+
+def collect_releases(root, args, remote_url, report):
+    if args.command == 'compare':
+        # A failed remote selection cannot quietly redirect comparison elsewhere.
+        if remote_url is None:
+            raise SourceError('repository-selection', 'Comparison remote is unavailable')
+        selected = github_repository(remote_url)
+        repo = repository_name(args.repo) if args.repo else selected
+        # GitHub repository identities are case insensitive.
+        if selected.lower() != repo.lower():
+            raise SourceError('repository-selection', 'Release repository differs from comparison remote')
+    else:
+        repo = release_repository(root, args.repo)
+    report['repository']['github'] = repo
+    items, state = read_releases(repo)
+    report['sources']['releases'] = state
+    for item in report['machines']:
+        item['releases'] = [release for release in items if release['machine'] == item['machine']]
+
+
+def collect_head_versions(root, report):
+    commit = inspect_git(root, 'rev-parse', '--verify', 'HEAD^{commit}').strip()
+    tree = TaggedTree(root, commit)
+    for item in report['machines']:
+        try:
+            path, text = tagged_knowledge(tree, item['machine'], 'version')
+            item['head'] = {'value': numeric_version(text), 'path': path, 'commit': commit,
+                            'source_mode': 'commit'}
+        except ValueError:
+            record_source_error(report, 'head_versions', 'knowledge-unavailable',
+                                'Committed version knowledge unavailable', item['machine'])
+            item['unknown_checks'].append('head-version')
+
+
+def add_issue(item, code, message, tag=None):
+    item['issues'].append(problem(item['machine'], tag, message, code))
+
+
+def compare_versions(item):
+    local = item['local']
+    channels = [tag for tag in item['remote'].values() if tag]
+    if local and not channels:
+        add_issue(item, 'version-tag-missing', 'No stable or RC tag exists for this machine')
+    elif local and not any(tag['version'] == local['value'] for tag in channels):
+        add_issue(item, 'version-mismatch', 'Local knowledge differs from remote stable/newer RC')
+
+
+def compare_tag_inventories(item):
+    local = {tag['name']: tag for tag in item['local_tags']}
+    remote = {tag['name']: tag for tag in item['remote_tags']}
+    for name in sorted(local.keys() - remote.keys()):
+        add_issue(item, 'local-only-tag', 'Tag exists only locally', name)
+    for name in sorted(remote.keys() - local.keys()):
+        add_issue(item, 'remote-only-tag', 'Tag exists only remotely', name)
+    for name in sorted(local.keys() & remote.keys()):
+        if local[name]['oid'] != remote[name]['oid']:
+            add_issue(item, 'tag-object-conflict', 'Same tag name has different direct objects', name)
+        if local[name]['commit'] and remote[name]['commit']:
+            if local[name]['commit'] != remote[name]['commit']:
+                add_issue(item, 'tag-target-conflict', 'Same tag name has different target commits', name)
+        else:
+            item['unknown_checks'].append('tag-target:' + name)
+
+
+def compare_release_inventory(item):
+    remote = {tag['name']: tag for tag in item['remote_tags']}
+    for name in sorted(remote):
+        matches = [release for release in item['releases'] if release['tag'] == name]
+        published = [release for release in matches if not release['draft'] and release['published_at']]
+        if not published:
+            message = 'Only a draft Release is visible' if matches else 'No published Release is visible'
+            add_issue(item, 'release-missing', message, name)
+        for release in matches:
+            channel = remote[name]['channel']
+            if ((channel == 'stable' and release['prerelease']) or
+                    (channel == 'rc' and not release['prerelease'])):
+                add_issue(item, 'release-channel-mismatch', 'Tag and Release channels disagree', name)
+    for release in item['releases']:
+        if release['tag'] not in remote:
+            add_issue(item, 'release-tag-missing', 'Release tag is absent from remote inventory', release['tag'])
+
+
+def finalize_comparison(report):
+    """Only complete counterpart inventories establish absence or agreement."""
+    sources = report['sources']
+    remote_ok = sources.get('remote_tags', {}).get('state') == 'ok'
+    local_ok = sources.get('local_tags', {}).get('state') == 'ok'
+    releases_ok = sources.get('releases', {}).get('state') == 'ok'
+    for item in report['machines']:
+        if report['command'] in ('versions', 'compare'):
+            if remote_ok:
+                compare_versions(item)
+            else:
+                item['unknown_checks'].append('remote-version')
+        if report['command'] != 'compare':
+            continue
+        if local_ok and item['local']:
+            matching = [tag for tag in item['local_tags']
+                        if tag['version'] == item['local']['value'] and tag['channel'] in ('stable', 'rc')]
+            if not matching:
+                add_issue(item, 'version-tag-missing', 'No local stable/RC tag matches version knowledge')
+        if item.get('head') and item['local']:
+            relative = os.path.relpath(item['local']['path'], report['repository']['root'])
+            if item['local']['value'] != item['head']['value'] or relative != item['head']['path']:
+                add_issue(item, 'working-version-differs', 'Working and committed knowledge differ')
+        if remote_ok and local_ok:
+            compare_tag_inventories(item)
+        else:
+            item['unknown_checks'].append('local-remote-tag-comparison')
+        if remote_ok and releases_ok:
+            compare_release_inventory(item)
+        else:
+            item['unknown_checks'].append('release-comparison')
+        item['unknown_checks'].append('draft-release-absence')
+    if any(state['state'] != 'ok' for state in sources.values()):
+        report['exit_code'] = 2
+    elif any(item['issues'] for item in report['machines']):
+        report['exit_code'] = 1
+
+
+def inspection_report(args):
+    report = new_inspection_report(args.command)
+    machines = [args.machine] if args.machine else MACHINES
+    report['machines'] = [machine_report(machine) for machine in machines]
+    try:
+        root = Path(inspect_git(Path.cwd(), 'rev-parse', '--show-toplevel').strip()).resolve()
+        report['repository']['root'] = str(root)
+    except (OSError, ValueError, UnicodeError, subprocess.SubprocessError):
+        for source in report['sources']:
+            record_source_error(report, source, 'repository-selection', 'Git repository unavailable')
+        return report
+    if args.command == 'versions':
+        try:
+            require_double(root)
+        except (OSError, ValueError, UnicodeError):
+            for source in report['sources']:
+                record_source_error(report, source, 'unsupported-context',
+                                    'versions requires the Double source project or a fork')
+            return report
+    if args.command in ('versions', 'compare'):
+        collect_source(report, 'versions', lambda: collect_versions(root, machines, report))
+    if args.command in ('tags', 'compare'):
+        collect_source(report, 'local_tags', lambda: collect_local_tags(root, machines, report))
+    if args.command == 'compare':
+        collect_source(report, 'head_versions', lambda: collect_head_versions(root, report))
+    remote_url = None
+    if args.command in ('versions', 'remote-tags', 'compare'):
+        remote_url = collect_source(report, 'remote_tags',
+                                    lambda: collect_remote_tags(root, args.remote, report))
+    if args.command in ('releases', 'compare'):
+        collect_source(report, 'releases', lambda: collect_releases(root, args, remote_url, report))
+    finalize_comparison(report)
+    return report
+
+
+def inspection_main(argv=None):
+    args = inspection_arguments(argv)
+    return emit(inspection_report(args), args.json)
+
+
+def release_field(text, name):
+    """Scalar compatibility with the existing release source resolver."""
+    return frontmatter(text).get(name, '')
+
+
+def strict_knowledge_path(machine, kind, read, exists):
+    """Resolve indexed project version knowledge, then the historical default.
+
+    Callbacks read one consistent source tree (working files or tagged Git).
+    Trust/TTL review of project context remains part of the agent workflow.
+    """
+    default = f'knowledge/{machine}-{kind}/{machine}-{kind}.md'
+    directory = '.double-rules'
+    index = f'{directory}/double-rules.md'
+    if not exists(directory):
+        return default
+    if not exists(index):
+        raise ValueError(f'Project knowledge index is missing: {index}')
+    scopes = {'Common Rules', 'double-agent', machine}
+    active, selected = False, []
+    clean = re.sub(r'(?ms)^```.*?^```[^\n]*', '', read(index))
+    for line in clean.splitlines():
+        heading = re.match(r'^#{1,2}\s+(.+?)\s*#*$', line)
+        if heading:
+            active = heading[1] in scopes
+        elif active:
+            selected.append(line)
+
+    def links(document, origin):
+        document = re.sub(r'(?ms)^```.*?^```[^\n]*', '', document)
+        for match in re.finditer(r'(?<!!)\[([^\]]*)\]\(\s*(<[^>]+>|[^\s)]+)(?:\s+"[^"]*")?\s*\)', document):
+            target = match[2].strip('<>')
+            url = urlsplit(target)
+            if url.scheme or url.netloc or not url.path:
+                continue
+            path = posixpath.normpath(posixpath.join(posixpath.dirname(origin), unquote(url.path)))
+            if path.endswith('.md'):
+                yield match[1], path
+
+    wanted = f'{machine}-{kind}'
+    candidates = set()
+    seen = set()
+
+    def inspect(label, path):
+        if not exists(path):
+            raise ValueError(f'Broken project knowledge link: {path}')
+        document = read(path)
+        identity = release_field(document, 'id')
+        intended = wanted in label or posixpath.basename(path) == f'{wanted}.md'
+        if intended and identity != wanted:
+            raise ValueError(f'Incorrect {kind} knowledge id: {path}')
+        if identity == wanted:
+            if release_field(document, 'status') not in ('stable', 'release-candidate'):
+                raise ValueError(f'Project {kind} knowledge is not ready: {path}')
+            candidates.add(path)
+        return document, identity
+
+    for label, path in links('\n'.join(selected), index):
+        if path in seen:
+            continue
+        seen.add(path)
+        document, identity = inspect(label, path)
+        if identity == wanted:
+            continue
+        # A project setting may point to the version source using an ordinary
+        # Markdown link in Value; other sections may contain historical sources.
+        values = re.split(r'^## Value[ \t]*$', document, flags=re.M)
+        if len(values) != 2:
+            continue
+        value = re.split(r'^## (?!#)', values[1], maxsplit=1, flags=re.M)[0]
+        for nested_label, nested_path in links(value, path):
+            inspect(nested_label, nested_path)
+    if len(candidates) > 1:
+        raise ValueError(f'Conflicting project {kind} sources: ' + ', '.join(sorted(candidates)))
+    return next(iter(candidates)) if candidates else default
+
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+    if len(sys.argv) > 1 and sys.argv[1] in ('versions', 'tags', 'remote-tags', 'releases', 'compare'):
+        return inspection_main(sys.argv[1:])
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        epilog='Inspection: versions, tags, remote-tags, releases, compare. '
+               'Use COMMAND --help for inspection options.')
     parser.add_argument('command', choices=('check', 'sync', 'watch'))
     parser.add_argument('paths', nargs='*', help='Files/directories relative to current directory; default: repository document roots')
     parser.add_argument('--interval', type=float, default=2, help='Watch polling interval in seconds (default: 2)')

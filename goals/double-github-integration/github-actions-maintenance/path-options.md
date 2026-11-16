@@ -4,11 +4,10 @@ kind: path-options
 template-id: path-options-template
 project-id: double
 produced-by: machine-of-goals/path-discovery-agent
-interaction-language: en
+interaction-language: ru
 artifact-language: en
 goal-id: github-actions-maintenance
 goal-artifact: ./github-actions-maintenance.md
-goal-scope: subgoal
 parent-goal-id: double-github-integration
 derived-from:
   - ./github-actions-maintenance.md
@@ -22,7 +21,6 @@ derived-from:
 ## 1. Source Goal
 
 - Goal: [GitHub Actions Maintenance](./github-actions-maintenance.md#github-actions-maintenance)
-- Scope: subgoal
 - Parent goal: [Double GitHub Integration](../double-github-integration.md#double-github-integration)
 - Current state: the repository contains a shared release script, local tests,
   and a thin GitHub Actions adapter to preserve and maintain.
@@ -31,8 +29,8 @@ derived-from:
   package testing, and is invoked autonomously by GitHub Actions for releases.
 - Success criteria: the selected path enforces the goal's tag, status, version,
   warning, package, prerelease, permission, and retention requirements.
-- Constraints: use a shell-based implementation; permit local package testing;
-  do not require repository secrets beyond the automatic GitHub token; preserve
+- Constraints: use the shared Python tooling; permit local package testing;
+  keep optional announcement secrets separate from GitHub publication; preserve
   GitHub Actions as the autonomous release executor.
 
 ## 2. Discovery Scope
@@ -40,7 +38,8 @@ derived-from:
 - Mode: `research`
 - Sources inspected:
   - `./github-actions-maintenance.md`
-  - `.github/workflows/release.yml`
+  - [Workflow](../../../.github/workflows/release.yml)
+  - [Release validation contract](../../../tests/double-release/README.md)
   - Machine of Goals path-discovery materials
 - Existing analogs checked: the repository release script, local tests, and workflow.
 - Known limitations of discovery: the alternatives describe architectural choices;
@@ -72,36 +71,38 @@ derived-from:
 - Plan element: none; retained as an unselected alternative.
 - Recommendation: keep-as-alternative
 
-<a id="shell-script-workflow-adapter"></a>
+<a id="shared-script-workflow-adapter"></a>
 
-### Path: Shell Script with Thin Workflow Adapter
+### Path: Shared Release Program with Workflow Adapter
 
-- Path id: `shell-script-workflow-adapter`
+- Path id: `shared-script-workflow-adapter`
 - Path type: hybrid
-- Description: move reusable release logic into a repository shell script. The
-  workflow becomes a thin adapter that passes the release tag and invokes the
-  script. The accepted interface is `scripts/double-release.sh package --tag <tag>`
-  for safe local packaging and `scripts/double-release.sh publish --tag <tag>` for
-  publication, using the same tag parsing and selection rules.
+- Description: maintain reusable Python release logic with a workflow adapter.
+  `python3 scripts/double-release/double-release.py package --tag <tag>` packages
+  locally; `publish --tag <tag>` uses the same contract inside GitHub Actions.
+  The shell-to-Python migration preserves this architectural path.
 - Why it is plausible: it preserves GitHub Actions for autonomous releases and
   lets the package logic run on a laptop against a selected tag before a
   release is published.
-- Required resources: one shell release script, a small `release.yml` adapter,
-  Git and standard shell utilities locally, and GitHub CLI or the GitHub token
+- Required resources: Python 3.11+, shared release tooling, pytest, a `release.yml` adapter,
+  Git locally, and GitHub CLI and the automatic GitHub token
   only for the publish operation.
 - Main risks: the script contract must separate safe local packaging from
-  GitHub publication; Bash compatibility and deterministic archive behavior
-  must be tested.
+  GitHub publication; candidate identity, version provenance and archive
+  contents must be tested.
 - Required local tests:
   - stable, `rc`, and `dev` tags select only files with their matching status
   - each package contains only the selected machine's Markdown working files
-  - a tag/machine-version-knowledge mismatch fails
+  - a tag/version mismatch or invalid version source fails
+  - local all-status packaging remains distinct from exact-tag packaging
+  - approved notes, validation-only mode and announcement gating are checked
   - exported working-file copies receive the verified tag version without
     changing their source frontmatter
   - nonmatching or missing statuses emit warnings and are excluded
   - no matching files emits the final warning and creates no package
   - the archive checksum matches and `package` never publishes a GitHub Release
-  - GitHub Actions logs and temporary workflow artifacts use 14-day retention;
+  - temporary workflow artifacts use 14-day retention and repository log
+    retention is checked separately;
     published GitHub Release assets are not subject to that retention rule
 - Expected cost: medium
 - Expected value: high
@@ -141,7 +142,7 @@ derived-from:
 | Path | Fit | Cost | Risk | Uncertainty | Expected Value | Recommendation |
 | --- | --- | --- | --- | --- | --- | --- |
 | [direct-workflow-rules](#direct-workflow-rules) | medium | low | medium | low | medium | keep-as-alternative |
-| [shell-script-workflow-adapter](#shell-script-workflow-adapter) | high | medium | medium | medium | high | include-in-plan |
+| [shared-script-workflow-adapter](#shared-script-workflow-adapter) | high | medium | medium | medium | high | include-in-plan |
 | [reusable-composite-action](#reusable-composite-action) | low | medium | medium | medium | low | reject |
 
 ## 5. Rejected or Deferred Paths

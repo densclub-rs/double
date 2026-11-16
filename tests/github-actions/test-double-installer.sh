@@ -139,7 +139,7 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
  run('download','--machine','machine-of-ideas',code=1)
  assert not (root/'state').exists()
  assert 'No downloaded machine archives.' in run('status')
- assert json.loads(run('status','--json'))=={'archives':[],'installations':[]}
+ assert json.loads(run('status','--json',cwd=root))=={'archives':[],'installations':[]}
  pages([stable,older]);package(stable)
  run('download','--machine','machine-of-ideas')
  cached=root/'state/installer/releases'/stable['tag_name'];assert (cached/stable['assets'][0]['name']).exists()
@@ -201,6 +201,22 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
  empty_project=root/'empty project';empty_project.mkdir()
  assert json.loads(run('status','--project','--json',cwd=empty_project))=={'archives':[],'installations':[]}
  assert 'No registered installations.' in run('status','--project',cwd=empty_project)
+ if os.name != 'nt':
+  linked_project=root/'hardlinked skills';linked_project.mkdir()
+  source=linked_project/'.double/skills/example/agents/openai.yaml'
+  source.parent.mkdir(parents=True);source.write_text('skill metadata')
+  linked=linked_project/'.agents/skills/example/agents/openai.yaml'
+  linked.parent.mkdir(parents=True);os.link(source,linked)
+  (linked.parent/'copy.yaml').write_text('skill metadata')
+  (source.parent/'copy.yaml').write_text('skill metadata')
+  symlink=linked_project/'.claude/skills/example/agents/openai.yaml'
+  symlink.parent.mkdir(parents=True);symlink.symlink_to(source)
+  expected=[{'project':posix_path(linked_project),'path':linked.relative_to(linked_project).as_posix(),
+             'source':source.relative_to(linked_project).as_posix()}]
+  assert json.loads(run('status','--json',cwd=linked_project))['hardlinked_skills']==expected
+  assert json.loads(run('status','--project',posix_path(linked_project),'--json'))['hardlinked_skills']==expected
+  output=run('status','--project',posix_path(linked_project))
+  assert 'Hardlinked project skills:' in output and expected[0]['path']+' -> '+expected[0]['source'] in output
  run('status','--project',posix_path(root/'missing project'),code=2)
  run('status','--project','',code=2)
  installed=project1/'.double/templates/machine-of-ideas/example.md'
@@ -734,7 +750,8 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
   assert 'Selected prerelease:' in output and manualfile.exists()
   output=run_tty('add','--project',posix_path(manual),'--machine','machine-of-goals','--agent','codex',answer='y\nn',code=1)
   assert 'Unregistered machine found:' in output and manualfile.exists()
-  output=run_tty('add','--project',posix_path(manual),'--machine','machine-of-goals','--agent','codex',answer='y\ny\nn')
+  output=run_tty('add','--project',posix_path(manual),'--machine','machine-of-goals','--agent','codex',answer='y\n\nn')
+  assert 'Continue? [Y/n]' in output and 'Delete this backup? [Y/n]' in output
  else:
   output=run('add','--project',posix_path(manual),'--machine','machine-of-goals','--agent','codex','--yes')
  assert not manualfile.exists() and not obsolete.exists() and other.read_text()=='keep other'
@@ -743,6 +760,13 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
  adoptedbackup=next(x for x in backups.glob('backup.*') if json.loads((x/'installation.json').read_text()).get('source')=='manual')
  assert (adoptedbackup/'old/.double/templates/machine-of-goals/custom/nested.txt').read_text()=='manual nested'
  assert (adoptedbackup/'old/.double/obsolete/machine-of-goals/extra.txt').read_text()=='obsolete manual'
+ if os.name!='nt':
+  default_cleanup=root/'manual default cleanup';default_cleanup.mkdir()
+  original=default_cleanup/'.double/skills/machine-of-goals/local.txt'
+  original.parent.mkdir(parents=True);original.write_text('replace and delete backup')
+  prior_backups=set(backups.glob('backup.*'))
+  run_tty('add','--project',posix_path(default_cleanup),'--machine','machine-of-goals','--agent','codex',answer='y\n\n')
+  assert not original.exists() and set(backups.glob('backup.*'))==prior_backups
  # Rollback after a replacement copy fails restores complete manual directories.
  failed=root/'manual failed';failed.mkdir()
  original=failed/'.double/skills/machine-of-goals/local/nested.txt';original.parent.mkdir(parents=True);original.write_text('restore all')

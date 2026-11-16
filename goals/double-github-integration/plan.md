@@ -1,205 +1,165 @@
 ---
-id: double-github-integration-plan
-kind: plan-artifact
-template-id: plan-template
+id: githubbridge
+kind: plan-model
+template-id: plan-model-template
 project-id: double
 produced-by: machine-of-goals/plan-synthesis-agent
 interaction-language: ru
 artifact-language: en
 goal-id: double-github-integration
-goal-artifact: ./double-github-integration.md
-path-options-artifact: ./path-options.md
-plan-artifact: ./plan.md
-goal-scope: main-goal
-plan-execution-style: single-pass
-plan-revision: null
-plan-revision-artifact: null
-created-at: 2026-07-24T00:04:41Z
-updated-at: 2026-09-28T00:00:00Z
+branch: release-infrastructure
+plan-revision: 4
 derived-from:
   - ./double-github-integration.md
   - ./path-options.md
-  - ./github-actions-maintenance/github-actions-maintenance.md
 ---
 
-<a id="double-github-integration-plan"></a>
+<a id="githubbridge"></a>
 
-# Plan: Double GitHub Integration
+# Plan: Double GitHub Integration / release-infrastructure
 
-## 1. Plan Summary
+Goal: [Double GitHub Integration](./double-github-integration.md#double-github-integration)
 
-This plan defines one transition model for the first agreed GitHub Actions
-release-infrastructure path. The path creates the required repository
-directories and delegates release rules and workflow maintenance to the
-accepted `github-actions-maintenance` subgoal.
+## Conditions
 
-- Source goal: [Double GitHub Integration](./double-github-integration.md#double-github-integration)
-- Source paths: [Path options](./path-options.md#double-github-integration-path-options)
+### Initial State
 
-### Current State
-
-`.github/workflows/` and `scripts/` may exist or not.
+- The repository is available locally. Existing workflows and scripts must be preserved.
+- Directory checks may establish that no creation is needed.
 
 ### Target State
 
-The required GitHub Actions and scripts directories are available, and release
-maintenance is defined and validated by the accepted subgoal.
+- Workflow and script directories are available, and the maintenance subgoal
+  supplies a defined and validated machine-release process.
 
 ### Success Criteria
 
-Each stage has the required state and validation evidence; the subgoals' plans are implemented.
+- S01 and S02 establish the required directories without destructive changes.
+- S03 obtains the maintenance subgoal outputs through S04, including local and
+  hosted evidence; merely locating the subgoal plan is insufficient.
 
-## 2. State Validation Contract
+## Selection and Control Boundaries
 
-- Initial state checks: inspect the repository and confirm that creating the
-  required directories will preserve existing workflow and script content.
-- Required intermediate state checks: `.github/workflows/` exists as a
-  directory, then `scripts/` exists as a directory.
-- Final state checks: the `github-actions-maintenance` subgoal artifact and its
-  canonical plan satisfy all S01–S04 completion criteria, including hosted validation.
-- Evidence requirements: directory existence checks and links to the accepted
-  subgoal artifacts and its accepted local and hosted evidence; detailed release
-  validation belongs to that subgoal.
-- Stop when validation cannot be completed: do not overwrite existing content
-  or proceed when the subgoal interface is unavailable.
+- Included path: [GitHub release infrastructure](./path-options.md#github-actions-release-infrastructure).
+- Entry: [S01](#stage-s01). Existing directories satisfy the corresponding checks.
+- Later functional extensions belong to [subgoal S05](./github-actions-maintenance/plan.md#stage-s05);
+  retain this parent as the integration boundary rather than duplicating extension stages.
+- Scope: parent coordination and directory prerequisites; release implementation
+  and its detailed checks belong to the maintenance subgoal.
+- Preserve workflow/script content. Stop on a file/directory conflict or missing
+  subgoal interface; revise the plan if its interface or integration scope changes.
+- Repository settings, publication and notifications require their applicable
+  authorization. This model and its migration do not authorize execution.
+- Prefer documentary evidence; explicit user statements may be identified as
+  fallback evidence with the unverified limitations recorded at execution.
+- Site publishing and broader governance remain outside this branch.
 
-## 3. Plan Map
 
-- Displayed run: none
-- Displayed plan revision: none
-- Progress synchronized at: never
+## Stages
 
-`⚪` is the neutral marker while no run is displayed; it does not assess
-existing repository behavior. Future progress is derived only from a run
-whose pinned revision and stage topology match this plan.
-
-| Progress | Stage | Kind | Inputs | Outputs | Possible Next Stages | Required Validation |
-| --- | --- | --- | --- | --- | --- | --- |
-| ⚪ | [S01: Create GitHub Actions Directory](#stage-s01) | stage | [source goal](./double-github-integration.md#double-github-integration) | `.github/workflows/` directory | [S02](#stage-s02) | `.github/workflows/` exists as a directory |
-| ⚪ | [S02: Create Scripts Directory](#stage-s02) | stage | [S01](#stage-s01) | `scripts/` directory | [S03](#stage-s03) | `scripts/` exists as a directory |
-| ⚪ | [S03: Invoke GitHub Actions Maintenance](#stage-s03) | subplan | [S02](#stage-s02), [github-actions-maintenance](./github-actions-maintenance/plan.md#stage-s01) | [validated maintenance output](./github-actions-maintenance/plan.md#stage-s04) | none | subgoal plan has the required artifacts and all stages are passed and validated |
-
-## 4. Stage Details
+| Stage | Input | Output | Next |
+| --- | --- | --- | --- |
+| [S01: Ensure Workflow Directory](#stage-s01) | S01-I01 | S01-O01 | [S02](#stage-s02) |
+| [S02: Ensure Scripts Directory](#stage-s02) | S02-I01 | S02-O01 | [S03](#stage-s03) |
+| [S03: Validate Maintenance Subgoal](#stage-s03) | S03-I01, S03-I02 | S03-O01 | End |
 
 <a id="stage-s01"></a>
 
-### Stage: Create GitHub Actions Directory
+## S01: Ensure Workflow Directory
 
-- Stage id: `S01`
-- Kind: stage
-- Purpose: create the working directory `.github/workflows/` for GitHub
-  Actions workflow files.
-- Input state: accepted parent goal and its release-infrastructure target.
-- Output state: `.github/workflows/` exists and is available for workflow
-  rules.
-- Preconditions: inspect the directory and preserve any existing workflow
-  files.
-- Actions: create the directory only if it does not exist.
-- Required resources: repository filesystem and existing `.github/` content.
-- Possible input stages: none.
-- Possible output stages: [S02: Create Scripts Directory](#stage-s02).
-- Related subplan: [GitHub Actions Maintenance plan](./github-actions-maintenance/plan.md#github-actions-maintenance-plan).
-- Validation criteria: `.github/workflows/` exists and is a directory.
-- Evidence expected: directory existence check confirmed by the user.
-- Risks: directory creation could overwrite or obscure existing workflow
-  content.
-- Stop points: stop if creation would replace existing files.
+Ensure that the repository has a usable GitHub Actions directory while
+preserving every existing workflow file.
+
+The directory artifact for this stage is [`.github/workflows/`](../../.github/workflows/),
+which houses the repository’s workflow definitions.
+
+### Input Conditions
+
+#### S01-I01: Repository Available
+
+- Confirm the repository root and inspect `.github/workflows` for conflicts.
+
+### Actions
+
+- Create `.github/workflows/` only if absent. Preserve existing files.
+- Stop if the path exists as a non-directory.
+
+### Output Conditions
+
+#### S01-O01: Workflow Directory Available
+
+- Verify [workflow directory](../../.github/workflows/) exists as a directory.
+- Inspect the diff to establish that existing workflow content was preserved.
 
 <a id="stage-s02"></a>
 
-### Stage: Create Scripts Directory
+## S02: Ensure Scripts Directory
 
-- Stage id: `S02`
-- Kind: stage
-- Purpose: create the working directory `scripts/` for release and validation
-  scripts.
-- Input state: S01 has established the GitHub Actions directory.
-- Output state: `scripts/` exists and is available for release scripts.
-- Preconditions: inspect the directory and preserve any existing scripts.
-- Actions: create the directory only if it does not exist.
-- Required resources: repository filesystem and existing script content.
-- Possible input stages: [S01: Create GitHub Actions Directory](#stage-s01).
-- Possible output stages: [S03: Invoke GitHub Actions Maintenance](#stage-s03).
-- Related subplan: [GitHub Actions Maintenance plan](./github-actions-maintenance/plan.md#github-actions-maintenance-plan).
-- Validation criteria: `scripts/` exists and is a directory.
-- Evidence expected: directory existence check confirmed by the user.
-- Risks: directory creation could overwrite or obscure existing script content.
-- Stop points: stop if creation would replace existing files.
+Ensure that the repository has a usable scripts directory while preserving
+existing tools and making the prerequisite available to the maintenance subgoal.
+
+The directory artifact for this stage is [`scripts/`](../../scripts/).
+Release-specific programs live in its [`double-release/`](../../scripts/double-release/) subdirectory.
+
+### Input Conditions
+
+#### S02-I01: Workflow Prerequisite
+
+- Establish S01-O01 and inspect `scripts` for conflicts.
+
+### Actions
+
+- Create `scripts/` only if absent. Preserve all existing tools.
+- Stop on a non-directory conflict.
+
+### Output Conditions
+
+#### S02-O01: Scripts Directory Available
+
+- Verify [scripts directory](../../scripts/) exists as a directory.
+- Inspect the diff to establish that existing tools were preserved.
 
 <a id="stage-s03"></a>
 
-### Stage: Invoke GitHub Actions Maintenance
+## S03: Validate Maintenance Subgoal
 
-- Stage id: `S03`
-- Kind: subplan
-- Purpose: delegate release implementation to the accepted
-  `github-actions-maintenance` subgoal.
-- Input state: S01 and S02 outputs exist; the subgoal artifact and canonical
-  plan are available.
-- Output state: the [maintenance subgoal](./github-actions-maintenance/github-actions-maintenance.md#github-actions-maintenance)
-  meets its success criteria with local and hosted validation evidence.
-- Preconditions: the subgoal remains accepted and its canonical plan is
-  available.
-- Actions: invoke the subgoal plan and follow its stage and approval
-  boundaries.
-- Required resources: the subgoal artifact, its canonical plan, GitHub Actions,
-  and GitHub Releases when hosted validation is reached.
-- Possible input stages: [S02: Create Scripts Directory](#stage-s02).
-- Possible output stages: none in this parent plan.
-- Related subgoal: [GitHub Actions Maintenance](./github-actions-maintenance/github-actions-maintenance.md#github-actions-maintenance).
-- Related subplan: [GitHub Actions Maintenance plan](./github-actions-maintenance/plan.md#github-actions-maintenance-plan).
-- Subplan entry: [S01: Specify the Release Contract](./github-actions-maintenance/plan.md#stage-s01).
-- Subplan output: [hosted validation stage](./github-actions-maintenance/plan.md#stage-s04).
-- Validation criteria: the delegated subgoal satisfies S01–S04, including
-  local packaging, workflow-adapter checks, and hosted validation.
-- Evidence expected: linked subgoal artifact and canonical plan, followed by
-  validation evidence recorded by that subgoal.
-- Risks: release maintenance may diverge from the parent integration contract.
-- Stop points: stop for the subgoal's required confirmation before changing
-  repository settings or publishing a release.
+Coordinate the release-maintenance subgoal and verify its returned contract,
+local checks and hosted evidence against the parent goal’s success criteria.
 
-## 5. Shared Dependencies
+The linked deliverables are the [maintenance goal](./github-actions-maintenance/github-actions-maintenance.md#github-actions-maintenance),
+its [plan](./github-actions-maintenance/plan.md#releaseguard), and the
+[accepted validation evidence](./github-actions-maintenance/github-actions-maintenance.md#release-validation-2026-11-06).
+The subgoal owns the release programs, workflow and tests described in its stages.
 
-- Internal dependencies: `.github/workflows/`, `scripts/`, and the
-  `github-actions-maintenance` subgoal.
-- External dependencies: GitHub Actions and GitHub Releases once the subgoal
-  reaches hosted validation.
-- Decision dependencies: the subgoal's explicit approval boundaries.
+### Input Conditions
 
-## 6. Shared Risks and Controls
+#### S03-I01: Parent Prerequisites
 
-- Risk: directory creation can overwrite or obscure existing repository files.
-- Impact: existing workflow or script behavior could be lost.
-- Mitigation: inspect first, create only missing directories, and preserve all
-  existing contents.
-- Stop condition: an operation would replace an existing file.
+- Establish S01-O01 and S02-O01.
 
-## 7. Automation Boundaries
+#### S03-I02: Subgoal Interface Available
 
-- Allowed automatic actions: inspect and create missing directories.
-- Actions requiring confirmation: changes to workflow rules, repository
-  settings, or releases.
-- Actions not allowed: deleting existing workflow or script content.
-- Dry-run required before: publication after workflow changes, as defined by the subgoal.
+- Read the [maintenance goal](./github-actions-maintenance/github-actions-maintenance.md#github-actions-maintenance)
+  and [plan](./github-actions-maintenance/plan.md#releaseguard).
+- Confirm entry at its S01 and exit at S04, and review its current control boundaries.
 
-## 8. Revision and Alignment Conditions
+### Actions
 
-- Revise a stage when: its directory or delegation checks no longer establish the required state.
-- Revise the plan when: the subgoal interface or agreed integration scope changes.
-- Reformulate the goal when: the desired GitHub project surfaces change.
+- Pass the workflow/scripts directories and their existing content to
+  [subgoal S01](./github-actions-maintenance/plan.md#stage-s01).
+- Follow the subgoal's review, execution and validation boundaries. Reuse prior
+  evidence only when it applies to the candidate being assessed.
+- Obtain the contract, local test/package evidence, adapter checks and hosted
+  evidence from [subgoal S04](./github-actions-maintenance/plan.md#stage-s04).
+- Return to parent S03, compare the outputs to the parent success criteria,
+  and stop for revision if the interface or evidence is insufficient.
 
-## 9. Subgoal Integration Boundaries
+### Output Conditions
 
-| Subgoal | Subgoal Plan | Entry Stage | Input Artifact | Output Artifact | Exit Stage | Parent Continuation |
-| --- | --- | --- | --- | --- | --- | --- |
-| [GitHub Actions Maintenance](./github-actions-maintenance/github-actions-maintenance.md#github-actions-maintenance) | [Maintenance plan](./github-actions-maintenance/plan.md#github-actions-maintenance-plan) | [Subgoal S01](./github-actions-maintenance/plan.md#stage-s01) | [S01 directory](../../.github/workflows/) and [S02 directory](../../scripts/), preserving existing content | Accepted release contract, local checks, and [hosted validation evidence](./github-actions-maintenance/plan.md#stage-s04) | [Subgoal S04](./github-actions-maintenance/plan.md#stage-s04) | Return to [parent S03](#stage-s03), validate the returned evidence, then complete the parent plan |
+#### S03-O01: Maintenance Outputs Validated
 
-<a id="realization-registry"></a>
-
-## 10. Realization Registry
-
-Empty.
-
-## 11. Open Questions
-
-None currently.
+- Establish subgoal S04-O01 and S04-O02 using linked evidence.
+- Confirm all S01–S04 checks of the subgoal support the parent target state.
+- After parent validation, the current release scope is complete. Later requested
+  extensions enter [subgoal S05](./github-actions-maintenance/plan.md#stage-s05)
+  and return their validated outputs to this stage for integration review.

@@ -1,0 +1,6 @@
+#!/usr/bin/env python3
+"""Command-line entry point for Double exchange operations."""
+from double_exchange import main
+
+if __name__ == '__main__':
+    raise SystemExit(main())

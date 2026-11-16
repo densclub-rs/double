@@ -5,9 +5,8 @@ template-id: goal-template
 project-id: double
 produced-by: machine-of-goals/goal-formulation-agent
 owner-id: densclub
-interaction-language: en
+interaction-language: ru
 artifact-language: en
-goal-scope: main-goal
 derived-from:
   - source conversation on 2026-07-18
   - ../../.github/workflows/release.yml
@@ -52,7 +51,7 @@ subgoals are not yet fully established.
 
 ### Known facts
 
-- The Double repository remote is `git@github.com:soliverr/double.git`.
+- The Double repository remote is `git@github.com:densclub-rs/double.git`.
 - `.github/workflows/release.yml` defines a machine-tag release workflow and
   delegates testing and publication to the release-maintenance subgoal.
 - The release-maintenance subgoal packages selected machine files and
@@ -62,6 +61,25 @@ subgoals are not yet fully established.
 - This goal is a main goal with an accepted `github-actions-maintenance`
   subgoal and room for additional focused subgoals.
 
+- On 2026-11-06, the user accepted the maintenance subgoal's
+  [local and hosted validation evidence](./github-actions-maintenance/github-actions-maintenance.md#release-validation-2026-11-06)
+  for the existing release automation. The linked record states the checks,
+  source run/release, retention settings and remaining evidence limitations.
+  This does not establish completion of the broader GitHub integration goal.
+
+### Release Scope Closure Assessment — 2026-11-06
+
+Both required directories exist, and the release tooling/workflow have no local
+changes from this verification. The maintenance subgoal's accepted evidence
+supports minimal success for the current release-infrastructure scope.
+The user accepted that scope as achieved on 2026-11-06. Future release
+extensions belong to [maintenance S05](./github-actions-maintenance/plan.md#stage-s05)
+and return to the parent for integration review.
+This does not close site publishing or broader GitHub project integration:
+those concerns appear in the Summary but have no target criteria in this branch.
+Keep the parent goal open for separately formulated future subgoals rather than
+inventing additional release work or silently expanding the current plan.
+
 ### Relevant environment
 
 The Double GitHub organization/repository environment, GitHub Actions, GitHub
@@ -69,6 +87,11 @@ Pages or another GitHub-connected publishing surface, and local contributor
 workspaces.
 
 ### Existing related goals or subgoals
+
+- [Git Double Integration](./git-double-integration/git-double-integration.md#git-double-integration)
+  — subgoal for an agent-facing Git integration covering local document visibility,
+  machine versions, local/remote tags and GitHub Releases,
+  backed by the existing `scripts/git-double`, its tests and documentation.
 
 - `double-general-installer` — candidate; not imported into this goal. It
   depends on a stable GitHub source and release/distribution conventions.
@@ -78,6 +101,13 @@ workspaces.
 
 ## 5. Target State
 
+The parent also owns the local contributor-to-Git boundary through
+[Git Double Integration](./git-double-integration/git-double-integration.md#git-double-integration):
+document maturity informs local visibility, and agents inspect machine versions,
+local release tags, remote tags and GitHub Releases through a documented interface
+with scoped permissions. Contributors retain explicit control of mutations. The existing release branch remains independently
+validated; adding this subgoal does not invalidate its accepted baseline.
+
 The GitHub Actions rules and workflow for Double, together with their
 maintenance, are defined by the `github-actions-maintenance` subgoal.
 
@@ -86,12 +116,19 @@ maintenance, are defined by the `github-actions-maintenance` subgoal.
     rules
   - `scripts/` exists and is available for release and validation scripts
   - GitHub Actions rules and a workflow for maintaining them, fully defined by
-    [github-actions-maintenance.md](./github-actions-maintenance/github-actions-maintenance.md) subgoal
+    [maintenance subgoal](./github-actions-maintenance/github-actions-maintenance.md#github-actions-maintenance),
+    with validated outputs returned to the parent
 
 ## 6. Success Criteria
 
+The criteria below describe the established release scope. The additional
+[Git Double Integration](./git-double-integration/git-double-integration.md#git-double-integration)
+scope is assessed against its own success criteria; the parent's release
+validation does not establish that this local Git integration is complete.
+
 - Minimal success: the accepted `github-actions-maintenance` subgoal defines
-  the GitHub Actions rules and maintenance workflow.
+  the GitHub Actions rules and maintenance workflow, with the subgoal
+  success criteria established by local and hosted evidence.
 - High-quality success: those rules and the workflow are reproducible,
   documented, validated, and maintainable.
 - Partial success: the subgoal exists but its rules or maintenance workflow are
@@ -142,7 +179,8 @@ None currently.
 
 ## 11. Machine of Goals Artifacts
 
-- Possible achievement paths: [Path options](./path-options.md#double-github-integration-path-options)
-- Plan: [Current plan](./plan.md#double-github-integration-plan)
-- Plan registry: [Registry](./plan.md#realization-registry)
-- Computed plan style: `single-pass`
+Possible paths: [Path options](./path-options.md#double-github-integration-path-options)
+
+| Branch | Review revision | Plan |
+| --- | --- | --- |
+| release-infrastructure | 4 | [githubbridge](./plan.md#githubbridge) |

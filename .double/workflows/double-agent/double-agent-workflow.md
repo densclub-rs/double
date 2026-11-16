@@ -3,9 +3,13 @@ style: double
 submodule: double
 id: double-agent-workflow
 kind: workflow
-status: stable
+status: release-candidate
 interaction-language: en
 artifact-language: en
+derived-from:
+  - ideas/double-agent/double-agent.md#double-agent
+  - ideas/double-agent/double-agent-principles.md#principle-explicit-collaborative-entry
+  - ideas/double-agent/double-agent-principles.md#principle-integrate-checked-contributions
 ---
 
 # Workflow: Double Agent
@@ -133,6 +137,33 @@ its responsible machine workflow.
 
 Do not store or infer machine versions from `.double/` frontmatter. Dedicated
 version knowledge artifacts are the only source of machine versions.
+
+For idea and goal exchange packages, consult the draft
+[Double Exchange Package Workflow](./exchange-package-workflow.md). Its
+unimplemented formats must not be presented as available packaging tools.
+
+When a task requires a known capability, inspect the local installed-goal
+registry with the available Double exchange `goal search --capability` command
+before proposing a new solution. Describe matching goal, realization, entrypoint,
+documentation and source when available. A matching goal is a candidate method,
+not proof the capability is present: use local Check separately when requested.
+Do not execute an installed realization without applicable authorization. A
+missing, invalid or unavailable registry is unknown, not an empty result; report
+the limitation and continue through the owning machine when appropriate. If the
+experimental exchange tool or its dependencies are unavailable, say so; do not
+claim that a search took place. Remote registry search is not yet implemented.
+
+<a id="collaborative-project-work"></a>
+
+## Parallel Project Work
+
+Route explicit requests to inspect parallel work, start or continue local or
+collaborative work, or act on an existing work item or contribution to the
+[Parallel Project Work workflow](./parallel-work-workflow.md). It prepares
+the working copy before handing off to the machine responsible for the
+artifact. Use the ordinary machine entry for artifact work outside that route.
+Follow the applicable release process when the parallel-work workflow hands
+off a release request.
 
 ## Repository Tools
 
