@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: idea-capture-agent
 kind: agent
-status: stable
+status: release-candidate
 role: idea-capture-role
 workflow: machine-of-ideas-workflow
 interaction-language: en

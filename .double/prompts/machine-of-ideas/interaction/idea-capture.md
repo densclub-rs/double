@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: idea-capture-interaction-prompt
 kind: prompt
-status: stable
+status: release-candidate
 produced-by: idea-capture-agent
 mode: shared
 derived-from:

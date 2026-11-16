@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: modes-registry
 kind: registry
-status: stable
+status: release-candidate
 derived-from:
   - ideas/machine-of-ideas/directory-layout/directory-layout.md
 ---

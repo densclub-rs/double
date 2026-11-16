@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: machine-of-ideas-workflow
 kind: workflow
-status: stable
+status: release-candidate
 interaction-language: en
 artifact-language: en
 derived-from:
@@ -73,6 +73,28 @@ are required.
 This workflow defines the prototype of the basic thinking scheme of the idea machine.
 
 `Idea Capture -> Concept Extraction -> Principle Synthesis`
+
+## Idea Export
+
+On an explicit request to export an idea, prepare a ZIP exchange package using
+the [Double Agent exchange package workflow](../double-agent/exchange-package-workflow.md)
+and its manifest template. The package contains the selected root idea and its
+existing concept and principle artifacts, preserving their identities, relative
+links and original content in sharing copies. Inspect their links and include
+any required supporting material selected by the user; report unavailable or
+unresolved references rather than inventing files. If concepts or principles
+have not been created, report that fact and proceed only with the user's chosen
+available material; do not invent them or advance idea development as a side
+effect. Check selected text and attachments for personal data before committing
+sharing material; if found, ask the user to remove, retain or mask it and
+preserve the originals. Do not promise complete detection.
+
+Create `manifest.yaml` for type `idea`, list existing concept and principle
+files as related artifacts, and pass the prepared content to Double Agent's ZIP
+packaging and checksum validation. Explain any missing packaging tool or
+dependency instead of claiming success. Export never publishes the package or
+modifies the source idea. The package is a standalone export, not evidence that
+the idea has been implemented.
 
 ## Version Knowledge Rule
 

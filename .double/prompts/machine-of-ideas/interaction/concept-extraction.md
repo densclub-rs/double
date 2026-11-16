@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: concept-extraction-interaction-prompt
 kind: prompt
-status: stable
+status: release-candidate
 produced-by: concept-extraction-agent
 mode: shared
 derived-from:
