@@ -464,9 +464,10 @@ def test_exchange_preserves_selected_walkthroughs_without_execution_bookkeeping(
     assert '<realization-result-or-stage-record>' in text
     for name in ['import', 'export']:
         mode = (ROOT / '.double/modes' / MACHINE / name / f'{name}.md').read_text()
-        assert 'goal and model alone or selected/all documented realizations' in mode
+        assert 'Sharing Realizations' in mode
+        assert 'Double Agent exchange packaging contract' in ' '.join(mode.split())
         assert 'Imported experience remains source history' in mode
-        assert 'never executes a packaged mechanism as a side effect' in mode
+        assert 'never executes a selected mechanism' in mode
 
 
 def test_evolution_dependency_and_sharing_contracts():

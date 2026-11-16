@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://double.local/schemas/exchange-package-manifest-v1.json",
+  "title": "Double exchange package manifest version 1",
+  "type": "object",
+  "required": ["schema-version", "package", "content"],
+  "additionalProperties": false,
+  "properties": {
+    "schema-version": {"const": 1},
+    "package": {
+      "type": "object",
+      "required": ["id", "version", "type", "title", "summary", "language"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "version": {"type": "string", "minLength": 1},
+        "type": {"enum": ["goal", "idea"]},
+        "title": {"type": "string", "minLength": 1},
+        "summary": {"type": "string", "minLength": 1},
+        "language": {"type": "string", "minLength": 1},
+        "public-url": {"type": "string", "format": "uri", "pattern": "^https?://"}
+      }
+    },
+    "content": {"type": "object"}
+  },
+  "allOf": [
+    {"if": {"properties": {"package": {"properties": {"type": {"const": "goal"}}, "required": ["type"]}}},
+     "then": {"properties": {"content": {"$ref": "#/$defs/goalContent"}}}},
+    {"if": {"properties": {"package": {"properties": {"type": {"const": "idea"}}, "required": ["type"]}}},
+     "then": {"properties": {"content": {"$ref": "#/$defs/ideaContent"}}}}
+  ],
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"},
+    "artifact": {"type": "object", "required": ["id", "path"], "additionalProperties": false,
+      "properties": {"id": {"$ref": "#/$defs/id"}, "path": {"$ref": "#/$defs/path"}}},
+    "plan": {"type": "object", "required": ["id", "path", "revision"], "additionalProperties": false,
+      "properties": {"id": {"$ref": "#/$defs/id"}, "path": {"$ref": "#/$defs/path"}, "revision": {"type": "integer", "minimum": 1}}},
+    "requirement": {"type": "object", "required": ["capability", "version", "check"], "additionalProperties": false,
+      "properties": {"capability": {"$ref": "#/$defs/id"}, "version": {"type": "string", "pattern": "^>=[0-9]+(?:\\.[0-9]+)*$"},
+        "check": {"type": "object", "required": ["command", "version-pattern"], "additionalProperties": false,
+          "properties": {"command": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}, "version-pattern": {"type": "string", "minLength": 1}}}}},
+    "realization": {"type": "object", "required": ["id", "type", "plan-id", "path"], "additionalProperties": false,
+      "properties": {"id": {"$ref": "#/$defs/id"}, "type": {"enum": ["manual", "automatic"]}, "plan-id": {"$ref": "#/$defs/id"},
+        "path": {"$ref": "#/$defs/path"}, "entrypoint": {"$ref": "#/$defs/path"}, "documentation": {"$ref": "#/$defs/path"},
+        "execution": {"type": "object", "required": ["kind"], "additionalProperties": false, "properties": {"kind": {"type": "string", "minLength": 1}}},
+        "requires": {"type": "array", "items": {"$ref": "#/$defs/requirement"}}},
+      "allOf": [{"if": {"properties": {"type": {"const": "automatic"}}, "required": ["type"]}, "then": {"required": ["entrypoint", "execution"]}}]},
+    "goalContent": {"type": "object", "required": ["goal", "plans"], "additionalProperties": false,
+      "properties": {"goal": {"$ref": "#/$defs/artifact"}, "plans": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/plan"}},
+        "sharing-realizations": {"type": "array", "items": {"$ref": "#/$defs/realization"}},
+        "provides": {"type": "array", "items": {"type": "object", "required": ["capability"], "additionalProperties": false, "properties": {"capability": {"$ref": "#/$defs/id"}}}}}},
+    "ideaContent": {"type": "object", "required": ["idea"], "additionalProperties": false,
+      "properties": {"idea": {"$ref": "#/$defs/artifact"}, "related-artifacts": {"type": "array", "items": {"$ref": "#/$defs/artifact"}}}}
+  }
+}

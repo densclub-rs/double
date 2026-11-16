@@ -10,3 +10,4 @@ mindmap-plugin: basic
 ## [Workflows](../workflows.md)
 - [Double Agent Workflow](./double-agent-workflow.md)
 - [Parallel Project Work](./parallel-work-workflow.md)
+- [Double Exchange Package Workflow](./exchange-package-workflow.md)

@@ -34,4 +34,4 @@ The version assigned to the `double-agent` main module of the Double project.
 
 ## Value
 
-`0.0.14`
+`0.0.15`

@@ -26,6 +26,12 @@ Changes recorded for the `double-agent` module.
 
 ## Value
 
+### 0.0.15-rc — 2026-11-16
+
+- Add exchange package manifest and local goal registry contracts.
+- Build and verify ZIP packages, inspect requirements, and install or update local goal realizations.
+- Find installed goals by capability and ship the exchange tool and manifest schema with Double Agent.
+
 ### 0.0.14-rc — 2026-11-11
 
 - Use Git by default for collaborative work and resolve the remote from the current clone.

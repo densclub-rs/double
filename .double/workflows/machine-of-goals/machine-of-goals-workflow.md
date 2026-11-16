@@ -686,7 +686,8 @@ Approval of model content and permission to start remain distinct. Steps 03
 and 04 create no execution artifacts. Any model edit requires renewed review
 before future planned action. Apply the incompatible-change preservation decision before an incompatible edit; preserve earlier facts.
 
-To inspect progress, use the goal's existing Machine of Goals Artifacts section
+To inspect progress, use the goal's existing Goals Artifacts section (or its
+legacy Machine of Goals Artifacts section)
 to open the applicable realization. Read its status, current-stage and Stage
 Map, then the stage documents for facts and evidence. Do not infer the active
 realization from the newest filename alone; show no active realization or
@@ -789,7 +790,8 @@ Markdown links are required; wiki-style links and absolute local filesystem
 paths are not portable artifact navigation.
 
 The goal links its actual editable plan variants and documented realizations
-with their actual linked plans in the existing Machine of Goals Artifacts section.
+with their actual linked plans in the existing Goals Artifacts section (or its
+legacy Machine of Goals Artifacts section).
 Realizations link their goal, applicable main or preserved plan and stage records;
 stage records link that plan and evidence. Progress is read there only.
 Never add a link to an execution document that does not exist.
@@ -1160,10 +1162,17 @@ originals. Do not claim the check guarantees detection of every personal datum.
 - step-id: `07-plan-packaging-export`
 - default-mode: `export`
 - purpose:
-  - optionally export the goal and editable plan alone, or include selected/all
-    documented realizations, their linked plans, stage records and evidence
-  - include a requested collapsed skill/action as reusable material when it
-    already exists; export does not execute it or fabricate invocation history
+  - present the goal, selected current plan and available Sharing Realizations;
+    the user selects manual or automatic variants, or exports without them
+  - offer a completed manual example or created mechanism for Sharing Realizations;
+    add it only on the user's decision, including incomplete work if explicitly chosen
+  - prepare sharing copies, selected files, dependencies and documentation; report
+    missing materials and validate links and compatibility with the exported plan
+  - export a copy of the current main plan, not per-realization frozen plans;
+    preserve captured stage conditions and provenance without implying historical
+    acceptance against a changed plan
+  - hand the prepared content to the [Double Agent exchange packaging contract](../double-agent/exchange-package-workflow.md);
+    if unavailable, report the blocker and do not claim a Double package exists
   - preserve source identities, context, applicable checks and provenance;
     prepare sharing copies for the intended audience
   - adapt imported source material into the local goal/model context; imported
@@ -1175,7 +1184,7 @@ originals. Do not claim the check guarantees detection of every personal datum.
   user intentionally leaves the goal without export.
 - next-step: `<end>`.
 
-Export is optional after final validation. It requires no registration,
+Export is optional and may be requested independently before final validation. It requires no registration,
 computed style or invocation journal. Creating skills/actions from demonstrated
 experience is a separate requested operation under the applicable contract.
 

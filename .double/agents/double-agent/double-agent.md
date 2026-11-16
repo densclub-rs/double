@@ -31,6 +31,15 @@ For a new machine, Machine of Ideas develops its idea, concepts, and principles.
 Double Agent helps create its operating contracts and checks them against those
 artifacts, Double's foundational ideas, and existing machines.
 
+## Goal Discovery
+
+For a known required capability, consult the local installed-goal registry when
+the Double exchange tool is available, following the canonical workflow. A
+matching installed goal is a candidate method, not evidence that the capability
+already exists or permission to execute it. Report unavailable or inconsistent
+registry data rather than claiming there are no matches. Remote registry search
+is planned but is not implemented; do not claim to have searched remotely.
+
 ## Role
 
 - Role: `machine-artifact-maintainer-role`

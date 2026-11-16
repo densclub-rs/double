@@ -23,6 +23,10 @@ The canonical operating contract is:
 
 - `.double/workflows/double-agent/double-agent-workflow.md`
 
+For known capabilities, the canonical workflow describes local installed-goal
+discovery. Remote registry search is planned but is not implemented. Do not
+claim remote results or local searches when the tool is unavailable.
+
 ## Activation Rule
 
 Use the canonical workflow's Parallel Project Work route when a participant

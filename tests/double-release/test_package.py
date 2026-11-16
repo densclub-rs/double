@@ -48,6 +48,26 @@ def assert_checksum(archive):
     assert Path('dist/SHA256SUMS.txt').read_text() == f'{hashlib.sha256(archive.read_bytes()).hexdigest()}  {archive.name}\n'
 
 
+def test_double_agent_exchange_assets_follow_workflow_and_preserve_mode(repo):
+    write(release.EXCHANGE_WORKFLOW, '---\nstatus: draft\n---\n# Exchange\n')
+    for path in release.EXCHANGE_ASSETS:
+        write(path, 'asset\n')
+    result = cli('package', '--machine', 'double-agent')
+    assert result.returncode == 0, result.stderr
+    archive = Path('dist/double-double-agent-1.2.4-local.tar.gz')
+    with tarfile.open(archive) as stream:
+        names = set(stream.getnames())
+        assert set(release.EXCHANGE_ASSETS) <= names
+        assert stream.getmember('.double/tools/double-agent/exchange/double-exchange').mode == 0o755
+
+
+def test_double_agent_exchange_workflow_rejects_missing_assets(repo):
+    write(release.EXCHANGE_WORKFLOW, '---\nstatus: draft\n---\n# Exchange\n')
+    result = cli('package', '--machine', 'double-agent')
+    assert 'requires missing asset' in result.stderr
+    assert not Path('dist/double-double-agent-1.2.4-local.tar.gz').exists()
+
+
 @pytest.fixture
 def repo(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)

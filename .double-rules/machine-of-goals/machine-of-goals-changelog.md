@@ -26,6 +26,12 @@ Changes recorded for the `machine-of-goals` module.
 
 ## Value
 
+### 0.0.22-rc — 2026-11-16
+
+- List selected manual and automatic realizations for sharing in goal artifacts.
+- Prepare exports from the current plan and selected sharing realizations through the Double exchange workflow.
+- Record stage and validation commands with their observed output and exit status.
+
 ### 0.0.21-rc — 2026-11-10
 
 - Record stage and validation commands with their observed output and exit status.

@@ -112,7 +112,7 @@ Describe the state that should exist after successful realization.
 - What is outside the goal?
 - What should not be optimized or pursued?
 
-## 11. Machine of Goals Artifacts
+## 11. Goals Artifacts
 
 Possible paths: [Path options](./path-options.md#<goal-id>-path-options)
 
@@ -123,6 +123,12 @@ Possible paths: [Path options](./path-options.md#<goal-id>-path-options)
 | Started | Plan | Realization |
 | --- | --- | --- |
 | <actual-start-with-timezone> | [Plan](./plan.md#<plan-id>) | [<realization-label>](./_realizations/<YYYY-MM-DDTHH-mm-ss>/realization.md#<realization-id>) |
+
+### Sharing Realizations
+
+| Plan | Type | Realization | Documentation |
+| --- | --- | --- | --- |
+| [<plan-title>](./plan.md#<plan-id>) | <Manual\|Automatic> | [<label>](<existing-realization-path>) | [<label>](<existing-documentation-path>) or — |
 
 ```
 
@@ -153,3 +159,12 @@ realization's actual state, not merely the latest timestamp; show no active
 realization or multiple candidates explicitly. Link only existing documents.
 An invoked collapsed skill/action needs no synthetic realization row or local
 execution files. An existing reusable mechanism may be linked in context.
+
+Sharing Realizations lists only existing manual examples and automatic mechanisms
+the user has chosen to share; omit the table when none are selected. Offer to add
+an appropriate documented walkthrough or created mechanism, and add it only
+with the user's decision, including an unfinished example when explicitly chosen.
+Link its plan and existing realization; use — if documentation is absent. Update
+or report stale links when related files move or disappear. This list is separate
+from the execution-progress table and supplies candidates, not an automatic selection,
+for export.
