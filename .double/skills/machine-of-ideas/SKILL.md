@@ -1,8 +1,8 @@
 ---
 name: machine-of-ideas
-status: stable
+status: release-candidate
 description: >
-  Use this skill when the user clearly wants to capture, develop, inspect, continue, or advance an idea through the Machine of Ideas. Trigger on direct
+  Use this skill when the user clearly wants to capture, develop, inspect, export, continue, or advance an idea through the Machine of Ideas. Trigger on direct
   requests such as "I have an idea", "let's work on an idea", "run machine of ideas", "I've catch it, let's go", or when the user
   asks to continue an existing idea artifact. Also trigger when the user asks to work on an idea clarification, sub-idea, mini-idea, `уточнение идеи`, `подидея`, `мини-идея`, or `миниидея`. Trigger and route to `double-agent` when the user asks to create, change, move, or remove Machine of Ideas operating artifacts under `.double/`. Do not trigger on casual mentions of ideas inside unrelated technical discussion unless the user asks to enter the idea workflow.
 metadata:
@@ -28,6 +28,7 @@ Activate this skill when the user clearly wants to work with the Machine of Idea
 - capturing a clarification of an existing idea as a mini-idea
 - working on a sub-idea or mini-idea
 - continuing an existing idea
+- exporting an existing idea
 - extracting concepts from an idea
 - synthesizing principles from an idea or concept artifact
 - inspecting the current state of an idea in the workflow
@@ -90,6 +91,10 @@ alternative or text fallback if unavailable. Preserve free-form clarification
 and existing user choices; defaults and tool acknowledgements are not consent.
 
 ## Loading Order
+
+For an explicit request to export an idea, use the canonical workflow's Idea
+Export rule to prepare the idea and existing concepts and principles as a Double
+ZIP exchange package; report missing artifacts and do not invent them.
 
 Use the Loading Order defined in
 `.double/workflows/machine-of-ideas/machine-of-ideas-workflow.md`.

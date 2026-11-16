@@ -33,6 +33,24 @@ def test_build_and_verify(source, tmp_path):
     assert not (source / 'SHA256SUMS').exists()
 
 
+def test_export_idea_with_concepts_and_principles(tmp_path):
+    root = tmp_path / 'idea-source'
+    root.mkdir()
+    for name in ('idea.md', 'concepts.md', 'principles.md'):
+        (root / name).write_text('# ' + name + '\n')
+    manifest = {
+        'schema-version': 1,
+        'package': {'id': 'sample-idea', 'version': '1.0', 'type': 'idea', 'title': 'Idea', 'summary': 'An idea', 'language': 'en'},
+        'content': {'idea': {'id': 'sample-idea', 'path': 'idea.md'}, 'related-artifacts': [{'id': 'sample-concepts', 'path': 'concepts.md'}, {'id': 'sample-principles', 'path': 'principles.md'}]}}
+    (root / 'manifest.yaml').write_text(yaml.safe_dump(manifest))
+    output = tmp_path / 'idea.double.zip'
+    pkg.build(root, output)
+    assert pkg.verify(output)['content'] == manifest['content']
+    with zipfile.ZipFile(output) as archive:
+        assert set(archive.namelist()) == {'manifest.yaml', 'SHA256SUMS', 'idea.md', 'concepts.md', 'principles.md'}
+        assert archive.read('idea.md') == (root / 'idea.md').read_bytes()
+
+
 @pytest.mark.parametrize('kind', ['changed', 'missing', 'extra', 'duplicate', 'traversal'])
 def test_reject_tampered_archive(source, tmp_path, kind):
     output = tmp_path / 'demo.double.zip'

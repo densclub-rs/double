@@ -26,6 +26,11 @@ Changes recorded for the `machine-of-ideas` module.
 
 ## Value
 
+### 0.2.9-rc — 2026-11-16
+
+- Export an idea with its existing concepts and principles as a Double ZIP package.
+- Preserve source artifacts and report missing development materials before export.
+
 ### 0.2.8 — 2026-11-05
 
 - Name generated idea documents by their idea title.

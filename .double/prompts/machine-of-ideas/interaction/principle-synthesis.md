@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: principle-synthesis-interaction-prompt
 kind: prompt
-status: stable
+status: release-candidate
 produced-by: principle-synthesis-agent
 mode: shared
 derived-from:
