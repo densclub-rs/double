@@ -47,3 +47,13 @@ A preserved local plan must retain the prior plan's identity, conditions and
 structure, with links rebased for its location. Human/agent review must check
 semantic preservation; structural tests cannot establish it for arbitrary files.
 Existing user-artifact migration requires separate authorization.
+
+Stage frequency review scenarios:
+
+| Scenario | Expected result |
+| --- | --- |
+| An occasional stage needs a second passage under an approved return condition | Keep its occasional type, check inputs again and preserve both passage records; no type change is required solely because it repeats |
+| A recurring stage has no applicable approved return condition | Its frequency type alone does not authorize repetition; stop and review the needed transition |
+| A stage has run only once so far | Infer expected frequency from purpose and planned transitions, not the observed count or presence of automation |
+
+Existing mechanism scenarios are covered structurally in `test_plan_contract.py`.

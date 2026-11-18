@@ -113,6 +113,17 @@ Portable sequence or package outline:
 
 - Exported editable plan: `plan.md` with its original stable plan ID and anchor
 - Selected Sharing Realizations: <manual-and-automatic-variants>
+- Selected existing automatic mechanisms: <existing-files-and-contextual-links-or-none>
+- Assessed source plan/revision, covered stages/transitions/operations:
+- Coverage boundaries, remaining manual work and compatibility limits:
+- Entrypoint/instructions, required inputs and dependencies:
+- Initial, required intermediate and final checks, including responsible actors:
+- Permissions, restrictions, decisions and stop points:
+- Evidence links, verified scope/environment and unchecked gaps:
+- Missing materials and receiving-environment adaptation requirements:
+- Availability does not imply export selection. Omit mechanism details when no
+  mechanism is selected. Export neither creates nor invokes a mechanism and
+  does not establish receiving-environment verification or goal acceptance.
 - Exported path-options artifact: `path-options.md`
 - Selected documented realizations and stage evidence:
 - Required validation contracts: initial, intermediate, and final state checks

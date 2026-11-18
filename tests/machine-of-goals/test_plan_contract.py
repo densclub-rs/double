@@ -485,3 +485,50 @@ def test_evolution_dependency_and_sharing_contracts():
     stage = (TEMPLATES / 'stage-realization-template.md').read_text()
     assert 'unique record id and anchor' in stage
     assert 'Continue a partial passage in its existing record' in stage
+
+
+def test_existing_mechanism_description_is_optional_and_not_an_invocation():
+    """No mechanism must produce no placeholder availability or execution artifact."""
+    rule = ' '.join(section(WORKFLOW.read_text(), '## Existing Automatic Mechanisms').split())
+    assert 'Omit it when no mechanism is established' in rule
+    assert 'description alone requires no new invocation' in rule
+    assert 'a helper script is not a plan realization merely because it exists' in rule
+    assert 'not a new registry, artifact type or process document' in rule
+    goal = (TEMPLATES / 'goal-template.md').read_text()
+    assert 'Omit the section when' in goal and 'omit placeholder entries' in goal
+
+
+def test_partial_mechanism_preserves_coverage_and_evidence_limits():
+    """A partial CLI with isolated tests must not imply full qualification."""
+    rule = ' '.join(section(WORKFLOW.read_text(), '## Existing Automatic Mechanisms').split())
+    assert 'Keep four claims independent' in rule
+    assert 'isolated tests and one successful operation do not establish full coverage' in rule
+    entry = section((TEMPLATES / 'goal-template.md').read_text(),
+                    '### Available Automatic Realizations')
+    for field in ['Mechanism:', 'Plan and assessed revision:', 'Coverage:',
+                  'Boundaries and manual remainder:', 'Usage, inputs and dependencies:',
+                  'Checks:', 'Authority:', 'Evidence:', 'Gaps:']:
+        assert field in entry
+    assert 'Sharing Realizations' not in entry
+
+
+def test_selected_existing_mechanism_export_preserves_context_without_running():
+    """Portable evidence is source evidence, not acceptance in a new environment."""
+    rule = ' '.join(section(WORKFLOW.read_text(), '## Existing Automatic Mechanisms').split())
+    assert 'Description and selection are not start authorization' in rule
+    assert 'Availability is independent of Sharing Realizations' in rule
+    assert 'Packaging never creates or modifies a mechanism, invokes it' in rule
+    assert 'no additional Machine of Goals invocation journal' in rule
+    package = (TEMPLATES / 'exported-plan-package-template.md').read_text()
+    for field in ['Assessed source plan/revision', 'remaining manual work',
+                  'required inputs and dependencies', 'responsible actors',
+                  'stop points', 'verified scope/environment and unchecked gaps',
+                  'receiving-environment verification or goal acceptance']:
+        assert field in package
+    for relative in ['skills/machine-of-goals/SKILL.md',
+                     'agents/machine-of-goals/plan-realization/plan-realization.md',
+                     'agents/machine-of-goals/plan-validation/plan-validation.md',
+                     'agents/machine-of-goals/plan-exchange/plan-exchange.md',
+                     'modes/machine-of-goals/export/export.md',
+                     'modes/machine-of-goals/import/import.md']:
+        assert 'Existing Automatic Mechanisms' in (ROOT / '.double' / relative).read_text()

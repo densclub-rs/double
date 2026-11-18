@@ -91,3 +91,13 @@ Existing user artifacts are history, not an alternative current contract;
 conversion requires separately authorized scope.
 
 Canonical workflow: [Machine of Goals](../../../workflows/machine-of-goals/machine-of-goals-workflow.md).
+
+## Existing Mechanisms and Evidence Boundaries
+
+Follow the workflow's Existing Automatic Mechanisms contract. Inspect optional
+Available Automatic Realizations in the goal's artifacts section. Keep mechanism
+existence, mapped plan coverage, verified scope/context, and invocation outcome
+or goal acceptance independent. Present remaining manual work and evidence gaps;
+recheck plan compatibility before offering a mechanism. Description requires no
+new invocation. Selection is not authorization to run or modify it; do not create
+execution records or rewrite historical acceptance as a side effect.

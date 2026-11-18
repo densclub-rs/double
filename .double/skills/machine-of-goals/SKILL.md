@@ -291,6 +291,10 @@ validation flow.
   another execution journal. Invocation creates no Machine of Goals directory,
   frozen-plan copy, realization document, stage record or index. Keep covered
   initial/intermediate/final checks and authorization in the mechanism.
+- Stage types express qualitative expected frequency: `🔹` occasional (few
+  passages), `♾️` recurring (many passages), without numeric thresholds or a
+  strictly-once category. Either type requires approved return conditions and
+  authority before repetition; frequency is independent of automation.
 - Repeatability is independent of automation. No computed plan style,
   registration transition or cumulative invocation statistics are required.
 - Preserve safe generated instructions and useful successful commands in the
@@ -304,6 +308,20 @@ validation flow.
   model; import never authorizes execution or a new local execution baseline.
   Historical provider plans may remain historical package evidence. Existing
   user-artifact conversion/migration requires separately authorized scope.
+
+## Existing Mechanism Description and Selection
+
+Use the workflow's Existing Automatic Mechanisms contract to describe an existing
+CLI, script, skill, action or executable workflow without creating or invoking it.
+Record the mapped plan/revision and coverage, manual remainder, usage and inputs,
+dependencies, checks, permissions, evidence scope/context and gaps in optional
+Available Automatic Realizations inside the goal's existing artifacts section.
+Omit it when absent; do not invent mechanisms or add a process registry.
+Existence, coverage, verification and invocation outcome/goal acceptance are
+independent claims. Show availability and limits on goal inspection and before
+method selection. Selection alone grants no execution permission. Sharing and
+export require their own selection, preserve the description and source evidence,
+and never establish receiving-environment validity or invoke/create a mechanism.
 
 ## Completion Handoff
 

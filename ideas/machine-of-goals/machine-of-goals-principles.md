@@ -340,6 +340,7 @@ A reference manual walkthrough can help many people achieve a goal. Requiring au
 - Allow later users to begin their own walkthroughs from a shared reference.
 - Evaluate a reusable skill, program, and manual example according to their actual role.
 - Keep user-selected execution form distinct from model identity and version.
+- Describe expected frequency qualitatively for each stage: occasional or recurring, independently of automation. Neither label sets an exact count or grants permission to repeat; the plan’s transition conditions and control boundaries govern every return. Do not classify the whole plan as single-pass or multi-pass.
 
 #### Boundaries
 

@@ -67,3 +67,13 @@ Collapsing a method into a new skill/action requires a separate user request
 and its applicable creation contract; exchange does not invent that procedure.
 
 Canonical workflow: [Machine of Goals](../../../workflows/machine-of-goals/machine-of-goals-workflow.md).
+
+## Existing Mechanism Context
+
+Use Existing Automatic Mechanisms in the canonical workflow. Available Automatic
+Realizations describes existence and mapped coverage, separately from Sharing
+Realizations and invocation history. Transfer only selected existing materials
+with their plan/revision, coverage, manual remainder, usage, inputs/dependencies,
+checks, authority, evidence context and unchecked gaps. Report missing files and
+compatibility limits. Transfer never creates or invokes a mechanism, grants
+execution permission or confirms its operation in the receiving environment.

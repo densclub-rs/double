@@ -488,13 +488,16 @@ anchor; never fall back to `plan.md` for a named variant.
 
 ### Start and Resume
 
-Plan synthesis infers each stage type from its purpose and transitions: `1️⃣`
-means once within a realization and `🔁` permits repeated passage. Put the type
-in the plan's stage table, describe conditional transitions and stop points in
-the stage, and present both for user correction during review. Never infer type
-from automation. A transition returning to an already performed stage requires
-that stage to be repeatable. If an actual return to a once-only stage becomes
-necessary, pause and propose a plan revision for user review before acting.
+Plan synthesis infers each stage's expected frequency from its purpose and
+transitions: `🔹` means occasional (few passages), and `♾️` means recurring
+(many passages). These are qualitative expectations, without numeric thresholds;
+occasional does not mean strictly once. Put the type in the plan's stage table,
+describe return conditions and stop points in the stage, and present both for
+user correction during review. Never infer frequency from automation or assign
+a frequency classification to the whole plan. Either type may be revisited under the
+approved transitions and authority. A frequency label alone never authorizes a
+return. If a needed return is outside the approved plan, pause and propose a
+plan revision for user review before acting.
 
 The realization Stage Map copies approved types into an emoji-only Type column
 and extends its existing legend. A repeated passage stays in the same realization:
@@ -616,7 +619,7 @@ stages, retaining earlier facts. A partial stage permits transition only where
 its outputs and the plan explicitly allow it. Continuing a partial passage closes
 remaining substages and/or records the person's explicit account of further work;
 verify the applicable output conditions, retaining `🟡` until all are accepted.
-This continues its existing stage record. Repeat a completed repeatable stage in
+This continues its existing stage record. Repeat any completed stage only under its approved return conditions in
 a distinct record and retain its earlier passages. Each passage receives a unique
 stage-record id and anchor by appending its ordinal (`-02`, `-03`, etc.) to the
 first record id; link all passages and indicate the current one in the map.
@@ -692,7 +695,9 @@ to open the applicable realization. Read its status, current-stage and Stage
 Map, then the stage documents for facts and evidence. Do not infer the active
 realization from the newest filename alone; show no active realization or
 multiple candidates explicitly. Do not create a second progress dashboard in
-the goal or model. Automatic invocation needs no synthetic active-realization row.
+the goal or model. Automatic invocation needs no synthetic active-realization row. Also inspect
+Available Automatic Realizations under Existing Automatic Mechanisms; show
+coverage and verification limits separately from execution progress.
 
 Older user artifacts retain their original meaning and are not an alternate
 current operating contract. Conversion requires separate authorization.
@@ -776,6 +781,60 @@ require automation and does not create a computed plan style.
 
 This rule defines the artifact boundary, not a new skill-generation procedure.
 Use the requested mechanism's applicable creation and execution contracts.
+
+## Existing Automatic Mechanisms
+
+An existing CLI, script, skill, automated action or executable workflow may
+implement all or part of a plan. Describing that relationship is independent
+of creating or modifying the mechanism, invoking it, validating its output,
+and accepting the goal. Preserve authorization separately for each operation;
+description alone requires no new invocation and authorizes none of the others.
+
+On an explicit request to describe an existing mechanism, inspect its source,
+documentation and available evidence read-only. Establish a substantive mapping
+to the actual linked plan and its stages, transitions or operations; a helper
+script is not a plan realization merely because it exists. If the mapping is
+unclear, state the uncertainty and clarify before recording it as coverage.
+
+Use optional `Available Automatic Realizations` within the goal's existing
+Goals Artifacts section (or legacy Machine of Goals Artifacts section), not a
+new registry, artifact type or process document. Omit it when no mechanism is
+established; never populate hypothetical mechanisms or migrate existing goals
+as a side effect. One entry describes the reusable mechanism, not each call.
+Contextual links may supply details without duplicating mechanism documentation.
+
+Each entry identifies:
+- The existing mechanism and actual plan (including the revision to which the
+  coverage assessment applies), with covered stages, transitions or operations.
+- Coverage boundaries, remaining manual work and known compatibility limits.
+- Entrypoint or usage instructions, required inputs and dependencies.
+- Initial, required intermediate and final checks; identify checks not performed
+  by the mechanism and who must perform them.
+- Required permissions, restrictions, user decisions and stop points.
+- Evidence links, the verified scope and environment, and known unchecked gaps;
+  distinguish documented claims from observed checks and mark unknowns explicitly.
+
+Keep four claims independent: mechanism existence, mapped plan coverage,
+verification in a stated scope/context, and a particular invocation's result or
+goal acceptance. Source code, isolated tests and one successful operation do not
+establish full coverage, runtime qualification or achievement of the goal.
+Do not rewrite historical evidence or acceptance when describing availability.
+
+When inspecting a goal or choosing how to act, show its available mechanisms,
+coverage, remaining manual checks and evidence limits. Recheck links and plan
+compatibility before offering a mechanism for the selected work; disclose stale
+or unknown coverage. Description and selection are not start authorization.
+An authorized invocation retains the Automatic Realization Rule: no additional
+Machine of Goals invocation journal, frozen plan, stage records, execution index
+or cumulative statistics. Never copy execution progress into the plan.
+
+Availability is independent of Sharing Realizations. Offer an existing mechanism
+as a candidate for sharing/export, but preserve the user's explicit selection.
+Export only selected existing materials with their plan context, assessed
+coverage, manual remainder, usage, inputs/dependencies, checks, permissions,
+evidence and gaps. Report missing files and portability limits. Packaging never
+creates or modifies a mechanism, invokes it, or validates it in the receiving
+environment. Retain source evidence as source evidence, not receiving acceptance.
 
 ## Contextual Navigation and Artifact Reference Rule
 
@@ -1066,8 +1125,10 @@ sequence authorization. The authoritative details are in the
   branches/paths/subplans and entry points, explain trade-offs and obtain
   explicit approval of those linked contents, selection and execution boundaries.
   Keep content fingerprints internal under the Plan Approval Presentation rule.
+  Present relevant Available Automatic Realizations, their mapped coverage,
+  remaining manual work and verification limits under Existing Automatic Mechanisms.
   For a requested collapsed mechanism, explain its checks and authority without
-  creating execution records.
+  creating execution records; selection alone does not authorize invocation.
 - produced-outputs: `approved-model-selection` in the conversation, identifying
   the linked current plan, its approved contents, selected path/entry and
   boundaries; preserve the computed digest separately as internal verification
@@ -1162,6 +1223,9 @@ originals. Do not claim the check guarantees detection of every personal datum.
 - step-id: `07-plan-packaging-export`
 - default-mode: `export`
 - purpose:
+  - inspect Available Automatic Realizations and offer compatible existing
+    mechanisms under Existing Automatic Mechanisms; availability is not export
+    selection and export establishes no receiving-environment validation
   - present the goal, selected current plan and available Sharing Realizations;
     the user selects manual or automatic variants, or exports without them
   - offer a completed manual example or created mechanism for Sharing Realizations;

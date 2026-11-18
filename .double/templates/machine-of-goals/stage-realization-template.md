@@ -26,7 +26,7 @@ unchanged if the stage name later changes. Use exactly three main parts: input
 state, actions, and output state. Evidence is linked where it supports a fact;
 it does not require a separate evidence or validation artifact.
 
-For a repeatable stage, keep each passage as a separate stage record in the
+For an authorized repeat of either stage type, keep each passage as a separate stage record in the
 same realization: retain the first filename and append `-02`, `-03`, etc. to
 the slug for later passages. Never overwrite an earlier record. Link all actual
 passages from the map and identify the current one. Capture and verify conditions

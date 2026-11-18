@@ -8,9 +8,11 @@ artifact-language: en
 access: free-of-charge
 type: static
 value-type: text
-observed-at: 2026-11-10
+observed-at: 2026-11-18
 ttl: one month
 derived-from:
+  - user-approved existing automatic mechanism description, selection and export contracts on 2026-11-18
+  - user-requested qualitative occasional and recurring stage types and removal of the obsolete plan-frequency mini-idea on 2026-11-18
   - user-approved group rule and machine contract updates on 2026-11-04
   - user-approved release preparation for machine-of-goals 0.0.17-rc on 2026-11-02
   - user-approved release preparation for machine-of-goals 0.0.16-rc on 2026-11-02
@@ -63,4 +65,4 @@ project.
 
 ## Value
 
-`0.0.22`
+`0.0.23`

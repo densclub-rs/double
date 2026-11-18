@@ -68,11 +68,13 @@ derived-from:
 - Stages have stable IDs (`S01`), anchors (`stage-s01`) and short English names.
   Immediately after each stage heading, provide a short description of its
   purpose and intended result, without a separate heading or technical slug.
-- Infer each stage's type from its purpose and expected transitions: `1️⃣` for
-  one execution per realization, `🔁` when a stage may be revisited. Present
-  types and transitions for user correction during plan review. Repeatability
-  is independent of automation. Explain conditional transitions and stop points
-  in each stage; a return to a previously performed stage requires `🔁`.
+- Infer each stage's expected frequency from its purpose and transitions:
+  `🔹` for occasional (few passages), `♾️` for recurring (many passages).
+  These qualitative types have no numeric thresholds; occasional is not a
+  strict one-passage limit. Present types and transitions for user correction
+  during review. Frequency is independent of automation and does not classify
+  the whole plan. Explain return conditions and stop points for either type;
+  a type alone never authorizes another passage.
   Identify each input/output condition as `<stage-id>-I<condition-number>` or
   `<stage-id>-O<condition-number>`, for example `S01-I01`, `S01-I02`, `S01-O01`
   and `S02-I01`, `S02-O01`. Number inputs and outputs independently within
@@ -135,12 +137,12 @@ Goal: [<goal-title>](./<goal-id>.md#<goal-id>)
 
 ## Stages
 
-Legend: 1️⃣ once per realization; 🔁 repeatable.
+Legend: 🔹 occasional (few passages); ♾️ recurring (many passages). Qualitative expectations, not numeric limits or permission to repeat.
 
 | Stage | Type | Input | Output | Next |
 | --- | --- | --- | --- | --- |
-| [S01: Prepare Documents](#stage-s01) | 1️⃣ | <required-state> | <expected-state> | [S02](#stage-s02) |
-| [S02: Submit Application](#stage-s02) | 🔁 | <required-state> | <expected-state> | <stage-link-or-end> |
+| [S01: Prepare Documents](#stage-s01) | 🔹 | <required-state> | <expected-state> | [S02](#stage-s02) |
+| [S02: Submit Application](#stage-s02) | ♾️ | <required-state> | <expected-state> | <stage-link-or-end> |
 
 <a id="stage-<stage-id-lowercase>"></a>
 

@@ -124,6 +124,20 @@ Possible paths: [Path options](./path-options.md#<goal-id>-path-options)
 | --- | --- | --- |
 | <actual-start-with-timezone> | [Plan](./plan.md#<plan-id>) | [<realization-label>](./_realizations/<YYYY-MM-DDTHH-mm-ss>/realization.md#<realization-id>) |
 
+### Available Automatic Realizations
+
+#### <existing-mechanism-label>
+
+- Mechanism: [<label>](<existing-mechanism-path>)
+- Plan and assessed revision: [<plan-title>](./plan.md#<plan-id>), <revision>
+- Coverage: <specific-stages-transitions-or-operations>
+- Boundaries and manual remainder: <uncovered-work-and-compatibility-limits>
+- Usage, inputs and dependencies: [<instructions>](<existing-instructions-path>)
+- Checks: <initial-required-intermediate-final-checks-and-responsible-actors>
+- Authority: <permissions-restrictions-decisions-and-stop-points>
+- Evidence: <contextual-links-verified-scope-and-environment-or-explicitly-unknown>
+- Gaps: <unchecked-claims-and-runtime-limits>
+
 ### Sharing Realizations
 
 | Plan | Type | Realization | Documentation |
@@ -159,6 +173,16 @@ realization's actual state, not merely the latest timestamp; show no active
 realization or multiple candidates explicitly. Link only existing documents.
 An invoked collapsed skill/action needs no synthetic realization row or local
 execution files. An existing reusable mechanism may be linked in context.
+
+Available Automatic Realizations is optional and records only established
+existing mechanisms on an authorized description request. Omit the section when
+none exist; omit placeholder entries. Use the workflow's Existing Automatic
+Mechanisms contract for coverage, independent evidence claims and authority.
+References may supply the entry's details without copying documentation.
+An availability entry is not an execution row or a sharing decision. Describing
+it requires no invocation, creates no mechanism and does not accept the goal.
+When inspecting the goal, show coverage, manual remainder and verification gaps;
+recheck compatibility before selection. Never infer full validation from tests.
 
 Sharing Realizations lists only existing manual examples and automatic mechanisms
 the user has chosen to share; omit the table when none are selected. Offer to add

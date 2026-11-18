@@ -48,8 +48,8 @@ creates none of these Machine of Goals execution records when invoked. See the
   Progress handoffs may use emoji with short prose labels. Keep frontmatter
   status values textual and synchronize their meaning with the body. Do not
   project progress into the editable model or frozen plan.
-- Copy approved stage types into a Type column containing only `1️⃣` or `🔁`;
-  extend the existing legend. For a return to a repeatable stage, show its
+- Copy approved stage types into a Type column containing only `🔹` or `♾️`;
+  extend the existing legend. For an authorized return to either stage type, show its
   current passage state and retain links to every prior passage and its evidence.
 - Compatible plan evolution updates this same map; add new stages, retain unaffected
   completed states and mark performed transitive dependents of changed results 🛠️.
@@ -118,12 +118,12 @@ Current stage: [<stage-id>: <stage-name>](./<stage-id-lowercase>-<stage-slug>.md
 
 Legend: ⚪ pending; 🔄 in progress; 🟠 awaiting verification; ✅ completed;
 🟡 partial; ⛔ blocked; ❌ failed; 🛠️ needs revision; ➖ not selected.
-Type: 1️⃣ once per realization; 🔁 repeatable.
+Type: 🔹 occasional (few passages); ♾️ recurring (many passages). Qualitative expectations, not numeric limits or permission to repeat.
 
 | Stage | Type | State | Record | Result |
 | --- | --- | --- | --- | --- |
-| [S01: Prepare Documents](../../plan.md#stage-s01) | 1️⃣ | ⚪ | <record-link-when-created> | <result-and-confirmation-basis> |
-| [S02: Submit Application](../../plan.md#stage-s02) | 🔁 | ⚪ | <record-link-when-created> | <result-and-confirmation-basis> |
+| [S01: Prepare Documents](../../plan.md#stage-s01) | 🔹 | ⚪ | <record-link-when-created> | <result-and-confirmation-basis> |
+| [S02: Submit Application](../../plan.md#stage-s02) | ♾️ | ⚪ | <record-link-when-created> | <result-and-confirmation-basis> |
 
 ## Result
 

@@ -8,7 +8,7 @@ artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-11-10
+observed-at: 2026-11-18
 ttl: one month
 derived-from:
   - .double-rules/machine-of-goals/machine-of-goals-version.md
@@ -25,6 +25,14 @@ derived-from:
 Changes recorded for the `machine-of-goals` module.
 
 ## Value
+
+### 0.0.23-rc — 2026-11-18
+
+- Describe existing automatic mechanisms with their plan coverage, usage, checks, permissions, evidence and known gaps.
+- Distinguish mechanism availability, coverage, verification and invocation results; selecting a mechanism does not authorize execution or imply goal acceptance.
+- Export selected existing mechanisms with their plan context and evidence without creating or invoking them or claiming validation in the receiving environment.
+- Define qualitative occasional (🔹) and recurring (♾️) stage types independently of automation; either type may repeat under approved return conditions.
+- Remove the obsolete plan-frequency mini-idea and preserve the boundary against additional automatic-invocation journals or statistics.
 
 ### 0.0.22-rc — 2026-11-16
 

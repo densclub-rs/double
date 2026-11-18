@@ -77,3 +77,20 @@ and its applicable creation contract; exchange does not invent that procedure.
 Canonical workflow: [Machine of Goals](../../../workflows/machine-of-goals/machine-of-goals-workflow.md).
 
 Before committing sharing materials, inspect selected text and attachments for personal data. If found, tell the user and ask whether to remove, retain or mask it; follow the explicit decision and preserve private originals. This check cannot guarantee complete detection.
+
+## Existing Mechanisms and Evidence Boundaries
+
+Follow the workflow's Existing Automatic Mechanisms contract. Inspect optional
+Available Automatic Realizations in the goal's artifacts section. Keep mechanism
+existence, mapped plan coverage, verified scope/context, and invocation outcome
+or goal acceptance independent. Present remaining manual work and evidence gaps;
+recheck plan compatibility before offering a mechanism. Description requires no
+new invocation. Selection is not authorization to run or modify it; do not create
+execution records or rewrite historical acceptance as a side effect.
+
+Export only explicitly selected existing mechanisms, with the linked plan and
+assessed revision, coverage and manual remainder, usage/inputs/dependencies,
+initial/intermediate/final checks, permissions/stop points, evidence and gaps.
+Contextual links may provide details; check packaged files and portability, and
+report omissions. Availability does not imply sharing selection. Export never
+creates or invokes a mechanism and does not verify the receiving environment.

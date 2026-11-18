@@ -133,7 +133,6 @@ Double Agent enters its dedicated `Style Development` process, captures the deve
 
 - [Machine of Ideas](../machine-of-ideas/machine-of-ideas.md)
 - [Machine of Goals](../machine-of-goals/machine-of-goals.md)
-- [Single-Pass and Multi-Pass Plans](../machine-of-goals/single-pass-and-multi-pass-plans/single-pass-and-multi-pass-plans.md)
 - [Double](../../Double.md)
 
 ## 12. Notes

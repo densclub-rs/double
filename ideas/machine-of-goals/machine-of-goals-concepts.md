@@ -195,6 +195,8 @@ The model is the bridge from a verifiable goal to understandable action. Stable 
 
 - Understandability can be sufficient to begin even when later details remain open.
 - The model contains expected states and checks, not in-progress or completed markers.
+- Expected execution frequency characterizes each stage: occasional (few passages) or recurring (many passages). This is qualitative, without numeric thresholds; occasional does not mean strictly once. A plan has no single-pass/multi-pass classification.
+- Either stage kind can be revisited under the plan’s explicit transition conditions, authorization and stop points. Frequency is independent of automation and actual execution counts.
 - Compatible model evolution can continue within the realization and does not rewrite what already happened.
 
 #### Questions
