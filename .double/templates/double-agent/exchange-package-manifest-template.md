@@ -19,6 +19,23 @@ Paths are relative to the package root. A realization's `path` may be a file or
 a directory; `entrypoint`, when present, names an existing file inside the package.
 There is no `files` inventory: `SHA256SUMS` records package file integrity.
 
+## Shell Package Informational Metadata
+
+For either content type, a future supported `.double.sh` container uses
+`package.title`, `package.id`, `package.version` and `package.summary` for its
+brief informational output. The optional `package.public-url` supplies the
+public home-page link; omit the line when absent, and do not invent a URL or
+substitute a Git remote. These existing fields require no schema change.
+
+Follow [Shell Package Informational Entry](../../workflows/double-agent/exchange-package-workflow.md#shell-package-informational-entry):
+no arguments and `--help` show the same GNU-style brief help on stdout and exit
+0, including actual supported next actions; `--version` shows the actual package
+identity/version and exits 0. Metadata is literal text. These paths perform no
+extraction, writes, installation, registration, environment checks, network
+access or realization invocation. Availability and syntax of actions come from
+the verified container implementation, not invented manifest fields. This is a
+contract for a future shell format, not a claim that shell packaging is available.
+
 ## Goal Package
 
 ```yaml
@@ -87,6 +104,7 @@ package:
   title: <title>
   summary: <summary>
   language: <language>
+  public-url: <optional-public-idea-or-catalog-url>
 content:
   idea:
     id: <idea-id>
@@ -96,6 +114,6 @@ content:
       path: <artifact-file>
 ```
 
-Omit `related-artifacts` if none are selected. The manifest describes portable
+Omit `related-artifacts` if none are selected, and `public-url` when absent. The manifest describes portable
 content, not installation paths, installation state or execution history.
 Execution variants beyond their kind and installation procedures remain to be designed.

@@ -8,7 +8,7 @@ artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-11-11
+observed-at: 2026-11-19
 ttl: one month
 derived-from:
   - .double-rules/double-agent/double-agent-version.md
@@ -25,6 +25,13 @@ derived-from:
 Changes recorded for the `double-agent` module.
 
 ## Value
+
+### 0.0.16-rc — 2026-11-19
+
+- Specify GNU-style informational output for future shell exchange packages: brief help without arguments or with --help, and package identity/version with --version.
+- Require informational modes to exit successfully without extraction, writes, installation, environment checks, network access or realization execution.
+- Reuse existing manifest metadata for descriptions and optional public home-page links; show only supported actions for goal and idea packages.
+- Add contract and metadata regression checks while keeping shell packaging explicitly unimplemented.
 
 ### 0.0.15-rc — 2026-11-16
 

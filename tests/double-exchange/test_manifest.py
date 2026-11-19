@@ -59,3 +59,20 @@ def test_rejects_symlink_escape(package, tmp_path):
     write(root, manifest)
     with pytest.raises(ValueError, match='Symlink'):
         module.validate(root)
+
+
+@pytest.mark.parametrize('kind', ['goal', 'idea'])
+@pytest.mark.parametrize('public_url', [None, 'https://example.org/package'])
+def test_informational_metadata_supports_both_content_types(package, kind, public_url):
+    """The existing schema supplies shell-help metadata without new fields."""
+    root, manifest = package
+    manifest['package']['type'] = kind
+    if kind == 'idea':
+        manifest['content'] = {'idea': {'id': 'sample', 'path': 'goal.md'}}
+    if public_url is not None:
+        manifest['package']['public-url'] = public_url
+    write(root, manifest)
+    metadata = module.validate(root)['package']
+    for name in ('id', 'title', 'summary', 'version'):
+        assert metadata[name] == manifest['package'][name]
+    assert metadata.get('public-url') == public_url

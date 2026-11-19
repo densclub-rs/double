@@ -8,9 +8,11 @@ artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-11-11
+observed-at: 2026-11-19
 ttl: one month
 derived-from:
+  - user-approved GNU-style informational entry contract for shell exchange packages on 2026-11-19
+  - .double/workflows/double-agent/exchange-package-workflow.md
   - collaborative work entry and integration contract update on 2026-11-10
   - user-approved group rule and machine contract updates on 2026-11-04
   - knowledge/double-main-modules/double-main-modules.md
@@ -34,4 +36,4 @@ The version assigned to the `double-agent` main module of the Double project.
 
 ## Value
 
-`0.0.15`
+`0.0.16`

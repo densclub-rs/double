@@ -77,6 +77,62 @@ executes code; disclose this before running it. Package creation never runs a
 realization. Do not claim support for a format until its implementation exists
 and is verified.
 
+## Shell Package Informational Entry
+
+This contract applies to both goal and idea `.double.sh` packages when a shell
+container is implemented and verified. It does not declare shell packaging
+available; the current experimental exchange implementation supports ZIP only.
+
+Running a shell package with no arguments must display brief help on standard
+output and exit with status 0. `--help` must display the same help and exit
+successfully. These informational paths must not extract content, create files
+or temporary directories, install or register anything, check the environment,
+access the network, or invoke a packaged realization. Prepare the informational
+metadata at package creation so displaying it needs no extraction or dependency
+bootstrap. Treat metadata as literal text, never as shell commands.
+
+Use the existing manifest fields for the informational content:
+- Identify the package using `package.title`, `package.id` and `package.version`.
+- Give its brief description from `package.summary`.
+- Show a short, actionable guide to the next supported operations and their
+  actual invocation syntax. List only operations implemented by this container;
+  do not advertise design-only actions as available commands.
+- When `package.public-url` is present, display it as the package home page near
+  the end. Otherwise omit that line. Do not invent a URL, use a Git remote as
+  proof of a public page, or probe a website while displaying help.
+
+Format the help in the style of GNU command-line tools: start with
+`Usage: <archive-name> [OPTION]...`, followed by a short description, a blank
+line, and an aligned list of available options with concise descriptions.
+Include `--help` and `--version`, brief next-action instructions, and the
+optional `Package home page: <URL>` line near the end. Use plain text without
+mandatory color, decorative banners, emoji or terminal control sequences; keep
+it readable both in a terminal and when redirected. The GNU-style presentation
+neither asserts GNU project membership nor supplies invented GNU/support links.
+
+`--version` must print the package name/identity and `package.version` on
+standard output and exit with status 0, under the same no-side-effects boundary.
+The version belongs to the exported package, not to the packaging tool or a
+plan revision. The no-arguments behavior is an explicit Double requirement in
+addition to the GNU-style `--help` and `--version` interface.
+
+Before claiming a shell container is supported, run these acceptance scenarios
+against a real generated package for both content types:
+
+| Invocation or setup | Required result |
+| --- | --- |
+| No arguments | Brief help, stdout, status 0; no extraction, writes, installation, registration, checks, network or realization invocation |
+| `--help` | Same informational content as no arguments, stdout, status 0 and the same absence of side effects |
+| `--version` | Actual package identity/version, stdout, status 0 and the same absence of side effects |
+| Manifest with `public-url` | Show the supplied URL near the end without requesting it |
+| Manifest without `public-url` | Omit the home-page line, without substituting another URL |
+| Available operations differ | Show only the container's supported options and actionable next steps |
+| Redirected output and literal metadata | Readable plain text; metadata is never executed as shell code |
+
+Contract consistency checks do not substitute for these runtime scenarios.
+Do not simulate a shell implementation in tests or report shell runtime support
+until an implementation exists and these scenarios have actually passed.
+
 ## Installation and Registry
 
 Use the [discovery registry template](../../templates/double-agent/exchange-registry-template.md)
