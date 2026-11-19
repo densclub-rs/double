@@ -82,3 +82,15 @@ Existing user artifacts are history, not an alternative current contract;
 conversion requires separately authorized scope.
 
 Canonical workflow: [Machine of Goals](../../workflows/machine-of-goals/machine-of-goals-workflow.md).
+
+## Stage Subdivision
+
+Follow [Stage Subdivision During Execution](../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-subdivision-rule) for any stage, preserving its identity and the same realization.
+Check child conditions against their own captured contract and evidence,
+including applicability of linked earlier parent work. Do not infer completion
+from the parent's state. Accept the parent only after required selected child
+outputs and its own integration/output conditions are accepted; preserve partial
+or unresolved outcomes and historical facts. Reassess performed transitive
+dependents when results change. Validate the actual parent passage for repeated
+stages; never merge its evidence with another passage or create a successor
+merely because the stage was subdivided.

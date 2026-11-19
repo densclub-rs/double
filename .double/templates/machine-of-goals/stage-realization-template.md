@@ -35,6 +35,26 @@ unique record id and anchor for each later passage by appending its ordinal.
 Continue a partial passage in its existing record with accepted new substages
 or a clearly attributed user statement; keep 🟡 until all outputs are accepted.
 
+## Substage Records
+
+Use this same template for a substage, under the workflow's
+[Stage Subdivision During Execution](../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-subdivision-rule).
+Keep the dotted `<substage-id>` as `stage-id` and in condition IDs; replace dots
+with hyphens in lowercase filenames and plan anchors. Keep the same
+`realization-id` and directory. In the body add a contextual Parent stage link
+to the actual parent passage record. Repeat-passage suffixes stay governed by
+the existing repeatability rule and must not overwrite any prior child record.
+
+Keep the parent's existing three-part record and captured contract. Append the
+subdivision note to its Actions with old/new revisions, prior approval digest,
+child IDs/links and applicable earlier evidence. Preserve the approval history
+before updating realization metadata. Child records link earlier evidence in
+place, identify its source and check it against each child condition; evidence
+reuse does not claim the child's actions were performed again. Parent Output
+State records acceptance of required selected child outputs and its own
+integration conditions. No extra main section, journal or new realization is
+introduced by subdivision.
+
 ## Stage Contract
 
 - Bind the record to its realization, stable stage ID and actual linked plan.

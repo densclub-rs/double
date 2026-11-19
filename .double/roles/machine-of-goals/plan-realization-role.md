@@ -82,3 +82,15 @@ Existing user artifacts are history, not an alternative current contract;
 conversion requires separately authorized scope.
 
 Canonical workflow: [Machine of Goals](../../workflows/machine-of-goals/machine-of-goals-workflow.md).
+
+## Stage Subdivision
+
+Follow [Stage Subdivision During Execution](../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-subdivision-rule) for any stage, preserving its identity and the same realization.
+Keep the parent's record and prior evidence, append its subdivision/revision
+note and synchronize child rows in the existing map. Use the same directory,
+normalize dotted IDs only for anchors/filenames and link each child record to
+its actual parent passage. Renew exact plan approval before future action and
+update approved revision/digest together, preserving the prior decision. Set
+`current-stage` to the active child's dotted ID. Do not copy parent completion
+to children or repeat actions awaiting verification. Reuse evidence only after
+condition-specific checks and validate each child before the next transition.

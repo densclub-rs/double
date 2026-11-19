@@ -102,3 +102,16 @@ or goal acceptance independent. Present remaining manual work and evidence gaps;
 recheck plan compatibility before offering a mechanism. Description requires no
 new invocation. Selection is not authorization to run or modify it; do not create
 execution records or rewrite historical acceptance as a side effect.
+
+
+## Stage Subdivision
+
+Follow [Stage Subdivision During Execution](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-subdivision-rule) for any stage, preserving its identity and the same realization.
+Check child conditions against their own captured contract and evidence,
+including applicability of linked earlier parent work. Do not infer completion
+from the parent's state. Accept the parent only after required selected child
+outputs and its own integration/output conditions are accepted; preserve partial
+or unresolved outcomes and historical facts. Reassess performed transitive
+dependents when results change. Validate the actual parent passage for repeated
+stages; never merge its evidence with another passage or create a successor
+merely because the stage was subdivided.

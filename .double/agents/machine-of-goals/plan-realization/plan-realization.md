@@ -101,3 +101,16 @@ or goal acceptance independent. Present remaining manual work and evidence gaps;
 recheck plan compatibility before offering a mechanism. Description requires no
 new invocation. Selection is not authorization to run or modify it; do not create
 execution records or rewrite historical acceptance as a side effect.
+
+
+## Stage Subdivision
+
+Follow [Stage Subdivision During Execution](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-subdivision-rule) for any stage, preserving its identity and the same realization.
+Keep the parent's record and prior evidence, append its subdivision/revision
+note and synchronize child rows in the existing map. Use the same directory,
+normalize dotted IDs only for anchors/filenames and link each child record to
+its actual parent passage. Renew exact plan approval before future action and
+update approved revision/digest together, preserving the prior decision. Set
+`current-stage` to the active child's dotted ID. Do not copy parent completion
+to children or repeat actions awaiting verification. Reuse evidence only after
+condition-specific checks and validate each child before the next transition.

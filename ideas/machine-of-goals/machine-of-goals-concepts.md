@@ -8,6 +8,7 @@ interaction-language: Russian
 artifact-language: English
 publication-path: ideas/machine-of-goals/machine-of-goals-concepts.md
 derived-from:
+  - user-approved stage subdivision during execution on 2026-11-19
   - machine-of-goals
   - ideas/machine-of-ideas/machine-of-ideas-concepts.md
 ---
@@ -775,6 +776,8 @@ A plan can grow by adding stages, substages or transitions while retaining exist
 - Explicit in the root idea's plan evolution and documented walkthrough description.
 
 #### Role in the Idea
+
+Stage subdivision is a refinement within this evolution: a large stage retains its identity and result obligations while its substages expose smaller verifiable transitions. The parent and parts remain visibly related, and earlier evidence retains its source rather than becoming fictional new execution.
 
 Evolution supports learning during execution without creating a copy or new realization for every compatible addition. Review changed plans before further work and reassess dependencies and success criteria. A previous completion remains historical evidence, not proof of new obligations.
 

@@ -8,7 +8,7 @@ artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-11-18
+observed-at: 2026-11-19
 ttl: one month
 derived-from:
   - .double-rules/machine-of-goals/machine-of-goals-version.md
@@ -25,6 +25,13 @@ derived-from:
 Changes recorded for the `machine-of-goals` module.
 
 ## Value
+
+### 0.0.24-rc — 2026-11-19
+
+- Subdivide any plan stage during execution while continuing the same realization and preserving its history and evidence.
+- Present substages as nested descriptions and icon-marked overview rows with stable hierarchical identifiers.
+- Synchronize substage records, current-stage navigation and renewed plan approval without creating a successor or local plan copy.
+- Verify applicable earlier evidence, required substage outputs and parent integration conditions before accepting the parent result.
 
 ### 0.0.23-rc — 2026-11-18
 

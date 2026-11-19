@@ -407,14 +407,15 @@ def test_every_plan_shape_has_no_runtime_state_or_progress():
     for name in ['plan-model-template.md']:
         generated = re.findall(r'^(`{3,4})md\n(.*?)^\1$',
                                (TEMPLATES / name).read_text(), re.M | re.S)
-        assert len(generated) == 1
-        _, text = generated[0]
-        meta = frontmatter(text)
-        allowed = {'realization-id'} if name == 'plan-template.md' else set()
-        assert not ((forbidden_fields - allowed) & meta.keys())
-        assert not re.search(r'^\|[^\n]*(?:Progress|State \| Record|Last Run|Last Result)',
-                             text, re.M)
-        assert not any(e in text for e in ['⚪', '🔄', '🟠', '✅', '🟡', '⛔', '❌', '🛠️', '➖'])
+        assert generated
+        assert len(shapes(name)) == 1  # One full model plus optional examples.
+        for _, text in generated:
+            if text.startswith('---\n'):
+                meta = frontmatter(text)
+                assert not (forbidden_fields & meta.keys())
+            assert not re.search(r'^\|[^\n]*(?:Progress|State \| Record|Last Run|Last Result)',
+                                 text, re.M)
+            assert not any(e in text for e in ['⚪', '🔄', '🟠', '✅', '🟡', '⛔', '❌', '🛠️', '➖'])
     boundary = section(WORKFLOW.read_text(), '## Plan Model and Execution Plan Boundary')
     assert 'The plan is a model in every mode' in boundary
     assert 'validating a stage never modifies the plan' in boundary
@@ -532,3 +533,52 @@ def test_selected_existing_mechanism_export_preserves_context_without_running():
                      'modes/machine-of-goals/export/export.md',
                      'modes/machine-of-goals/import/import.md']:
         assert 'Existing Automatic Mechanisms' in (ROOT / '.double' / relative).read_text()
+
+
+def test_substage_fragment_has_nested_conditions_and_resolvable_anchor_pattern():
+    """Check the reusable child shape, independent of a particular stage number."""
+    template = (TEMPLATES / 'plan-model-template.md').read_text()
+    fragment = section(template, '## Substage Structure')
+    assert not re.search(r'\bS\d+\b', fragment)
+    blocks = re.findall(r'^```md\n(.*?)^```$', fragment, re.M | re.S)
+    assert len(blocks) == 2
+    table, child = blocks
+    rows = [line.split('|')[1:-1] for line in table.splitlines()
+            if line.startswith('|')][2:]
+    assert len(rows) == 3 and all(len(row) == 5 for row in rows)
+    assert '📦' in rows[0][0]
+    assert all('↳ 🧩' in row[0] for row in rows[1:])
+    assert all(row[1].strip() in {'🔹', '♾️'} for row in rows)
+    headings = re.findall(r'^(#+) (.+)$', child, re.M)
+    assert headings[0] == ('###', '<substage-id>: <Short English Name>')
+    assert [name for level, name in headings if level == '####'] == [
+        'Input Conditions', 'Actions', 'Output Conditions', 'Transitions']
+    assert all(level == '#####' for level, name in headings
+               if name.startswith('<substage-id>-'))
+    assert '<a id="stage-<normalized-substage-id>"></a>' in child
+    realization = section((TEMPLATES / 'realization-template.md').read_text(),
+                          '## Substage Synchronization')
+    child_row = next(line for line in realization.splitlines()
+                     if line.startswith('| ↳ 🧩'))
+    cells = child_row.split('|')[1:-1]
+    assert len(cells) == 5
+    assert cells[1].strip() == '🔹'
+    assert cells[2].strip() == '⚪'
+    assert '#stage-<normalized-substage-id>' in cells[0]
+
+
+@pytest.mark.parametrize('step', ['plan-synthesis', 'plan-realization', 'plan-validation'])
+@pytest.mark.parametrize('surface', ['agents', 'roles', 'system', 'interaction'])
+def test_subdivision_entry_surfaces_resolve_to_one_canonical_rule(step, surface):
+    if surface == 'agents':
+        path = ROOT / '.double/agents' / MACHINE / step / f'{step}.md'
+    elif surface == 'roles':
+        path = ROOT / '.double/roles' / MACHINE / f'{step}-role.md'
+    else:
+        path = ROOT / '.double/prompts' / MACHINE / surface / f'{step}.md'
+    text = section(path.read_text(), '## Stage Subdivision')
+    links = re.findall(r'\]\(([^)]+)#stage-subdivision-rule\)', text)
+    assert len(links) == 1
+    assert (path.parent / links[0]).resolve() == WORKFLOW.resolve()
+    assert WORKFLOW.read_text().count('<a id="stage-subdivision-rule"></a>') == 1
+    assert not re.search(r'\bS\d+\b', text)

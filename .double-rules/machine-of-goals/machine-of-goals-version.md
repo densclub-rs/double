@@ -8,9 +8,10 @@ artifact-language: en
 access: free-of-charge
 type: static
 value-type: text
-observed-at: 2026-11-18
+observed-at: 2026-11-19
 ttl: one month
 derived-from:
+  - user-approved stage subdivision release 0.0.24-rc on 2026-11-19
   - user-approved existing automatic mechanism description, selection and export contracts on 2026-11-18
   - user-requested qualitative occasional and recurring stage types and removal of the obsolete plan-frequency mini-idea on 2026-11-18
   - user-approved group rule and machine contract updates on 2026-11-04
@@ -65,4 +66,4 @@ project.
 
 ## Value
 
-`0.0.23`
+`0.0.24`

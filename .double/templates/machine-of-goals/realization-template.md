@@ -81,6 +81,31 @@ its logical branch and approved revision. Update `plan-artifact`,
 fall back to `plan.md` for a named variant. Do not create or rename the source
 merely to fill its branch field. A preserved historical copy uses `./plan.md` only when needed.
 
+## Substage Synchronization
+
+Apply [Stage Subdivision During Execution](../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-subdivision-rule)
+without creating another realization or plan copy. Keep the parent row/record,
+then insert its children immediately below it. Extend the legend with `📦`
+subdivided stage, `🧩` substage and `↳` nesting; repeat `↳` for deeper levels.
+
+```md
+| Stage | Type | State | Record | Result |
+| --- | --- | --- | --- | --- |
+| 📦 [<parent-stage-id>: <name>](../../plan.md#stage-<normalized-parent-id>) | 🔹 | 🟡 | <existing-parent-record-link> | <preserved-partial-result> |
+| ↳ 🧩 [<substage-id>: <name>](../../plan.md#stage-<normalized-substage-id>) | 🔹 | ⚪ | <record-link-when-created> | <remaining-obligation> |
+```
+
+Use the actual selected plan path, including named variants. State remains a
+single emoji and Type remains `🔹` or `♾️`. Set `current-stage` to the active
+child's dotted ID and link its actual record in the body. Preserve parent and
+unaffected history; start new children pending unless a condition-specific
+check of earlier evidence establishes another state. Do not copy parent status.
+Record revision/approval history in the parent Actions note before updating the
+realization's approved revision and digest together. Child records live directly
+in this same directory. Complete the parent only after required selected child
+outputs and its own output/integration conditions are accepted. Preserve partial
+and unresolved outcomes; reassess affected dependents when results change.
+
 ## Realization Shape
 
 ````md

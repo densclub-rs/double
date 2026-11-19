@@ -91,6 +91,60 @@ derived-from:
   copies and follow the workflow before incompatible changes.
 - Omit unused optional fields and sections. Keep metadata in frontmatter.
 
+## Substage Structure
+
+Apply the workflow's [Stage Subdivision During Execution](../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-subdivision-rule)
+for any stage. Keep its row and show its children immediately below it:
+
+```md
+Legend: 📦 subdivided stage; 🧩 substage; ↳ nesting.
+Type: 🔹 occasional (few passages); ♾️ recurring (many passages). Qualitative expectations, not permission to repeat.
+
+| Stage | Type | Input | Output | Next |
+| --- | --- | --- | --- | --- |
+| 📦 [<parent-stage-id>: <parent-name>](#stage-<normalized-parent-id>) | 🔹 | <parent-input> | <parent-output> | <external-transition> |
+| ↳ 🧩 [<parent-stage-id>.1: <child-name>](#stage-<normalized-parent-id>-1) | 🔹 | <child-input> | <child-output> | <explicit-transition> |
+| ↳ 🧩 [<parent-stage-id>.2: <child-name>](#stage-<normalized-parent-id>-2) | 🔹 | <child-input> | <child-output> | <parent-verification> |
+```
+
+The parent keeps its own conditions, actions and transitions. Append each child
+inside the parent's stage block, not as another top-level stage:
+
+```md
+<a id="stage-<normalized-substage-id>"></a>
+
+### <substage-id>: <Short English Name>
+
+<short-purpose-and-intended-result>
+
+#### Input Conditions
+
+##### <substage-id>-I01: <condition-name>
+
+- <condition-and-check>
+
+#### Actions
+
+- <action-with-dependencies-and-stop-points>
+
+#### Output Conditions
+
+##### <substage-id>-O01: <condition-name>
+
+- <condition-and-check>
+
+#### Transitions
+
+- <explicit-next-child-or-parent-verification>
+```
+
+Generate each substage ID from its actual parent ID and next unused child
+number. Normalize dots to hyphens only for lowercase anchors and filenames;
+conditions and metadata retain dotted IDs. Use structural icons in the table,
+never progress markers. Repeat the nesting rule for deeper refinement, using
+bold condition labels if headings would exceed level six. Parent acceptance
+requires required selected child outputs and its own integration conditions.
+
 ## Model Shape
 
 ````md

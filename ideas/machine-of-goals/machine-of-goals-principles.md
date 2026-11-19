@@ -8,6 +8,7 @@ interaction-language: Russian
 artifact-language: English
 publication-path: ideas/machine-of-goals/machine-of-goals-principles.md
 derived-from:
+  - user-approved stage subdivision during execution on 2026-11-19
   - machine-of-goals
   - machine-of-goals-concepts
 ---
@@ -296,6 +297,7 @@ Stage records retain the actual conditions and evidence under which work was per
 #### Implications Without Implementation
 
 - Record and review the updated model before further action; keep compatible work linked to the main plan.
+- Refine a large stage into visible substages within the same realization, preserving the parent's identity, obligations and earlier evidence. Verify both the parts and their integrated result.
 - Preserve the old plan and repair references when preservation is chosen for incompatible change; deletion requires separate consent.
 - Carry unchanged stage records and evidence forward; retain completed status after checking dependencies and current conditions.
 - Include inherited materials in a readable retained walkthrough.

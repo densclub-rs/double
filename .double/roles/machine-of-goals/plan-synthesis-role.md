@@ -123,3 +123,13 @@ captured conditions and earlier facts; validate observed outputs against them.
 - Executor-only plan template: `.double/templates/machine-of-goals/plan-template.md`
 - Workflow: `.double/workflows/machine-of-goals/machine-of-goals-workflow.md`
 - Modes: `.double/registries/machine-of-goals/modes-registry.md`
+
+## Stage Subdivision
+
+Follow [Stage Subdivision During Execution](../../workflows/machine-of-goals/machine-of-goals-workflow.md#stage-subdivision-rule) for any stage, preserving its identity and the same realization.
+Use stable `<parent-stage-id>.<child-number>` IDs, nested child descriptions,
+explicit conditions/transitions and `📦` / `↳ 🧩` overview rows. Retain parent
+obligations, check dependency compatibility and increment the same plan revision.
+Review changed content before action; no new realization or plan copy follows
+from subdivision. Hand synchronization of the existing map, records and approval
+evidence to plan-realization; keep progress out of the plan.

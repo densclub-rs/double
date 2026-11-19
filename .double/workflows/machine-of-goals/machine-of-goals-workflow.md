@@ -599,6 +599,107 @@ stage outcomes, not new metadata keys or permissions. Preserve existing textual
 frontmatter status values and `current-stage`. Progress lives in realization
 and stage records; never add it to the main plan or preserved historical copy.
 
+<a id="stage-subdivision-rule"></a>
+
+### Stage Subdivision During Execution
+
+Subdivision refines any existing stage into smaller verifiable substages while
+continuing the same realization. Use `<parent-stage-id>.1`,
+`<parent-stage-id>.2`, etc. as stable substage IDs; never renumber existing
+stages, substages or captured conditions. Allocate the next unused positive
+child number under that parent. A substage may itself be subdivided by the
+same rule. A substage is part of its parent, not a new goal or plan variant.
+
+Retain the parent's ID, anchor, purpose, input/output conditions and external
+integration boundaries. Subdivision alone creates no successor, timestamped
+directory or local plan copy and does not repeat the parent's earlier actions.
+If a proposal changes those meanings or makes retained execution context
+unmappable, stop treating it as subdivision and use Model Change and Succession.
+
+#### Plan Structure and Navigation
+
+- In the plan's Stages table keep the parent row, followed immediately by its
+  substage rows in numeric hierarchical order. Mark a subdivided parent `📦`
+  and each child `↳ 🧩` in the Stage cell; repeat `↳` for deeper nesting.
+  Extend the legend: `📦` subdivided stage; `🧩` substage; `↳` nesting.
+  These structural icons are not progress; Type remains only `🔹` or `♾️`.
+- Put each substage description under its parent's description as a subsection,
+  one heading level deeper. Include purpose, input conditions, actions, output
+  conditions and transitions just as for a stage. Nest their section headings
+  accordingly; beyond Markdown's sixth heading level use bold condition labels
+  instead of invalid heading levels. Never flatten child descriptions into peers
+  of the parent or put their required conditions only in the overview table.
+- Keep the dotted substage ID in headings, metadata and condition IDs:
+  `<substage-id>-I01` and `<substage-id>-O01`. For links and filenames replace
+  dots in its lowercase ID with hyphens: `stage-<normalized-substage-id>` and
+  `<normalized-substage-id>-<short-english-stage-slug>.md`. Use explicit HTML
+  anchors, not renderer-generated heading anchors. Preserve existing parent
+  links and created record filenames; check collisions before creating files.
+- Define dependencies, entry, exits, conditional paths and parent integration
+  explicitly. Do not assume siblings are sequential merely from numbering.
+  Enter eligible children after accepted parent and child inputs; external
+  dependents of the parent remain gated on its accepted outputs. Check the
+  revised graph for missing dependencies, dead ends and unintended cycles.
+
+#### Synchronize the Existing Realization
+
+1. Inspect the parent passage, its records and evidence, current work and
+   affected dependencies. Explain what remains and which facts can support
+   which child conditions; preserve the old conditions, decisions and actions.
+2. Revise the same main plan, increment `plan-revision`, and review its changed
+   content under the existing approval rule before further execution. Keep
+   the plan's ID, branch and path and the realization's ID, directory and start.
+3. Append a subdivision note in the existing parent record's Actions: old and
+   new plan revisions, prior approval digest, child IDs/links, evidence mapping
+   and remaining obligations. Retain previous notes. After exact renewed
+   approval, update the realization's `plan-revision` and
+   `approved-model-content-hash` together; retain the prior decision in that note.
+   Do not overwrite the parent's captured contract or retroactively relabel work.
+   For a not-yet-started parent, capture its approved contract before child
+   action and put the note there; do not fabricate earlier execution or approval.
+4. Insert child rows immediately below the parent in the same Stage Map with
+   the same structural icons, links and Type legend as the plan. Keep the
+   emoji-only State column and existing result/evidence summaries. A new
+   selected child starts `⚪`; an explicitly unselected path uses `➖`.
+   Preserve unaffected stage states, records and prior passage links.
+5. Create a child's three-part stage record only when capturing its contract
+   for work or assessing existing evidence. Link its parent passage in the
+   body and use the same `realization-id`; no separate substage journal or
+   directory is needed. Link earlier parent evidence rather than moving,
+   duplicating or claiming to repeat its actions. Evidence reuse requires
+   condition-specific applicability checks; the parent's state is never
+   copied to all children. Awaiting-verification work goes to step 06 first.
+6. Set `current-stage` to the eligible child's dotted ID when work focuses
+   there and synchronize the body link to its actual record. When child work
+   is accepted, choose the next eligible child or return to parent verification.
+   Resume within existing authority and stop points; refinement grants no
+   extra execution authority.
+
+#### Parent Acceptance and Repeated Passages
+
+A parent may be `✅` only after all required child outputs on the selected path
+and the parent's own integration/output conditions are accepted. `➖` children
+are excluded only by explicit approved selection; they cannot hide required
+work. Child completion alone never proves the parent result. While child work
+continues, a previously partial parent retains `🟡`; an active parent uses `🔄`
+and moves to `🟠` when its result is ready for verification. Keep actual blocked,
+failed or needs-revision markers and explain the unresolved child in Result;
+do not invent a status priority that erases recorded outcomes.
+
+When subdividing an already accepted parent, keep its past acceptance as fact,
+check child applicability individually and retain its current `✅` only if all
+new applicable obligations are established. Otherwise mark its current result
+`🛠️` and review affected performed dependents. Changes to results invalidate
+performed direct and transitive dependents under Model Change and Succession;
+independent results remain intact. No historical completion is blanket proof
+of newly added obligations.
+
+Subdivision of an in-progress or partial passage continues that passage.
+For a parent with repeated passages, bind child records and evidence to the actual parent
+passage; do not merge previous passages. Repeat children only under approved return conditions and authority, with
+distinct passage records under the existing repetition rule. Frequency alone
+grants no permission to return. Validate parent acceptance for the current passage.
+
 ### Model Change and Succession
 
 Before editing, assess compatibility with each affected realization using stable
