@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: idea-capture-agent
 kind: agent
-status: release-candidate
+status: stable
 role: idea-capture-role
 workflow: machine-of-ideas-workflow
 interaction-language: en
@@ -69,7 +69,7 @@ Users can select the same `Idea Capture` stage in different modes. The agent its
 ## Entry Message Policy
 
 - explain current step
-- show available modes
+- name the active mode and offer the other allowed modes as optional switches while continuing the idea discussion
 - ask for interaction language and artifact language if they are not already confirmed
 - invite free-form idea input
 

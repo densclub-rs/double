@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: strict-research
 kind: mode
-status: release-candidate
+status: stable
 user-selectable: true
 class: cognitive
 derived-from:

@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: principle-synthesis-agent
 kind: agent
-status: release-candidate
+status: stable
 role: principle-synthesizer-role
 workflow: machine-of-ideas-workflow
 interaction-language: en

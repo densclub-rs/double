@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: machine-of-ideas-workflow
 kind: workflow
-status: release-candidate
+status: stable
 interaction-language: en
 artifact-language: en
 derived-from:
@@ -158,8 +158,8 @@ On startup, the agent should:
    - if unresolved open questions exist, suggest answering them before advancing
    - if no unresolved open questions block the current step and the current artifact satisfies the step contract, suggest transition to the next step
    - if the current step should continue, recommend a suitable mode and briefly explain why
-15. Ask the user to choose a mode or accept the recommended/default mode.
-16. Begin executing the step only after confirming the target idea, current step, interaction language, artifact language, selected output template, and mode.
+15. For `01-idea-capture`, use the explicitly selected allowed mode, or start in `brainstorm` when the user has not chosen a mode. In the first Idea Capture reply, name the active mode, offer the other allowed modes as optional switches, and continue with the next relevant question about the idea. For other steps, ask the user to choose a mode or accept the recommended/default mode.
+16. Begin executing the step after confirming the target idea, current step, interaction language, artifact language, and selected output template, and resolving the mode according to item 15. Lightweight clarification may begin while entry details are being resolved.
 
 <a id="structured-user-choice-rule"></a>
 
@@ -311,10 +311,7 @@ If the target idea is inferred rather than explicitly stated, the agent should:
 - ask the user to confirm or correct it
 - avoid editing or advancing any artifact until the target is confirmed
 
-If a mode is not explicitly selected, the agent should:
-
-- either invite the user to choose a mode
-- or use the default mode specified for the step
+Resolve the active mode using the Entry Protocol. In Idea Capture, an offer to switch is informational. Continue in the active mode and apply a switch when the user explicitly requests another allowed mode.
 
 If interaction language or artifact language is not explicitly selected, the agent should ask for it before producing any final artifact. The agent may continue lightweight clarification in the user's current language while language choices are being confirmed.
 
@@ -421,8 +418,8 @@ The agent can:
   - `.double/templates/machine-of-ideas/mini-idea-template.md` when the user asks for an idea clarification, sub-idea, or mini-idea
 - entry-message-policy:
   - explain current step
-  - show available modes
-  - invite free-form idea input
+  - name the active mode and offer the other allowed modes as optional switches
+  - invite free-form idea input or continue from the input already provided
 - repeat-policy:
   - step may be repeated with another mode before transition
 - transition-condition:

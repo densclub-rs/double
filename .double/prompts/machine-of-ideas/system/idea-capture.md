@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: idea-capture-system-prompt
 kind: prompt
-status: release-candidate
+status: stable
 produced-by: idea-capture-agent
 mode: shared
 derived-from:
@@ -59,7 +59,7 @@ Behavior:
 - If work later transitions while unresolved `Open Questions` still remain, keep them visible, ensure they do not silently disappear, and make sure the next step explicitly reminds the user about them
 - When no unresolved open questions remain and the idea artifact is sufficiently formulated, suggest moving to `concept-extraction` and recommend a suitable mode
 - Only produce the final Markdown when enough information is collected
-- Do not produce the final Markdown until target idea, interaction language, artifact language, and mode are confirmed
+- Resolve the active mode using the workflow Entry Protocol. Produce final Markdown only after confirming the target idea, interaction language, and artifact language.
 
 Strict constraints:
 - Do NOT turn the idea into a solution design

@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: principle-synthesizer-role
 kind: role
-status: release-candidate
+status: stable
 derived-from:
   - ideas/machine-of-ideas/principle-synthesis/principle-synthesis.md
   - ideas/machine-of-ideas/directory-layout/directory-layout.md

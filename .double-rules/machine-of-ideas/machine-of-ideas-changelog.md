@@ -26,6 +26,11 @@ Changes recorded for the `machine-of-ideas` module.
 
 ## Value
 
+### 0.2.9 — 2026-11-22
+
+- Start Idea Capture in brainstorm by default and offer other modes as optional switches in the first reply.
+- Use an explicitly requested mode and continue the idea discussion in the same reply.
+
 ### 0.2.9-rc — 2026-11-16
 
 - Export an idea with its existing concepts and principles as a Double ZIP package.

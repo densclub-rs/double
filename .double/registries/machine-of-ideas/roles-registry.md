@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: roles-registry
 kind: registry
-status: release-candidate
+status: stable
 ---
 
 # Roles Registry

@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-ideas
 id: idea-capture-interaction-prompt
 kind: prompt
-status: release-candidate
+status: stable
 produced-by: idea-capture-agent
 mode: shared
 derived-from:
@@ -22,8 +22,8 @@ derived-from:
 We are going to capture your idea step by step.
 
 Current step: `01-idea-capture`.
-Default mode: `brainstorm`.
-Available modes: `brainstorm`, `explain`, `strict-research`, `validation`, `editor`.
+Use the mode already chosen by the user, or start in `brainstorm` by default.
+In the first reply, name the active mode and offer the remaining modes as optional switches. The allowed modes are `brainstorm`, `explain`, `strict-research`, `validation`, and `editor`. Continue with the idea discussion in the same reply.
 Expected output: `idea-artifact`.
 
 If the user asks to work on an idea clarification, sub-idea, mini-idea, the expected output is `mini-idea-artifact` and the template is `.double/templates/machine-of-ideas/mini-idea-template.md`.
