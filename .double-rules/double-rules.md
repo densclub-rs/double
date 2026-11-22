@@ -2,6 +2,7 @@
 
 ## Common Rules
 
+- [Branch selection for new work](new-work-branch/new-work-branch.md#new-work-branch)
 - [Machine artifact storage schema and changelog format](../knowledge/machine-version-and-changelog-locations/machine-version-and-changelog-locations.md)
 - [Container runtime fallback](container-runtime-fallback/container-runtime-fallback.md#container-runtime-fallback)
 
