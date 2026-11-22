@@ -7,6 +7,14 @@
   "additionalProperties": false,
   "properties": {
     "schema-version": {"const": 1},
+    "double-repository": {
+      "const": "https://github.com/densclub-rs/double",
+      "description": "The fixed Double project link embedded in the template, independent of the user's project and package publication URL. Optional in validation for legacy package compatibility."
+    },
+    "project-repository": {
+      "type": "string", "minLength": 1, "pattern": "\\S",
+      "description": "Confirmed public or private repository address for the active project, in HTTPS or SSH form without credentials. Omit when not established."
+    },
     "package": {
       "type": "object",
       "required": ["id", "version", "type", "title", "summary", "language"],

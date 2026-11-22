@@ -1,4 +1,5 @@
 ---
+double-repository: https://github.com/densclub-rs/double
 style: double
 submodule: machine-of-ideas
 id: concept-template
@@ -21,6 +22,8 @@ id: <concept-artifact-id>
 kind: concept-artifact
 mindmap-plugin: basic
 produced-by: machine-of-ideas/concept-extraction-agent
+double-repository: https://github.com/densclub-rs/double
+  # project-repository: <confirmed-project-repository-address; omit when absent>
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
 publication-path: <root-idea-directory>/<root-idea-id>-concepts.md

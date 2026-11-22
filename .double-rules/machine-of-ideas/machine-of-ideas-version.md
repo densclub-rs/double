@@ -3,14 +3,17 @@ id: machine-of-ideas-version
 kind: knowledge-artifact
 status: stable
 produced-by: machine-of-knowledge/knowledge-extraction-agent
+double-repository: https://github.com/densclub-rs/double
+project-repository: https://github.com/densclub-rs/double
 interaction-language: ru
 artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-11-04
+observed-at: 2026-11-22
 ttl: one month
 derived-from:
+  - user-requested cross-machine repository metadata refactoring on 2026-11-22
   - user-approved group rule and machine contract updates on 2026-11-04
   - knowledge/double-main-modules/double-main-modules.md
   - user-provided project versioning decision
@@ -28,4 +31,4 @@ project.
 
 ## Value
 
-`0.2.9`
+`0.2.10`

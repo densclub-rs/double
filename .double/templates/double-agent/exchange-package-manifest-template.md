@@ -1,4 +1,5 @@
 ---
+double-repository: https://github.com/densclub-rs/double
 style: double
 submodule: double-agent
 id: exchange-package-manifest-template
@@ -40,6 +41,8 @@ contract for a future shell format, not a claim that shell packaging is availabl
 
 ```yaml
 schema-version: 1
+double-repository: https://github.com/densclub-rs/double
+  # project-repository: <confirmed-project-repository-address; omit when absent>
 package:
   id: <package-id>
   version: <package-version>
@@ -97,6 +100,8 @@ plans merely for sharing realizations; preserve captured conditions and provenan
 
 ```yaml
 schema-version: 1
+double-repository: https://github.com/densclub-rs/double
+  # project-repository: <confirmed-project-repository-address; omit when absent>
 package:
   id: <package-id>
   version: <package-version>

@@ -1,4 +1,5 @@
 ---
+double-repository: https://github.com/densclub-rs/double
 style: double
 submodule: machine-of-ideas
 id: mini-idea-template
@@ -23,6 +24,8 @@ id: <mini-idea-artifact-id>
 kind: mini-idea-artifact
 status: draft
 produced-by: machine-of-ideas/idea-capture-agent
+double-repository: https://github.com/densclub-rs/double
+  # project-repository: <confirmed-project-repository-address; omit when absent>
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
 parent-idea:

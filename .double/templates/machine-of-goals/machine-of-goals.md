@@ -1,4 +1,5 @@
 ---
+double-repository: https://github.com/densclub-rs/double
 style: double
 submodule: machine-of-goals
 mindmap-plugin: basic

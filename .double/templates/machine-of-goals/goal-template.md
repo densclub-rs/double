@@ -1,4 +1,5 @@
 ---
+double-repository: https://github.com/densclub-rs/double
 style: double
 submodule: machine-of-goals
 id: goal-template
@@ -21,6 +22,8 @@ kind: goal-artifact
 template-id: goal-template
 project-id: <stable-project-id>
 produced-by: machine-of-goals/goal-formulation-agent
+double-repository: https://github.com/densclub-rs/double
+  # project-repository: <confirmed-project-repository-address; omit when absent>
 owner-id: densclub
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>

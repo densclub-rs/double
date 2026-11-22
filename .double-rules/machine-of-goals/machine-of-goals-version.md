@@ -3,14 +3,17 @@ id: machine-of-goals-version
 kind: knowledge-artifact
 status: stable
 produced-by: machine-of-knowledge/knowledge-extraction-agent
+double-repository: https://github.com/densclub-rs/double
+project-repository: https://github.com/densclub-rs/double
 interaction-language: ru
 artifact-language: en
 access: free-of-charge
 type: static
 value-type: text
-observed-at: 2026-11-19
+observed-at: 2026-11-22
 ttl: one month
 derived-from:
+  - user-requested cross-machine repository metadata refactoring on 2026-11-22
   - user-approved stage subdivision release 0.0.24-rc on 2026-11-19
   - user-approved existing automatic mechanism description, selection and export contracts on 2026-11-18
   - user-requested qualitative occasional and recurring stage types and removal of the obsolete plan-frequency mini-idea on 2026-11-18
@@ -66,4 +69,4 @@ project.
 
 ## Value
 
-`0.0.24`
+`0.0.25`

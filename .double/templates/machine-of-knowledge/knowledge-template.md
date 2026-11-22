@@ -1,4 +1,5 @@
 ---
+double-repository: https://github.com/densclub-rs/double
 style: double
 submodule: machine-of-knowledge
 id: knowledge-template
@@ -20,6 +21,8 @@ id: <unique-knowledge-id>
 kind: knowledge-artifact
 status: <draft-or-release-candidate-or-stable>
 produced-by: machine-of-knowledge/knowledge-extraction-agent
+double-repository: https://github.com/densclub-rs/double
+  # project-repository: <confirmed-project-repository-address; omit when absent>
 interaction-language: <interaction-language>
 artifact-language: <artifact-language>
 type: <static-or-dynamic>
@@ -69,7 +72,7 @@ derived-from: <optional-list-of-sources>
 ````
 
 The frontmatter fields and sections above define the artifact contract. Omit
-`retrieval-method` and `derived-from` when not applicable; omit `Notes` when
+`project-repository`, `retrieval-method` and `derived-from` when not applicable; omit `Notes` when
 there are no supplemental notes, omit `Schema` when
 unnecessary and `Command` unless a retrieval method or binary value requires
 it. Do not add other fields or top-level sections. Ask clarification questions

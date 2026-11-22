@@ -1,4 +1,5 @@
 ---
+double-repository: https://github.com/densclub-rs/double
 style: double
 submodule: double-agent
 id: exchange-registry-template
@@ -17,6 +18,8 @@ links belong to the registry entry and do not imply local installation.
 
 ```yaml
 schema-version: 1
+double-repository: https://github.com/densclub-rs/double
+  # project-repository: <confirmed-project-repository-address; omit when absent>
 entries:
   - id: install-python
     type: goal

@@ -3,14 +3,17 @@ id: double-agent-version
 kind: knowledge-artifact
 status: stable
 produced-by: machine-of-knowledge/knowledge-extraction-agent
+double-repository: https://github.com/densclub-rs/double
+project-repository: https://github.com/densclub-rs/double
 interaction-language: ru
 artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-11-19
+observed-at: 2026-11-22
 ttl: one month
 derived-from:
+  - user-requested cross-machine repository metadata refactoring on 2026-11-22
   - user-approved GNU-style informational entry contract for shell exchange packages on 2026-11-19
   - .double/workflows/double-agent/exchange-package-workflow.md
   - collaborative work entry and integration contract update on 2026-11-10
@@ -36,4 +39,4 @@ The version assigned to the `double-agent` main module of the Double project.
 
 ## Value
 
-`0.0.16`
+`0.0.17`

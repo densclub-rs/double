@@ -88,6 +88,37 @@ Machine of Knowledge reuses these common concepts from Machine of Ideas:
 
 This workflow is the canonical source for knowledge-specific behavior.
 
+## Project Repository Metadata
+
+`project-repository` is an optional repository address for the active project
+to which the artifact belongs. It may identify a public or private repository;
+it is independent of the fixed `double-repository` link embedded in templates,
+`produced-by`, `project-id`, and any public artifact page or package URL.
+Use an address confirmed by the user or applicable usable project knowledge,
+preserving HTTPS or SSH form without embedded credentials. A Git remote is
+only a candidate: do not silently select one when project identity or the
+intended remote is uncertain. In the Double project both repository attributes
+may legitimately have the same value. Omit `project-repository` when no address
+is established; never write a placeholder, empty string or `null`, and do not
+substitute `double-repository`.
+
+Before creating an artifact with document status `release-candidate` or
+`stable`, or changing its document status to either value, check whether the
+project repository is established. Reuse an applicable confirmed address;
+otherwise ask whether the project has a repository and which address to record.
+The user may state that no repository exists or decline to record it; then
+omit the optional field and continue the normal status validation. Reuse that
+explicit decision within the same confirmed project context rather than asking
+for each artifact. An unanswered question is not a decision. Do not change
+status automatically or add a maturity status to an artifact that uses
+execution progress. A confirmed address may be recorded at any document status.
+
+This check does not authorize publication, network access, visibility changes
+or mass migration. Ordinary reading, validation, import, export and historical
+preservation retain source repository metadata without filling missing fields.
+Supporting binary files and checksum inventories retain their native formats;
+their containing semantic artifact or manifest holds repository metadata.
+
 ## Version Knowledge Rule
 
 For ordinary work resolve the version source from usable project and group
@@ -515,6 +546,6 @@ item.
 - kind: `knowledge-artifact`
 - produced-by: `knowledge-extraction-agent`
 - required-frontmatter: `id`, `kind`, `status`, `produced-by`, `interaction-language`, `artifact-language`, `type`, `access`, `value-type`, `observed-at`, `ttl`
-- optional-frontmatter: `retrieval-method`, `derived-from`
+- optional-frontmatter: `double-repository` (fixed template value; older artifacts may omit it), `project-repository`, `retrieval-method`, `derived-from`
 - publication-path: resolved by Storage Schema Resolution inside the selected catalog; per-artifact directory layout is the default
 - access-value: `free-of-charge`

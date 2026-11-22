@@ -1,4 +1,5 @@
 ---
+double-repository: https://github.com/densclub-rs/double
 style: double
 submodule: machine-of-goals
 id: realization-template
@@ -115,6 +116,8 @@ kind: realization-artifact
 template-id: realization-template
 project-id: <stable-project-id>
 produced-by: machine-of-goals/plan-realization-agent
+double-repository: https://github.com/densclub-rs/double
+  # project-repository: <confirmed-project-repository-address; omit when absent>
 interaction-language: <interaction-language>
 artifact-language: <artifact-language>
 goal-id: <goal-id>

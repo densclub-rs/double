@@ -1,4 +1,5 @@
 ---
+double-repository: https://github.com/densclub-rs/double
 style: double
 submodule: machine-of-goals
 id: exported-plan-package-template
@@ -28,6 +29,8 @@ kind: exported-plan-package
 template-id: exported-plan-package-template
 project-id: <stable-project-id>
 produced-by: machine-of-goals/plan-exchange-agent
+double-repository: https://github.com/densclub-rs/double
+  # project-repository: <confirmed-project-repository-address; omit when absent>
 interaction-language: <language-code-or-name-used-for-dialogue>
 artifact-language: <language-code-or-name-used-for-this-artifact>
 goal-id: <goal-id>

@@ -32,6 +32,23 @@ defines the current structural fields; package validation must also check
 referenced files and relationships. An executable packaging implementation
 remains to be built and validated.
 
+## Repository Metadata
+
+The manifest and discovery registry templates embed the fixed top-level
+`double-repository: https://github.com/densclub-rs/double`. Include the optional
+top-level `project-repository` only when the active project's address is
+confirmed. These fields identify Double and the user's project independently;
+neither replaces `package.public-url`, registry publication links or source
+artifact provenance. Follow the Double Agent workflow's Project Repository Metadata
+rule for project-address clarification and document maturity transitions.
+Preserve source artifacts and their metadata when packaging sharing copies.
+
+The version 1 manifest schema accepts these attributes when present and checks
+the canonical Double URL and a nonempty project address. It continues to accept
+legacy manifests without the attributes. The embedded template value does not
+introduce a runtime presence check or trigger an implicit migration. Import and checksum
+verification do not probe either repository or execute its contents.
+
 ## Explain, Check and Dry Run
 
 Explain describes the goal, realizations, requirements and intended installation

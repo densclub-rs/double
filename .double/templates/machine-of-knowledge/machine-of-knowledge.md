@@ -1,4 +1,5 @@
 ---
+double-repository: https://github.com/densclub-rs/double
 status: stable
 style: double
 submodule: machine-of-knowledge

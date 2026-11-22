@@ -33,6 +33,38 @@ def test_valid_goal_package(package):
     assert module.validate(root)['package']['id'] == 'sample'
 
 
+@pytest.mark.parametrize('kind', ['goal', 'idea'])
+@pytest.mark.parametrize('project_repository', [None, 'https://example.org/team/project', 'git@example.org:private/project.git'])
+def test_repository_metadata_is_independent_of_package_publication(package, kind, project_repository):
+    root, manifest = package
+    manifest['package']['type'] = kind
+    if kind == 'idea':
+        manifest['content'] = {'idea': {'id': 'sample', 'path': 'goal.md'}}
+    manifest['double-repository'] = 'https://github.com/densclub-rs/double'
+    if project_repository is not None:
+        manifest['project-repository'] = project_repository
+    write(root, manifest)
+    result = module.validate(root)
+    assert result['double-repository'] == manifest['double-repository']
+    assert result.get('project-repository') == project_repository
+    assert 'public-url' not in result['package']
+
+
+@pytest.mark.parametrize(('field', 'value'), [
+    ('double-repository', 'https://example.org/user-project'),
+    ('double-repository', None),
+    ('project-repository', ''),
+    ('project-repository', '   '),
+    ('project-repository', None),
+])
+def test_rejects_invalid_repository_metadata(package, field, value):
+    root, manifest = package
+    manifest[field] = value
+    write(root, manifest)
+    with pytest.raises(module.jsonschema.ValidationError):
+        module.validate(root)
+
+
 @pytest.mark.parametrize('mutation', ['missing', 'escape', 'unknown-plan', 'duplicate-plan', 'bad-regex'])
 def test_rejects_inconsistent_package(package, mutation):
     root, manifest = package

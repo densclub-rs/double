@@ -1,4 +1,5 @@
 ---
+double-repository: https://github.com/densclub-rs/double
 style: double
 submodule: machine-of-goals
 id: plan-model-template
@@ -154,6 +155,8 @@ kind: plan-model
 template-id: plan-model-template
 project-id: <stable-project-id>
 produced-by: machine-of-goals/plan-synthesis-agent
+double-repository: https://github.com/densclub-rs/double
+  # project-repository: <confirmed-project-repository-address; omit when absent>
 interaction-language: <interaction-language>
 artifact-language: <artifact-language>
 goal-id: <goal-id>
