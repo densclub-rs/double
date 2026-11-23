@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Release packaging verifies this value against the immutable release tag.
-installer_version='0.1.14-rc'
+installer_version='0.1.15'
 
 # Git Bash needs LF jq output, literal JSON string values and explicit native
 # input filenames: MSYS conversion is unreliable for paths containing quotes.
@@ -365,6 +365,7 @@ update
          double-installer.sh update [--all] [--channel stable|rc] [--non-interactive]
          double-installer.sh update --global [--agent codex|claude|antigravity] [--machine ID] [--channel stable|rc] [--non-interactive]
   Project updates retain the recorded channel unless explicitly overridden.
+  RC installations automatically promote to stable at the same or a newer version.
   Without --machine, or with --all, update every registered machine in the
   project and list available machines that can be added separately.
   Without --project or --global, update all registered project and global installations.
@@ -390,7 +391,8 @@ update-all
   Group machines alphabetically, then visit their projects in path order.
   Show indented results per installation and a final success/failure summary.
   Usage: double-installer.sh update-all [--channel stable|rc] [--non-interactive]
-  Project entries retain their channel; global entries use stable -> rc
+  RC entries promote to stable at the same or a newer version. Other project
+  entries retain their channel; global entries use stable -> rc
   unless --channel overrides it. Download verified updates, back up replacements
   and update registry records. Release installations never downgrade versions.
   Local development copies select stable, then RC, regardless of version.
@@ -1383,6 +1385,17 @@ update_machine() {
     # version is lower than the source checkout's future machine version.
     row=$(jq '.[0] // empty' "$work_dir/latest.json")
     [ -z "$row" ] || channel=$(printf '%s' "$row"|jq -r .channel)
+  elif [ -z "$channel" ] && [ "$(printf '%s' "$installed" | jq -r .channel)" = rc ];then
+    channel=all;release_catalog
+    # Prefer a stable successor, but keep following RC when stable would downgrade.
+    row=$(jq --arg installed "$(printf '%s' "$installed" | jq -r .version)" '
+      ($installed | split(".") | map(tonumber)) as $current |
+      [.[] | select(.channel == "rc" or
+        (.channel == "stable" and (.version | split(".") | map(tonumber)) >= $current))] |
+      max_by([{stable:2,rc:1}[.channel], (.version | split(".") | map(tonumber))]) // empty
+    ' "$work_dir/catalog.json")
+    printf '%s' "$row" | jq -s '.' > "$work_dir/catalog.json" || fail 'Cannot stage selected RC successor.'
+    [ -z "$row" ] || channel=$(printf '%s' "$row" | jq -r .channel)
   elif [ -z "$channel" ] && [ "$(printf '%s' "$installed"|jq -r '.scope // "project"')" = global ];then
     channel=all;latest_machines
     row=$(jq '.[0] // empty' "$work_dir/latest.json")

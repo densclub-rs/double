@@ -325,8 +325,30 @@ else: shutil.copyfile(root/'assets'/url.rsplit('/',1)[-1],target)
  assert all(json.loads((x/'installation.json').read_text())['project']!=posix_path(a) for x in backups.glob('backup.*'))
  assert any(json.loads((x/'installation.json').read_text())['project']==posix_path(b) for x in backups.glob('backup.*'))
  run('backups-clean','--yes');assert not list(backups.glob('backup.*'))
- # Equal numeric version may promote rc to stable without downgrading.
+ # RC follows newer RCs while stable is older; explicit RC suppresses promotion.
  c=root/'channel promotion';c.mkdir();rc4=release('4.0.0','rc');pages([rc4]);package(rc4)
+ run('add','--yes','--project',posix_path(c),'--machine','machine-of-ideas','--channel','rc')
+ rc5=release('4.1.0','rc');pages([release('3.9.0'),rc5]);package(rc5)
+ run('update','--project',posix_path(c),'--machine','machine-of-ideas','--non-interactive')
+ assert next(x for x in json.loads(registry.read_text())['installations'] if x['project']==posix_path(c))['tag']==rc5['tag_name']
+ stable5=release('4.1.0');pages([stable5,rc5]);package(stable5)
+ run('update','--project',posix_path(c),'--machine','machine-of-ideas','--channel','rc','--non-interactive')
+ assert next(x for x in json.loads(registry.read_text())['installations'] if x['project']==posix_path(c))['tag']==rc5['tag_name']
+ # Equal numeric version automatically promotes RC to stable and persists the channel.
+ run('update','--project',posix_path(c),'--machine','machine-of-ideas','--non-interactive')
+ promoted=next(x for x in json.loads(registry.read_text())['installations'] if x['project']==posix_path(c))
+ assert promoted['tag']==stable5['tag_name'] and promoted['channel']=='stable'
+ # The same selection applies to other machines through update-all.
+ other=root/'other machine promotion';other.mkdir();goalsrc=release('2.0.9','rc','machine-of-goals')
+ pages([goalsrc]);package(goalsrc,'.double/templates/machine-of-goals/example.md')
+ run('add','--yes','--project',posix_path(other),'--machine','machine-of-goals','--channel','rc')
+ goalsstable=release('2.1.0',machine='machine-of-goals');pages([goalsstable]);package(goalsstable,'.double/templates/machine-of-goals/example.md')
+ run('update-all','--non-interactive')
+ promoted=next(x for x in json.loads(registry.read_text())['installations'] if x['project']==posix_path(other))
+ assert promoted['tag']==goalsstable['tag_name'] and promoted['channel']=='stable'
+ # Explicit stable override still supports equal-version promotion.
+ run('remove','--yes','--project',posix_path(c),'--machine','machine-of-ideas')
+ pages([rc4]);package(rc4)
  run('add','--yes','--project',posix_path(c),'--machine','machine-of-ideas','--channel','rc')
  stable4=release('4.0.0');pages([stable4]);package(stable4)
  run('update','--project',posix_path(c),'--machine','machine-of-ideas','--channel','stable','--non-interactive')
