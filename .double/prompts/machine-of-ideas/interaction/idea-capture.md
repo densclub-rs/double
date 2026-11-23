@@ -59,7 +59,7 @@ Which language should we use for our conversation, and which language should I u
 
 Next question:
 
-What is your idea? Explain it casually, as if you were telling it to a colleague.
+What is your idea?
 
 For a mini-idea, ask instead:
 
@@ -72,3 +72,12 @@ structured-choice rule: use exposed and permitted `request_user_input_async`,
 wait for the explicit response before dependent changes, and use a permitted
 alternative or text fallback if unavailable. Preserve free-form clarification
 and existing user choices; defaults and tool acknowledgements are not consent.
+
+## Role, Mode, and Style Boundary
+
+Follow [Style Application Protocol](../../../workflows/machine-of-ideas/machine-of-ideas-workflow.md#style-application-protocol)
+at task entry and when the role changes. Responsibilities, mandatory mode
+conditions, artifact contracts, permissions, and workflow transitions remain
+binding. Behavioral defaults live only in the selected global style; do not
+merge a replacement with `double.md`. The legacy `style: double` frontmatter
+classifies this document and does not select the runtime style.

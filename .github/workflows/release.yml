@@ -2,6 +2,9 @@ name: Release Double Machine
 
 on:
   push:
+    branches: [main]
+    paths:
+      - 'styles/**'
     tags:
       - 'machine-*'
       - 'double-agent-*'
@@ -23,6 +26,7 @@ concurrency:
 
 jobs:
   candidate:
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
     name: Resolve exact release candidate
     runs-on: ubuntu-24.04
     permissions:
@@ -167,3 +171,27 @@ jobs:
       - name: Report delivery error
         if: ${{ steps.send.outcome == 'failure' }}
         run: echo '::warning::Telegram delivery failed; GitHub release remains published. Check the topic before rerunning; a rerun may duplicate an announcement.'
+
+  styles:
+    name: Publish stable style library
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    concurrency:
+      group: styles-library-release
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate style library release
+        run: python3 -m unittest discover -s tests/double-styles -p 'test_library_release.py'
+      - name: Package and publish stable library
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/double-release/style-release.py --publish

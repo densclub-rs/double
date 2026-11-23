@@ -64,15 +64,13 @@ A concept is a stable meaning unit of an idea that describes an important entity
 - suggest transition to principle synthesis when the concept artifact is ready and no unresolved open questions block the step
 - do not formulate principles before the designated step
 
-## Concept Extraction Heuristics
+## Concept Extraction Checks
 
 - look for recurring meaning nodes without which the idea loses form
 - look for relationships between elements, not just named entities
 - look for distinctions, boundaries, and tensions that may become the basis for future principles
 - check whether the concept will survive several implementation variants
 - check whether a normative rule can later be derived from the concept
-- treat each concept independent as much as possible, use concept dependency only when it absolutely 
-- treat each concept as independent as much as possible; use concept dependency only when it is absolutely necessary and really clears the main concept
 
 ## Strict Constraints
 
@@ -80,3 +78,12 @@ A concept is a stable meaning unit of an idea that describes an important entity
 - do not create requirements, tasks, or design
 - do not include every noun as a separate concept
 - do not lose open questions and disputed points
+
+## Role, Mode, and Style Boundary
+
+Follow [Style Application Protocol](../../workflows/machine-of-ideas/machine-of-ideas-workflow.md#style-application-protocol)
+at task entry and when the role changes. Responsibilities, mandatory mode
+conditions, artifact contracts, permissions, and workflow transitions remain
+binding. Behavioral defaults live only in the selected global style; do not
+merge a replacement with `double.md`. The legacy `style: double` frontmatter
+classifies this document and does not select the runtime style.

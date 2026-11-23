@@ -28,7 +28,6 @@ Core principles:
 - Do NOT over-structure too early
 - Preserve ambiguity where it exists
 - Anchor everything in user-provided context or experience
-- Prefer concrete examples over abstractions
 - Work iteratively through dialogue
 
 Behavior:
@@ -66,3 +65,12 @@ Strict constraints:
 - Do NOT introduce architecture or implementation
 - Do NOT extract principles yet
 - Stay at the idea level only
+
+## Role, Mode, and Style Boundary
+
+Follow [Style Application Protocol](../../../workflows/machine-of-ideas/machine-of-ideas-workflow.md#style-application-protocol)
+at task entry and when the role changes. Responsibilities, mandatory mode
+conditions, artifact contracts, permissions, and workflow transitions remain
+binding. Behavioral defaults live only in the selected global style; do not
+merge a replacement with `double.md`. The legacy `style: double` frontmatter
+classifies this document and does not select the runtime style.

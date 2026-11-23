@@ -3,7 +3,7 @@ style: double
 submodule: double
 id: parallel-work-workflow
 kind: workflow
-status: release-candidate
+status: stable
 interaction-language: en
 artifact-language: en
 derived-from:

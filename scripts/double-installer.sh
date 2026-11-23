@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Release packaging verifies this value against the immutable release tag.
-installer_version='0.1.15'
+installer_version='0.1.16'
 
 # Git Bash needs LF jq output, literal JSON string values and explicit native
 # input filenames: MSYS conversion is unreliable for paths containing quotes.
@@ -92,7 +92,8 @@ add --global installs globally; update --global updates registered machines.
 Download/install only cache packages; add integrates projects or global agents.
 add automatically downloads missing releases; a separate download is optional.
 Minimal flow: [doctor] -> releases -> add.
-Local development: dev copies working machine directories without GitHub access.
+Local development: dev copies working machine directories and source styles without GitHub access.
+add/update also synchronize the latest stable styles-* library release; custom/ is preserved.
 Agent skills: ~/.agents/skills (shared), ~/.claude/skills (Claude Code),
 ~/.gemini/config/skills (global Antigravity).
 CLAUDE_CONFIG_DIR overrides the Claude directory; foreign skills are preserved.
@@ -713,6 +714,7 @@ installation_consent() {
 cleanup() {
   local item rollback_failed=0
   if [ -n "$transaction" ]; then
+    styles_restore || rollback_failed=1
     if [ -f "$transaction/snapshot-complete" ];then
       restore_directories "$transaction_project" "$transaction" || rollback_failed=1
       if [ -f "$transaction/directories" ];then
@@ -786,6 +788,7 @@ release_catalog() {
       | try (.tag_name | capture("^(?<machine>[a-z0-9][a-z0-9-]*)-(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)(?:-(?<channel>rc))?$")) catch empty
       | .channel = (.channel // "stable")
       | select($channel == "all" or .channel == $channel)
+      | select(.machine != "styles")
       | select($machine == "" or .machine == $machine)
       | select((.channel != "stable") or ($release.prerelease == false))
       | .tag = $release.tag_name | .assets = $release.assets
@@ -885,6 +888,190 @@ state_init() {
   no_symlinks "$state_root/installer"
   state="$state_root/installer"
   registry="$state/registry.json"
+}
+
+# The official library is shared state, independently versioned from machines.
+styles_manifest_check() {
+  local dir="$1" file digest actual allow_missing="${2:-false}"
+  no_symlinks "$dir/manifest.json"
+  [ -f "$dir/manifest.json" ] || fail 'Style manifest is missing.'
+  jq -e '
+    type=="object" and (.version|type)=="string" and
+    (.version|test("^(0|[1-9][0-9]{0,8})\\.(0|[1-9][0-9]{0,8})\\.(0|[1-9][0-9]{0,8})$")) and
+    (.files|type)=="object" and (.files|has("double.md")) and
+    all(.files|to_entries[];
+      (.key|test("^[a-z0-9][a-z0-9-]*\\.md$")) and
+      (.value|type)=="string" and (.value|test("^[a-f0-9]{64}$")))
+  ' "$dir/manifest.json" >/dev/null || fail 'Invalid style manifest or non-stable version.'
+  while IFS= read -r file;do
+    no_symlinks "$dir/$file"
+    if [ ! -e "$dir/$file" ] && [ "$allow_missing" = true ];then continue;fi
+    [ -f "$dir/$file" ] && [ -s "$dir/$file" ] || fail "Style file missing or empty: $file"
+    LC_ALL=C grep -q '[^[:space:]]' "$dir/$file" || fail "Style file is whitespace-only: $file"
+    digest=$(jq -r --arg f "$file" '.files[$f]' "$dir/manifest.json")
+    if command -v sha256sum >/dev/null 2>&1;then actual=$(sha256sum "$dir/$file" | awk '{print $1}')
+    else actual=$(shasum -a 256 "$dir/$file" | awk '{print $1}');fi
+    [ "$digest" = "$actual" ] || fail "Style checksum mismatch: $file"
+  done < <(jq -r '.files|keys[]' "$dir/manifest.json")
+}
+
+styles_archive_check() {
+  local archive="$1" member clean
+  tar -tzf "$archive" > "$work_dir/style-members" || fail 'Invalid style archive.'
+  tar -tvzf "$archive" > "$work_dir/style-types" || fail 'Cannot inspect style archive.'
+  LC_ALL=C awk 'substr($0,1,1)!="-" && substr($0,1,1)!="d" {bad=1} END {exit bad}' \
+    "$work_dir/style-types" || fail 'Style archive contains links or special files.'
+  : > "$work_dir/style-files"
+  while IFS= read -r member;do
+    clean="${member#./}"
+    case "$clean" in styles|styles/) continue ;; esac
+    [[ "$clean" =~ ^styles/(manifest\.json|[a-z0-9][a-z0-9-]*\.md)$ ]] || fail 'Unsafe or foreign style archive path.'
+    printf '%s\n' "$clean" >> "$work_dir/style-files"
+  done < "$work_dir/style-members"
+  [ -s "$work_dir/style-files" ] || fail 'Empty style archive.'
+  [ "$(LC_ALL=C sort "$work_dir/style-files" | uniq -d | wc -l | tr -d ' ')" = 0 ] || fail 'Duplicate style archive paths.'
+  grep -qx 'styles/manifest.json' "$work_dir/style-files" || fail 'Style archive lacks manifest.'
+  [ ! -d "$work_dir/style-extracted" ] || rm -rf -- "$work_dir/style-extracted"
+  mkdir "$work_dir/style-extracted"
+  tar -xzf "$archive" -C "$work_dir/style-extracted" || fail 'Cannot extract styles.'
+  styles_manifest_check "$work_dir/style-extracted/styles"
+  { printf 'styles/manifest.json\n'; jq -r '.files|keys[]|"styles/"+.' "$work_dir/style-extracted/styles/manifest.json"; } | LC_ALL=C sort > "$work_dir/style-expected"
+  LC_ALL=C sort "$work_dir/style-files" > "$work_dir/style-actual"
+  cmp -s "$work_dir/style-expected" "$work_dir/style-actual" || fail 'Style archive inventory differs from manifest.'
+}
+
+styles_restore() {
+  local file result=0
+  [ -f "$transaction/styles/ready" ] || return 0
+  while IFS= read -r file;do
+    if [ -f "$transaction/styles/old/$file" ];then
+      cp -p -- "$transaction/styles/old/$file" "$state_root/styles/$file" || result=1
+    else
+      rm -f -- "$state_root/styles/$file" || result=1
+    fi
+  done < "$transaction/styles/files"
+  [ -f "$transaction/styles/root-existed" ] || rmdir "$state_root/styles" 2>/dev/null || true
+  return "$result"
+}
+
+styles_apply() {
+  local incoming="$1" target="$state_root/styles" old='' new comparison file missing=false
+  styles_manifest_check "$incoming"
+  new=$(jq -r .version "$incoming/manifest.json")
+  no_symlinks "$target"
+  if [ -e "$target/manifest.json" ] || [ -L "$target/manifest.json" ];then
+    styles_manifest_check "$target" true
+    old=$(jq -r .version "$target/manifest.json")
+    comparison=$(jq -nr --arg a "$new" --arg b "$old" '
+      ($a|split(".")|map(tonumber)) as $a | ($b|split(".")|map(tonumber)) as $b |
+      if $a>$b then "newer" elif $a<$b then "older" else "equal" end')
+    if [ "$comparison" = older ];then
+      styles_manifest_check "$target"
+      action_printf info 'Styles %s retained; incoming %s is older.\n' "$old" "$new"
+      return 0
+    fi
+    if [ "$comparison" = equal ];then
+      jq -S .files "$incoming/manifest.json" > "$work_dir/style-new-map"
+      jq -S .files "$target/manifest.json" > "$work_dir/style-old-map"
+      cmp -s "$work_dir/style-new-map" "$work_dir/style-old-map" || fail 'Same style version has different content; increment the library version.'
+      while IFS= read -r file;do [ -f "$target/$file" ] || missing=true;done < <(jq -r '.files|keys[]' "$target/manifest.json")
+      if [ "$missing" = false ];then action_printf info 'Styles %s already current.\n' "$old";return 0;fi
+    fi
+  fi
+  # A newly managed filename must not overwrite an unregistered local file.
+  while IFS= read -r file;do
+    no_symlinks "$target/$file"
+    if [ -e "$target/$file" ];then
+      [ -n "$old" ] && jq -e --arg f "$file" '.files|has($f)' "$target/manifest.json" >/dev/null || fail "Unmanaged style destination exists: $file"
+    fi
+  done < <(jq -r '.files|keys[]' "$incoming/manifest.json")
+  if [ -z "$transaction" ];then
+    transaction=$(mktemp -d "$state/transactions/styles.XXXXXX");transaction_kind=styles;transaction_project="$project"
+  fi
+  mkdir -p "$transaction/styles/old"
+  [ ! -d "$target" ] || : > "$transaction/styles/root-existed"
+  { printf 'manifest.json\n';jq -r '.files|keys[]' "$incoming/manifest.json";[ -z "$old" ] || jq -r '.files|keys[]' "$target/manifest.json"; } | LC_ALL=C sort -u > "$transaction/styles/files"
+  while IFS= read -r file;do
+    no_symlinks "$target/$file"
+    [ ! -e "$target/$file" ] || cp -p -- "$target/$file" "$transaction/styles/old/$file" || fail 'Cannot snapshot style library.'
+  done < "$transaction/styles/files"
+  mkdir -p "$target"
+  : > "$transaction/styles/ready"
+  while IFS= read -r file;do
+    if [ "$file" = manifest.json ] || jq -e --arg f "$file" '.files|has($f)' "$incoming/manifest.json" >/dev/null;then
+      cp -p -- "$incoming/$file" "$target/$file" || fail 'Cannot write style library; rolling back.'
+    else
+      rm -f -- "$target/$file" || fail 'Cannot remove obsolete official style; rolling back.'
+    fi
+  done < "$transaction/styles/files"
+  styles_manifest_check "$target"
+  action_printf success 'Styles %s installed globally; custom styles preserved.\n' "$new"
+}
+
+styles_transport_failure() {
+  # Continue only with a verified existing library, or a historical machine
+  # whose contracts predate styles. Modern first installs require the default.
+  if [ -f "$state_root/styles/manifest.json" ];then
+    styles_manifest_check "$state_root/styles"
+    action_printf warning 'Style release unavailable; retaining verified installed styles.\n'
+    return 0
+  fi
+  local contract="$project/.double/workflows/$machine/$machine-workflow.md"
+  if [ -f "$contract" ] && grep -q '^## Style Application Protocol' "$contract";then
+    fail 'Cannot obtain style release; the default style is required for this installation.'
+  fi
+  action_printf warning 'No style release available for this legacy installation.\n'
+}
+
+styles_sync() {
+  work_dir=$(cd "$work_dir" && pwd -P)
+  local page=1 count tag ver url sum_url archive expected actual row
+  if [ "$command_name" = dev ];then
+    if [ -f "$source/styles/manifest.json" ];then styles_apply "$source/styles";else styles_transport_failure;fi
+    return 0
+  fi
+  printf '[]\n' > "$work_dir/styles-catalog"
+  while :;do
+    if ! curl --fail --silent --show-error --location --proto '=https' --proto-redir '=https' \
+      --connect-timeout 15 --max-time 120 --retry 2 --output "$work_dir/styles-page" \
+      "https://api.github.com/repos/densclub-rs/double/releases?per_page=100&page=$page";then
+      styles_transport_failure;return 0
+    fi
+    jq -e 'type=="array" and all(.[]; (.tag_name|type)=="string" and (.assets|type)=="array")' "$work_dir/styles-page" >/dev/null || fail 'Invalid style release response.'
+    count=$(jq length "$work_dir/styles-page")
+    jq -s '.[0]+.[1]' "$work_dir/styles-catalog" "$work_dir/styles-page" > "$work_dir/styles-next"
+    mv "$work_dir/styles-next" "$work_dir/styles-catalog"
+    [ "$count" -eq 100 ] || break
+    page=$((page+1))
+  done
+  row=$(jq -c '[.[]|select(.draft==false and .prerelease==false)|select(.tag_name|test("^styles-(0|[1-9][0-9]{0,8})\\.(0|[1-9][0-9]{0,8})\\.(0|[1-9][0-9]{0,8})$"))]|
+    sort_by(.tag_name|ltrimstr("styles-")|split(".")|map(tonumber))|last // empty' "$work_dir/styles-catalog")
+  [ -n "$row" ] || { styles_transport_failure;return 0; }
+  tag=$(printf '%s' "$row"|jq -r .tag_name);ver="${tag#styles-}"
+  archive="double-styles-$ver.tar.gz"
+  url=$(printf '%s' "$row"|jq -r --arg n "$archive" '[.assets[]|select(.name==$n)|.browser_download_url]|if length==1 then .[0] else empty end')
+  sum_url=$(printf '%s' "$row"|jq -r '[.assets[]|select(.name=="SHA256SUMS.txt")|.browser_download_url]|if length==1 then .[0] else empty end')
+  [ "$url" = "https://github.com/densclub-rs/double/releases/download/$tag/$archive" ] &&
+    [ "$sum_url" = "https://github.com/densclub-rs/double/releases/download/$tag/SHA256SUMS.txt" ] || fail 'Invalid style release assets or URLs.'
+  for url in "$url" "$sum_url";do
+    if ! curl --fail --silent --show-error --location --proto '=https' --proto-redir '=https' \
+      --connect-timeout 15 --max-time 120 --retry 2 --output "$work_dir/${url##*/}" "$url";then
+      styles_transport_failure;return 0
+    fi
+  done
+  expected=$(awk -v n="$archive" '$2==n || $2=="*"n {print $1}' "$work_dir/SHA256SUMS.txt")
+  [[ "$expected" =~ ^[a-fA-F0-9]{64}$ ]] || fail 'Invalid style archive checksum entry.'
+  if command -v sha256sum >/dev/null 2>&1;then actual=$(sha256sum "$work_dir/$archive"|awk '{print $1}');else actual=$(shasum -a 256 "$work_dir/$archive"|awk '{print $1}');fi
+  [ "$(printf '%s' "$expected"|tr A-F a-f)" = "$actual" ] || fail 'Style archive checksum mismatch.'
+  styles_archive_check "$work_dir/$archive"
+  [ "$(jq -r .version "$work_dir/style-extracted/styles/manifest.json")" = "$ver" ] || fail 'Style release tag and manifest version differ.'
+  styles_apply "$work_dir/style-extracted/styles"
+}
+
+styles_finish_standalone() {
+  if [ "$transaction_kind" = styles ] && [ -n "$transaction" ];then
+    local done_styles="$transaction";transaction='';rm -rf -- "$done_styles"
+  fi
 }
 
 registry_check() {
@@ -1074,7 +1261,9 @@ add_machine() {
         return $?
       fi
     done < "$work_dir/files"
-    project_instructions_sync
+    styles_sync
+  project_instructions_sync
+  styles_finish_standalone
     action_printf info 'Machine already installed: %s in %s; integrating selected agents only.\n' "$machine" "$project"
     integrate_selected_agents
     return $?
@@ -1173,7 +1362,9 @@ add_machine() {
     jq --arg p "$project" --arg m "$machine" '(.installations[]|select(.project==$p and .machine==$m)).scope="global"' "$registry" > "$state/registry.new" || fail 'Cannot stage registry update.'
     mv "$state/registry.new" "$registry" || fail 'Cannot commit registry update.'
   fi
+  styles_sync
   project_instructions_sync
+  styles_finish_standalone
   local done_transaction="$transaction";transaction=''
   rm -rf -- "$done_transaction"
   action_printf success 'Installed %s in %s (%s)\n' "$machine" "$project" "$tag"
@@ -1288,7 +1479,9 @@ dev_machine() {
         source:{type:"development",path:$source},files:$f[0],directories:$d[0]}])
   ' "$registry" > "$state/registry.new" || fail 'Cannot stage development registration.'
   mv "$state/registry.new" "$registry" || fail 'Cannot commit development registration.'
+  styles_sync
   project_instructions_sync
+  styles_finish_standalone
   transaction_done="$transaction";transaction='';rm -rf -- "$transaction_done"
   action_printf success 'Installed %s in %s (development from %s)\n' "$machine" "$project" "$source"
   offer_backup_cleanup "$backup"
@@ -1405,7 +1598,9 @@ update_machine() {
     release_catalog
     row=$(jq '.[0] // empty' "$work_dir/catalog.json")
   fi
-  [ -n "$row" ] || { [ "${repair_missing:-false}" != true ] || fail 'Cannot restore incomplete machine: no applicable published release.'; project_instructions_sync; action_printf warning 'No applicable release: %s (%s) in %s\n' "$machine" "$channel" "$project"; return 0; }
+  [ -n "$row" ] || { [ "${repair_missing:-false}" != true ] || fail 'Cannot restore incomplete machine: no applicable published release.'; styles_sync
+    project_instructions_sync
+    styles_finish_standalone; action_printf warning 'No applicable release: %s (%s) in %s\n' "$machine" "$channel" "$project"; return 0; }
   if [ "$development" = false ] && ! jq -ne --arg a "$(printf '%s' "$row"|jq -r .version)" --arg b "$(printf '%s' "$installed"|jq -r .version)" \
     --arg old "$(printf '%s' "$installed"|jq -r '.tag|if endswith("-dev") then "dev" elif endswith("-rc") then "rc" else "stable" end')" --arg new "$channel" \
     '($a|split(".")|map(tonumber)) as $av | ($b|split(".")|map(tonumber)) as $bv |
@@ -1416,7 +1611,9 @@ update_machine() {
     jq --arg p "$project" --arg m "$machine" --arg c "$channel" \
       '(.installations[]|select(.project==$p and .machine==$m)).channel=$c' "$registry" > "$state/registry.new" || fail 'Cannot stage registry update.'
     mv "$state/registry.new" "$registry" || fail 'Cannot commit registry update.'
-    project_instructions_sync
+    styles_sync
+  project_instructions_sync
+  styles_finish_standalone
     refresh_integrations
     action_printf success 'Already current: %s in %s\n' "$machine" "$project"; return 0
     fi
@@ -1483,7 +1680,9 @@ update_machine() {
     '(.installations[]|select(.project==$p and .machine==$m)) |= (del(.source)|.version=$v|.tag=$t|.channel=$c|.files=$f[0]|.directories=((.directories+$d[0])|unique))' \
     "$registry" > "$state/registry.new" || fail 'Cannot stage registry update.'
   mv "$state/registry.new" "$registry" || fail 'Cannot commit registry update.'
+  styles_sync
   project_instructions_sync
+  styles_finish_standalone
   transaction_done="$transaction";transaction='';rm -rf -- "$transaction_done"
   refresh_integrations
   action_printf success 'Updated %s in %s to %s; backup: %s\n' "$machine" "$project" "$version" "$backup"

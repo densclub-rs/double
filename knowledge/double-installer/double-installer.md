@@ -9,9 +9,10 @@ knowledge-type: static
 type: static
 value-type: text
 access: free-of-charge
-observed-at: 2026-10-22
+observed-at: 2026-11-23
 ttl: two years
 derived-from:
+  - user-approved independent stable style library releases on 2026-11-23
   - ../../scripts/double-installer.sh
   - ../../tests/github-actions/test-double-installer.sh
   - https://github.com/densclub-rs/double/blob/double-installer-0.1.5-rc/goals/double-installer/plan.md
@@ -724,3 +725,26 @@ Historical goal/run references now point to their verified immutable
 `double-installer-0.1.5-rc` snapshot because those process files are absent from
 the current main tree. This preserves source evidence without recreating old
 plans or claiming that a historical run is current.
+
+## Stable Style Library — Local Implementation 2026-11-23
+
+Installer working version `0.1.16` synchronizes the independent stable `styles-X.Y.Z`
+release on `add` and `update`, including already-current machines. It does not
+download raw repository contents or bundle styles in machine archives. The
+existing machine release workflow contains an independent, silent styles job
+for pushes changing `styles/` on `main`; the library has no RC channel.
+
+The library version and official file hashes are in `styles/manifest.json`.
+Official Markdown files install directly in the global state root's `styles/`;
+user files remain in `styles/custom/` and are never removed by library updates.
+Newer versions replace tracked files, equal versions verify content (and repair
+missing files), and older versions never downgrade a verified installed library.
+An equal version with differing content, an edited official file, or an
+unmanaged destination collision fails without overwriting that work.
+
+Style writes participate in installer locking and handled-failure rollback.
+Unavailable transport preserves an already verified library with a warning.
+Without a valid library, installation of a style-aware machine fails and rolls
+back; legacy contracts remain compatible with a warning. `dev` uses the local
+source library without network access. Machine removal retains shared styles.
+These are local implementation results, not evidence of a published release.

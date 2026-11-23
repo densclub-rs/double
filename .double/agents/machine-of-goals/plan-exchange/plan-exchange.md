@@ -94,3 +94,12 @@ initial/intermediate/final checks, permissions/stop points, evidence and gaps.
 Contextual links may provide details; check packaged files and portability, and
 report omissions. Availability does not imply sharing selection. Export never
 creates or invokes a mechanism and does not verify the receiving environment.
+
+## Role, Mode, and Style Boundary
+
+Follow [Style Application Protocol](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#style-application-protocol)
+at task entry and when the role changes. Responsibilities, mandatory mode
+conditions, artifact contracts, permissions, and workflow transitions remain
+binding. Behavioral defaults live only in the selected global style; do not
+merge a replacement with `double.md`. The legacy `style: double` frontmatter
+classifies this document and does not select the runtime style.

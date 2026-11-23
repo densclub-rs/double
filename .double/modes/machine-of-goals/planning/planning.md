@@ -20,7 +20,7 @@ derived-from:
 Used when the agent must turn one or more paths into a plan project: a
 comprehensible transition model from the current state toward the target state.
 
-## Behavioral Intent
+## Mandatory Conditions
 
 - model the plan as a graph of stages, checks, dependencies, and possible exits
 - keep the link between goal, current state, target state, and success criteria
@@ -78,3 +78,12 @@ review; an authorized manual successor freezes its own plan before action.
 Capture conditions in that realization's stage document and preserve prior
 facts and evidence. An existing skill/action has no additional Machine of Goals
 execution journal or directory. Do not silently migrate user artifacts.
+
+## Role, Mode, and Style Boundary
+
+Follow [Style Application Protocol](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#style-application-protocol)
+at task entry and when the role changes. Responsibilities, mandatory mode
+conditions, artifact contracts, permissions, and workflow transitions remain
+binding. Behavioral defaults live only in the selected global style; do not
+merge a replacement with `double.md`. The legacy `style: double` frontmatter
+classifies this document and does not select the runtime style.

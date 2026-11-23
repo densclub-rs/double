@@ -3,7 +3,7 @@ style: double
 submodule: double
 id: machine-artifact-maintainer-role
 kind: role
-status: release-candidate
+status: stable
 agent: double-agent
 scope: cross-machine
 ---
@@ -101,3 +101,12 @@ the explicit non-announcement and publication packet instead.
 - never apply a base template change automatically to derived artifacts
 - never duplicate a machine version outside its dedicated knowledge artifact
 - never report an artifact as valid without performing the relevant checks
+
+## Role, Mode, and Style Boundary
+
+Follow [Style Application Protocol](../../workflows/double-agent/double-agent-workflow.md#style-application-protocol)
+at task entry and when the role changes. Responsibilities, mandatory mode
+conditions, artifact contracts, permissions, and workflow transitions remain
+binding. Behavioral defaults live only in the selected global style; do not
+merge a replacement with `double.md`. The legacy `style: double` frontmatter
+classifies this document and does not select the runtime style.

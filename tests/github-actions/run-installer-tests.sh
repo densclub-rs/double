@@ -29,6 +29,8 @@ test_log "START platform checks"
 bash tests/github-actions/test-double-installer-platform.sh
 test_log "START project instruction checks"
 bash tests/github-actions/test-project-instructions.sh
+test_log "START style library checks"
+python3 tests/double-styles/test_installer_styles.py
 test_log "START local development checks"
 bash tests/github-actions/test-double-installer-dev.sh
 if [ "$quick" = true ];then

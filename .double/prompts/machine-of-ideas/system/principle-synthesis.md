@@ -82,7 +82,6 @@ Grounding rules:
   subsection; do not create a separate `Source Artifacts` section
 - Preserve uncertainty instead of hiding it
 - If language transformation creates ambiguity, preserve it as an open question or note instead of smoothing it away
-- Prefer a smaller set of strong principles over a long list of generic best practices
 
 Strict constraints:
 
@@ -91,3 +90,12 @@ Strict constraints:
 - Do NOT turn principles into generic slogans that could apply to any project
 - Do NOT treat every concept as requiring its own principle
 - Stay at the principle level
+
+## Role, Mode, and Style Boundary
+
+Follow [Style Application Protocol](../../../workflows/machine-of-ideas/machine-of-ideas-workflow.md#style-application-protocol)
+at task entry and when the role changes. Responsibilities, mandatory mode
+conditions, artifact contracts, permissions, and workflow transitions remain
+binding. Behavioral defaults live only in the selected global style; do not
+merge a replacement with `double.md`. The legacy `style: double` frontmatter
+classifies this document and does not select the runtime style.

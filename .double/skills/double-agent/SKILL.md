@@ -1,5 +1,5 @@
 ---
-status: release-candidate
+status: stable
 name: double-agent
 description: >
   Actively assist people with project work using Double, coordinate local and
@@ -130,3 +130,11 @@ Before normal entry questions or catalog selection, follow the canonical
 workflow's Project Rules Loading Protocol for the active user project and its
 two nearest parent levels. Select usable common and this machine's rules by id;
 silently skip unusable sources and use the nearest usable scope.
+
+## Style Entry
+
+After project-rule loading, follow [Style Application Protocol](../../workflows/double-agent/double-agent-workflow.md#style-application-protocol).
+Resolve the current role and mode and read the selected global style before
+substantive work, including each new task in an existing chat. This skill does
+not embed behavioral defaults; do not confuse document classification metadata
+with active style selection.

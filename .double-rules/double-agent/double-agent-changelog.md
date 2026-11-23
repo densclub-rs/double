@@ -3,14 +3,17 @@ id: double-agent-changelog
 kind: knowledge-artifact
 status: stable
 produced-by: machine-of-knowledge/knowledge-extraction-agent
+double-repository: https://github.com/densclub-rs/double
+project-repository: https://github.com/densclub-rs/double
 interaction-language: ru
 artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-11-19
+observed-at: 2026-11-23
 ttl: one month
 derived-from:
+  - user-approved cross-machine style contract refactoring on 2026-11-23
   - .double-rules/double-agent/double-agent-version.md
   - knowledge/machine-version-and-changelog-locations/machine-version-and-changelog-locations.md
   - git history and local annotated machine tags inspected on 2026-10-28
@@ -25,6 +28,13 @@ derived-from:
 Changes recorded for the `double-agent` module.
 
 ## Value
+
+### 0.0.17 — 2026-11-23
+
+- Apply one global Markdown style without mixing defaults or replacement styles, while preserving role and mode obligations.
+- Help create independently named personal styles and connect them through project rules.
+- Reload styles at task boundaries and warn before automatically falling back to the default style.
+- Preserve Double and project repository metadata in machine artifacts and exchange packages.
 
 ### 0.0.16-rc — 2026-11-19
 
@@ -87,6 +97,7 @@ Changes recorded for the `double-agent` module.
 - Publish through GitHub Actions and verify release and Telegram delivery separately; development releases have no Telegram announcement.
 
 ## Notes
+
 
 Pending changes for 0.0.13. The release date is pending.
 

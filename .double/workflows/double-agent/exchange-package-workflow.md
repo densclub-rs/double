@@ -3,7 +3,7 @@ style: double
 submodule: double-agent
 id: exchange-package-workflow
 kind: workflow
-status: release-candidate
+status: stable
 ---
 
 # Double Exchange Package Workflow

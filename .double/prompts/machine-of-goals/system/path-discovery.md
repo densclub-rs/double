@@ -79,3 +79,12 @@ A No stops continuation without rejecting the completed result. If blocked,
 name the blocker and offer clarification or repair. At the workflow end, state
 completion instead of inventing a next step. After plan-stage execution, offer
 `06-plan-validation` before any further plan-stage execution.
+
+## Role, Mode, and Style Boundary
+
+Follow [Style Application Protocol](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#style-application-protocol)
+at task entry and when the role changes. Responsibilities, mandatory mode
+conditions, artifact contracts, permissions, and workflow transitions remain
+binding. Behavioral defaults live only in the selected global style; do not
+merge a replacement with `double.md`. The legacy `style: double` frontmatter
+classifies this document and does not select the runtime style.

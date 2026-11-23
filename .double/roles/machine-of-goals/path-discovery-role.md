@@ -27,7 +27,7 @@ realization selections.
 - use local context and reusable analogs when available
 - mark infeasible or blocked goals honestly
 
-## Behavioral Rules
+## Obligations
 
 - discover direct, minimal, exploratory, long-term, delegated, automated,
   tool-based, external, and reusable-plan paths when relevant
@@ -65,3 +65,12 @@ realization selections.
 - do not execute plan stages
 - do not move to Plan Synthesis while unresolved `Open Questions` remain
 - do not treat an executable realization as a separate plan
+
+## Role, Mode, and Style Boundary
+
+Follow [Style Application Protocol](../../workflows/machine-of-goals/machine-of-goals-workflow.md#style-application-protocol)
+at task entry and when the role changes. Responsibilities, mandatory mode
+conditions, artifact contracts, permissions, and workflow transitions remain
+binding. Behavioral defaults live only in the selected global style; do not
+merge a replacement with `double.md`. The legacy `style: double` frontmatter
+classifies this document and does not select the runtime style.

@@ -3,7 +3,7 @@ style: double
 submodule: double
 id: double-agent-workflow
 kind: workflow
-status: release-candidate
+status: stable
 interaction-language: en
 artifact-language: en
 derived-from:
@@ -64,6 +64,77 @@ of Knowledge creates it when the first rule at that level is accepted. It uses
 and `machine-of-goals` headings with ordinary relative links; other machine-id
 headings may be used and unused headings omitted. No agent-specific entry files
 are required.
+
+<a id="style-application-protocol"></a>
+
+## Style Application Protocol
+
+### Responsibility, Mode, and Style
+
+A role defines responsibility for an output, including duties and constraints.
+A mode defines the purpose, permitted actions, and mandatory conditions of the
+current work within that responsibility. A style contains recommendations for
+how the AI agent behaves. Role and mode obligations, workflow transitions,
+approvals, evidence, language choices, and artifact contracts remain binding.
+Behavioral preferences belong in the style, not in role or mode contracts.
+
+The `style: double` frontmatter on operating documents is legacy classification
+metadata, not an active-style selection. Do not use it to override project rules.
+
+### Selection and Loading
+
+1. Load applicable rules using Project Rules Loading Protocol. Determine the
+   current machine, role, and mode. Rules select a style for all machines,
+   a named machine, or a named role. Styles need no compatibility declarations.
+2. Select by scope before specificity: project rules override group/global
+   defaults even when those defaults target a particular role. Within the
+   same scope, role selection overrides machine selection, which overrides an
+   all-machine selection. Resolve conflicting selections at equal precedence
+   with the user rather than mixing styles. Preserve existing explicit choices.
+   The global catalog is storage, not an implicit global activation rule.
+3. Resolve the selected file relative to `styles/` under the absolute
+   `DOUBLE_STATE_DIR`, or `~/.local/state/double` when unset. Examples are
+   `double.md`, `thoughtful.md`, and `custom/my-style.md`. Read the named
+   Markdown file; do not require frontmatter, parameters, a source-style link,
+   or a list of supported machines. Do not resolve catalog-relative references
+   outside this catalog, including through traversal or a symlink.
+4. With no selection, use `styles/double.md` from that state root. With an
+   explicit selection, use only that style: it completely replaces every
+   previous style, including `double.md`. Do not load default recommendations
+   to fill omissions. Unaddressed matters follow role and mode obligations,
+   applicable rules, higher-priority instructions, and the current request.
+5. Read the style before acting on every new user task, including a new prompt
+   in an ongoing chat, and re-evaluate selection when the role changes. A mode
+   change preserves the selection but changes its mandatory execution context.
+   During long-running work, recheck the selected file at stage handoffs and
+   before resuming after a pause. If its contents changed, reread before further
+   work. Apply installed updates without a separate switch or approval. This
+   is an instruction to check files, not a claim of a background watcher or an
+   automatic download. Do not pin an earlier version in project rules.
+6. A missing, whitespace-only, or unreadable selected file triggers a warning
+   and automatic use of `styles/double.md`, without approval or a stop solely
+   for that fallback. Do not fall back to a previously selected custom style.
+   If `double.md` itself is unavailable, warn that no style could be loaded and
+   continue under mandatory contracts and the user's request; do not claim to
+   have applied default recommendations or loop through fallback indefinitely.
+
+### Ownership and Installation Boundary
+
+Official files live directly in `styles/`; personal styles live in
+`styles/custom/`. Users do not modify official styles. A requested personal
+variation creates a separately named Markdown artifact in `custom/`, then a
+project rule selects it. There are no project-local style files, inherited
+styles, or mandatory contribution steps. Filesystem permissions still apply.
+
+The source library in the Double repository is `styles/`, containing the single
+default resource `double.md`. Loading uses the global installed catalog, not
+an arbitrary checkout or a machine-local copy. Double Installer add/update
+synchronizes the separate latest stable `styles-X.Y.Z` library release, verified
+by archive and file checksums. Machine archives do not contain style copies.
+The library version and official inventory live in `styles/manifest.json`;
+`custom/` remains user-owned. Local `dev` uses the source library without a
+network request. Report unavailable styles through the fallback rule rather
+than claiming an installation succeeded.
 
 ## Purpose
 
@@ -200,6 +271,26 @@ the limitation and continue through the owning machine when appropriate. If the
 experimental exchange tool or its dependencies are unavailable, say so; do not
 claim that a search took place. Remote registry search is not yet implemented.
 
+## Style Development and Connection
+
+On a request to define or change a style, help the user express behavioral
+recommendations without rewriting role responsibilities or mode conditions.
+This explicitly extends assistance to personal style artifacts in the global
+`styles/custom/` catalog; these user artifacts are not machine operating files.
+Honor existing scope authorization and filesystem permissions. Describe the
+intended file and rule change before writing; do not infer permission to change
+other projects, publish a style, or overwrite an existing personal style.
+
+Create a separately named, free-form Markdown file in `custom/` for a personal
+variation of an official style. Preserve official files, create no inheritance
+or source-style links, and select the new file through the requested project's
+rules. Route rule publication to Machine of Knowledge using its existing
+knowledge template and index. A role-specific rule applies to that role only;
+a machine-wide rule applies unless a role-specific selection overrides it.
+Show the style file and the resulting selection. Contribution to Double is an
+independent action only on explicit request. Working-contract changes still
+follow the normal approved maintenance plan and version-knowledge procedure.
+
 <a id="collaborative-project-work"></a>
 
 ## Parallel Project Work
@@ -223,6 +314,8 @@ interfaces for these operations. Existing release scripts may orchestrate
 editing, packaging, or validation.
 
 ## Entry Protocol
+
+Apply [Style Application Protocol](#style-application-protocol) after rule loading and role/mode resolution, before substantive work.
 
 1. Verify that `.double/agents/double-agent/double-agent.md` is installed and
    available. If it is unavailable, do not modify a `.double/` file; require

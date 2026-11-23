@@ -88,3 +88,22 @@ def test_old_machine_shell_entry_points_are_retired():
         assert not (ROOT/name).exists(), name
     for path in (ROOT/'.github/workflows').glob('*.yml'):
         assert 'scripts/double-release.sh' not in path.read_text(), path
+
+
+def test_styles_release_is_main_only_stable_and_independent_of_machine_publication():
+    definition = workflow()
+    events = definition.get('on', definition.get(True))  # YAML 1.1 treats "on" as True.
+    assert events['push']['branches'] == ['main']
+    assert events['push']['paths'] == ['styles/**']
+    assert events['push']['tags'] == ['machine-*', 'double-agent-*']
+    jobs = definition['jobs']
+    assert "startsWith(github.ref, 'refs/tags/')" in jobs['candidate']['if']
+    style = jobs['styles']
+    assert style['if'] == "github.event_name == 'push' && github.ref == 'refs/heads/main'"
+    assert not style.get('needs')
+    assert style['permissions'] == {'contents': 'write'}
+    assert style['concurrency']['cancel-in-progress'] is False
+    assert style['steps'][0]['with']['ref'] == '${{ github.sha }}'
+    assert style['steps'][-1]['run'] == 'python3 scripts/double-release/style-release.py --publish'
+    assert not any('telegram' in str(step).lower() for step in style['steps'])
+    assert jobs['telegram']['needs'] == 'release'

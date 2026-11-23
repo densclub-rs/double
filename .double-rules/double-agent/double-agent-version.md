@@ -10,10 +10,11 @@ artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-11-22
+observed-at: 2026-11-23
 ttl: one month
 derived-from:
   - user-requested cross-machine repository metadata refactoring on 2026-11-22
+  - user-approved cross-machine style contract refactoring on 2026-11-23
   - user-approved GNU-style informational entry contract for shell exchange packages on 2026-11-19
   - .double/workflows/double-agent/exchange-package-workflow.md
   - collaborative work entry and integration contract update on 2026-11-10

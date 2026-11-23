@@ -20,7 +20,7 @@ derived-from:
 Used when the agent must discover possible ways to reach a formulated goal
 before committing to a concrete plan.
 
-## Behavioral Intent
+## Mandatory Conditions
 
 - search for direct, minimal, exploratory, delegated, automated, external, and
   reusable-plan paths
@@ -59,3 +59,12 @@ Stop before planning when:
 
 Primary mode for `02-path-discovery`. It may be used inside later steps when
 execution reveals that a new path or external analog is needed.
+
+## Role, Mode, and Style Boundary
+
+Follow [Style Application Protocol](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#style-application-protocol)
+at task entry and when the role changes. Responsibilities, mandatory mode
+conditions, artifact contracts, permissions, and workflow transitions remain
+binding. Behavioral defaults live only in the selected global style; do not
+merge a replacement with `double.md`. The legacy `style: double` frontmatter
+classifies this document and does not select the runtime style.

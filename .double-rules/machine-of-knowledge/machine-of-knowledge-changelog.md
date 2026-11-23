@@ -3,14 +3,17 @@ id: machine-of-knowledge-changelog
 kind: knowledge-artifact
 status: stable
 produced-by: machine-of-knowledge/knowledge-extraction-agent
+double-repository: https://github.com/densclub-rs/double
+project-repository: https://github.com/densclub-rs/double
 interaction-language: ru
 artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-11-04
+observed-at: 2026-11-23
 ttl: one month
 derived-from:
+  - user-approved cross-machine style contract refactoring on 2026-11-23
   - .double-rules/machine-of-knowledge/machine-of-knowledge-version.md
   - knowledge/machine-version-and-changelog-locations/machine-version-and-changelog-locations.md
   - git history and local annotated machine tags inspected on 2026-10-28
@@ -25,6 +28,12 @@ derived-from:
 Changes recorded for the `machine-of-knowledge` module.
 
 ## Value
+
+### 0.0.9 — 2026-11-23
+
+- Apply configurable styles independently of knowledge extraction obligations and mode conditions.
+- Publish style selections through existing project and group knowledge rules.
+- Preserve Double and project repository metadata in knowledge artifacts.
 
 ### 0.0.8 — 2026-11-09
 

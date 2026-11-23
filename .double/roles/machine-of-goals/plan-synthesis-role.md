@@ -133,3 +133,12 @@ obligations, check dependency compatibility and increment the same plan revision
 Review changed content before action; no new realization or plan copy follows
 from subdivision. Hand synchronization of the existing map, records and approval
 evidence to plan-realization; keep progress out of the plan.
+
+## Role, Mode, and Style Boundary
+
+Follow [Style Application Protocol](../../workflows/machine-of-goals/machine-of-goals-workflow.md#style-application-protocol)
+at task entry and when the role changes. Responsibilities, mandatory mode
+conditions, artifact contracts, permissions, and workflow transitions remain
+binding. Behavioral defaults live only in the selected global style; do not
+merge a replacement with `double.md`. The legacy `style: double` frontmatter
+classifies this document and does not select the runtime style.

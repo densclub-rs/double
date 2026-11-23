@@ -148,3 +148,12 @@ The default mode, entry message policy, and repeat policy are defined in the wor
 ## Transition Rule
 
 The step is considered complete when a `principle-artifact` has been created in which the core principles are grounded in the input artifacts, distinguished from requirements and design decisions, and ready to serve as input for future stages.
+
+## Role, Mode, and Style Boundary
+
+Follow [Style Application Protocol](../../../workflows/machine-of-ideas/machine-of-ideas-workflow.md#style-application-protocol)
+at task entry and when the role changes. Responsibilities, mandatory mode
+conditions, artifact contracts, permissions, and workflow transitions remain
+binding. Behavioral defaults live only in the selected global style; do not
+merge a replacement with `double.md`. The legacy `style: double` frontmatter
+classifies this document and does not select the runtime style.

@@ -220,8 +220,8 @@ under the repository root. Supply paths to opt in only selected documents or
 folders; rules managed outside that scope are preserved:
 
 ```sh
-git double check ideas/styles/styles.md
-git double sync ideas/styles
+git double check ideas/double-styles/double-styles.md
+git double sync ideas/double-styles
 git double watch ideas knowledge --interval 1
 ```
 
@@ -253,3 +253,39 @@ Run the isolated Git integration tests:
 ```sh
 python3 scripts/test-git-double.py
 ```
+
+## Stable Style Library Releases
+
+`styles/double.md` is the single default style source. `styles/manifest.json`
+records the stable library version and SHA-256 of each official Markdown file.
+Change the version and the affected file hashes together when updating styles.
+User content in `styles/custom/` is never included in release archives.
+
+```sh
+python3 scripts/double-release/style-release.py --output /tmp/double-style-preview
+python3 -m unittest discover -s tests/double-styles -p 'test_library_release.py'
+python3 tests/double-styles/test_installer_styles.py
+```
+
+A push changing `styles/` on `main` runs the styles job in the existing
+`.github/workflows/release.yml`. It publishes stable `styles-X.Y.Z` with
+`double-styles-X.Y.Z.tar.gz` and `SHA256SUMS.txt`, without Telegram or making
+styles the repository's default latest release. Same-version retries verify
+identical assets; mismatches require a version increment, never an overwrite.
+The archive is deterministic and publication targets the checked-out commit.
+
+Machine packages remain machine-only. Installer `add` and `update` (including
+already-current installations) fetch the highest numeric stable styles release
+and install under `${DOUBLE_STATE_DIR:-$HOME/.local/state/double}/styles/`.
+Newer libraries replace official tracked files, older ones do not downgrade,
+and equal versions must have matching inventories and content. Missing files
+of an equal version can be repaired. Unknown destination files and modified
+official files cause an error rather than being overwritten. `custom/` is
+preserved. Machine removal leaves the shared library available to other users
+of that state root.
+
+Style writes share the installer mutation lock and machine rollback transaction.
+A transport failure retains a verified installed library with a warning. A
+first style-aware machine installation fails and rolls back if the default
+cannot be obtained. Historical machines without style contracts remain usable
+with a warning. `dev` synchronizes the local source library without GitHub.

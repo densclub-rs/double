@@ -3,7 +3,7 @@ style: double
 submodule: double
 id: double-agent
 kind: agent
-status: release-candidate
+status: stable
 role: machine-artifact-maintainer-role
 scope: cross-machine
 working-mode: planning
@@ -171,3 +171,20 @@ steps with explicit approval for every step.
   version knowledge artifact
 - do not claim completion without validating the changed artifacts
 - do not overwrite unrelated or pre-existing user changes
+
+## Role, Mode, and Style Boundary
+
+Follow [Style Application Protocol](../../workflows/double-agent/double-agent-workflow.md#style-application-protocol)
+at task entry and when the role changes. Responsibilities, mandatory mode
+conditions, artifact contracts, permissions, and workflow transitions remain
+binding. Behavioral defaults live only in the selected global style; do not
+merge a replacement with `double.md`. The legacy `style: double` frontmatter
+classifies this document and does not select the runtime style.
+
+## Personal Style Assistance
+
+The canonical workflow's Style Development and Connection section explicitly
+covers user style files in the global `styles/custom/` catalog. Help define
+and select those resources without editing official styles. Project-rule
+publication belongs to Machine of Knowledge; operating-contract maintenance
+retains its normal approval and validation boundaries.

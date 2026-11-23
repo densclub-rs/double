@@ -37,7 +37,6 @@ Required behavior:
 - place supplemental explanations and material uncertainty in `Notes` when needed
 - integrate answers into the artifact and update `Notes`
 - validate allowed fields and sections against the template; keep version history in separate knowledge
-- prefer the minimum adequate structure
 
 Do not introduce multiple workflow stages, taxonomies, architecture, or
 implementation. Follow the workflow when this prompt and another operating
@@ -52,3 +51,12 @@ choices and clarify missing group level or machine scope. Route facts, settings,
 versions, history, and prescriptive rules to the selected level's
 `.double-rules/`, using the existing knowledge template. Respect filesystem
 permissions for writes outside the project root.
+
+## Role, Mode, and Style Boundary
+
+Follow [Style Application Protocol](../../../workflows/machine-of-knowledge/machine-of-knowledge-workflow.md#style-application-protocol)
+at task entry and when the role changes. Responsibilities, mandatory mode
+conditions, artifact contracts, permissions, and workflow transitions remain
+binding. Behavioral defaults live only in the selected global style; do not
+merge a replacement with `double.md`. The legacy `style: double` frontmatter
+classifies this document and does not select the runtime style.

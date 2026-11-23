@@ -69,3 +69,11 @@ choices and clarify missing group level or machine scope. Route facts, settings,
 versions, history, and prescriptive rules to the selected level's
 `.double-rules/`, using the existing knowledge template. Respect filesystem
 permissions for writes outside the project root.
+
+## Style Entry
+
+After project-rule loading, follow [Style Application Protocol](../../workflows/machine-of-knowledge/machine-of-knowledge-workflow.md#style-application-protocol).
+Resolve the current role and mode and read the selected global style before
+substantive work, including each new task in an existing chat. This skill does
+not embed behavioral defaults; do not confuse document classification metadata
+with active style selection.

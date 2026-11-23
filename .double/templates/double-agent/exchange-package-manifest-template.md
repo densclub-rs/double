@@ -4,7 +4,7 @@ style: double
 submodule: double-agent
 id: exchange-package-manifest-template
 kind: template
-status: release-candidate
+status: stable
 derived-from:
   - ../../workflows/double-agent/exchange-package-workflow.md
 ---

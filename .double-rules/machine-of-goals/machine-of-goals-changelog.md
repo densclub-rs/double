@@ -3,14 +3,17 @@ id: machine-of-goals-changelog
 kind: knowledge-artifact
 status: stable
 produced-by: machine-of-knowledge/knowledge-extraction-agent
+double-repository: https://github.com/densclub-rs/double
+project-repository: https://github.com/densclub-rs/double
 interaction-language: ru
 artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-11-19
+observed-at: 2026-11-23
 ttl: one month
 derived-from:
+  - user-approved cross-machine style contract refactoring on 2026-11-23
   - .double-rules/machine-of-goals/machine-of-goals-version.md
   - knowledge/machine-version-and-changelog-locations/machine-version-and-changelog-locations.md
   - git history and local annotated machine tags inspected on 2026-10-28
@@ -25,6 +28,12 @@ derived-from:
 Changes recorded for the `machine-of-goals` module.
 
 ## Value
+
+### 0.0.25-rc — 2026-11-23
+
+- Apply configurable global styles while preserving planning, execution, approval, and validation contracts.
+- Refresh the selected style at task boundaries and use the default style with a warning when unavailable.
+- Preserve Double and project repository metadata in goal artifacts and exchange packages.
 
 ### 0.0.24-rc — 2026-11-19
 

@@ -68,6 +68,77 @@ and `machine-of-goals` headings with ordinary relative links; other machine-id
 headings may be used and unused headings omitted. No agent-specific entry files
 are required.
 
+<a id="style-application-protocol"></a>
+
+## Style Application Protocol
+
+### Responsibility, Mode, and Style
+
+A role defines responsibility for an output, including duties and constraints.
+A mode defines the purpose, permitted actions, and mandatory conditions of the
+current work within that responsibility. A style contains recommendations for
+how the AI agent behaves. Role and mode obligations, workflow transitions,
+approvals, evidence, language choices, and artifact contracts remain binding.
+Behavioral preferences belong in the style, not in role or mode contracts.
+
+The `style: double` frontmatter on operating documents is legacy classification
+metadata, not an active-style selection. Do not use it to override project rules.
+
+### Selection and Loading
+
+1. Load applicable rules using Project Rules Loading Protocol. Determine the
+   current machine, role, and mode. Rules select a style for all machines,
+   a named machine, or a named role. Styles need no compatibility declarations.
+2. Select by scope before specificity: project rules override group/global
+   defaults even when those defaults target a particular role. Within the
+   same scope, role selection overrides machine selection, which overrides an
+   all-machine selection. Resolve conflicting selections at equal precedence
+   with the user rather than mixing styles. Preserve existing explicit choices.
+   The global catalog is storage, not an implicit global activation rule.
+3. Resolve the selected file relative to `styles/` under the absolute
+   `DOUBLE_STATE_DIR`, or `~/.local/state/double` when unset. Examples are
+   `double.md`, `thoughtful.md`, and `custom/my-style.md`. Read the named
+   Markdown file; do not require frontmatter, parameters, a source-style link,
+   or a list of supported machines. Do not resolve catalog-relative references
+   outside this catalog, including through traversal or a symlink.
+4. With no selection, use `styles/double.md` from that state root. With an
+   explicit selection, use only that style: it completely replaces every
+   previous style, including `double.md`. Do not load default recommendations
+   to fill omissions. Unaddressed matters follow role and mode obligations,
+   applicable rules, higher-priority instructions, and the current request.
+5. Read the style before acting on every new user task, including a new prompt
+   in an ongoing chat, and re-evaluate selection when the role changes. A mode
+   change preserves the selection but changes its mandatory execution context.
+   During long-running work, recheck the selected file at stage handoffs and
+   before resuming after a pause. If its contents changed, reread before further
+   work. Apply installed updates without a separate switch or approval. This
+   is an instruction to check files, not a claim of a background watcher or an
+   automatic download. Do not pin an earlier version in project rules.
+6. A missing, whitespace-only, or unreadable selected file triggers a warning
+   and automatic use of `styles/double.md`, without approval or a stop solely
+   for that fallback. Do not fall back to a previously selected custom style.
+   If `double.md` itself is unavailable, warn that no style could be loaded and
+   continue under mandatory contracts and the user's request; do not claim to
+   have applied default recommendations or loop through fallback indefinitely.
+
+### Ownership and Installation Boundary
+
+Official files live directly in `styles/`; personal styles live in
+`styles/custom/`. Users do not modify official styles. A requested personal
+variation creates a separately named Markdown artifact in `custom/`, then a
+project rule selects it. There are no project-local style files, inherited
+styles, or mandatory contribution steps. Filesystem permissions still apply.
+
+The source library in the Double repository is `styles/`, containing the single
+default resource `double.md`. Loading uses the global installed catalog, not
+an arbitrary checkout or a machine-local copy. Double Installer add/update
+synchronizes the separate latest stable `styles-X.Y.Z` library release, verified
+by archive and file checksums. Machine archives do not contain style copies.
+The library version and official inventory live in `styles/manifest.json`;
+`custom/` remains user-owned. Local `dev` uses the source library without a
+network request. Report unavailable styles through the fallback rule rather
+than claiming an installation succeeded.
+
 ## Purpose
 
 This workflow defines the prototype of the basic thinking scheme of the idea machine.
@@ -148,7 +219,7 @@ When the user refers to the "working catalog", "the catalog", "your side", "insi
 
 Changes inside `.double/` are process changes: they modify workflows, agents, roles, modes, prompts, templates, registries, or other machine-of-ideas operating material. Changes outside `.double/`, especially under `ideas/`, are user artifact changes.
 
-If the intended target is ambiguous, the agent should briefly state the assumed target and the reason for it before editing.
+If the intended target is ambiguous, the agent should state the assumed target and the reason for it before editing.
 
 ## Machine Operating Change Routing Rule
 
@@ -167,6 +238,8 @@ Machine of Ideas workflow agent remains responsible for the user artifact
 portion.
 
 ## Entry Protocol
+
+Apply [Style Application Protocol](#style-application-protocol) after rule loading and role/mode resolution, before substantive work.
 
 This workflow is the entry point for a universal agent if the user invokes the idea machine without a step already selected.
 
@@ -188,7 +261,7 @@ On startup, the agent should:
 14. Recommend the next useful action:
    - if unresolved open questions exist, suggest answering them before advancing
    - if no unresolved open questions block the current step and the current artifact satisfies the step contract, suggest transition to the next step
-   - if the current step should continue, recommend a suitable mode and briefly explain why
+   - if the current step should continue, recommend a suitable mode and explain why
 15. For `01-idea-capture`, use the explicitly selected allowed mode, or start in `brainstorm` when the user has not chosen a mode. In the first Idea Capture reply, name the active mode, offer the other allowed modes as optional switches, and continue with the next relevant question about the idea. For other steps, ask the user to choose a mode or accept the recommended/default mode.
 16. Begin executing the step after confirming the target idea, current step, interaction language, artifact language, and selected output template, and resolving the mode according to item 15. Lightweight clarification may begin while entry details are being resolved.
 
@@ -316,7 +389,8 @@ To execute a step, the agent should read related artifacts in the following orde
 5. description of the selected mode
 6. system prompt
 7. interaction prompt, if it exists for the current step
-8. template of the output artifact
+8. selected style, resolved through Style Application Protocol
+9. template of the output artifact
 
 This order is needed so that the agent first understands the process, then its function, then the current mode, and only then specific text instructions.
 
@@ -338,7 +412,7 @@ Before starting to execute a step, the agent should inform the user of:
 If the target idea is inferred rather than explicitly stated, the agent should:
 
 - say that it is an assumption
-- briefly name the signals used for that assumption
+- name the signals used for that assumption
 - ask the user to confirm or correct it
 - avoid editing or advancing any artifact until the target is confirmed
 
@@ -361,7 +435,7 @@ At the end of each meaningful interaction or artifact update, the agent should i
 - if no unresolved open questions remain and the current artifact meets the step contract, suggest moving to the next workflow step
 - if the artifact is incomplete but no direct question is needed, suggest the mode that best fits the next pass, such as `editor` for cleanup, `validation` for checking, `strict-research` for rigorous extraction or synthesis, `brainstorm` for expansion, or `explain` for understanding the process
 
-The recommendation should be concise and practical. The agent should not wait passively for the user to ask what to do next when the workflow state clearly indicates a useful continuation.
+The recommendation must identify an actionable next movement; its length and manner follow the selected style. The agent should not wait passively for the user to ask what to do next when the workflow state clearly indicates a useful continuation.
 
 ## Human Clarification Loop
 

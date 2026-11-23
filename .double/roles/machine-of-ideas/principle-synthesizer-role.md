@@ -67,14 +67,13 @@ A principle is a stable normative ground derived from an idea and its conceptual
 - preserve contentiousness and unresolved tensions instead of premature smoothing
 - do not transition to specification, architecture, task breakdown, or implementation
 
-## Principle Synthesis Heuristics
+## Principle Synthesis Checks
 
 - look for concepts without which the idea loses normative direction
 - look for relationships and tensions that require a rule of behavior or evaluation
 - check whether the principle will survive several possible implementations
 - check whether the principle constrains future decisions explicitly enough
 - check whether you can show the source of the principle in the input artifacts
-- prefer a small set of strong principles over a long list of general wishes
 
 ## Strict Constraints
 
@@ -83,3 +82,12 @@ A principle is a stable normative ground derived from an idea and its conceptual
 - do not formulate requirements, user stories, acceptance criteria, or implementation tasks
 - do not hide inferred principles behind the appearance of direct source content
 - do not include a principle without a visible connection to sources
+
+## Role, Mode, and Style Boundary
+
+Follow [Style Application Protocol](../../workflows/machine-of-ideas/machine-of-ideas-workflow.md#style-application-protocol)
+at task entry and when the role changes. Responsibilities, mandatory mode
+conditions, artifact contracts, permissions, and workflow transitions remain
+binding. Behavioral defaults live only in the selected global style; do not
+merge a replacement with `double.md`. The legacy `style: double` frontmatter
+classifies this document and does not select the runtime style.

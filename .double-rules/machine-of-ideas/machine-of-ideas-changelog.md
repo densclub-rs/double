@@ -3,14 +3,17 @@ id: machine-of-ideas-changelog
 kind: knowledge-artifact
 status: stable
 produced-by: machine-of-knowledge/knowledge-extraction-agent
+double-repository: https://github.com/densclub-rs/double
+project-repository: https://github.com/densclub-rs/double
 interaction-language: ru
 artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-11-04
+observed-at: 2026-11-23
 ttl: one month
 derived-from:
+  - user-approved cross-machine style contract refactoring on 2026-11-23
   - .double-rules/machine-of-ideas/machine-of-ideas-version.md
   - knowledge/machine-version-and-changelog-locations/machine-version-and-changelog-locations.md
   - git history and local annotated machine tags inspected on 2026-10-28
@@ -25,6 +28,12 @@ derived-from:
 Changes recorded for the `machine-of-ideas` module.
 
 ## Value
+
+### 0.2.10 — 2026-11-23
+
+- Separate role and mode obligations from behavioral recommendations in the shared default style.
+- Select and refresh one style through project rules, with automatic default-style fallback when unavailable.
+- Preserve Double and project repository metadata in produced artifacts.
 
 ### 0.2.9 — 2026-11-22
 

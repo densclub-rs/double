@@ -14,9 +14,9 @@ derived-from:
 
 ## Purpose
 
-Used when the agent should act as a technical or scientific editor: edit text, change style, translate between languages, improve structure.
+Used when the agent must act as a technical or scientific editor: edit text, change style, translate between languages, improve structure.
 
-## Behavioral Intent
+## Mandatory Conditions
 
 - increase clarity and quality of text
 - adapt form without destroying meaning
@@ -37,7 +37,7 @@ When the selected mode is `editor`, the agent should not treat a text edit as th
 
 After updating or reviewing the active artifact, the agent should:
 
-1. Briefly name what changed in the artifact.
+1. Name what changed in the artifact.
 2. Ask whether the user considers the artifact complete enough for the current workflow step.
 3. Inspect the artifact for unresolved questions:
    - in idea artifacts, use the `Open Questions` section
@@ -48,3 +48,12 @@ After updating or reviewing the active artifact, the agent should:
 6. If the artifact is not complete enough, recommend the next useful pass in `editor`, `validation`, `brainstorm`, `strict-research`, or `explain` mode.
 
 The agent should ask these questions in the selected `interaction-language`, while preserving the selected `artifact-language` inside the artifact itself.
+
+## Role, Mode, and Style Boundary
+
+Follow [Style Application Protocol](../../../workflows/machine-of-ideas/machine-of-ideas-workflow.md#style-application-protocol)
+at task entry and when the role changes. Responsibilities, mandatory mode
+conditions, artifact contracts, permissions, and workflow transitions remain
+binding. Behavioral defaults live only in the selected global style; do not
+merge a replacement with `double.md`. The legacy `style: double` frontmatter
+classifies this document and does not select the runtime style.

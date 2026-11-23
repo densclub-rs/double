@@ -20,7 +20,7 @@ derived-from:
 Review the actual current model contents, choices, entry and control boundaries.
 Approval and permission to start are separate decisions.
 
-## Behavioral Intent
+## Mandatory Conditions
 
 - Link the actual selected plan file and show its contents, branches, paths or
   subplans and material trade-offs. Preserve a selection already explicitly made.
@@ -45,3 +45,12 @@ Step 04 completes with the exact content/selection decision. Offer the eligible
 next action, preserving exact consent already supplied. Start may remain deferred.
 
 Canonical workflow: [Machine of Goals](../../../workflows/machine-of-goals/machine-of-goals-workflow.md).
+
+## Role, Mode, and Style Boundary
+
+Follow [Style Application Protocol](../../../workflows/machine-of-goals/machine-of-goals-workflow.md#style-application-protocol)
+at task entry and when the role changes. Responsibilities, mandatory mode
+conditions, artifact contracts, permissions, and workflow transitions remain
+binding. Behavioral defaults live only in the selected global style; do not
+merge a replacement with `double.md`. The legacy `style: double` frontmatter
+classifies this document and does not select the runtime style.
