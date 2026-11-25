@@ -7,9 +7,9 @@ derived-from:
   - ../../workflows/machine-of-goals/machine-of-goals-workflow.md
 ---
 
-# [Machine of Goals](../../.double.md)
+# [Machine of Goals](../../workflows/machine-of-goals/machine-of-goals.md)
 
-## [Agents](../agents.md)
+## Agents
 
 ### Core Agents
 

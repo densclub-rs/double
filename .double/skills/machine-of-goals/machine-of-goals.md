@@ -5,8 +5,8 @@ mindmap-plugin: basic
 status: stable
 ---
 
-# [Machine of Goals](../../.double.md)
+# [Machine of Goals](../../workflows/machine-of-goals/machine-of-goals.md)
 
-## [Entry Point](../skills.md)
+## Entry Point
 
 - [SKILL](./SKILL.md)

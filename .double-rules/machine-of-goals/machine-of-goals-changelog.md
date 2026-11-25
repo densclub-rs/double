@@ -13,6 +13,7 @@ value-type: text
 observed-at: 2026-11-25
 ttl: one month
 derived-from:
+  - user-approved stable navigation release 0.0.26 on 2026-11-25
   - user-approved stable release 0.0.25 changelog on 2026-11-25
   - user-approved cross-machine style contract refactoring on 2026-11-23
   - .double-rules/machine-of-goals/machine-of-goals-version.md
@@ -29,6 +30,11 @@ derived-from:
 Changes recorded for the `machine-of-goals` module.
 
 ## Value
+
+### 0.0.26 — 2026-11-25
+
+- Fix 13 broken navigation links across seven Machine of Goals overview pages so users can browse the installed machine offline.
+- Add a regression test that checks local links and anchors in the packaged overview pages.
 
 ### 0.0.25 — 2026-11-25
 

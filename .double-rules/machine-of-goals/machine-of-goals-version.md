@@ -10,9 +10,10 @@ artifact-language: en
 access: free-of-charge
 type: static
 value-type: text
-observed-at: 2026-11-23
+observed-at: 2026-11-25
 ttl: one month
 derived-from:
+  - user-approved stable navigation release 0.0.26 on 2026-11-25
   - user-requested cross-machine repository metadata refactoring on 2026-11-22
   - user-approved cross-machine style contract refactoring on 2026-11-23
   - user-approved stage subdivision release 0.0.24-rc on 2026-11-19
@@ -70,4 +71,4 @@ project.
 
 ## Value
 
-`0.0.25`
+`0.0.26`

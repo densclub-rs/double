@@ -9,7 +9,7 @@ derived-from:
 
 # [Machine of Goals](../../workflows/machine-of-goals/machine-of-goals.md)
 
-## [Modes](../modes.md)
+## Modes
 
 - [Clarification](./clarification/clarification.md)
 - [Research](./research/research.md)

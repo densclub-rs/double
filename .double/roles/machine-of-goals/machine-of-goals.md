@@ -5,9 +5,9 @@ mindmap-plugin: basic
 status: stable
 ---
 
-# [Machine of Goals](../../.double.md)
+# [Machine of Goals](../../workflows/machine-of-goals/machine-of-goals.md)
 
-## [Roles](../roles.md)
+## Roles
 
 - [Goal Formulation Role](./goal-formulation-role.md)
 - [Path Discovery Role](./path-discovery-role.md)

@@ -5,9 +5,9 @@ mindmap-plugin: basic
 status: stable
 ---
 
-# [Machine of Goals](../../.double.md)
+# [Machine of Goals](../../workflows/machine-of-goals/machine-of-goals.md)
 
-## [Registries](../registries.md)
+## Registries
 
 - [Agents Registry](./agents-registry.md)
 - [Modes Registry](./modes-registry.md)

@@ -6,9 +6,9 @@ mindmap-plugin: basic
 status: stable
 ---
 
-# [Machine of Goals](../../.double.md)
+# [Machine of Goals](../../workflows/machine-of-goals/machine-of-goals.md)
 
-## [Templates](../templates.md)
+## Templates
 
 - [Goal Template](./goal-template.md)
 - [Path Options Template](./path-options-template.md)

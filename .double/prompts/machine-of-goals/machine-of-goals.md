@@ -5,9 +5,9 @@ mindmap-plugin: basic
 status: stable
 ---
 
-# [Machine of Goals](../../.double.md)
+# [Machine of Goals](../../workflows/machine-of-goals/machine-of-goals.md)
 
-## [Prompts](../prompts.md)
+## Prompts
 
 ### [System](./system/system.md)
 

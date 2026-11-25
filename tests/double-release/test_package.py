@@ -2,6 +2,9 @@
 import hashlib
 import importlib.util
 import os
+import posixpath
+import re
+import shutil
 from pathlib import Path
 import subprocess
 import sys
@@ -46,6 +49,40 @@ def archive_files(archive):
 
 def assert_checksum(archive):
     assert Path('dist/SHA256SUMS.txt').read_text() == f'{hashlib.sha256(archive.read_bytes()).hexdigest()}  {archive.name}\n'
+
+
+def test_stable_goals_archive_overview_links(repo):
+    machine = 'machine-of-goals'
+    sections = ('agents', 'modes', 'prompts', 'registries', 'roles', 'skills', 'templates', 'workflows')
+    for section in sections:
+        directory = Path('.double') / section / machine
+        shutil.copytree(ROOT / directory, directory, dirs_exist_ok=True)
+    git('add', '.double')
+    git('commit', '-qm', 'include machine navigation')
+    tag = f'{machine}-1.2.4'
+    git('tag', tag)
+    result = cli('package', '--tag', tag)
+    assert result.returncode == 0, result.stderr
+    files = archive_files(Path(f'dist/double-{tag}.tar.gz'))
+
+    broken = []
+    for section in sections:
+        page = f'.double/{section}/{machine}/{machine}.md'
+        content = files[page].decode()
+        for href in re.findall(r'\[[^\]]*\]\(([^)\s]+)\)', content):
+            if href.startswith(('https://', 'http://', 'mailto:')):
+                continue
+            path, _, fragment = href.partition('#')
+            target = posixpath.normpath(posixpath.join(posixpath.dirname(page), path)) if path else page
+            if target not in files:
+                broken.append(f'{page} -> {href}')
+            elif fragment:
+                document = files[target].decode()
+                headings = re.findall(r'^#{1,6} (.+)$', document, re.MULTILINE)
+                slugs = {re.sub(r'[^\w -]', '', heading.lower()).replace(' ', '-') for heading in headings}
+                if f'id="{fragment}"' not in document and fragment not in slugs:
+                    broken.append(f'{page} -> {href}')
+    assert not broken, '\n'.join(broken)
 
 
 def test_double_agent_exchange_assets_follow_workflow_and_preserve_mode(repo):
