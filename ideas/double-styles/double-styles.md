@@ -1,7 +1,7 @@
 ---
 id: double-styles
 kind: idea-artifact
-status: release-candidate
+status: stable
 double-repository: https://github.com/densclub-rs/double
 project-repository: https://github.com/densclub-rs/double
 produced-by: idea-capture-agent

@@ -1,7 +1,7 @@
 ---
 id: double-styles-concepts
 kind: concept-artifact
-status: release-candidate
+status: stable
 mindmap-plugin: basic
 double-repository: https://github.com/densclub-rs/double
 project-repository: https://github.com/densclub-rs/double

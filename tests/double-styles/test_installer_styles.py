@@ -124,7 +124,9 @@ class InstallerStylesTests(unittest.TestCase):
 import os,pathlib,shutil,sys
 args=sys.argv[1:];url=args[-1];out=args[args.index('--output')+1];root=pathlib.Path(os.environ['STYLE_FIXTURE'])
 if os.environ.get('STYLE_HTTP_FAIL'):sys.exit(22)
-if 'api.github.com' in url:src=root/'releases.json'
+if 'api.github.com' in url:
+ with (root/'catalog-requests').open('a') as log:log.write(url+'\\n')
+ src=root/'releases.json'
 else:
  parts=url.split('/');src=root/'assets'/parts[-2]/parts[-1]
 shutil.copyfile(src,out)
@@ -159,6 +161,41 @@ shutil.copyfile(src,out)
         result=self.run_cli('releases')
         self.assertIn(self.machine,result.stdout)
         self.assertNotIn('styles-',result.stdout)
+
+    def test_project_and_registered_updates_share_catalog_and_hide_styles(self):
+        self.transport();self.add()
+        second=self.root/'second-project';second.mkdir()
+        self.run_cli('add','--project',str(second),'--machine',self.machine,'--yes')
+        requests=self.root/'catalog-requests'
+        for args in [('update-all','--non-interactive'),
+                     ('update','--all','--project',str(self.project),'--non-interactive')]:
+            with self.subTest(command=args):
+                requests.write_text('')
+                (self.state/'styles/double.md').unlink()
+                result=self.run_cli(*args)
+                self.assertEqual(len(requests.read_text().splitlines()),1)
+                self.assertTrue((self.state/'styles/double.md').is_file())
+                self.assertNotIn('  - styles ',result.stdout)
+
+    def test_failed_pagination_does_not_publish_partial_catalog(self):
+        source=Path(self.installer).read_text()
+        function=source[source.index('fetch_release_catalog() {'):source.index('\nrelease_catalog() {')]
+        rows=[{'tag_name':'fixture-1.0.0','assets':[]}]*100
+        (self.root/'page.json').write_text(json.dumps(rows))
+        harness=function+r'''
+work_dir="$1/work";mkdir "$work_dir"
+DOUBLE_INSTALLER_RELEASE_CATALOG="$1/shared.json"
+curl() {
+  case "${*: -1}" in
+    *page=1) cp "$work_dir/../page.json" "$work_dir/page.json" ;;
+    *) return 22 ;;
+  esac
+}
+if fetch_release_catalog "$work_dir/all.json";then exit 9;fi
+[ ! -e "$DOUBLE_INSTALLER_RELEASE_CATALOG" ] && [ ! -e "$work_dir/all.json" ]
+'''
+        result=subprocess.run(['bash','-c',harness,'test',str(self.root)],text=True,capture_output=True)
+        self.assertEqual(result.returncode,0,result.stdout+result.stderr)
 
     def test_foreign_official_destination_is_never_overwritten(self):
         folder=self.state/'styles';folder.mkdir(parents=True)

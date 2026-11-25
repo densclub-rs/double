@@ -613,6 +613,7 @@ update_all() {
   local group row machine_name project_path scope bold='' project_color='' reset=''
   local machines=0 checked=0 succeeded=0 failed=0 count
   local -a args
+  export DOUBLE_INSTALLER_RELEASE_CATALOG="$work_dir/shared-releases.json"
   jq -c '.installations | group_by(.machine)[] | sort_by(.project)' "$registry" > "$work_dir/machine-groups" || fail 'Cannot group registered installations.'
   if [ ! -s "$work_dir/machine-groups" ];then
     action_printf warning 'No registered installations.\n';return 0
@@ -769,19 +770,46 @@ http_get() {
     --retry 2 --output "$2" "$1" || fail 'GitHub request failed (network, HTTP error, or rate limit); retry later.'
 }
 
+# Cache only a complete, validated catalog for this invocation. Nested updates
+# share their parent's temporary file; no persistent or stale fallback is used.
+fetch_release_catalog() {
+  local destination="$1" page=1 count
+  local shared="${DOUBLE_INSTALLER_RELEASE_CATALOG:-}"
+  if [ -f "$work_dir/all.json" ];then
+    [ "$destination" = "$work_dir/all.json" ] || cp "$work_dir/all.json" "$destination" || return 1
+    return 0
+  fi
+  if [ -n "$shared" ] && [ -f "$shared" ];then
+    jq -e 'type == "array" and all(.[]; (.tag_name|type)=="string" and (.assets|type)=="array")' "$shared" >/dev/null || fail 'Invalid GitHub release response.'
+    cp "$shared" "$work_dir/all.json" || return 1
+  else
+    printf '[]\n' > "$work_dir/catalog-pending.json"
+    while :;do
+      if ! curl --fail --silent --show-error --location --proto '=https' \
+        --proto-redir '=https' --connect-timeout 15 --max-time 120 \
+        --retry 2 --output "$work_dir/page.json" \
+        "https://api.github.com/repos/densclub-rs/double/releases?per_page=100&page=$page";then
+        return 1
+      fi
+      jq -e 'type == "array" and all(.[]; (.tag_name|type)=="string" and (.assets|type)=="array")' \
+        "$work_dir/page.json" >/dev/null || fail 'Invalid GitHub release response.'
+      count=$(jq 'length' "$work_dir/page.json")
+      jq -s '.[0] + .[1]' "$work_dir/catalog-pending.json" "$work_dir/page.json" > "$work_dir/next.json" || return 1
+      mv "$work_dir/next.json" "$work_dir/catalog-pending.json" || return 1
+      [ "$count" -eq 100 ] || break
+      page=$((page + 1))
+    done
+    mv "$work_dir/catalog-pending.json" "$work_dir/all.json" || return 1
+    if [ -n "$shared" ];then
+      cp "$work_dir/all.json" "$shared.pending" && mv "$shared.pending" "$shared" || return 1
+    fi
+  fi
+  [ "$destination" = "$work_dir/all.json" ] || cp "$work_dir/all.json" "$destination" || return 1
+  return 0
+}
+
 release_catalog() {
-  local page=1 count
-  printf '[]\n' > "$work_dir/all.json"
-  while :; do
-    http_get "https://api.github.com/repos/densclub-rs/double/releases?per_page=100&page=$page" "$work_dir/page.json"
-    jq -e 'type == "array" and all(.[]; (.tag_name|type)=="string" and (.assets|type)=="array")' \
-      "$work_dir/page.json" >/dev/null || fail 'Invalid GitHub release response.'
-    count=$(jq 'length' "$work_dir/page.json")
-    jq -s '.[0] + .[1]' "$work_dir/all.json" "$work_dir/page.json" > "$work_dir/next.json"
-    mv "$work_dir/next.json" "$work_dir/all.json"
-    [ "$count" -eq 100 ] || break
-    page=$((page + 1))
-  done
+  fetch_release_catalog "$work_dir/all.json" || fail 'GitHub request failed (network, HTTP error, or rate limit); retry later.'
   jq --arg machine "$machine" --arg channel "$channel" '
     [ .[] | select(.draft == false)
       | . as $release
@@ -1025,25 +1053,14 @@ styles_transport_failure() {
 
 styles_sync() {
   work_dir=$(cd "$work_dir" && pwd -P)
-  local page=1 count tag ver url sum_url archive expected actual row
+  local tag ver url sum_url archive expected actual row
   if [ "$command_name" = dev ];then
     if [ -f "$source/styles/manifest.json" ];then styles_apply "$source/styles";else styles_transport_failure;fi
     return 0
   fi
-  printf '[]\n' > "$work_dir/styles-catalog"
-  while :;do
-    if ! curl --fail --silent --show-error --location --proto '=https' --proto-redir '=https' \
-      --connect-timeout 15 --max-time 120 --retry 2 --output "$work_dir/styles-page" \
-      "https://api.github.com/repos/densclub-rs/double/releases?per_page=100&page=$page";then
-      styles_transport_failure;return 0
-    fi
-    jq -e 'type=="array" and all(.[]; (.tag_name|type)=="string" and (.assets|type)=="array")' "$work_dir/styles-page" >/dev/null || fail 'Invalid style release response.'
-    count=$(jq length "$work_dir/styles-page")
-    jq -s '.[0]+.[1]' "$work_dir/styles-catalog" "$work_dir/styles-page" > "$work_dir/styles-next"
-    mv "$work_dir/styles-next" "$work_dir/styles-catalog"
-    [ "$count" -eq 100 ] || break
-    page=$((page+1))
-  done
+  if ! fetch_release_catalog "$work_dir/styles-catalog";then
+    styles_transport_failure;return 0
+  fi
   row=$(jq -c '[.[]|select(.draft==false and .prerelease==false)|select(.tag_name|test("^styles-(0|[1-9][0-9]{0,8})\\.(0|[1-9][0-9]{0,8})\\.(0|[1-9][0-9]{0,8})$"))]|
     sort_by(.tag_name|ltrimstr("styles-")|split(".")|map(tonumber))|last // empty' "$work_dir/styles-catalog")
   [ -n "$row" ] || { styles_transport_failure;return 0; }
@@ -2168,6 +2185,7 @@ project_add_all() {
 project_update_all() {
   local row machine_name result=0 count=0 script_path
   project_init;state_init;registry_check
+  export DOUBLE_INSTALLER_RELEASE_CATALOG="$work_dir/shared-releases.json"
   if [ -f "$registry" ];then
     jq -c --arg p "$project" '.installations[]|select(.project==$p and (.scope // "project")=="project")' "$registry" > "$work_dir/project-updates"
   else : > "$work_dir/project-updates";fi
