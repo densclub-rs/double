@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: plan-exchange-role
 kind: role
-status: release-candidate
+status: stable
 optional: true
 derived-from:
   - ../../workflows/machine-of-goals/machine-of-goals-workflow.md

@@ -2,7 +2,7 @@
 style: double
 submodule: machine-of-goals
 mindmap-plugin: basic
-status: release-candidate
+status: stable
 ---
 
 # [Machine of Goals](../../.double.md)

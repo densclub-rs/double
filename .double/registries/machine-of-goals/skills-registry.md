@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: skills-registry
 kind: registry
-status: release-candidate
+status: stable
 derived-from:
   - .double/workflows/machine-of-goals/machine-of-goals-workflow.md
 ---

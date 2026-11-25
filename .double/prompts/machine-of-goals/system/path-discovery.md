@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: path-discovery-system-prompt
 kind: prompt
-status: release-candidate
+status: stable
 produced-by: path-discovery-agent
 mode: shared
 derived-from:

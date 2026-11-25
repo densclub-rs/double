@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: plan-exchange-agent
 kind: agent
-status: release-candidate
+status: stable
 optional: true
 role: plan-exchange-role
 workflow: machine-of-goals-workflow

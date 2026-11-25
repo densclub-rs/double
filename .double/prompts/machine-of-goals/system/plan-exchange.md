@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: plan-exchange-system-prompt
 kind: prompt
-status: release-candidate
+status: stable
 produced-by: plan-exchange-agent
 mode: shared
 optional: true

@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: goal-formulation-interaction-prompt
 kind: prompt
-status: release-candidate
+status: stable
 produced-by: goal-formulation-agent
 mode: shared
 derived-from:

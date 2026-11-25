@@ -47,7 +47,7 @@ def outputs(step):
 def test_template_producers_and_lifecycle(template, stage, artifact_kind, producer):
     meta = frontmatter((TEMPLATES / template).read_text())
     assert meta['workflow-stage'] == stage
-    assert meta['status'] == 'release-candidate'
+    assert meta['status'] == 'stable'
     assert shapes(template)
     if template in {'plan-model-template.md', 'plan-template.md'}:
         document_titles = re.findall(
@@ -366,7 +366,7 @@ def test_operating_frontmatter_and_static_links():
     for path in operating_files():
         text = path.read_text()
         meta = frontmatter(text)
-        assert meta['status'] == 'release-candidate', path
+        assert meta['status'] == 'stable', path
         assert not ({'version', 'machine-version', 'workflow-version'} & meta.keys()), path
         # Generated examples contain destination-context links and placeholders;
         # only literal links outside fenced examples are repository navigation.

@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: machine-of-goals-workflow
 kind: workflow
-status: release-candidate
+status: stable
 interaction-language: en
 artifact-language: en
 derived-from:

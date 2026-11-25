@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: path-discovery-agent
 kind: agent
-status: release-candidate
+status: stable
 role: path-discovery-role
 workflow: machine-of-goals-workflow
 interaction-language: en

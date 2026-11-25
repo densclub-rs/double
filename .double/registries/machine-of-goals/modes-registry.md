@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: modes-registry
 kind: registry
-status: release-candidate
+status: stable
 ---
 
 # Modes Registry

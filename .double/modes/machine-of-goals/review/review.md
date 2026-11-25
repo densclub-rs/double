@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: review
 kind: mode
-status: release-candidate
+status: stable
 user-selectable: true
 class: decision
 default-for:

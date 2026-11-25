@@ -4,7 +4,7 @@ style: double
 submodule: machine-of-goals
 id: goal-template
 kind: template
-status: release-candidate
+status: stable
 workflow-stage: goal-formulation
 interaction-language: en
 artifact-language: en

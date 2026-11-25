@@ -4,7 +4,7 @@ style: double
 submodule: machine-of-goals
 id: path-options-template
 kind: template
-status: release-candidate
+status: stable
 workflow-stage: path-discovery
 interaction-language: en
 artifact-language: en

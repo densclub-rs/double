@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: plan-validation-agent
 kind: agent
-status: release-candidate
+status: stable
 role: plan-validation-role
 workflow: machine-of-goals-workflow
 interaction-language: en

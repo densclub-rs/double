@@ -10,9 +10,10 @@ artifact-language: en
 type: static
 access: free-of-charge
 value-type: text
-observed-at: 2026-11-23
+observed-at: 2026-11-25
 ttl: one month
 derived-from:
+  - user-approved stable release 0.0.25 changelog on 2026-11-25
   - user-approved cross-machine style contract refactoring on 2026-11-23
   - .double-rules/machine-of-goals/machine-of-goals-version.md
   - knowledge/machine-version-and-changelog-locations/machine-version-and-changelog-locations.md
@@ -28,6 +29,11 @@ derived-from:
 Changes recorded for the `machine-of-goals` module.
 
 ## Value
+
+### 0.0.25 — 2026-11-25
+
+- Promote Machine of Goals 0.0.25 from release candidate to stable.
+- Mark all Machine of Goals operating artifacts as stable.
 
 ### 0.0.25-rc — 2026-11-23
 

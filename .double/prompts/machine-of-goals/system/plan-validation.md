@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: plan-validation-system-prompt
 kind: prompt
-status: release-candidate
+status: stable
 produced-by: plan-validation-agent
 mode: shared
 derived-from:

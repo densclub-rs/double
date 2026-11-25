@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: templates-registry
 kind: registry
-status: release-candidate
+status: stable
 ---
 
 # Templates Registry

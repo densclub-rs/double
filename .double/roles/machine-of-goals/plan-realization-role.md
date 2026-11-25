@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: plan-realization-role
 kind: role
-status: release-candidate
+status: stable
 derived-from:
   - ../../workflows/machine-of-goals/machine-of-goals-workflow.md
   - ../../../ideas/machine-of-goals/machine-of-goals-principles.md

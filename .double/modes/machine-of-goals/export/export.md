@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: export
 kind: mode
-status: release-candidate
+status: stable
 user-selectable: true
 class: transfer
 default-for:

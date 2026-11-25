@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: goal-formulation-agent
 kind: agent
-status: release-candidate
+status: stable
 role: goal-formulation-role
 workflow: machine-of-goals-workflow
 interaction-language: en

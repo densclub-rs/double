@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: planning
 kind: mode
-status: release-candidate
+status: stable
 user-selectable: true
 class: cognitive
 default-for:

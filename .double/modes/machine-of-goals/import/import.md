@@ -3,7 +3,7 @@ style: double
 submodule: machine-of-goals
 id: import
 kind: mode
-status: release-candidate
+status: stable
 user-selectable: true
 class: transfer
 derived-from:

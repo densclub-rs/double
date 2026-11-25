@@ -4,7 +4,7 @@ style: double
 submodule: machine-of-goals
 id: plan-model-template
 kind: template
-status: release-candidate
+status: stable
 workflow-stage: plan-synthesis
 interaction-language: en
 artifact-language: en
