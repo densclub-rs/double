@@ -20,6 +20,7 @@ derived-from:
 ---
 id: <concept-artifact-id>
 kind: concept-artifact
+status: draft
 mindmap-plugin: basic
 produced-by: machine-of-ideas/concept-extraction-agent
 double-repository: https://github.com/densclub-rs/double

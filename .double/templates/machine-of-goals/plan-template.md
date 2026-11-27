@@ -32,6 +32,6 @@ and plan references to this local copy, preserving historical facts. A new
 realization links the changed main plan. No copy is created for compatible
 edits. Legacy frozen files retain their history unless separately authorized.
 
-A preserved copy retains the source `double-repository` and optional
-`project-repository`; do not backfill missing metadata in historical copies.
+A preserved copy retains the source document status when present, along with its
+`double-repository` and optional `project-repository`; do not backfill missing metadata in historical copies.
 New plans follow the repository metadata contract in `plan-model-template`.

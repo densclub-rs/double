@@ -21,7 +21,7 @@ existing user artifacts as part of contract validation.
 
 | Scenario | Expected result |
 | --- | --- |
-| Create any new plan: ordinary, parallel or author variant | Synthesize one short meaningful word jointly expressing the actual plan's subject, core meaning and goal, distinguishing it from other variants. A readable coined word is allowed. Use lowercase English letters only, without spaces, hyphens or digits. Write only `id` in plan frontmatter and use it as the root anchor; use it in the filename only for parallel variants. Do not add a duplicate plan identity field |
+| Create any new plan: ordinary, parallel or author variant | Synthesize one short meaningful word jointly expressing the actual plan's subject, core meaning and goal, distinguishing it from other variants. A readable coined word is allowed. Use lowercase English letters only, without spaces, hyphens or digits. Write `id` as the sole plan identifier in frontmatter and use it as the root anchor; use it in the filename only for parallel variants. Do not add a duplicate plan identity field |
 | An ID names only the subject, action or goal, or uses several hyphen-separated words | It does not satisfy the contract. Synthesize one word combining all three concepts from this plan's context |
 | The generated word is already used by another plan | Choose another single word derived from the same plan's context that still combines its subject, core meaning and goal. Do not choose a random/unrelated word, generate numeric/opaque codes or append a numeric suffix. Preserve existing plans and their IDs |
 | Revise a plan | Retain the same `id`, root anchor and branch; increment the review revision and review changed content before action |

@@ -152,6 +152,7 @@ requires required selected child outputs and its own integration conditions.
 ---
 id: <id>
 kind: plan-model
+status: draft
 template-id: plan-model-template
 project-id: <stable-project-id>
 produced-by: machine-of-goals/plan-synthesis-agent

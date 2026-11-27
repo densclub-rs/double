@@ -18,6 +18,7 @@ links belong to the registry entry and do not imply local installation.
 
 ```yaml
 schema-version: 1
+status: draft
 double-repository: https://github.com/densclub-rs/double
   # project-repository: <confirmed-project-repository-address; omit when absent>
 entries:

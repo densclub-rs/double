@@ -1,3 +1,7 @@
+---
+status: stable
+---
+
 # Double Working Catalog
 
 The `.double/` directory is the working catalog of Double.

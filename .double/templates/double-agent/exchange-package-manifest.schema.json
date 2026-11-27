@@ -7,6 +7,7 @@
   "additionalProperties": false,
   "properties": {
     "schema-version": {"const": 1},
+    "status": {"enum": ["draft", "release-candidate", "stable"]},
     "double-repository": {
       "const": "https://github.com/densclub-rs/double",
       "description": "The fixed Double project link embedded in the template, independent of the user's project and package publication URL. Optional in validation for legacy package compatibility."

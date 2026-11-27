@@ -46,8 +46,8 @@ creates none of these Machine of Goals execution records when invoked. See the
   The map links its linked plan anchor and stage record directly. Render every
   State cell with only its required emoji; the legend above the map explains
   the meanings. Do not append state names or add a duplicate status column.
-  Progress handoffs may use emoji with short prose labels. Keep frontmatter
-  status values textual and synchronize their meaning with the body. Do not
+  Progress handoffs may use emoji with short prose labels. Keep `execution-status`
+  textual and consistent with the progress documented in the body. Do not
   project progress into the editable model or frozen plan.
 - Copy approved stage types into a Type column containing only `🔹` or `♾️`;
   extend the existing legend. For an authorized return to either stage type, show its
@@ -113,6 +113,7 @@ and unresolved outcomes; reassess affected dependents when results change.
 ---
 id: <realization-id>
 kind: realization-artifact
+status: draft
 template-id: realization-template
 project-id: <stable-project-id>
 produced-by: machine-of-goals/plan-realization-agent
@@ -128,7 +129,7 @@ plan-revision: <approved-plan-revision>
 approved-model-content-hash: sha256:<actual-approved-source-file-digest>
 started-at: <actual-ISO8601-time-with-offset>
 timezone: <IANA-timezone>
-status: <in-progress|completed|blocked|cancelled|model-changed>
+execution-status: <in-progress|completed|blocked|cancelled|model-changed>
 current-stage: <stage-id-or-null>
 predecessor: <previous-realization-path-or-null>
 successor: <next-realization-path-or-null>

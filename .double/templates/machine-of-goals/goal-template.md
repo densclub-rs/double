@@ -19,6 +19,7 @@ derived-from:
 ---
 id: <goal-id>
 kind: goal-artifact
+status: draft
 template-id: goal-template
 project-id: <stable-project-id>
 produced-by: machine-of-goals/goal-formulation-agent
@@ -153,7 +154,7 @@ Possible paths: [Path options](./path-options.md#<goal-id>-path-options)
 
 The plan table records every actual plan's `id`, branch, review revision and
 file/anchor. The ordinary editable filename is `plan.md`.
-Every plan has only `id` in frontmatter, generated as one short
+Every plan has `id` as its sole plan identifier in frontmatter, generated as one short
 human-readable word derived from the plan's context: jointly express its
 subject, core meaning and goal in a single word. The root anchor equals `id`.
 The sample row links ordinary `plan.md#<plan-id>`; include it only when that file
@@ -170,7 +171,7 @@ progress and checks. Review revisions are not execution plan versions; no
 separate registration, decision, execution index or computed style is required.
 
 To inspect manual progress, open the applicable realization from this table;
-its status, current-stage and Stage Map identify completed and remaining work.
+its execution-status, current-stage and Stage Map identify completed and remaining work.
 Do not mirror stage progress into the goal or plan. Determine activity from the
 realization's actual state, not merely the latest timestamp; show no active
 realization or multiple candidates explicitly. Link only existing documents.

@@ -41,6 +41,7 @@ contract for a future shell format, not a claim that shell packaging is availabl
 
 ```yaml
 schema-version: 1
+status: draft
 double-repository: https://github.com/densclub-rs/double
   # project-repository: <confirmed-project-repository-address; omit when absent>
 package:
@@ -100,6 +101,7 @@ plans merely for sharing realizations; preserve captured conditions and provenan
 
 ```yaml
 schema-version: 1
+status: draft
 double-repository: https://github.com/densclub-rs/double
   # project-repository: <confirmed-project-repository-address; omit when absent>
 package:

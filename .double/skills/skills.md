@@ -1,6 +1,7 @@
 ---
 style: double
 mindmap-plugin: basic
+status: stable
 ---
 
 # [Skills](../.double.md)

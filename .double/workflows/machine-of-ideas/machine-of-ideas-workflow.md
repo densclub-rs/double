@@ -181,16 +181,20 @@ may legitimately have the same value. Omit `project-repository` when no address
 is established; never write a placeholder, empty string or `null`, and do not
 substitute `double-repository`.
 
-Before creating an artifact with document status `release-candidate` or
-`stable`, or changing its document status to either value, check whether the
+Create each new artifact with `status: draft` in Markdown frontmatter or
+top-level YAML metadata. Show that literal field inside each new artifact
+template. Advance document maturity one step at a time through
+`draft` → `release-candidate` → `stable` after the applicable review.
+
+Before advancing to `release-candidate` or `stable`, check whether the
 project repository is established. Reuse an applicable confirmed address;
 otherwise ask whether the project has a repository and which address to record.
 The user may state that no repository exists or decline to record it; then
 omit the optional field and continue the normal status validation. Reuse that
 explicit decision within the same confirmed project context rather than asking
-for each artifact. An unanswered question is not a decision. Do not change
-status automatically or add a maturity status to an artifact that uses
-execution progress. A confirmed address may be recorded at any document status.
+for each artifact. An unanswered question is not a decision. Keep execution
+progress separate from document maturity. A confirmed address may be recorded
+at any document status.
 
 This check does not authorize publication, network access, visibility changes
 or mass migration. Ordinary reading, validation, import, export and historical
@@ -683,6 +687,7 @@ The agent can:
 - kind: `concept-artifact`
 - produced-by: `concept-extraction-agent`
 - required-frontmatter:
+  - `status`
   - `interaction-language`
   - `artifact-language`
 - publication-path: `ideas/<...>/<root-idea-id>/<root-idea-id>-concepts.md`
@@ -704,6 +709,7 @@ The agent can:
 - kind: `principle-artifact`
 - produced-by: `principle-synthesis-agent`
 - required-frontmatter:
+  - `status`
   - `interaction-language`
   - `artifact-language`
 - publication-path: `ideas/<...>/<root-idea-id>/<root-idea-id>-principles.md`

@@ -2,6 +2,7 @@
 double-repository: https://github.com/densclub-rs/double
 style: double
 mindmap-plugin: basic
+status: stable
 ---
 
 # [Templates](../.double.md)

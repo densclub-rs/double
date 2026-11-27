@@ -112,6 +112,7 @@ introduced by subdivision.
 ---
 id: <stage-record-id>
 kind: stage-realization
+status: draft
 template-id: stage-realization-template
 project-id: <stable-project-id>
 produced-by: machine-of-goals/plan-realization-agent

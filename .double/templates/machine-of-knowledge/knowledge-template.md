@@ -19,7 +19,7 @@ derived-from:
 ---
 id: <unique-knowledge-id>
 kind: knowledge-artifact
-status: <draft-or-release-candidate-or-stable>
+status: draft
 produced-by: machine-of-knowledge/knowledge-extraction-agent
 double-repository: https://github.com/densclub-rs/double
   # project-repository: <confirmed-project-repository-address; omit when absent>

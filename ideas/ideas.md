@@ -1,3 +1,7 @@
+---
+status: stable
+---
+
 # Ideas
 
 ![A human thinker and an AI presence transforming vague thoughts into diamonds and pearls of ideas.](../_media/ideas-illustration.png)

@@ -20,6 +20,7 @@ derived-from:
 ---
 id: <principle-artifact-id>
 kind: principle-artifact
+status: draft
 mindmap-plugin: basic
 produced-by: machine-of-ideas/principle-synthesis-agent
 double-repository: https://github.com/densclub-rs/double

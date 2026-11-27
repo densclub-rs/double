@@ -188,16 +188,20 @@ may legitimately have the same value. Omit `project-repository` when no address
 is established; never write a placeholder, empty string or `null`, and do not
 substitute `double-repository`.
 
-Before creating an artifact with document status `release-candidate` or
-`stable`, or changing its document status to either value, check whether the
+Create each new artifact with `status: draft` in Markdown frontmatter or
+top-level YAML metadata. Show that literal field inside each new artifact
+template. Advance document maturity one step at a time through
+`draft` → `release-candidate` → `stable` after the applicable review.
+
+Before advancing to `release-candidate` or `stable`, check whether the
 project repository is established. Reuse an applicable confirmed address;
 otherwise ask whether the project has a repository and which address to record.
 The user may state that no repository exists or decline to record it; then
 omit the optional field and continue the normal status validation. Reuse that
 explicit decision within the same confirmed project context rather than asking
-for each artifact. An unanswered question is not a decision. Do not change
-status automatically or add a maturity status to an artifact that uses
-execution progress. A confirmed address may be recorded at any document status.
+for each artifact. An unanswered question is not a decision. Keep execution
+progress separate from document maturity. A confirmed address may be recorded
+at any document status.
 
 This check does not authorize publication, network access, visibility changes
 or mass migration. Ordinary reading, validation, import, export and historical
@@ -280,7 +284,12 @@ If the user starts from an existing goal, plan, imported plan, or subgoal, the
 agent should infer the current step from the artifact state and explain that
 inference before advancing.
 
-For the timestamped manual/interactive realization shape, inspect its linked plan, approved revision and digest, `status`, `current-stage`, map,
+For older realization records without `execution-status`, read an existing
+`status` value of `in-progress`, `completed`, `blocked`, `cancelled`, or
+`model-changed` as execution progress. When editing such a record, preserve
+that value in `execution-status` and initialize document maturity to `draft`.
+
+For the timestamped manual/interactive realization shape, inspect its linked plan, approved revision and digest, `execution-status`, `current-stage`, map,
 and corresponding three-part stage record. Resume observed actions awaiting verification at step 06 rather than
 repeating them. Unaccepted inputs stay at input clarification in step 05;
 Changed content routes to renewed review before further planned action.
@@ -698,7 +707,7 @@ observed facts and the evidence/confirmation basis in Result or the stage
 record rather than duplicating status words in the table. The emoji does not
 replace facts. These are presentation markers for
 stage outcomes, not new metadata keys or permissions. Preserve existing textual
-frontmatter status values and `current-stage`. Progress lives in realization
+frontmatter `execution-status` values and `current-stage`. Progress lives in realization
 and stage records; never add it to the main plan or preserved historical copy.
 
 <a id="stage-subdivision-rule"></a>
@@ -894,7 +903,7 @@ before future planned action. Apply the incompatible-change preservation decisio
 
 To inspect progress, use the goal's existing Goals Artifacts section (or its
 legacy Machine of Goals Artifacts section)
-to open the applicable realization. Read its status, current-stage and Stage
+to open the applicable realization. Read its execution-status, current-stage and Stage
 Map, then the stage documents for facts and evidence. Do not infer the active
 realization from the newest filename alone; show no active realization or
 multiple candidates explicitly. Do not create a second progress dashboard in

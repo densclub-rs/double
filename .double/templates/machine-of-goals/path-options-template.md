@@ -19,6 +19,7 @@ derived-from:
 ---
 id: <goal-id>-path-options
 kind: path-options
+status: draft
 template-id: path-options-template
 project-id: <stable-project-id>
 produced-by: machine-of-goals/path-discovery-agent
@@ -95,7 +96,7 @@ developed parallel plan. Record that need during discovery; create plans only
 at step-03 synthesis. Ordinary plans use `plan.md`, parallel variants use
 `plan-<id>.md`, and author variants use `plan<owner_id>.md`, without a hyphen
 after `plan`. No prior ordinary plan or major divergence is required.
-Each plan has only `id` in frontmatter, generated as one short human-readable
+Each plan has `id` as its sole plan identifier in frontmatter, generated as one short human-readable
 word derived from the plan's context: jointly express its subject, core meaning
 and goal in a single word. Its root anchor equals `id`; generation/collision
 rules preserve all three concepts and use no numeric suffix. Plan IDs, path IDs

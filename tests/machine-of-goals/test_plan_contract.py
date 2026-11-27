@@ -150,7 +150,8 @@ def test_manual_realization_renders_emoji_states_and_legend():
 
 def test_emoji_rendering_preserves_metadata_and_plan_immutability():
     realization = shapes('realization-template.md')[0]
-    assert realization['status'] == '<in-progress|completed|blocked|cancelled|model-changed>'
+    assert realization['status'] == 'draft'
+    assert realization['execution-status'] == '<in-progress|completed|blocked|cancelled|model-changed>'
     assert realization['current-stage'] == '<stage-id-or-null>'
     for name in ['plan-model-template.md']:
         generated = re.search(r'^````md\n(.*?)^````$', (TEMPLATES / name).read_text(), re.M | re.S).group(1)
@@ -400,7 +401,7 @@ def test_retired_execution_artifacts_have_no_current_producer_or_reference():
 
 
 def test_every_plan_shape_has_no_runtime_state_or_progress():
-    forbidden_fields = {'current-stage', 'realization-id', 'status', 'runs',
+    forbidden_fields = {'current-stage', 'realization-id', 'execution-status', 'runs',
                         'last-run', 'last-result', 'plan-execution-style',
                         'plan-revision-artifact', 'readiness', 'alignment'}
     # Frozen provenance names its realization; this is identity, not progress.

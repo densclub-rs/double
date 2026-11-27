@@ -1,6 +1,7 @@
 ---
 style: double
 mindmap-plugin: basic
+status: stable
 ---
 
 # [Agents](../.double.md)

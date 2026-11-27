@@ -301,7 +301,7 @@ validation flow.
   manual stage's Actions section, with context, observed results and replay
   constraints. Recorded commands do not authorize replay or automatic execution.
 - Inspect manual progress by following the goal's existing links to the
-  applicable realization and reading its status/current-stage and Stage Map.
+  applicable realization and reading its execution-status/current-stage and Stage Map.
   Do not guess activity solely from the newest filename or mirror its progress.
 - Import/export retains context, model/plan distinction, paths, automation
   definitions and validation contracts. Imported editable material remains a

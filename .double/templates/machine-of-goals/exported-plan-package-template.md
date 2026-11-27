@@ -26,6 +26,7 @@ exporting or invoking it creates no Machine of Goals execution history.
 ---
 id: <goal-id>-exported-plan-package
 kind: exported-plan-package
+status: draft
 template-id: exported-plan-package-template
 project-id: <stable-project-id>
 produced-by: machine-of-goals/plan-exchange-agent
